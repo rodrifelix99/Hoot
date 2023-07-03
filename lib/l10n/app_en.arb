@@ -1,0 +1,110 @@
+{
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "welcome": "Welcome to Hoot",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+  "displayName": "Display Name",
+  "@displayName": {
+    "description": "Display Name label"
+  },
+  "displayNameTooShort": "Your name must be at least 3 characters long",
+  "@displayNameTooShort": {
+    "description": "Display name too short message"
+  },
+  "email": "Email",
+  "@email":{
+    "description": "Email label"
+  },
+  "emailInvalid": "Invalid email address",
+  "@email":{
+    "description": "Invalid email address message"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password label"
+  },
+  "passwordTooShort": "Your password must be at least 6 characters long",
+  "@passwordTooShort": {
+    "description": "Password too short message"
+  },
+  "repeatPassword": "Repeat Password",
+  "@repeatPassword": {
+    "description": "Repeat Password label"
+  },
+  "passwordsDontMatch": "Passwords don't match",
+  "@passwordsDontMatch": {
+    "description": "Passwords don't match message"
+  },
+  "alreadyHaveAnAccount": "Already have an account?",
+  "@alreadyHaveAnAccount": {
+    "description": "Already have an account? label"
+  },
+  "signIn": "Sign In",
+  "@signIn": {
+    "description": "Sign In button"
+  },
+  "signUp": "Sign Up",
+  "@signUp": {
+    "description": "Sign Up button"
+  },
+  "createMyAccount": "Create my account",
+  "@createMyAccount": {
+    "description": "Create my account button"
+  },
+  "signOut": "Sign Out",
+  "@signOut": {
+    "description": "Sign Out button"
+  },
+  "bySigningUpYouAgreeToOur": "By signing up you agree to our",
+  "@bySigningUpYouAgreeToOur": {
+    "description": "By signing up you agree to our label"
+  },
+  "termsOfService": "Terms of Service and Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Terms of Service and Privacy Policy link"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot Password link"
+  },
+  "resetPassword": "Reset Password",
+  "@resetPassword": {
+    "description": "Reset Password button"
+  },
+  "signInFailed": "Sign in failed",
+  "@signInFailed": {
+    "description": "Sign in failed message"
+  },
+  "errorInvalidEmail": "Invalid email",
+  "@errorInvalidEmailOrPassword": {
+    "description": "Invalid email message"
+  },
+  "errorEmailAlreadyInUse": "Email already in use",
+  "@errorEmailAlreadyInUse": {
+    "description": "Email already in use message"
+  },
+  "errorWeakPassword": "Weak password",
+  "@errorWeakPassword": {
+    "description": "Weak password message"
+  },
+  "userDisabled": "User disabled",
+  "@userDisabled": {
+    "description": "User disabled message"
+  },
+  "errorWrongPassword": "Wrong password",
+  "@errorWrongPassword": {
+    "description": "Wrong password message"
+  },
+  "errorUserNotFound": "User not found",
+  "@errorUserNotFound": {
+    "description": "User not found message"
+  },
+  "errorUnknown": "Unknown error occurred",
+  "@errorUnknown": {
+    "description": "Unknown error message"
+  }
+}

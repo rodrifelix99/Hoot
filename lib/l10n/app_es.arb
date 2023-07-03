@@ -1,0 +1,8 @@
+{
+  "helloWorld": "¡Hola Mundo!",
+  "welcome": "Bienvenido a Hoot",
+  "signInFailed": "Error al iniciar sesión",
+  "email": "Correo electrónico",
+    "password": "Contraseña",
+  "signIn": "Iniciar sesión"
+}
