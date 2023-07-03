@@ -7,6 +7,22 @@
   "@welcome": {
     "description": "Welcome message"
   },
+  "welcomeTo": "Welcome to",
+  "@welcomeTo": {
+    "description": "Welcome to label"
+  },
+  "appName": "Hoot",
+  "@appName": {
+    "description": "App name"
+  },
+  "welcomeDescription": "Are you ready to start hooting? With Hoot there's no rate limits, no ads and no tracking. Just you and your friends.",
+  "@welcomeDescription": {
+    "description": "Welcome description"
+  },
+  "getStarted": "Get Started",
+  "@getStarted": {
+    "description": "Get Started button"
+  },
   "displayName": "Display Name",
   "@displayName": {
     "description": "Display Name label"
@@ -20,7 +36,7 @@
     "description": "Email label"
   },
   "emailInvalid": "Invalid email address",
-  "@email":{
+  "@emailInvalid":{
     "description": "Invalid email address message"
   },
   "password": "Password",
@@ -106,5 +122,60 @@
   "errorUnknown": "Unknown error occurred",
   "@errorUnknown": {
     "description": "Unknown error message"
-  }
+  },
+  "whatsYourName": "What's your name?",
+  "@whatsYourName": {
+    "description": "What's your name? label"
+  },
+  "displayNameDescription": "This is the name that will be displayed to other users as your identity.",
+  "@displayNameDescription": {
+    "description": "Display name description"
+  },
+  "letsSpiceItUp": "Let's spice it up!",
+  "@letsSpiceItUp": {
+    "description": "Let's spice it up! label"
+  },
+  "usernameDescription": "A username is a unique identifier that will be used to identify you in the network. It can only contain letters, numbers and underscores.",
+  "@usernameDescription": {
+    "description": "Username description"
+  },
+  "username": "@username",
+  "@username": {
+    "description": "Username label"
+  },
+  "usernameTaken": "Username already taken",
+  "@usernameTaken": {
+    "description": "Username already taken message"
+  },
+  "usernameTooShort": "Your username must be at least 6 characters long",
+  "@usernameTooShort": {
+    "description": "Username too short message"
+  },
+  "pressEnterToContinue": "Press enter to continue",
+  "@pressEnterToContinue": {
+    "description": "Press enter to continue label"
+  },
+  "almostThere": "Almost there!",
+  "@almostThere": {
+    "description": "Almost there! label"
+  },
+  "avatarDescription": "Choose an avatar to represent you as a fancy owl.",
+  "@avatarDescription": {
+    "description": "Avatar description"
+  },
+  "avatarSelectedFunny1": "Oh wow, that's a great choice!",
+  "avatarSelectedFunny2": "Now that's a good looking owl!",
+  "avatarSelectedFunny3": "What a great choice!",
+  "skip": "Skip",
+  "@skip": {
+    "description": "Skip button"
+  },
+  "skipForNow": "Skip for now",
+    "@skipForNow": {
+        "description": "Skip for now button"
+    },
+  "continueButton": "Continue",
+    "@continueButton": {
+        "description": "Continue button"
+    }
 }

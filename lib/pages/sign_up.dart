@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_signin_button/button_list.dart';
-import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 
 import '../components/sign_in_with_apple.dart';
@@ -15,16 +13,13 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController _displayNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
 
   bool _isValid() {
-    return _displayNameController.text.isNotEmpty &&
-        _displayNameController.text.length >= 3 &&
-        _emailController.text.isNotEmpty &&
+    return _emailController.text.isNotEmpty &&
         _emailController.text.contains('@') &&
         _passwordController.text.isNotEmpty &&
         _passwordController.text.length >= 6 &&
@@ -39,9 +34,8 @@ class _SignUpPageState extends State<SignUpPage> {
     });
 
     String code = await Provider.of<AuthProvider>(context, listen: false).signUpWithEmailAndPassword(
-      _displayNameController.text,
       _emailController.text,
-      _passwordController.text,
+      _passwordController.text
     );
 
     if (code != 'success') {
@@ -64,7 +58,7 @@ class _SignUpPageState extends State<SignUpPage> {
         _isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content: Text(errorMessage, style: Theme.of(context).textTheme.bodyText1?.copyWith(color: Theme.of(context).colorScheme.onError)),
+                content: Text(errorMessage, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onError)),
                 backgroundColor: Theme.of(context).colorScheme.error
             )
         );
@@ -88,28 +82,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       TextField(
-                        controller: _displayNameController,
-                        autocorrect: true,
-                        keyboardType: TextInputType.name,
-                        textCapitalization: TextCapitalization.words,
-                        textInputAction: TextInputAction.next,
-                        onChanged: (value) => setState(() {}),
-                        onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.displayName,
-                        ),
-                      ),
-                      _displayNameController.text.isNotEmpty && _displayNameController.text.length < 3
-                          ? Text(
-                        AppLocalizations.of(context)!.displayNameTooShort,
-                        textAlign: TextAlign.start,
-                        style: Theme.of(context).textTheme.caption?.copyWith(
-                            color: Theme.of(context).colorScheme.error
-                        ),
-                      )
-                          : const SizedBox(),
-                      const SizedBox(height: 16),
-                      TextField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
@@ -123,7 +95,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ? Text(
                           AppLocalizations.of(context)!.emailInvalid,
                           textAlign: TextAlign.start,
-                          style: Theme.of(context).textTheme.caption?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.error
                           )
                       )
@@ -144,7 +116,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ? Text(
                           AppLocalizations.of(context)!.passwordTooShort,
                           textAlign: TextAlign.start,
-                          style: Theme.of(context).textTheme.caption?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.error
                           )
                       )
@@ -164,7 +136,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ? Text(
                           AppLocalizations.of(context)!.passwordsDontMatch,
                           textAlign: TextAlign.start,
-                          style: Theme.of(context).textTheme.caption?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.error
                           )
                       )
@@ -178,7 +150,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           children: [
                             Text(
                               AppLocalizations.of(context)!.bySigningUpYouAgreeToOur,
-                              style: Theme.of(context).textTheme.caption?.copyWith(
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)
                               ),
                             ),
@@ -186,7 +158,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 onPressed: () => Navigator.of(context).pushNamed('/terms_of_service'),
                                 child: Text(
                                   AppLocalizations.of(context)!.termsOfService,
-                                  style: Theme.of(context).textTheme.caption?.copyWith(
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                       color: Theme.of(context).colorScheme.primary
                                   ),
                                 )

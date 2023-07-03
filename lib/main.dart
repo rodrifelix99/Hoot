@@ -46,11 +46,7 @@ Future<void> main() async {
                 case '/login':
                   return MaterialPageRoute(builder: (context) => LoginPage());
                 case '/home':
-                  if (authProvider.user != null) {
-                    return MaterialPageRoute(builder: (context) => HomePage());
-                  } else {
-                    return MaterialPageRoute(builder: (context) => LoginPage());
-                  }
+                  return MaterialPageRoute(builder: (context) => HomePage());
                 case '/signup':
                   return MaterialPageRoute(builder: (context) => SignUpPage());
                 case '/signin':

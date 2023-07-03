@@ -12,6 +12,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  Future isNewUser() async {
+    bool isNewUser = await Provider.of<AuthProvider>(context, listen: false).user!.username == null;
+    if (isNewUser) {
+      Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
+    }
+  }
+
+  @override
+  void initState() {
+    bool isSignedIn = Provider.of<AuthProvider>(context, listen: false).isSignedIn;
+    if (!isSignedIn) {
+      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+    } else {
+      isNewUser();
+    }
+    super.initState();
+  }
+
   Future _signOut() async {
     await Provider.of<AuthProvider>(context, listen: false).signOut();
     Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
@@ -25,7 +43,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Center(
         child: ElevatedButton(
-          onPressed: _signOut,
+          onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false),
           child: Text('Sign Out'),
         ),
       ),

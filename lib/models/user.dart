@@ -1,13 +1,15 @@
+import 'dart:convert';
+
 class U {
   final String uid;
-  final String? name;
-  final String? username;
-  final String? smallProfilePictureUrl;
-  final String? largeProfilePictureUrl;
-  final String? bio;
-  final String? location;
-  final String? website;
-  final DateTime? birthday;
+  String? name;
+  String? username;
+  String? smallProfilePictureUrl;
+  String? largeProfilePictureUrl;
+  String? bio;
+  String? location;
+  String? website;
+  DateTime? birthday;
 
   U({required this.uid, this.name, this.username, this.smallProfilePictureUrl, this.largeProfilePictureUrl, this.bio, this.location, this.website, this.birthday});
 
@@ -28,5 +30,19 @@ class U {
       website: json['website'],
       birthday: json['birthday'],
     );
+  }
+
+  String toJson() {
+    String json = jsonEncode({
+      'displayName': name,
+      'username': username,
+      'smallAvatar': smallProfilePictureUrl,
+      'bigAvatar': largeProfilePictureUrl,
+      'bio': bio,
+      'location': location,
+      'website': website,
+      'birthday': birthday,
+    });
+    return json;
   }
 }

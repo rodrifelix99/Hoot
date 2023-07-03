@@ -8,6 +8,12 @@ class AppTheme {
     brightness: Brightness.light,
     colorSchemeSeed: Colors.blue,
     textTheme: GoogleFonts.interTextTheme(),
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         textStyle: MaterialStateProperty.all(

@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,8 +7,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFunctions _functions =
-  FirebaseFunctions.instanceFor(region: 'europe-west1');
+  final FirebaseFunctions _functions = FirebaseFunctions.instanceFor(region: 'europe-west1');
 
   U? _user;
   U? get user => _user;
@@ -24,17 +21,17 @@ class AuthProvider extends ChangeNotifier {
     try {
       if (firebaseUser == null) {
         _user = null;
-      } else {
+      } else if (_user == null || _user!.uid != firebaseUser.uid) {
         _user = await getUserInfo();
+        print('User changed: $_user from $firebaseUser');
       }
-      print('User changed: $_user from $firebaseUser');
       notifyListeners();
     } catch (e) {
       print(e.toString());
     }
   }
 
-  bool get isSignedIn => _auth.currentUser != null && _user != null;
+  bool get isSignedIn => _auth.currentUser != null;
 
   Future<U?> getUserInfo() async {
     try {
@@ -116,6 +113,7 @@ class AuthProvider extends ChangeNotifier {
         password: password,
       );
       if (userCredential.user != null) {
+        _user = await getUserInfo();
         notifyListeners();
         return "success";
       } else if (userCredential.additionalUserInfo!.isNewUser || userCredential.user!.displayName == null) {
@@ -130,7 +128,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<String> signUpWithEmailAndPassword(String name, String email, String password) async {
+  Future<String> signUpWithEmailAndPassword(String email, String password) async {
     try {
       final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -138,26 +136,43 @@ class AuthProvider extends ChangeNotifier {
       );
 
       if (userCredential.user != null) {
-        // update user's display name
-        await userCredential.user!.updateDisplayName(name);
-        await userCredential.user!.reload();
-        notifyListeners();
         return "success";
       } else {
         return "unknown-error";
       }
     } catch (e) {
       FirebaseAuthException exception = e as FirebaseAuthException;
-      return e.code;
+      return exception.code;
     }
   }
 
-  Future<bool> testEndpoint() async {
+  Future<bool> updateUser(U user) async {
     try {
-      HttpsCallable callable = _functions.httpsCallable('testEndpoint');
-      final response = await callable.call();
-      final data = response.data;
-      return data == "Hello World";
+      U? oldUser = _user;
+      _user = user;
+      notifyListeners();
+
+      HttpsCallable callable = _functions.httpsCallable('updateUser');
+      final response = await callable.call(user.toJson());
+
+      if (response.data == true) {
+        return true;
+      } else {
+        _user = oldUser;
+        return false;
+      }
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> isUsernameAvailable(String username) async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('isUsernameAvailable');
+      final response = await callable.call(username);
+      print(response.data);
+      return response.data;
     } catch (e) {
       print(e.toString());
       return false;

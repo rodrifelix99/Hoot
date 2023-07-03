@@ -60,3 +60,29 @@ exports.testEndpoint = functions.region("europe-west1").https.onCall(async () =>
     error(e);
   }
 });
+
+exports.updateUser = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const info = JSON.parse(data);
+    info.updatedAt = admin.firestore.FieldValue.serverTimestamp();
+    await db.collection("users").doc(context.auth.uid).update(info);
+    await admin.auth().updateUser(context.auth.uid, {
+      displayName: data.displayName,
+      photoURL: data.bigAvatar,
+    });
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.isUsernameAvailable = functions.region("europe-west1").https.onCall(async (data) => {
+  try {
+    const username = data;
+    const user = await db.collection("users").where("username", "==", username).get();
+    info(user.empty + " " + username);
+    return user.empty;
+  } catch (e) {
+    error(e);
+  }
+});

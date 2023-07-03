@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1038917266721',
     projectId: 'hoot-1cd96',
     storageBucket: 'hoot-1cd96.appspot.com',
+    androidClientId: '1038917266721-kme9f0sh5jac7sf0cvckhg0b9otu3be4.apps.googleusercontent.com',
     iosClientId: '1038917266721-bt8q5uhgll2tv5ksju28rdbjb0ksvcnn.apps.googleusercontent.com',
     iosBundleId: 'com.hoot.app.hoot',
   );
