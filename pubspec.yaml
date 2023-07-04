@@ -54,6 +54,8 @@ dependencies:
   firebase_storage: ^11.2.4
   image: ^4.0.17
   firebase_messaging: ^14.6.4
+  dot_navigation_bar: ^1.0.2
+  animated_notch_bottom_bar: ^1.0.0
 
 dev_dependencies:
   flutter_test:
