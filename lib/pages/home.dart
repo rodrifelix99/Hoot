@@ -16,6 +16,11 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _fcmController = TextEditingController();
 
   Future _setFCMToken() async {
+    String? fcmToken = await messaging.getToken();
+    if (fcmToken != null) {
+      await Provider.of<AuthProvider>(context, listen: false).setFCMToken(fcmToken);
+    }
+
     FirebaseMessaging.instance.onTokenRefresh
         .listen((fcmToken) async {
       await Provider.of<AuthProvider>(context, listen: false).setFCMToken(fcmToken);

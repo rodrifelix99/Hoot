@@ -102,16 +102,40 @@ exports.setFCMToken = functions.region("europe-west1").https.onCall(async (data,
 exports.sendTestNotification = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const token = data;
+    // get photoUrl from auth
+    // const userPhotoURL = context.auth.photoURL;
     const message = {
       notification: {
         title: "Test Notification",
         body: "This is a test notification",
       },
       token: token,
+      android: {
+        notification: {
+          imageUrl: "https://play-lh.googleusercontent.com/pEZvyjV4HNa9dwxYB4g-YzRVmbtNEwKdo_YpGbkDucVftFAx93gXrXYJYnTaT8TaDg", // URL of the image
+        },
+      },
+      apns: {
+        payload: {
+          aps: {
+            "mutable-content": 1,
+          },
+        },
+        fcm_options: {
+          image: "https://play-lh.googleusercontent.com/pEZvyjV4HNa9dwxYB4g-YzRVmbtNEwKdo_YpGbkDucVftFAx93gXrXYJYnTaT8TaDg", // URL of the image
+        },
+      },
+      webpush: {
+        headers: {
+          image: "https://play-lh.googleusercontent.com/pEZvyjV4HNa9dwxYB4g-YzRVmbtNEwKdo_YpGbkDucVftFAx93gXrXYJYnTaT8TaDg", // URL of the image
+        },
+      },
     };
     await admin.messaging().send(message);
     return true;
   } catch (e) {
-    error(e);
+    console.error(e);
+    throw new functions.https.HttpsError("internal", "An error occurred while sending the notification.");
   }
 });
+
