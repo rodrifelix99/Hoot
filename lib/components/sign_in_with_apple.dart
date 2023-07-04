@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
@@ -35,10 +37,14 @@ class _SignInWithAppleButtonState extends State<SignInWithAppleButton> {
 
   @override
   Widget build(BuildContext context) {
-    return SignInButton(
-      Buttons.AppleDark,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-      onPressed: () => _signInWithApple(),
-    );
+    if (Platform.isIOS || Platform.isMacOS) {
+      return SignInButton(
+        Buttons.AppleDark,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+        onPressed: () => _signInWithApple(),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }
