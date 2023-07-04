@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/follow_button.dart';
 import 'package:provider/provider.dart';
 import 'package:hoot/services/auth.dart';
 import 'package:hoot/models/user.dart';
 import 'package:octo_image/octo_image.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  U? user;
+  ProfilePage({super.key, this.user});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -13,11 +16,18 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late U _user;
+  late bool _isCurrentUser;
 
   @override
   void initState() {
-    _user = Provider.of<AuthProvider>(context, listen: false).user!;
+    _user = widget.user ?? Provider.of<AuthProvider>(context, listen: false).user!;
+    _isCurrentUser = _user.uid == Provider.of<AuthProvider>(context, listen: false).user!.uid;
     super.initState();
+  }
+
+  Future _signOut() async {
+    await Provider.of<AuthProvider>(context, listen: false).signOut();
+    Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
   }
 
   @override
@@ -30,17 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            OctoImage(
-                image: NetworkImage(_user.largeProfilePictureUrl!),
-                width: 150,
-                height: 150,
-                fit: BoxFit.cover,
-                placeholderBuilder: OctoPlaceholder.blurHash(
-                  'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                ),
-              errorBuilder: OctoError.icon(color: Colors.red),
-              imageBuilder: OctoImageTransformer.circleAvatar(),
-            ),
+            ProfileAvatar(image: _user.largeProfilePictureUrl!, size: 150),
             const SizedBox(height: 20),
             Text(
               _user.name!,
@@ -58,10 +58,10 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {},
+            _isCurrentUser ? ElevatedButton(
+              onPressed: _signOut,
               child: const Text('Sign Out'),
-            ),
+            ) : FollowButton(userId: _user.uid)
           ],
         ),
       )

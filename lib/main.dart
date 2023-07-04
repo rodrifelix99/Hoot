@@ -2,6 +2,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:hoot/pages/create_post.dart';
 import 'package:hoot/pages/home.dart';
 import 'package:hoot/pages/sign_in.dart';
 import 'package:hoot/pages/sign_up.dart';
@@ -71,6 +72,8 @@ Future<void> main() async {
                   return MaterialPageRoute(builder: (context) => TermsOfService());
                 case '/welcome':
                   return MaterialPageRoute(builder: (context) => WelcomePage());
+                case '/create':
+                  return MaterialPageRoute(builder: (context) => CreatePostPage());
                 default:
                   return MaterialPageRoute(builder: (context) => HomePage());
               }

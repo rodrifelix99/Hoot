@@ -99,43 +99,248 @@ exports.setFCMToken = functions.region("europe-west1").https.onCall(async (data,
   }
 });
 
-exports.sendTestNotification = functions.region("europe-west1").https.onCall(async (data, context) => {
+exports.createPost = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
-    const token = data;
-    // get photoUrl from auth
-    // const userPhotoURL = context.auth.photoURL;
-    const message = {
-      notification: {
-        title: "Test Notification",
-        body: "This is a test notification",
-      },
-      token: token,
-      android: {
-        notification: {
-          imageUrl: "https://play-lh.googleusercontent.com/pEZvyjV4HNa9dwxYB4g-YzRVmbtNEwKdo_YpGbkDucVftFAx93gXrXYJYnTaT8TaDg", // URL of the image
-        },
-      },
-      apns: {
-        payload: {
-          aps: {
-            "mutable-content": 1,
-          },
-        },
-        fcm_options: {
-          image: "https://play-lh.googleusercontent.com/pEZvyjV4HNa9dwxYB4g-YzRVmbtNEwKdo_YpGbkDucVftFAx93gXrXYJYnTaT8TaDg", // URL of the image
-        },
-      },
-      webpush: {
-        headers: {
-          image: "https://play-lh.googleusercontent.com/pEZvyjV4HNa9dwxYB4g-YzRVmbtNEwKdo_YpGbkDucVftFAx93gXrXYJYnTaT8TaDg", // URL of the image
-        },
-      },
-    };
-    await admin.messaging().send(message);
+    info(data);
+    const post = data;
+    post.user = db.collection("users").doc(context.auth.uid);
+    post.createdAt = admin.firestore.FieldValue.serverTimestamp();
+    post.updatedAt = admin.firestore.FieldValue.serverTimestamp();
+    post.hashtags = [];
+    const regex = /(?:^|\s)(?:#)([a-zA-Z\d]+)/gm;
+    let m;
+    let i = 0;
+    while ((m = regex.exec(post.text)) !== null && i < 10) {
+      // This is necessary to avoid infinite loops with zero-width matches
+      if (m.index === regex.lastIndex) {
+        regex.lastIndex++;
+      }
+      post.hashtags.push(m[1]);
+      i++;
+    }
+    await db.collection("users").doc(context.auth.uid).collection("posts").add(post);
+    await db.collection("users").doc(context.auth.uid).collection("feed").add(post);
     return true;
   } catch (e) {
-    console.error(e);
-    throw new functions.https.HttpsError("internal", "An error occurred while sending the notification.");
+    error(e);
+    return false;
   }
 });
 
+exports.onPostCreated = functions.region("europe-west1").firestore.document("users/{userId}/posts/{postId}").onCreate(async (snapshot, context) => {
+  try {
+    const post = snapshot.data();
+    const followers = await db.collection("users").doc(context.params.userId).collection.followers.get();
+    const promises = [];
+    for (const follower of followers) {
+      uid = follower.id;
+      promises.push(db.collection("users").doc(uid).collection("feed").add(post));
+    }
+    await Promise.all(promises);
+    return true;
+  } catch (e) {
+    error(e);
+    return false;
+  }
+});
+
+exports.deletePost = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const postId = data;
+    await db.collection("users").doc(context.auth.uid).collection("posts").doc(postId).delete();
+    await db.collection("users").doc(context.auth.uid).collection("feed").doc(postId).delete();
+    return true;
+  } catch (e) {
+    error(e);
+    return false;
+  }
+});
+
+exports.onPostDeleted = functions.region("europe-west1").firestore.document("users/{userId}/posts/{postId}").onDelete(async (snapshot, context) => {
+  try {
+    const post = snapshot.data();
+    const followers = await db.collection("users").doc(context.params.userId).collection.followers.get();
+    const promises = [];
+    for (const follower of followers) {
+      uid = follower.id;
+      promises.push(db.collection("users").doc(uid).collection("feed").where("id", "==", post.id).get());
+    }
+    const results = await Promise.all(promises);
+    for (const result of results) {
+      for (const doc of result.docs) {
+        await doc.ref.delete();
+      }
+    }
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.updatePost = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const post = JSON.parse(data);
+    post.updatedAt = admin.firestore.FieldValue.serverTimestamp();
+    await db.collection("users").doc(context.auth.uid).collection("posts").doc(post.id).update(post);
+    await db.collection("users").doc(context.auth.uid).collection("feed").doc(post.id).update(post);
+    return true;
+  } catch (e) {
+    error(e);
+    return false;
+  }
+});
+
+exports.onPostUpdated = functions.region("europe-west1").firestore.document("users/{userId}/posts/{postId}").onUpdate(async (change, context) => {
+  try {
+    const post = change.after.data();
+    const followers = await db.collection("users").doc(context.params.userId).collection.followers.get();
+    const promises = [];
+    for (const follower of followers) {
+      uid = follower.id;
+      promises.push(db.collection("users").doc(uid).collection("feed").where("id", "==", post.id).get());
+    }
+    const results = await Promise.all(promises);
+    for (const result of results) {
+      for (const doc of result.docs) {
+        await doc.ref.update(post);
+      }
+    }
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.getFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const startAfter = data ? new Date(data) : new Date();
+    const posts = await db.collection("users").doc(context.auth.uid).collection("feed").orderBy("createdAt", "desc").startAfter(startAfter).limit(10).get();
+    const feed = [];
+    const cashedUsers = [];
+    for (const post of posts.docs) {
+      const postData = post.data();
+      postData.id = post.id;
+      if (!cashedUsers[post.data().user.id]) {
+        cashedUsers[post.data().user.id] = await db.collection("users").doc(post.data().user.id).get();
+      }
+      postData.user = cashedUsers[post.data().user.id].data();
+      postData.user.uid = cashedUsers[post.data().user.id].id;
+      const likesSnapshot = await db.collection("users").doc(context.auth.uid).collection("feed").doc(post.id).collection("likes").get();
+      const commentsSnapshot = await db.collection("users").doc(context.auth.uid).collection("feed").doc(post.id).collection("comments").get();
+      postData.likes = likesSnapshot.size > 0 ? likesSnapshot.docs.map((doc) => doc.data().user.id) || [] : [];
+      postData.comments = commentsSnapshot.size > 0 ? commentsSnapshot.docs.map((doc) => doc.data()) || [] : [];
+      feed.push(postData);
+    }
+    return JSON.stringify(feed);
+  } catch (e) {
+    error(e);
+  }
+});
+
+
+exports.followUser = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = data;
+    await db.collection("users").doc(context.auth.uid).collection("following").doc(uid).set({
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    await db.collection("users").doc(uid).collection("followers").doc(context.auth.uid).set({
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.onFollowUser = functions.region("europe-west1").firestore.document("users/{userId}/following/{followingId}").onCreate(async (snapshot, context) => {
+  try {
+    const uid = context.params.userId;
+    const followingId = context.params.followingId;
+    const posts = await db.collection("users").doc(followingId).collection("posts").get();
+    const promises = [];
+    for (const post of posts) {
+      promises.push(db.collection("users").doc(uid).collection("feed").add(post.data()));
+    }
+    await Promise.all(promises);
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.unfollowUser = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = data;
+    await db.collection("users").doc(context.auth.uid).collection("following").doc(uid).delete();
+    await db.collection("users").doc(uid).collection("followers").doc(context.auth.uid).delete();
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.onUnfollowUser = functions.region("europe-west1").firestore.document("users/{userId}/following/{followingId}").onDelete(async (snapshot, context) => {
+  try {
+    const uid = context.params.userId;
+    const followingId = context.params.followingId;
+    const posts = await db.collection("users").doc(followingId).collection("posts").get();
+    const promises = [];
+    for (const post of posts) {
+      const query = await db.collection("users").doc(uid).collection("feed").where("id", "==", post.id).get();
+      for (const doc of query.docs) {
+        promises.push(doc.ref.delete());
+      }
+    }
+    await Promise.all(promises);
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+// suggest 10 users to follow based on the user's followers
+exports.getSuggestedUsers = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const query = await db.collection("users").doc(uid).collection("following").get();
+    const promises = [];
+    if (query.size > 0) {
+      for (const doc of query.docs) {
+        promises.push(db.collection("users").doc(doc.id).collection("following").get());
+      }
+      const results = await Promise.all(promises);
+      const following = new Set();
+      for (const result of results) {
+        for (const doc of result.docs) {
+          following.add(doc.id);
+        }
+      }
+      const users = await db.collection("users").where("id", "not-in", [...following, uid]).limit(10).get();
+      const data = [];
+      for (const doc of users.docs) {
+        data.push(doc.data());
+      }
+      return data;
+    } else {
+      const users = await db.collection("users").where("id", "!=", uid).limit(10).get();
+      const data = [];
+      for (const doc of users.docs) {
+        data.push(doc.data());
+      }
+      return data;
+    }
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.isFollowing = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = data;
+    const query = await db.collection("users").doc(context.auth.uid).collection("following").doc(uid).get();
+    return query.exists;
+  } catch (e) {
+    error(e);
+  }
+});

@@ -24,6 +24,42 @@ class _LoginPageState extends State<LoginPage> {
                   fit: BoxFit.cover,
                 ),
               ),
+          Positioned.fill(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(AppLocalizations.of(context)!.appName,
+                    style: const TextStyle(
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.black12,
+                          offset: Offset(5.0, 5.0),
+                        ),
+                      ],
+                      fontSize: 100,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Text("Beta - Please do not share",
+                    style: TextStyle(
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.black,
+                          offset: Offset(1.0, 1.0),
+                        ),
+                      ],
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           Positioned(
             bottom: 0,
             left: 0,

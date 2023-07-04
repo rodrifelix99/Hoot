@@ -211,4 +211,49 @@ class AuthProvider extends ChangeNotifier {
       print(e.toString());
     }
   }
+
+  Future<List<U>> getSuggestions() async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('getSuggestedUsers');
+      final response = await callable.call();
+      final json = response.data;
+      return List<U>.from(json.map((model) => U.fromJson(model)));
+    } catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
+  Future<bool> isFollowing(String uid) async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('isFollowing');
+      final response = await callable.call(uid);
+      return response.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> follow(String uid) async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('follow');
+      final response = await callable.call(uid);
+      return response.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> unfollow(String uid) async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('unfollow');
+      final response = await callable.call(uid);
+      return response.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
 }

@@ -7,6 +7,7 @@ import 'package:hoot/pages/notifications.dart';
 import 'package:hoot/pages/profile.dart';
 import 'package:provider/provider.dart';
 import '../services/auth.dart';
+import '../services/feed_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage();
@@ -85,14 +86,18 @@ class _HomePageState extends State<HomePage> {
       body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
+        onPageChanged: (i) => setState(() {}),
         children: [
-          FeedPage(),
-          NotificationsPage(),
+          ChangeNotifierProvider<FeedProvider>(
+            create: (_) => FeedProvider(),
+            child: const FeedPage(),
+          ),
+          const NotificationsPage(),
           ProfilePage(),
         ],
       ),
       extendBody: true,
-        floatingActionButton: _pageController.hasClients && _pageController.page!.round() == 0 ?
+      floatingActionButton: (_pageController.hasClients && _pageController.page!.round() == 0) || !_pageController.hasClients ?
         FloatingActionButton(
         onPressed: () => Navigator.of(context).pushNamed('/create'),
         child: const Icon(Icons.add_rounded),
