@@ -13,43 +13,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  final TextEditingController _fcmController = TextEditingController();
 
   Future _setFCMToken() async {
-    try {
-      String? token = await messaging.getToken();
-      if (token != null) {
-        bool success = await Provider.of<AuthProvider>(context, listen: false).setFCMToken(token);
-        if (!success) {
-          setState(() {
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text("Impossible to register for push notifications on the server", style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onError)),
-                    backgroundColor: Theme.of(context).colorScheme.error
-                )
-            );
-          });
-        }
-      } else {
-        setState(() {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text("No FCM token available", style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onError)),
-                  backgroundColor: Theme.of(context).colorScheme.error
-              )
-          );
-        });
-      }
-    } catch (e) {
-      print(e);
-      setState(() {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text("Impossible to register for push notifications", style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onError)),
-                backgroundColor: Theme.of(context).colorScheme.error
-            )
-        );
-      });
-    }
+    FirebaseMessaging.instance.onTokenRefresh
+        .listen((fcmToken) async {
+      await Provider.of<AuthProvider>(context, listen: false).setFCMToken(fcmToken);
+    });
   }
 
   Future isNewUser() async {
@@ -78,17 +48,42 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
   }
 
+  Future _sendTestNotification() async {
+    try {
+      await Provider.of<AuthProvider>(context, listen: false).sendTestNotification(_fcmController.text);
+    } catch (e) {
+      print(e);
+      setState(() {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text("Impossible to send test notification", style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onError)),
+                backgroundColor: Theme.of(context).colorScheme.error
+            )
+        );
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: Center(
-        child: ElevatedButton(
+      body: Column(
+        children: [
+          TextField(
+            onSubmitted: (value) => _sendTestNotification(),
+            decoration: const InputDecoration(
+              labelText: 'FCMToken',
+            ),
+            controller: _fcmController,
+          ),
+          ElevatedButton(
           onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false),
           child: Text('Sign Out'),
         ),
+        ]
       ),
     );
   }

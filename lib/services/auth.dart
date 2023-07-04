@@ -201,4 +201,14 @@ class AuthProvider extends ChangeNotifier {
       print(e.toString());
     }
   }
+
+  Future sendTestNotification(String token) async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('sendTestNotification');
+      final response = await callable.call(token);
+      print(response.data);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

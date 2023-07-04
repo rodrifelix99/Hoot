@@ -98,3 +98,20 @@ exports.setFCMToken = functions.region("europe-west1").https.onCall(async (data,
     error(e);
   }
 });
+
+exports.sendTestNotification = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const token = data;
+    const message = {
+      notification: {
+        title: "Test Notification",
+        body: "This is a test notification",
+      },
+      token: token,
+    };
+    await admin.messaging().send(message);
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
