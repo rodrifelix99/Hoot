@@ -72,7 +72,7 @@ Future<void> main() async {
                 case '/welcome':
                   return MaterialPageRoute(builder: (context) => WelcomePage());
                 default:
-                  return MaterialPageRoute(builder: (context) => LoginPage());
+                  return MaterialPageRoute(builder: (context) => HomePage());
               }
             },
           );

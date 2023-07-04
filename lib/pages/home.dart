@@ -2,10 +2,10 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:hoot/pages/feed.dart';
 import 'package:hoot/pages/notifications.dart';
 import 'package:hoot/pages/profile.dart';
 import 'package:provider/provider.dart';
-
 import '../services/auth.dart';
 
 class HomePage extends StatefulWidget {
@@ -82,20 +82,26 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_appBarText()),
-      ),
       body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          HomePage(),
+          FeedPage(),
           NotificationsPage(),
           ProfilePage(),
         ],
       ),
+      extendBody: true,
+        floatingActionButton: _pageController.hasClients && _pageController.page!.round() == 0 ?
+        FloatingActionButton(
+        onPressed: () => Navigator.of(context).pushNamed('/create'),
+        child: const Icon(Icons.add_rounded),
+      ) : const SizedBox(),
       bottomNavigationBar: BottomNavigationBar(
-        onTap: (i) => _pageController.jumpToPage(i),
+        onTap: (i) => setState(() {
+          _pageController.jumpToPage(i);
+        }),
+        currentIndex: _pageController.hasClients ? _pageController.page!.round() : 0,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded),
