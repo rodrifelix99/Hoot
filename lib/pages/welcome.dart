@@ -64,7 +64,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     left: 0,
                     right: 0,
                     child: Container(
-                      padding: const EdgeInsets.fromLTRB(16, 100, 16, 30),
+                      padding: const EdgeInsets.fromLTRB(16, 100, 16, 80),
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
@@ -82,7 +82,9 @@ class _WelcomePageState extends State<WelcomePage> {
             );
           },
           itemCount: screens.length,
-          pagination: const SwiperPagination(),
+          pagination: SwiperPagination(
+            margin: EdgeInsets.only(bottom: 50), // Add bottom margin to the dots
+          ),
         )
     );
   }

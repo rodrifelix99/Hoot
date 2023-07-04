@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
             left: 0,
             right: 0,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -51,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                           style: const TextStyle(color: Colors.black)
                       )
                   ),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

@@ -149,7 +149,7 @@ class _SignInPageState extends State<SignInPage> {
             right: 0,
             child: Container(
               color: Theme.of(context).colorScheme.surface,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
