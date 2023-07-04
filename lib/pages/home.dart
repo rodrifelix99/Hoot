@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,11 +12,52 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  Future _setFCMToken() async {
+    try {
+      String? token = await messaging.getToken();
+      if (token != null) {
+        bool success = await Provider.of<AuthProvider>(context, listen: false).setFCMToken(token);
+        if (!success) {
+          setState(() {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text("Impossible to register for push notifications on the server", style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onError)),
+                    backgroundColor: Theme.of(context).colorScheme.error
+                )
+            );
+          });
+        }
+      } else {
+        setState(() {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text("No FCM token available", style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onError)),
+                  backgroundColor: Theme.of(context).colorScheme.error
+              )
+          );
+        });
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text("Impossible to register for push notifications", style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onError)),
+                backgroundColor: Theme.of(context).colorScheme.error
+            )
+        );
+      });
+    }
+  }
 
   Future isNewUser() async {
-    bool isNewUser = await Provider.of<AuthProvider>(context, listen: false).user!.username == null;
+    bool isNewUser = Provider.of<AuthProvider>(context, listen: false).user!.username == null;
     if (isNewUser) {
       Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
+    } else {
+      _setFCMToken();
     }
   }
 
@@ -27,6 +69,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       isNewUser();
     }
+
     super.initState();
   }
 

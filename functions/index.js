@@ -86,3 +86,15 @@ exports.isUsernameAvailable = functions.region("europe-west1").https.onCall(asyn
     error(e);
   }
 });
+
+exports.setFCMToken = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const token = data;
+    await db.collection("users").doc(context.auth.uid).update({
+      fcmToken: token,
+    });
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});

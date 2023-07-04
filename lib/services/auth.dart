@@ -179,6 +179,18 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> setFCMToken(String token) async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('setFCMToken');
+      final response = await callable.call(token);
+      print(response.data);
+      return response.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
   // Sign out
   Future<void> signOut() async {
     try {
