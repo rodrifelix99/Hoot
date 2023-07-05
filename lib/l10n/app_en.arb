@@ -115,9 +115,9 @@
   "@errorWrongPassword": {
     "description": "Wrong password message"
   },
-  "errorUserNotFound": "User not found",
+  "errorUserNotFound": "Email or password incorrect",
   "@errorUserNotFound": {
-    "description": "User not found message"
+    "description": "Email or password incorrect message"
   },
   "errorUnknown": "Unknown error occurred",
   "@errorUnknown": {
@@ -182,6 +182,10 @@
   "@feed": {
     "description": "Feed label"
   },
+  "myFeeds": "My Feeds",
+  "@myFeeds": {
+    "description": "My Feeds label"
+  },
   "search": "Search",
   "@search": {
     "description": "Search label"
@@ -229,5 +233,9 @@
   "somethingWentWrong": "Something went wrong, please try again later",
   "@somethingWentWrong": {
     "description": "Something went wrong message"
+  },
+  "imageTooLarge": "Image too large, please choose a smaller one",
+  "@imageTooLarge": {
+    "description": "Image too large message"
   }
 }

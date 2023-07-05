@@ -177,6 +177,13 @@ class _SecondScreenState extends State<SecondScreen> {
         }
       } else {
         print('User is null');
+        setState(() {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.somethingWentWrong),
+            ),
+          );
+        });
       }
     }
   }
@@ -224,7 +231,7 @@ class _SecondScreenState extends State<SecondScreen> {
             const SizedBox(width: 20),
             IconButton(
               onPressed: _isNameValid() ? () => _onSubmit() : null,
-              icon: Icon(Icons.arrow_right_alt_rounded, color: Theme.of(context).colorScheme.onPrimary),
+              icon: Icon(Icons.arrow_right_rounded, color: Theme.of(context).colorScheme.onPrimary),
               style: ElevatedButton.styleFrom(
                 shape: const CircleBorder(),
                 backgroundColor: Theme.of(context).colorScheme.primary,
@@ -264,7 +271,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
   bool _loading = false;
 
   bool _isValid() {
-    return _usernameController.text.isNotEmpty && _usernameController.text.length >= 6 && _usernameController.text.length <= 20 && !_usernameController.text.contains("@");
+    return _usernameController.text.isNotEmpty && _usernameController.text.length >= 6 && _usernameController.text.length <= 15 && !_usernameController.text.contains("@");
   }
 
   Future _onSubmit() async {
@@ -335,16 +342,43 @@ class _ThirdScreenState extends State<ThirdScreen> {
         const SizedBox(height: 16),
         _loading ? const Center(
           child: CircularProgressIndicator(),
-        ) : TextField(
-          controller: _usernameController,
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.done,
-          maxLength: 20,
-          onChanged: (value) => setState(() => _usernameController.text.contains("@") ? _usernameController.text = _usernameController.text.replaceAll("@", "") : null),
-          onSubmitted: (value) => _onSubmit(),
-          decoration: InputDecoration(
-            labelText: AppLocalizations.of(context)!.username,
-          ),
+        ) : Row(
+          children: [
+            IconButton(
+              onPressed: widget.controller.previous,
+              icon: Icon(Icons.arrow_left_rounded, color: Theme.of(context).colorScheme.onPrimary),
+              style: ElevatedButton.styleFrom(
+                shape: const CircleBorder(),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                padding: const EdgeInsets.all(16),
+              ),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: TextField(
+                controller: _usernameController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                maxLength: 15,
+                onChanged: (value) => setState(() => _usernameController.text.contains("@") ? _usernameController.text = _usernameController.text.replaceAll("@", "") : null),
+                onSubmitted: (value) => _onSubmit(),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.username,
+                  counter: const SizedBox(),
+                ),
+              ),
+            ),
+            const SizedBox(width: 20),
+            IconButton(
+              onPressed: _isValid() ? () => _onSubmit() : null,
+              icon: Icon(Icons.arrow_right_rounded, color: Theme.of(context).colorScheme.onPrimary),
+              style: ElevatedButton.styleFrom(
+                shape: const CircleBorder(),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                padding: const EdgeInsets.all(16),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 5),
         _isValid() || _usernameController.text.isEmpty ? Text(
@@ -378,10 +412,17 @@ class _FourthScreenState extends State<FourthScreen> {
 
   void _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
+    if (pickedFile != null && pickedFile.path.isNotEmpty && pickedFile.path.length <= 1000000) {
       setState(() {
         _selectedImage = File(pickedFile.path);
       });
+    } else if (pickedFile != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.imageTooLarge),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
     }
   }
 

@@ -14,6 +14,7 @@ class UserSuggestions extends StatefulWidget {
 
 class _UserSuggestionsState extends State<UserSuggestions> {
   List<U> _users = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -22,13 +23,16 @@ class _UserSuggestionsState extends State<UserSuggestions> {
   }
 
   Future _loadUsers() async {
+    setState(() => _isLoading = true);
     List<U> users = await Provider.of<AuthProvider>(context, listen: false).getSuggestions();
     if (users.isNotEmpty) {
       setState(() {
+        _isLoading = false;
         _users = users;
       });
     } else {
       setState(() {
+        _isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("No users found to suggest"),
@@ -41,12 +45,12 @@ class _UserSuggestionsState extends State<UserSuggestions> {
 
   @override
   Widget build(BuildContext context) {
-    return _users.isEmpty
+    return _users.isEmpty && !_isLoading
         ? const SizedBox()
         : SizedBox(
       height: 110,
       width: double.infinity,
-      child: ListView.builder(
+      child: _isLoading ? const Center(child: CircularProgressIndicator()) : ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         scrollDirection: Axis.horizontal,
         itemCount: _users.length,

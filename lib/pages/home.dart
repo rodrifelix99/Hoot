@@ -1,11 +1,13 @@
-import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:animations/animations.dart';
-import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:hoot/components/avatar.dart';
 import 'package:hoot/pages/feed.dart';
 import 'package:hoot/pages/notifications.dart';
 import 'package:hoot/pages/profile.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
 import '../services/auth.dart';
@@ -69,23 +71,6 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
   }
 
-  String _appBarText() {
-    if (_pageController.hasClients) {
-      switch (_pageController.page!.round()) {
-        case 0:
-          return 'Home';
-        case 1:
-          return 'Notifications';
-        case 2:
-          return 'Profile';
-        default:
-          return 'Hoot';
-      }
-    } else {
-      return 'Hoot';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,10 +78,10 @@ class _HomePageState extends State<HomePage> {
         duration: const Duration(milliseconds: 300),
         reverse: false,
         transitionBuilder: (
-          Widget child,
-          Animation<double> animation,
-          Animation<double> secondaryAnimation,
-        ) {
+            Widget child,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            ) {
           return SharedAxisTransition(
             child: child,
             animation: animation,
@@ -120,28 +105,47 @@ class _HomePageState extends State<HomePage> {
       ),
       extendBody: true,
       floatingActionButton: (_pageController.hasClients && _pageController.page!.round() == 0) || !_pageController.hasClients ?
-        FloatingActionButton(
+      FloatingActionButton(
         onPressed: () => Navigator.of(context).pushNamed('/create'),
         child: const Icon(Icons.add_rounded),
       ) : const SizedBox(),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (i) => setState(() {
+      bottomNavigationBar: GNav(
+        onTabChange: (i) => setState(() {
           _pageController.jumpToPage(i);
         }),
-        currentIndex: _pageController.hasClients ? _pageController.page!.round() : 0,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.feed_rounded),
-            label: AppLocalizations.of(context)!.feed,
+        selectedIndex: _pageController.hasClients ? _pageController.page!.round() : 0,
+        haptic: true,
+        gap: 8,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        tabBackgroundColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+        activeColor: Theme.of(context).colorScheme.onSurface,
+        tabMargin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        tabs: [
+          GButton(
+              icon: LineIcons.home,
+              text: AppLocalizations.of(context)!.myFeeds,
+              padding: const EdgeInsets.all(16)
           ),
-          BottomNavigationBarItem(
-              icon: const Icon(Icons.notifications_rounded),
-              label: AppLocalizations.of(context)!.notifications
+          GButton(
+              icon: LineIcons.bell,
+              text: AppLocalizations.of(context)!.notifications,
+              leading: Badge(
+                label: Text('3'),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                textColor: Theme.of(context).colorScheme.onPrimary,
+                child: Icon(
+                  LineIcons.bell,
+                ),
+              ),
+              padding: const EdgeInsets.all(16)
           ),
-          BottomNavigationBarItem(
-              icon: const Icon(Icons.person_rounded),
-              label: AppLocalizations.of(context)!.profile
-          )
+          GButton(
+            leading: Provider.of<AuthProvider>(context).user?.smallProfilePictureUrl != null ?
+            ProfileAvatar(image: Provider.of<AuthProvider>(context).user!.smallProfilePictureUrl ?? '', size: 24) : null,
+              icon: LineIcons.user,
+              text: AppLocalizations.of(context)!.profile,
+              padding: const EdgeInsets.all(16)
+          ),
         ],
       ),
     );

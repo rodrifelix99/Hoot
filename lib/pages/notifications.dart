@@ -15,8 +15,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.notifications),
       ),
-      body: const Center(
-        child: Text('In the future, this page will show notifications'),
+      body: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Center(
+          child: Text('In the future, this page will show notifications. The 3 unread notifications are just for show.', textAlign: TextAlign.center),
+        ),
       ),
     );
   }

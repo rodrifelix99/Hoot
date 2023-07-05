@@ -66,6 +66,8 @@ class AuthProvider extends ChangeNotifier {
       if (userCredential.user == null) {
         return "unknown-error";
       } else if (userCredential.additionalUserInfo!.isNewUser) {
+        _user = U(uid: 'HOOT-IS-AWESOME');
+        notifyListeners();
         return "new-user";
       } else {
         _user = await getUserInfo();
@@ -205,16 +207,6 @@ class AuthProvider extends ChangeNotifier {
       await _auth.signOut();
       _user = null;
       notifyListeners();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  Future sendTestNotification(String token) async {
-    try {
-      HttpsCallable callable = _functions.httpsCallable('sendTestNotification');
-      final response = await callable.call(token);
-      print(response.data);
     } catch (e) {
       print(e.toString());
     }
