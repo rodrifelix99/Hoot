@@ -2,13 +2,16 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:hoot/models/user.dart';
 import 'package:hoot/pages/create_post.dart';
 import 'package:hoot/pages/home.dart';
+import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/sign_in.dart';
 import 'package:hoot/pages/sign_up.dart';
 import 'package:hoot/pages/terms.dart';
 import 'package:hoot/pages/welcome.dart';
 import 'package:hoot/services/auth.dart';
+import 'package:hoot/services/feed_provider.dart';
 import 'package:hoot/theme/theme.dart';
 import 'firebase_options.dart';
 import 'package:hoot/pages/login.dart';
@@ -38,8 +41,11 @@ Future<void> main() async {
   );
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => AuthProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => FeedProvider()),
+      ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {
           return MaterialApp(
@@ -73,7 +79,15 @@ Future<void> main() async {
                 case '/welcome':
                   return MaterialPageRoute(builder: (context) => WelcomePage());
                 case '/create':
-                  return MaterialPageRoute(builder: (context) => CreatePostPage());
+                  return MaterialPageRoute(
+                    builder: (context) {
+                      final feedProvider = Provider.of<FeedProvider>(context, listen: false);
+                      return CreatePostPage(feedProvider: feedProvider);
+                    },
+                  );
+                case '/profile':
+                  final U user = settings.arguments as U;
+                  return MaterialPageRoute(builder: (context) => ProfilePage(user: user));
                 default:
                   return MaterialPageRoute(builder: (context) => HomePage());
               }

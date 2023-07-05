@@ -82,6 +82,9 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   ElevatedButton(
                       onPressed: () => Navigator.pushNamed(context, '/signup'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                      ),
                       child: Text(
                           AppLocalizations.of(context)!.createMyAccount,
                           style: const TextStyle(color: Colors.black)

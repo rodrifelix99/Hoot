@@ -15,6 +15,56 @@ admin.initializeApp();
 // Get a reference to the Firestore database
 const db = admin.firestore();
 
+/**
+ * Retrieves user data from the database.
+ * @param {string} uid - The user ID.
+ * @param {boolean} [addFollowers=true] - Indicates whether to include follower information. Default is true.
+ * @param {object} [built=null] - An optional pre-built user object.
+ * @return {Promise<object|null>} A promise that resolves with the user data or null if the user doesn't exist.
+ */
+async function getUserObject(uid, addFollowers = true, built = null) {
+  try {
+    if (!!built) {
+      const user = built;
+      user.uid = uid;
+      user.followers = [];
+      user.following = [];
+      const followers = await db.collection("users").doc(uid).collection("followers").get() || [];
+      for (const follower of followers.docs) {
+        user.followers.push(follower.id);
+      }
+      const following = await db.collection("users").doc(uid).collection("following").get() || [];
+      for (const follow of following.docs) {
+        user.following.push(follow.id);
+      }
+      return user;
+    } else {
+      const doc = await db.collection("users").doc(uid).get();
+      if (doc.exists) {
+        const user = doc.data();
+        user.uid = doc.id;
+        if (addFollowers) {
+          user.followers = [];
+          user.following = [];
+          const followers = await db.collection("users").doc(uid).collection("followers").get() || [];
+          for (const follower of followers.docs) {
+            user.followers.push(follower.id);
+          }
+          const following = await db.collection("users").doc(uid).collection("following").get() || [];
+          for (const follow of following.docs) {
+            user.following.push(follow.id);
+          }
+        }
+        return user;
+      } else {
+        return null;
+      }
+    }
+  } catch (e) {
+    error(e);
+  }
+}
+
 exports.createUserDocument = functions.region("europe-west1").auth.user().onCreate(async (user) => {
   try {
     // Create a document for the new user in Firestore
@@ -221,10 +271,12 @@ exports.getFeed = functions.region("europe-west1").https.onCall(async (data, con
       const postData = post.data();
       postData.id = post.id;
       if (!cashedUsers[post.data().user.id]) {
-        cashedUsers[post.data().user.id] = await db.collection("users").doc(post.data().user.id).get();
+        cashedUsers[post.data().user.id] = await getUserObject(post.data().user.id);
       }
-      postData.user = cashedUsers[post.data().user.id].data();
-      postData.user.uid = cashedUsers[post.data().user.id].id;
+      if (cashedUsers[post.data().user.id].username === "") {
+        continue;
+      }
+      postData.user = cashedUsers[post.data().user.id];
       const likesSnapshot = await db.collection("users").doc(context.auth.uid).collection("feed").doc(post.id).collection("likes").get();
       const commentsSnapshot = await db.collection("users").doc(context.auth.uid).collection("feed").doc(post.id).collection("comments").get();
       postData.likes = likesSnapshot.size > 0 ? likesSnapshot.docs.map((doc) => doc.data().user.id) || [] : [];
@@ -319,14 +371,20 @@ exports.getSuggestedUsers = functions.region("europe-west1").https.onCall(async 
       const users = await db.collection("users").where("id", "not-in", [...following, uid]).limit(10).get();
       const data = [];
       for (const doc of users.docs) {
-        data.push(doc.data());
+        const user = await getUserObject(doc.id, true, doc.data());
+        data.push(user);
       }
       return data;
     } else {
-      const users = await db.collection("users").where("id", "!=", uid).limit(10).get();
+      // get 10 users where the document id is not equal to the current user's id, must have a username and limit to 10
+      const users = await db.collection("users").where("username", "!=", "").limit(10).get();
       const data = [];
       for (const doc of users.docs) {
-        data.push(doc.data());
+        if (doc.id === uid) {
+          continue;
+        }
+        const user = await getUserObject(doc.id, true, doc.data());
+        data.push(user);
       }
       return data;
     }

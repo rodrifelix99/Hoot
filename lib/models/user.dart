@@ -10,15 +10,27 @@ class U {
   String? location;
   String? website;
   DateTime? birthday;
+  List<String?> followers = [];
+  List<String?> following = [];
 
-  U({required this.uid, this.name, this.username, this.smallProfilePictureUrl, this.largeProfilePictureUrl, this.bio, this.location, this.website, this.birthday});
+  U({
+    required this.uid,
+    this.name, this.username,
+    this.smallProfilePictureUrl,
+    this.largeProfilePictureUrl,
+    this.bio, this.location,
+    this.website,
+    this.birthday,
+    this.followers = const [],
+    this.following = const [],
+  });
 
   @override
   String toString() {
     return 'User $uid';
   }
 
-  static fromJson(Map<String, dynamic> json) {
+  factory U.fromJson(Map<String, dynamic> json) {
     return U(
       uid: json['uid'],
       name: json['displayName'],
@@ -29,6 +41,8 @@ class U {
       location: json['location'],
       website: json['website'],
       birthday: json['birthday'],
+      followers: json['followers'] != null ? List<String>.from(json['followers']) : [],
+      following: json['following'] != null ? List<String>.from(json['following']) : [],
     );
   }
 

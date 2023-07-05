@@ -58,6 +58,7 @@ dependencies:
   animated_notch_bottom_bar: ^1.0.0
   full_screen_image_null_safe: ^2.0.0
   cloud_firestore: ^4.8.2
+  animations: ^2.0.7
 
 dev_dependencies:
   flutter_test:

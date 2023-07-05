@@ -22,13 +22,12 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
         backgroundColor: Colors.black,
         child: Hero(
           tag: widget.image + widget.url + widget.size.toString(),
-          child: OctoImage(
-            image: NetworkImage(widget.image),
-            placeholderBuilder: OctoPlaceholder.blurHash(
-              'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+          child: OctoImage.fromSet(
+            image: widget.image.isEmpty ? const NetworkImage('none') : NetworkImage(widget.image),
+            octoSet: OctoSet.circleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              text: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: 50),
             ),
-            imageBuilder: OctoImageTransformer.circleAvatar(),
-            errorBuilder: OctoError.icon(color: Colors.red),
             fit: BoxFit.cover,
             height: widget.size.toDouble(),
             width: widget.size.toDouble(),
@@ -36,18 +35,15 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
         ),
       );
     } else {
-      return GestureDetector(
-        onTap: () { },
-        child: OctoImage.fromSet(
-          image: NetworkImage(widget.image),
-          octoSet: OctoSet.circleAvatar(
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              text: Icon(Icons.person, color: Theme.of(context).colorScheme.primary, size: 50),
-          ),
-          fit: BoxFit.cover,
-          height: widget.size.toDouble(),
-          width: widget.size.toDouble(),
+      return OctoImage.fromSet(
+        image: widget.image.isEmpty ? const NetworkImage('none') : NetworkImage(widget.image),
+        octoSet: OctoSet.circleAvatar(
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            text: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: 50),
         ),
+        fit: BoxFit.cover,
+        height: widget.size.toDouble(),
+        width: widget.size.toDouble(),
       );
     }
   }

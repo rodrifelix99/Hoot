@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth.dart';
 
 class FollowButton extends StatefulWidget {
@@ -42,6 +42,7 @@ class _FollowButtonState extends State<FollowButton> {
     bool res = await Provider.of<AuthProvider>(context, listen: false).follow(widget.userId);
     if (!res) {
       setState(() {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.errorFollow)));
         _isFollowing = false;
       });
     }
@@ -54,6 +55,7 @@ class _FollowButtonState extends State<FollowButton> {
     bool res = await Provider.of<AuthProvider>(context, listen: false).unfollow(widget.userId);
     if (!res) {
       setState(() {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.errorUnfollow)));
         _isFollowing = true;
       });
     }
@@ -65,7 +67,7 @@ class _FollowButtonState extends State<FollowButton> {
         ? const Center(child: CircularProgressIndicator())
         : ElevatedButton(
       onPressed: _isFollowing ? _unfollow : _follow,
-      child: Text(_isFollowing ? 'Unfollow' : 'Follow'),
+      child: Text(_isFollowing ? AppLocalizations.of(context)!.unfollow : AppLocalizations.of(context)!.follow),
     );
   }
 }

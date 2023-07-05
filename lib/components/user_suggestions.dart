@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoot/components/avatar.dart';
 import 'package:hoot/services/auth.dart';
 import 'package:provider/provider.dart';
 
@@ -40,10 +41,13 @@ class _UserSuggestionsState extends State<UserSuggestions> {
 
   @override
   Widget build(BuildContext context) {
-    // horizontal list view of all user avatars
-    return _users.isEmpty ? const SizedBox() : SizedBox(
-      height: 100,
+    return _users.isEmpty
+        ? const SizedBox()
+        : SizedBox(
+      height: 110,
+      width: double.infinity,
       child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         scrollDirection: Axis.horizontal,
         itemCount: _users.length,
         itemBuilder: (BuildContext context, int index) {
@@ -55,12 +59,13 @@ class _UserSuggestionsState extends State<UserSuggestions> {
                   onTap: () {
                     Navigator.of(context).pushNamed('/profile', arguments: _users[index]);
                   },
-                  child: CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(_users[index].smallProfilePictureUrl!),
+                  child: ProfileAvatar(
+                    image: _users[index].smallProfilePictureUrl ?? '',
+                    size: 60,
                   ),
                 ),
-                Text(_users[index].username!),
+                const SizedBox(height: 5),
+                Text("@${_users[index].username!}", style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           );

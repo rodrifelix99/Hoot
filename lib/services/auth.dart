@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -93,6 +95,8 @@ class AuthProvider extends ChangeNotifier {
         print('User is null');
         return false;
       } else if (userCredential.additionalUserInfo!.isNewUser) {
+        _user = U(uid: 'HOOT-IS-AWESOME');
+        notifyListeners();
         return true;
       } else {
         _user = await getUserInfo();
@@ -117,6 +121,8 @@ class AuthProvider extends ChangeNotifier {
         notifyListeners();
         return "success";
       } else if (userCredential.additionalUserInfo!.isNewUser || userCredential.user!.displayName == null) {
+        _user = U(uid: 'HOOT-IS-AWESOME');
+        notifyListeners();
         return "new-user";
       } else {
         return "unknown-error";
@@ -136,6 +142,8 @@ class AuthProvider extends ChangeNotifier {
       );
 
       if (userCredential.user != null) {
+        _user = U(uid: 'HOOT-IS-AWESOME');
+        notifyListeners();
         return "success";
       } else {
         return "unknown-error";
@@ -216,8 +224,14 @@ class AuthProvider extends ChangeNotifier {
     try {
       HttpsCallable callable = _functions.httpsCallable('getSuggestedUsers');
       final response = await callable.call();
-      final json = response.data;
-      return List<U>.from(json.map((model) => U.fromJson(model)));
+      final data = response.data;
+
+      if (data != null && data is List) {
+        final List<U> users = data.map<U>((user) => U.fromJson(Map<String, dynamic>.from(user))).toList();
+        return users;
+      } else {
+        return [];
+      }
     } catch (e) {
       print(e.toString());
       return [];

@@ -21,7 +21,7 @@ class _PostComponentState extends State<PostComponent> {
         children: [
           Row(
             children: [
-              ProfileAvatar(image: widget.post.user!.smallProfilePictureUrl!, size: 50),
+              ProfileAvatar(image: widget.post.user!.smallProfilePictureUrl ?? '', size: 50),
               const SizedBox(width: 10),
               Text(
                 widget.post.user!.name!,

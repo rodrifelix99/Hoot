@@ -154,19 +154,15 @@ class _SignInPageState extends State<SignInPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _isLoading ?
                   ElevatedButton(
-                    onPressed: () {},
-                    child: const Icon(Icons.cloud_circle),
-                  ) : ElevatedButton(
-                    onPressed: _signInWithEmailAndPassword,
+                    onPressed: _isValid() && !_isLoading ? _signInWithEmailAndPassword : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _isValid() ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                      backgroundColor: _isValid() ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.primary.withOpacity(0.5),
                     ),
-                    child: Text(
+                    child: !_isLoading ? Text(
                         AppLocalizations.of(context)!.signIn,
                         style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)
-                    ),
+                    ) : CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary),
                   ),
                   const SizedBox(height: 8),
                   SignInWithAppleButton()

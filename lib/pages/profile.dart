@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:hoot/services/auth.dart';
 import 'package:hoot/models/user.dart';
 import 'package:octo_image/octo_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfilePage extends StatefulWidget {
   U? user;
@@ -34,13 +35,13 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text(_isCurrentUser ? AppLocalizations.of(context)!.profile : _user.name!),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 20),
-            ProfileAvatar(image: _user.largeProfilePictureUrl!, size: 150),
+            ProfileAvatar(image: _user.largeProfilePictureUrl ?? '', size: 150, preview: true),
             const SizedBox(height: 20),
             Text(
               _user.name!,
@@ -60,8 +61,8 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 20),
             _isCurrentUser ? ElevatedButton(
               onPressed: _signOut,
-              child: const Text('Sign Out'),
-            ) : FollowButton(userId: _user.uid)
+              child: Text(AppLocalizations.of(context)!.signOut),
+            ) : FollowButton(isFollowing: _user.followers.contains(Provider.of<AuthProvider>(context, listen: false).user!.uid)),
           ],
         ),
       )

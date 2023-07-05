@@ -171,11 +171,63 @@
     "description": "Skip button"
   },
   "skipForNow": "Skip for now",
-    "@skipForNow": {
-        "description": "Skip for now button"
-    },
+  "@skipForNow": {
+    "description": "Skip for now button"
+  },
   "continueButton": "Continue",
-    "@continueButton": {
-        "description": "Continue button"
-    }
+  "@continueButton": {
+    "description": "Continue button"
+  },
+  "feed": "Feed",
+  "@feed": {
+    "description": "Feed label"
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Search label"
+  },
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Notifications label"
+  },
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile label"
+  },
+  "follow": "Follow",
+  "@follow": {
+    "description": "Follow button"
+  },
+  "unfollow": "Unfollow",
+  "@unfollow": {
+    "description": "Unfollow button"
+  },
+  "errorFollow": "Error following user",
+  "@errorFollow": {
+    "description": "Error following user message"
+  },
+  "errorUnfollow": "Error unfollowing user",
+  "@errorUnfollow": {
+    "description": "Error unfollowing user message"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings label"
+  },
+  "createPost": "Make a Hoot",
+  "@createPost": {
+    "description": "Create post label"
+  },
+  "postPlaceholder": "What's on your mind?",
+  "@hootTextField": {
+    "description": "What's on your mind? label"
+  },
+  "publish": "Publish",
+  "@publish": {
+    "description": "Publish button"
+  },
+  "somethingWentWrong": "Something went wrong, please try again later",
+  "@somethingWentWrong": {
+    "description": "Something went wrong message"
+  }
 }

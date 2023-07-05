@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CreatePostPage extends StatefulWidget {
-  const CreatePostPage({super.key});
+  FeedProvider feedProvider;
+  CreatePostPage({super.key, required this.feedProvider});
 
   @override
   State<CreatePostPage> createState() => _CreatePostPageState();
@@ -19,15 +21,15 @@ class _CreatePostPageState extends State<CreatePostPage> {
     String text = _textEditingController.text;
     if (_isValid()) {
       setState(() => _isLoading = true);
-      bool code = await Provider.of<FeedProvider>(context, listen: false).createPost(text: text);
+      bool code = await widget.feedProvider.createPost(text: text);
       if (code) {
         Navigator.pop(context);
       } else {
         setState(() {
           _isLoading = false;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Something went wrong. Please try again later.'),
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.somethingWentWrong),
             ),
           );
         });
@@ -39,7 +41,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Make a Hoot'),
+        title: Text(AppLocalizations.of(context)!.createPost),
       ),
       body: _isLoading ? const Center(child: CircularProgressIndicator()) :
       Column(
@@ -48,8 +50,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
           TextField(
             controller: _textEditingController,
             onChanged: (value) => setState(() {}),
-            decoration: const InputDecoration(
-              hintText: 'What\'s on your mind?',
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.postPlaceholder,
               contentPadding: EdgeInsets.all(20),
             ),
             maxLines: 5,
@@ -57,7 +59,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _isValid() ? _createPost : null,
-            child: const Text('Create Post'),
+            child: Text(AppLocalizations.of(context)!.publish),
           )
         ],
       ),

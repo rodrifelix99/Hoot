@@ -83,7 +83,11 @@ class _WelcomePageState extends State<WelcomePage> {
           },
           itemCount: screens.length,
           pagination: SwiperPagination(
-            margin: EdgeInsets.only(bottom: 50), // Add bottom margin to the dots
+            margin: const EdgeInsets.only(bottom: 50),
+            builder: DotSwiperPaginationBuilder(
+              color: Colors.white,
+              activeColor: Theme.of(context).colorScheme.primary,
+            ),
           ),
         )
     );
@@ -198,18 +202,36 @@ class _SecondScreenState extends State<SecondScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        TextField(
-          controller: _nameController,
-          autocorrect: true,
-          keyboardType: TextInputType.name,
-          textCapitalization: TextCapitalization.words,
-          textInputAction: TextInputAction.next,
-          maxLength: 30,
-          onChanged: (value) => setState(() {}),
-          onSubmitted: (value) => _onSubmit(),
-          decoration: InputDecoration(
-            labelText: AppLocalizations.of(context)!.displayName,
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _nameController,
+                autocorrect: true,
+                keyboardType: TextInputType.name,
+                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.next,
+                maxLength: 30,
+                onChanged: (value) => setState(() {}),
+                onSubmitted: (value) => _onSubmit(),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.displayName,
+                  counter: const SizedBox(),
+                ),
+              ),
+            ),
+            const SizedBox(width: 20),
+            IconButton(
+              onPressed: _isNameValid() ? () => _onSubmit() : null,
+              icon: Icon(Icons.arrow_right_alt_rounded, color: Theme.of(context).colorScheme.onPrimary),
+              style: ElevatedButton.styleFrom(
+                shape: const CircleBorder(),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                padding: const EdgeInsets.all(16),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 5),
         _isNameValid() || _nameController.text.isEmpty ? Text(

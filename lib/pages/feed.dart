@@ -3,7 +3,7 @@ import 'package:hoot/components/user_suggestions.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../components/post_component.dart';
 
 class FeedPage extends StatefulWidget {
@@ -40,7 +40,7 @@ class _FeedPageState extends State<FeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Feed'),
+        title: Text(AppLocalizations.of(context)!.feed),
       ),
       body: _isLoading ? const Center(child: CircularProgressIndicator()) : SingleChildScrollView(
           child: Column(
