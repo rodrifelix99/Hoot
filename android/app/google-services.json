@@ -48,6 +48,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038917266721:android:4b1fad63323d27c2a46260",
+        "android_client_info": {
+          "package_name": "com.hoot.app.nonic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038917266721-a68jbpa85uja88hd7tdt981r96dal44m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKuNJ1wll_uJZQStZoqVoNtMpguLXqBbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038917266721-a68jbpa85uja88hd7tdt981r96dal44m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1038917266721-bt8q5uhgll2tv5ksju28rdbjb0ksvcnn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hoot.app.hoot"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
