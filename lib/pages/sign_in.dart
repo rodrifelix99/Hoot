@@ -45,7 +45,7 @@ class _SignInPageState extends State<SignInPage> {
           error = AppLocalizations.of(context)!.errorWrongPassword;
           break;
         default:
-          error = AppLocalizations.of(context)!.errorUnknown;
+          error = code;
           break;
       }
       ToastService.showToast(context, error, true);

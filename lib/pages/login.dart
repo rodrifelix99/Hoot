@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:octo_image/octo_image.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -10,6 +11,20 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String version = "";
+
+  Future _loadVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      version = "${packageInfo.version} (${packageInfo.buildNumber})";
+    });
+  }
+
+  @override
+  void initState() {
+    _loadVersion();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +57,8 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                     ),
                   ),
-                  const Text("Beta - Please do not share",
-                    style: TextStyle(
+                  Text("Beta - $version",
+                    style: const TextStyle(
                       shadows: [
                         Shadow(
                           blurRadius: 10.0,
