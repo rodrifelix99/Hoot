@@ -4,8 +4,8 @@ import 'package:hoot/models/post.dart';
 import 'package:octo_image/octo_image.dart';
 
 class PostComponent extends StatefulWidget {
-  Post post;
-  PostComponent({super.key, required this.post});
+  final Post post;
+  const PostComponent({super.key, required this.post});
 
   @override
   State<PostComponent> createState() => _PostComponentState();

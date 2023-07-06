@@ -189,7 +189,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ) : CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary),
                     ),
                     const SizedBox(height: 8),
-                    SignInWithAppleButton(),
+                    const SignInWithAppleButton(),
                   ],
                 ),
               ),

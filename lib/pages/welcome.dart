@@ -96,8 +96,8 @@ class _WelcomePageState extends State<WelcomePage> {
 }
 
 class FirstScreen extends StatefulWidget {
-  SwiperController controller = SwiperController();
-  FirstScreen({super.key, required this.controller});
+  final SwiperController controller;
+  const FirstScreen({super.key, required this.controller});
 
   @override
   State<FirstScreen> createState() => _FirstScreenState();
@@ -144,8 +144,8 @@ class _FirstScreenState extends State<FirstScreen> {
 }
 
 class SecondScreen extends StatefulWidget {
-  SwiperController controller = SwiperController();
-  SecondScreen({super.key, required this.controller});
+  final SwiperController controller;
+  const SecondScreen({super.key, required this.controller});
 
   @override
   State<SecondScreen> createState() => _SecondScreenState();
@@ -252,8 +252,8 @@ class _SecondScreenState extends State<SecondScreen> {
 }
 
 class ThirdScreen extends StatefulWidget {
-  SwiperController controller = SwiperController();
-  ThirdScreen({super.key, required this.controller});
+  final SwiperController controller;
+  const ThirdScreen({super.key, required this.controller});
 
   @override
   State<ThirdScreen> createState() => _ThirdScreenState();
@@ -384,8 +384,8 @@ class _ThirdScreenState extends State<ThirdScreen> {
 }
 
 class FourthScreen extends StatefulWidget {
-  SwiperController controller = SwiperController();
-  FourthScreen({super.key, required this.controller});
+  final SwiperController controller;
+  const FourthScreen({super.key, required this.controller});
 
   @override
   State<FourthScreen> createState() => _FourthScreenState();

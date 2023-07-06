@@ -7,8 +7,8 @@ import 'package:hoot/models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfilePage extends StatefulWidget {
-  U? user;
-  ProfilePage({super.key, this.user});
+  final U? user;
+  const ProfilePage({super.key, this.user});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();

@@ -55,7 +55,7 @@ class _FeedPageState extends State<FeedPage> {
           child: Column(
             children: [
               const UserSuggestions(),
-              Divider(),
+              const Divider(),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
                 child: Center(

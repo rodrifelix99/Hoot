@@ -60,24 +60,24 @@ Future<void> main() async {
               Locale('en'), // English
             ],
             home: AnimatedSplashScreen(
-              nextScreen: authProvider.isSignedIn ? HomePage() : LoginPage(),
+              nextScreen: authProvider.isSignedIn ? const HomePage() : const LoginPage(),
               splash: Image.asset('assets/logo.png'),
               splashTransition: SplashTransition.fadeTransition,
             ),
             onGenerateRoute: (settings) {
               switch (settings.name) {
                 case '/login':
-                  return MaterialPageRoute(builder: (context) => LoginPage());
+                  return MaterialPageRoute(builder: (context) => const LoginPage());
                 case '/home':
-                  return MaterialPageRoute(builder: (context) => HomePage());
+                  return MaterialPageRoute(builder: (context) => const HomePage());
                 case '/signup':
-                  return MaterialPageRoute(builder: (context) => SignUpPage());
+                  return MaterialPageRoute(builder: (context) => const SignUpPage());
                 case '/signin':
-                  return MaterialPageRoute(builder: (context) => SignInPage());
+                  return MaterialPageRoute(builder: (context) => const SignInPage());
                 case '/terms_of_service':
-                  return MaterialPageRoute(builder: (context) => TermsOfService());
+                  return MaterialPageRoute(builder: (context) => const TermsOfService());
                 case '/welcome':
-                  return MaterialPageRoute(builder: (context) => WelcomePage());
+                  return MaterialPageRoute(builder: (context) => const WelcomePage());
                 case '/create':
                   return MaterialPageRoute(
                     builder: (context) {
@@ -89,7 +89,7 @@ Future<void> main() async {
                   final U user = settings.arguments as U;
                   return MaterialPageRoute(builder: (context) => ProfilePage(user: user));
                 default:
-                  return MaterialPageRoute(builder: (context) => HomePage());
+                  return MaterialPageRoute(builder: (context) => const HomePage());
               }
             },
           );

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_signin_button/button_list.dart';
-import 'package:flutter_signin_button/button_view.dart';
 import 'package:hoot/components/sign_in_with_apple.dart';
 import 'package:hoot/services/auth.dart';
 import 'package:provider/provider.dart';
@@ -83,7 +81,7 @@ class _SignInPageState extends State<SignInPage> {
                         ? Text(
                         AppLocalizations.of(context)!.emailInvalid,
                         textAlign: TextAlign.start,
-                        style: Theme.of(context).textTheme.caption?.copyWith(
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.error
                         )
                     )
@@ -104,7 +102,7 @@ class _SignInPageState extends State<SignInPage> {
                         ? Text(
                         AppLocalizations.of(context)!.passwordTooShort,
                         textAlign: TextAlign.start,
-                        style: Theme.of(context).textTheme.caption?.copyWith(
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.error
                         )
                     )
@@ -118,7 +116,7 @@ class _SignInPageState extends State<SignInPage> {
                         children: [
                           Text(
                             AppLocalizations.of(context)!.bySigningUpYouAgreeToOur,
-                            style: Theme.of(context).textTheme.caption?.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)
                             ),
                           ),
@@ -126,7 +124,7 @@ class _SignInPageState extends State<SignInPage> {
                               onPressed: () => Navigator.of(context).pushNamed('/terms_of_service'),
                               child: Text(
                                 AppLocalizations.of(context)!.termsOfService,
-                                style: Theme.of(context).textTheme.caption?.copyWith(
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                     color: Theme.of(context).colorScheme.primary
                                 ),
                               )
@@ -161,7 +159,7 @@ class _SignInPageState extends State<SignInPage> {
                     ) : CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary),
                   ),
                   const SizedBox(height: 8),
-                  SignInWithAppleButton()
+                  const SignInWithAppleButton()
                 ],
               ),
             ),

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CreatePostPage extends StatefulWidget {
-  FeedProvider feedProvider;
-  CreatePostPage({super.key, required this.feedProvider});
+  final FeedProvider feedProvider;
+  const CreatePostPage({super.key, required this.feedProvider});
 
   @override
   State<CreatePostPage> createState() => _CreatePostPageState();
@@ -49,7 +48,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
             onChanged: (value) => setState(() {}),
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context)!.postPlaceholder,
-              contentPadding: EdgeInsets.all(20),
+              contentPadding: const EdgeInsets.all(20),
             ),
             maxLines: 5,
           ),

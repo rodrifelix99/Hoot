@@ -15,7 +15,7 @@ import '../services/feed_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage();
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future isNewUser() async {
-    U? user = await Provider.of<AuthProvider>(context, listen: false).user;
+    U? user = Provider.of<AuthProvider>(context, listen: false).user;
     if (user != null) {
       if (user.username == null || user.username!.isEmpty) {
         await Navigator.of(context).pushNamed('/welcome');
@@ -82,10 +82,10 @@ class _HomePageState extends State<HomePage> {
             Animation<double> secondaryAnimation,
             ) {
           return SharedAxisTransition(
-            child: child,
             animation: animation,
             secondaryAnimation: secondaryAnimation,
             transitionType: SharedAxisTransitionType.horizontal,
+            child: child,
           );
         },
         child: PageView(

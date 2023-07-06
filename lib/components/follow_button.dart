@@ -4,9 +4,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth.dart';
 
 class FollowButton extends StatefulWidget {
-  String userId;
-  bool isFollowing;
-  FollowButton({super.key, this.userId = '', this.isFollowing = false});
+  final String userId;
+  final bool isFollowing;
+  const FollowButton({super.key, this.userId = '', this.isFollowing = false});
 
   @override
   State<FollowButton> createState() => _FollowButtonState();

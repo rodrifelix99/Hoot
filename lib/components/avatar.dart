@@ -3,11 +3,11 @@ import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:octo_image/octo_image.dart';
 
 class ProfileAvatar extends StatefulWidget {
-  String image;
-  int size;
-  bool preview;
-  String url;
-  ProfileAvatar({super.key, required this.image, required this.size, this.preview = false, this.url = ''});
+  final String image;
+  final int size;
+  final bool preview;
+  final String url;
+  const ProfileAvatar({super.key, required this.image, required this.size, this.preview = false, this.url = ''});
 
   @override
   State<ProfileAvatar> createState() => _ProfileAvatarState();
