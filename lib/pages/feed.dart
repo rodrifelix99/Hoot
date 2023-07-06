@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/user_suggestions.dart';
 import 'package:hoot/models/post.dart';
+import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../components/post_component.dart';
@@ -27,6 +29,7 @@ class _FeedPageState extends State<FeedPage> {
       });
     } catch (e) {
       print(e);
+      ToastService.showToast(context, e.toString(), true);
     }
   }
 
@@ -41,6 +44,12 @@ class _FeedPageState extends State<FeedPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.myFeeds),
+        actions: [
+          IconButton(
+            icon: const Icon(LineIcons.search),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: _isLoading ? const Center(child: CircularProgressIndicator()) : SingleChildScrollView(
           child: Column(
@@ -52,7 +61,7 @@ class _FeedPageState extends State<FeedPage> {
                 child: Center(
                   child: Text(
                       'Thank you for being a tester, you\'re awesome! \n\n'
-                      'My Feeds is a page where you can see all the feeds you subscribed to. '
+                      'My Feeds will be a page where you can see all the feeds you subscribed to. '
                       'It can be a feed created by your roommate for their aesthetic and kinda gay living room, or a feed created by your friend for their cat tips.\n\n'
                       'My goal is to make something that no other social media has done before, and I think this is it. I\'m excited to see what you think about it. '
                       'You can DM me @_felix_zinho_ on Twitter to share feedback and report bugs whenever you want\n\n'

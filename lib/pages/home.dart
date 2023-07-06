@@ -1,12 +1,12 @@
 import 'package:animations/animations.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hoot/components/avatar.dart';
 import 'package:hoot/pages/feed.dart';
 import 'package:hoot/pages/notifications.dart';
 import 'package:hoot/pages/profile.dart';
+import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
@@ -30,8 +30,7 @@ class _HomePageState extends State<HomePage> {
     if (fcmToken != null) {
       await Provider.of<AuthProvider>(context, listen: false).setFCMToken(fcmToken);
     }
-    FirebaseMessaging.instance.onTokenRefresh
-        .listen((fcmToken) async {
+    FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
       await Provider.of<AuthProvider>(context, listen: false).setFCMToken(fcmToken);
     });
   }
@@ -107,46 +106,49 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: (_pageController.hasClients && _pageController.page!.round() == 0) || !_pageController.hasClients ?
       FloatingActionButton(
         onPressed: () => Navigator.of(context).pushNamed('/create'),
-        child: const Icon(Icons.add_rounded),
+        child: const LineIcon(LineIcons.alternateFeather),
       ) : const SizedBox(),
-      bottomNavigationBar: GNav(
-        onTabChange: (i) => setState(() {
-          _pageController.jumpToPage(i);
-        }),
-        selectedIndex: _pageController.hasClients ? _pageController.page!.round() : 0,
-        haptic: true,
-        gap: 8,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        tabBackgroundColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-        activeColor: Theme.of(context).colorScheme.onSurface,
-        tabMargin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        tabs: [
-          GButton(
-              icon: LineIcons.home,
-              text: AppLocalizations.of(context)!.myFeeds,
-              padding: const EdgeInsets.all(16)
-          ),
-          GButton(
-              icon: LineIcons.bell,
-              text: AppLocalizations.of(context)!.notifications,
-              leading: Badge(
-                label: Text('3'),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                textColor: Theme.of(context).colorScheme.onPrimary,
-                child: Icon(
-                  LineIcons.bell,
+      bottomNavigationBar: SafeArea(
+        bottom: true,
+        child: GNav(
+          onTabChange: (i) => setState(() {
+            _pageController.jumpToPage(i);
+          }),
+          selectedIndex: _pageController.hasClients ? _pageController.page!.round() : 0,
+          haptic: true,
+          gap: 8,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          tabBackgroundColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+          activeColor: Theme.of(context).colorScheme.onSurface,
+          tabMargin: const EdgeInsets.all(16),
+          tabs: [
+            GButton(
+                icon: LineIcons.feather,
+                text: AppLocalizations.of(context)!.myFeeds,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+            ),
+            GButton(
+                icon: LineIcons.bell,
+                text: AppLocalizations.of(context)!.notifications,
+                leading: Badge(
+                  label: const Text('3'),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  textColor: Theme.of(context).colorScheme.onPrimary,
+                  child: const Icon(
+                    LineIcons.bell,
+                  ),
                 ),
-              ),
-              padding: const EdgeInsets.all(16)
-          ),
-          GButton(
-            leading: Provider.of<AuthProvider>(context).user?.smallProfilePictureUrl != null ?
-            ProfileAvatar(image: Provider.of<AuthProvider>(context).user!.smallProfilePictureUrl ?? '', size: 24) : null,
-              icon: LineIcons.user,
-              text: AppLocalizations.of(context)!.profile,
-              padding: const EdgeInsets.all(16)
-          ),
-        ],
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+            ),
+            GButton(
+              leading: Provider.of<AuthProvider>(context).user?.smallProfilePictureUrl != null ?
+              ProfileAvatar(image: Provider.of<AuthProvider>(context).user!.smallProfilePictureUrl ?? '', size: 24) : null,
+                icon: LineIcons.user,
+                text: AppLocalizations.of(context)!.profile,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+            ),
+          ],
+        ),
       ),
     );
   }

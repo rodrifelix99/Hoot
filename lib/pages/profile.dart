@@ -4,7 +4,6 @@ import 'package:hoot/components/follow_button.dart';
 import 'package:provider/provider.dart';
 import 'package:hoot/services/auth.dart';
 import 'package:hoot/models/user.dart';
-import 'package:octo_image/octo_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfilePage extends StatefulWidget {

@@ -26,7 +26,7 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
             image: widget.image.isEmpty ? const NetworkImage('none') : NetworkImage(widget.image),
             octoSet: OctoSet.circleAvatar(
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              text: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: 50),
+              text: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: widget.size.toDouble() / 2),
             ),
             fit: BoxFit.cover,
             height: widget.size.toDouble(),
@@ -39,7 +39,7 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
         image: widget.image.isEmpty ? const NetworkImage('none') : NetworkImage(widget.image),
         octoSet: OctoSet.circleAvatar(
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            text: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: 50),
+            text: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: widget.size.toDouble() / 2),
         ),
         fit: BoxFit.cover,
         height: widget.size.toDouble(),

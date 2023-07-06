@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hoot/services/error_service.dart';
 import 'package:provider/provider.dart';
 
 import '../components/sign_in_with_apple.dart';
@@ -56,12 +57,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
       setState(() {
         _isLoading = false;
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(errorMessage, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onError)),
-                backgroundColor: Theme.of(context).colorScheme.error
-            )
-        );
+        ToastService.showToast(context, errorMessage, true);
       });
     } else {
       Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);

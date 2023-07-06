@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/upload_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:octo_image/octo_image.dart';
@@ -168,21 +169,13 @@ class _SecondScreenState extends State<SecondScreen> {
         if (!response) {
           widget.controller.move(1, animation: true);
           setState(() {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.errorUnknown),
-              ),
-            );
+            ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
           });
         }
       } else {
         print('User is null');
         setState(() {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.somethingWentWrong),
-            ),
-          );
+          ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
         });
       }
     }
@@ -292,28 +285,20 @@ class _ThirdScreenState extends State<ThirdScreen> {
           if (!response) {
             widget.controller.move(2, animation: true);
             setState(() {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.errorUnknown),
-                ),
-              );
+              ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
             });
           }
         } else {
           print('User is null');
           setState(() {
             _loading = false;
+            ToastService.showToast(context, AppLocalizations.of(context)!.somethingWentWrong, true);
           });
         }
       } else {
         setState(() {
           _loading = false;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.usernameTaken),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
+          ToastService.showToast(context, AppLocalizations.of(context)!.usernameTaken, true);
         });
       }
     }
@@ -417,12 +402,7 @@ class _FourthScreenState extends State<FourthScreen> {
         _selectedImage = File(pickedFile.path);
       });
     } else if (pickedFile != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.imageTooLarge),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+      ToastService.showToast(context, AppLocalizations.of(context)!.imageTooLarge, true);
     }
   }
 
@@ -446,11 +426,7 @@ class _FourthScreenState extends State<FourthScreen> {
             Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
           } else {
             setState(() {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.errorUnknown),
-                ),
-              );
+              ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
             });
           }
         } else {
@@ -458,11 +434,7 @@ class _FourthScreenState extends State<FourthScreen> {
         }
       } else {
         setState(() {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.errorUnknown),
-            ),
-          );
+          ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
         });
       }
       setState(() {
@@ -470,11 +442,7 @@ class _FourthScreenState extends State<FourthScreen> {
       });
     } else {
       setState(() {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorUnknown),
-          ),
-        );
+        ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
       });
     }
   }

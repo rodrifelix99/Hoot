@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -27,11 +28,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
       } else {
         setState(() {
           _isLoading = false;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.somethingWentWrong),
-            ),
-          );
+          ToastService.showToast(context, AppLocalizations.of(context)!.somethingWentWrong, true);
         });
       }
     }

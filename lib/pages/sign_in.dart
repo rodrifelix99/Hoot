@@ -6,6 +6,8 @@ import 'package:hoot/components/sign_in_with_apple.dart';
 import 'package:hoot/services/auth.dart';
 import 'package:provider/provider.dart';
 
+import '../services/error_service.dart';
+
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
 
@@ -46,13 +48,7 @@ class _SignInPageState extends State<SignInPage> {
           error = AppLocalizations.of(context)!.errorUnknown;
           break;
       }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+      ToastService.showToast(context, error, true);
     } else if (code == "new-user") {
       Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
     } else {

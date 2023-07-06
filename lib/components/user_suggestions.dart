@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar.dart';
 import 'package:hoot/services/auth.dart';
+import 'package:hoot/services/error_service.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user.dart';
@@ -33,12 +34,7 @@ class _UserSuggestionsState extends State<UserSuggestions> {
     } else {
       setState(() {
         _isLoading = false;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("No users found to suggest"),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        ToastService.showToast(context, 'No users found', true);
       });
     }
   }
