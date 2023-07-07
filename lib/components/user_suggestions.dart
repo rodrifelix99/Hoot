@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar.dart';
-import 'package:hoot/services/auth.dart';
+import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:provider/provider.dart';
 

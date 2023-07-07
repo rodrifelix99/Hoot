@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar.dart';
 import 'package:hoot/components/follow_button.dart';
+import 'package:line_icons/line_icon.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:hoot/services/auth.dart';
+import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -26,8 +28,28 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future _signOut() async {
-    await Provider.of<AuthProvider>(context, listen: false).signOut();
-    Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+    // show confirmation dialog
+    bool? result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.signOut),
+        content: Text(AppLocalizations.of(context)!.signOutConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(AppLocalizations.of(context)!.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(AppLocalizations.of(context)!.signOut),
+          ),
+        ],
+      ),
+    );
+    if (result == true) {
+      await Provider.of<AuthProvider>(context, listen: false).signOut();
+      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+    }
   }
 
   @override
@@ -35,6 +57,12 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isCurrentUser ? AppLocalizations.of(context)!.profile : _user.name!),
+        actions: [
+          if (_isCurrentUser) IconButton(
+            onPressed: _signOut,
+            icon: const LineIcon(LineIcons.alternateSignOut),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -59,8 +87,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 20),
             _isCurrentUser ? ElevatedButton(
-              onPressed: _signOut,
-              child: Text(AppLocalizations.of(context)!.signOut),
+              onPressed: () => Navigator.of(context).pushNamed('/edit_profile'),
+              child: Text(AppLocalizations.of(context)!.editProfile),
             ) : FollowButton(isFollowing: _user.followers.contains(Provider.of<AuthProvider>(context, listen: false).user!.uid)),
           ],
         ),

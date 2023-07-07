@@ -237,5 +237,29 @@
   "imageTooLarge": "Image too large, please choose a smaller one",
   "@imageTooLarge": {
     "description": "Image too large message"
-  }
+  },
+  "editProfile": "Edit Profile",
+    "@editProfile": {
+        "description": "Edit Profile label"
+    },
+    "signOutConfirmation": "Are you sure you want to sign out?",
+    "@signOutConfirmation": {
+        "description": "Sign out confirmation message"
+    },
+    "cancel": "Cancel",
+    "@cancel": {
+        "description": "Cancel button"
+    },
+    "bio": "Bio",
+    "@bio": {
+        "description": "Bio label"
+    },
+    "done": "Done",
+    "@done": {
+        "description": "Done button"
+    },
+    "errorEditingProfile": "There was an error editing your profile",
+    "@errorEditingProfile": {
+        "description": "Error editing profile message"
+    }
 }

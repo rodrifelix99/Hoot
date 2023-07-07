@@ -6,7 +6,7 @@ import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../services/auth.dart';
+import '../services/auth_provider.dart';
 
 class SignInWithAppleButton extends StatefulWidget {
   const SignInWithAppleButton({super.key});

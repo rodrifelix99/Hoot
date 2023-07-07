@@ -179,7 +179,6 @@ class AuthProvider extends ChangeNotifier {
     try {
       HttpsCallable callable = _functions.httpsCallable('isUsernameAvailable');
       final response = await callable.call(username);
-      print(response.data);
       return response.data;
     } catch (e) {
       print(e.toString());
@@ -191,7 +190,6 @@ class AuthProvider extends ChangeNotifier {
     try {
       HttpsCallable callable = _functions.httpsCallable('setFCMToken');
       final response = await callable.call(token);
-      print(response.data);
       return response.data;
     } catch (e) {
       print(e.toString());

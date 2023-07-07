@@ -4,13 +4,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/pages/create_post.dart';
+import 'package:hoot/pages/edit_profile.dart';
 import 'package:hoot/pages/home.dart';
 import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/sign_in.dart';
 import 'package:hoot/pages/sign_up.dart';
 import 'package:hoot/pages/terms.dart';
 import 'package:hoot/pages/welcome.dart';
-import 'package:hoot/services/auth.dart';
+import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:hoot/theme/theme.dart';
 import 'firebase_options.dart';
@@ -60,24 +61,24 @@ Future<void> main() async {
               Locale('en'), // English
             ],
             home: AnimatedSplashScreen(
-              nextScreen: authProvider.isSignedIn ? const HomePage() : const LoginPage(),
+              nextScreen: authProvider.isSignedIn ? HomePage() : LoginPage(),
               splash: Image.asset('assets/logo.png'),
               splashTransition: SplashTransition.fadeTransition,
             ),
             onGenerateRoute: (settings) {
               switch (settings.name) {
                 case '/login':
-                  return MaterialPageRoute(builder: (context) => const LoginPage());
+                  return MaterialPageRoute(builder: (context) => LoginPage());
                 case '/home':
-                  return MaterialPageRoute(builder: (context) => const HomePage());
+                  return MaterialPageRoute(builder: (context) => HomePage());
                 case '/signup':
-                  return MaterialPageRoute(builder: (context) => const SignUpPage());
+                  return MaterialPageRoute(builder: (context) => SignUpPage());
                 case '/signin':
-                  return MaterialPageRoute(builder: (context) => const SignInPage());
+                  return MaterialPageRoute(builder: (context) => SignInPage());
                 case '/terms_of_service':
-                  return MaterialPageRoute(builder: (context) => const TermsOfService());
+                  return MaterialPageRoute(builder: (context) => TermsOfService());
                 case '/welcome':
-                  return MaterialPageRoute(builder: (context) => const WelcomePage());
+                  return MaterialPageRoute(builder: (context) => WelcomePage());
                 case '/create':
                   return MaterialPageRoute(
                     builder: (context) {
@@ -88,8 +89,10 @@ Future<void> main() async {
                 case '/profile':
                   final U user = settings.arguments as U;
                   return MaterialPageRoute(builder: (context) => ProfilePage(user: user));
+                  case '/edit_profile':
+                  return MaterialPageRoute(builder: (context) => EditProfilePage());
                 default:
-                  return MaterialPageRoute(builder: (context) => const HomePage());
+                  return MaterialPageRoute(builder: (context) => HomePage());
               }
             },
           );

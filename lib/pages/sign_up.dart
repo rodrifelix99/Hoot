@@ -4,7 +4,7 @@ import 'package:hoot/services/error_service.dart';
 import 'package:provider/provider.dart';
 
 import '../components/sign_in_with_apple.dart';
-import '../services/auth.dart';
+import '../services/auth_provider.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

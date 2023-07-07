@@ -11,7 +11,7 @@ import 'package:octo_image/octo_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-import '../services/auth.dart';
+import '../services/auth_provider.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});

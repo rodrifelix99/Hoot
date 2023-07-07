@@ -10,7 +10,7 @@ import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
-import '../services/auth.dart';
+import '../services/auth_provider.dart';
 import '../services/feed_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -108,46 +108,49 @@ class _HomePageState extends State<HomePage> {
         onPressed: () => Navigator.of(context).pushNamed('/create'),
         child: const LineIcon(LineIcons.alternateFeather),
       ) : const SizedBox(),
-      bottomNavigationBar: SafeArea(
-        bottom: true,
-        child: GNav(
-          onTabChange: (i) => setState(() {
-            _pageController.jumpToPage(i);
-          }),
-          selectedIndex: _pageController.hasClients ? _pageController.page!.round() : 0,
-          haptic: true,
-          gap: 8,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          tabBackgroundColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-          activeColor: Theme.of(context).colorScheme.onSurface,
-          tabMargin: const EdgeInsets.all(16),
-          tabs: [
-            GButton(
-                icon: LineIcons.feather,
-                text: AppLocalizations.of(context)!.myFeeds,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
-            ),
-            GButton(
-                icon: LineIcons.bell,
-                text: AppLocalizations.of(context)!.notifications,
-                leading: Badge(
-                  label: const Text('3'),
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  textColor: Theme.of(context).colorScheme.onPrimary,
-                  child: const Icon(
-                    LineIcons.bell,
+      bottomNavigationBar: Container(
+        color: Theme.of(context).colorScheme.surface,
+        child: SafeArea(
+          bottom: true,
+          child: GNav(
+            onTabChange: (i) => setState(() {
+              _pageController.jumpToPage(i);
+            }),
+            selectedIndex: _pageController.hasClients ? _pageController.page!.round() : 0,
+            haptic: true,
+            gap: 8,
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            tabBackgroundColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+            activeColor: Theme.of(context).colorScheme.onSurface,
+            tabMargin: const EdgeInsets.all(16),
+            tabs: [
+              GButton(
+                  icon: LineIcons.feather,
+                  text: AppLocalizations.of(context)!.myFeeds,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+              ),
+              GButton(
+                  icon: LineIcons.bell,
+                  text: AppLocalizations.of(context)!.notifications,
+                  leading: Badge(
+                    label: const Text('3'),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    textColor: Theme.of(context).colorScheme.onPrimary,
+                    child: const Icon(
+                      LineIcons.bell,
+                    ),
                   ),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
-            ),
-            GButton(
-              leading: Provider.of<AuthProvider>(context).user?.smallProfilePictureUrl != null ?
-              ProfileAvatar(image: Provider.of<AuthProvider>(context).user!.smallProfilePictureUrl ?? '', size: 24) : null,
-                icon: LineIcons.user,
-                text: AppLocalizations.of(context)!.profile,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
-            ),
-          ],
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+              ),
+              GButton(
+                leading: Provider.of<AuthProvider>(context).user?.smallProfilePictureUrl != null ?
+                ProfileAvatar(image: Provider.of<AuthProvider>(context).user!.smallProfilePictureUrl ?? '', size: 24) : null,
+                  icon: LineIcons.user,
+                  text: AppLocalizations.of(context)!.profile,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+              ),
+            ],
+          ),
         ),
       ),
     );
