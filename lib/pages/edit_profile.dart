@@ -6,6 +6,8 @@ import 'package:hoot/models/user.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/upload_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:line_icons/line_icon.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth_provider.dart';
@@ -19,7 +21,8 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   late U user;
-  File? _selectedImage;
+  File? _profilePicture;
+  File? _bannerPicture;
   bool _isLoading = false;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -38,19 +41,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return _nameController.text.isNotEmpty && _bioController.text.length <= 150;
   }
 
-  Future _pickImage() async {
+  Future _pickProfilePicture() async {
+    File? image = await _pickImage(CropAspectRatioPreset.square, 1, 1);
+    setState(() => _profilePicture = image);
+  }
+
+  Future _pickBannerPicture() async {
+    File? image = await _pickImage(CropAspectRatioPreset.original, 16, 9);
+    setState(() => _bannerPicture = image);
+  }
+
+  Future<File> _pickImage(CropAspectRatioPreset preset, double ratioX, double ratioY) async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null && pickedFile.path.isNotEmpty && pickedFile.path.length <= 1000000) {
       CroppedFile? croppedImage = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-          /*CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio16x9*/
-        ],
+        aspectRatio: CropAspectRatio(ratioX: ratioX, ratioY: ratioY),
+        aspectRatioPresets: [preset],
         uiSettings: [
           AndroidUiSettings(
               toolbarTitle: 'Crop avatar',
@@ -66,11 +73,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
         ],
       );
-      setState(() {
-        _selectedImage = croppedImage != null ? File(croppedImage.path) : null;
-      });
+      if (croppedImage != null) {
+        return File(croppedImage.path);
+      } else {
+        return File(pickedFile.path);
+      }
     } else if (pickedFile != null) {
       ToastService.showToast(context, AppLocalizations.of(context)!.imageTooLarge, true);
+      return File('');
+    } else {
+      return File('');
     }
   }
 
@@ -82,9 +94,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
         user.name = _nameController.text;
         user.bio = _bioController.text;
 
-        if(_selectedImage != null) {
-          user.smallProfilePictureUrl = await UploadService().uploadFile(_selectedImage!, 'avatars/${user.uid}/small', compressed: true, size: 50);
-          user.largeProfilePictureUrl = await UploadService().uploadFile(_selectedImage!, 'avatars/${user.uid}/big', compressed: true);
+        if(_profilePicture != null) {
+          user.smallProfilePictureUrl = await UploadService().uploadFile(_profilePicture!, 'avatars/${user.uid}/small', compressed: true, size: 50, square: true);
+          user.largeProfilePictureUrl = await UploadService().uploadFile(_profilePicture!, 'avatars/${user.uid}/big', compressed: true, size: 200, square: true);
+        }
+
+        if (_bannerPicture != null) {
+          user.bannerPictureUrl = await UploadService().uploadFile(_bannerPicture!, 'banners/${user.uid}', compressed: true, size: 1000, square: false);
         }
 
         bool res = await Provider.of<AuthProvider>(context, listen: false).updateUser(user);
@@ -134,32 +150,70 @@ class _EditProfilePageState extends State<EditProfilePage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              Stack(
+                children: [
+                  Container(
+                    height: 200,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      image: _bannerPicture == null ? user.bannerPictureUrl != null ? DecorationImage(
+                        image: NetworkImage(user.bannerPictureUrl!),
+                        fit: BoxFit.cover,
+                      ) : null : DecorationImage(
+                        image: FileImage(_bannerPicture!),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () => _pickBannerPicture(),
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: LineIcon(
+                          LineIcons.image,
+                          color: Theme.of(context).colorScheme.onSurface,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 16),
               Center(
                 child: Stack(
                   children: [
-                    _selectedImage == null ?
+                    _profilePicture == null ?
                     ProfileAvatar(image: user.largeProfilePictureUrl ?? '', size: 100)
                         : CircleAvatar(
                       radius: 50,
-                      backgroundImage: FileImage(_selectedImage!),
+                      backgroundImage: FileImage(_profilePicture!),
                     ),
                     Positioned(
                       bottom: 0,
                       right: 0,
                       child: GestureDetector(
-                        onTap: _pickImage,
+                        onTap: () => _pickProfilePicture(),
                         child: Container(
                           height: 30,
                           width: 30,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          child: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.white,
-                            size: 20,
+                          child: LineIcon(
+                            LineIcons.camera,
+                            color: Theme.of(context).colorScheme.onSurface,
+                            size: 16,
                           ),
                         ),
                       ),
@@ -203,12 +257,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     const SizedBox(height: 50),
                     Text(
                       'Please note that this options are just for testing purposes.\n'
-                      'Hoot profiles will be completely customizable in the future. Here are some examples of what you will be able to do:\n'
-                      '- Choose a background image for your profile\n'
-                      '- Choose a color for your profile\n'
-                      '- Choose your anthem song from Spotify\n'
-                      '- Add a frame to your profile picture\n'
-                      '- Etc...',
+                          'Hoot profiles will be completely customizable in the future. Here are some examples of what you will be able to do:\n'
+                          '- Choose a background image for your profile\n'
+                          '- Choose a color for your profile\n'
+                          '- Choose your anthem song from Spotify\n'
+                          '- Add a frame to your profile picture\n'
+                          '- Etc...',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],

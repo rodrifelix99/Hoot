@@ -439,8 +439,8 @@ class _FourthScreenState extends State<FourthScreen> {
       });
 
       String uid = Provider.of<AuthProvider>(context, listen: false).user!.uid;
-      String smallAvatarUrl = await UploadService().uploadFile(_selectedImage!, 'avatars/$uid/small', compressed: true, size: 50);
-      String bigAvatarUrl = await UploadService().uploadFile(_selectedImage!, 'avatars/$uid/big', compressed: true);
+      String smallAvatarUrl = await UploadService().uploadFile(_selectedImage!, 'avatars/$uid/small', compressed: true, size: 50, square: true);
+      String bigAvatarUrl = await UploadService().uploadFile(_selectedImage!, 'avatars/$uid/big', compressed: true, size: 200, square: true);
 
       if (smallAvatarUrl.isNotEmpty && bigAvatarUrl.isNotEmpty) {
         U? user = Provider.of<AuthProvider>(context, listen: false).user;

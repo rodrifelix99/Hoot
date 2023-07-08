@@ -6,6 +6,9 @@ class U {
   String? username;
   String? smallProfilePictureUrl;
   String? largeProfilePictureUrl;
+  String? bannerPictureUrl;
+  String? color;
+  String? musicUrl;
   String? bio;
   String? location;
   String? website;
@@ -18,6 +21,8 @@ class U {
     this.name, this.username,
     this.smallProfilePictureUrl,
     this.largeProfilePictureUrl,
+    this.bannerPictureUrl,
+    this.color, this.musicUrl,
     this.bio, this.location,
     this.website,
     this.birthday,
@@ -37,6 +42,9 @@ class U {
       username: json['username'],
       smallProfilePictureUrl: json['smallAvatar'],
       largeProfilePictureUrl: json['bigAvatar'],
+      bannerPictureUrl: json['banner'],
+      color: json['color'],
+      musicUrl: json['music'],
       bio: json['bio'],
       location: json['location'],
       website: json['website'],
@@ -52,6 +60,9 @@ class U {
       'username': username,
       'smallAvatar': smallProfilePictureUrl,
       'bigAvatar': largeProfilePictureUrl,
+      'banner': bannerPictureUrl,
+      'color': color,
+      'music': musicUrl,
       'bio': bio,
       'location': location,
       'website': website,

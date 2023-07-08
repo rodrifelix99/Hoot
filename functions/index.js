@@ -151,8 +151,9 @@ exports.setFCMToken = functions.region("europe-west1").https.onCall(async (data,
 
 exports.searchUsers = functions.region("europe-west1").https.onCall(async (data) => {
   try {
-    const query = data;
-    const users = await db.collection("users").where("displayName", ">=", query).where("displayName", "<=", query + "\uf8ff").get();
+    // query is the search string trimmed and lowercased and remove @
+    const query = data.trim().toLowerCase().replace("@", "");
+    const users = await db.collection("users").where("username", ">=", query).where("username", "<=", query + "\uf8ff").get();
     const results = [];
     for (const user of users.docs) {
       const userInfo = await getUserObject(user.id, true, user.data());

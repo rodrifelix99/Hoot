@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/avatar.dart';
 import 'package:hoot/models/user.dart';
 import 'package:provider/provider.dart';
-
 import '../services/auth_provider.dart';
 import '../services/error_service.dart';
 
@@ -21,6 +20,7 @@ class _SearchPageState extends State<SearchPage> {
 
   Future _search() async {
     try {
+      FocusScope.of(context).unfocus();
       setState(() => _isLoading = true);
       List<U> res = await Provider.of<AuthProvider>(context, listen: false).searchUsers(_searchController.text);
       setState(() {
@@ -49,7 +49,7 @@ class _SearchPageState extends State<SearchPage> {
                 controller: _searchController,
                 onSubmitted: (_) => _search(),
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.search,
+                  hintText: AppLocalizations.of(context)!.searchPlaceholder,
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.search),
                     onPressed: () => _search(),

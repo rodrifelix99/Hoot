@@ -56,7 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isCurrentUser ? AppLocalizations.of(context)!.profile : _user.name!),
+        title: Text(_user.name!),
         actions: [
           if (_isCurrentUser) IconButton(
             onPressed: _signOut,
@@ -67,6 +67,14 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            _user.bannerPictureUrl != null ?
+            Image(
+              image: NetworkImage(_user.bannerPictureUrl!),
+              width: double.infinity,
+              height: 200,
+              fit: BoxFit.cover,
+            ) :
+            const SizedBox(),
             const SizedBox(height: 20),
             ProfileAvatar(image: _user.largeProfilePictureUrl ?? '', size: 150, preview: true),
             const SizedBox(height: 20),
