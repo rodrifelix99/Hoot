@@ -67,11 +67,6 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  Future _signOut() async {
-    await Provider.of<AuthProvider>(context, listen: false).signOut();
-    Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
