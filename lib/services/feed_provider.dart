@@ -30,7 +30,8 @@ class FeedProvider extends ChangeNotifier {
   }
 
   Future<void> getFeed() async {
-    try {
+    _feed = [];
+    /*try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('getFeed');
       final res = await callable.call();
@@ -45,7 +46,7 @@ class FeedProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print(e.toString());
-    }
+    }*/
   }
 }
 

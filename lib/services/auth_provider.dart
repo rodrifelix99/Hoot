@@ -261,4 +261,22 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<List<U>> searchUsers(String query) async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('searchUsers');
+      final response = await callable.call(query);
+      final data = response.data;
+
+      if (data != null && data is List) {
+        final List<U> users = data.map<U>((user) => U.fromJson(Map<String, dynamic>.from(user))).toList();
+        return users;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
 }

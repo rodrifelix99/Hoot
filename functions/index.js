@@ -148,3 +148,60 @@ exports.setFCMToken = functions.region("europe-west1").https.onCall(async (data,
     error(e);
   }
 });
+
+exports.searchUsers = functions.region("europe-west1").https.onCall(async (data) => {
+  try {
+    const query = data;
+    const users = await db.collection("users").where("displayName", ">=", query).where("displayName", "<=", query + "\uf8ff").get();
+    const results = [];
+    for (const user of users.docs) {
+      const userInfo = await getUserObject(user.id, true, user.data());
+      results.push(userInfo);
+    }
+    return results;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.getSuggestedUsers = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const query = await db.collection("users").doc(uid).collection("following").get();
+    const promises = [];
+    if (query.size > 0) {
+      for (const doc of query.docs) {
+        promises.push(db.collection("users").doc(doc.id).collection("following").get());
+      }
+      const results = await Promise.all(promises);
+      const following = new Set();
+      for (const result of results) {
+        for (const doc of result.docs) {
+          following.add(doc.id);
+        }
+      }
+      const users = await db.collection("users").where("id", "not-in", [...following, uid]).limit(10).get();
+      const data = [];
+      for (const doc of users.docs) {
+        const user = await getUserObject(doc.id, true, doc.data());
+        data.push(user);
+      }
+      return data;
+    } else {
+      // get 10 users where the document id is not equal to the current user's id, must have a username and limit to 10
+      const users = await db.collection("users").where("username", "!=", "").limit(10).get();
+      const data = [];
+      for (const doc of users.docs) {
+        if (doc.id === uid) {
+          continue;
+        }
+        const user = await getUserObject(doc.id, true, doc.data());
+        data.push(user);
+      }
+      return data;
+    }
+  } catch (e) {
+    error(e);
+  }
+});
+
