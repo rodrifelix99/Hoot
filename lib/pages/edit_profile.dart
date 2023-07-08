@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar.dart';
 import 'package:hoot/models/user.dart';
@@ -38,11 +38,36 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return _nameController.text.isNotEmpty && _bioController.text.length <= 150;
   }
 
-  void _pickImage() async {
+  Future _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null && pickedFile.path.isNotEmpty && pickedFile.path.length <= 1000000) {
+      CroppedFile? croppedImage = await ImageCropper().cropImage(
+        sourcePath: pickedFile.path,
+        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          /*CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9*/
+        ],
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Crop avatar',
+              toolbarColor: Theme.of(context).colorScheme.primary,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Crop avatar',
+          ),
+          WebUiSettings(
+            context: context,
+          ),
+        ],
+      );
       setState(() {
-        _selectedImage = File(pickedFile.path);
+        _selectedImage = croppedImage != null ? File(croppedImage.path) : null;
       });
     } else if (pickedFile != null) {
       ToastService.showToast(context, AppLocalizations.of(context)!.imageTooLarge, true);
