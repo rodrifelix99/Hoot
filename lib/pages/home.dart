@@ -49,14 +49,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    bool isSignedIn = Provider.of<AuthProvider>(context, listen: false).isSignedIn;
-    if (!isSignedIn) {
-      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
-    } else {
-      isNewUser();
-    }
     _pageController = PageController();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      bool isSignedIn = Provider.of<AuthProvider>(context, listen: false).isSignedIn;
+      if (!isSignedIn) {
+        Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+      } else {
+        isNewUser();
+      }
+    });
   }
 
   @override

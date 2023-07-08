@@ -12,7 +12,6 @@ class AuthProvider extends ChangeNotifier {
   U? _user;
   U? get user => _user;
 
-  // Initialize the authentication provider
   AuthProvider() {
     _auth.authStateChanges().listen(_onAuthStateChanged); // Add listener
   }
@@ -21,9 +20,10 @@ class AuthProvider extends ChangeNotifier {
     try {
       if (firebaseUser == null) {
         _user = null;
-      } else if (_user == null || _user!.uid != firebaseUser.uid) {
+      } else if (_user == null || (_user!.uid != firebaseUser.uid && _user!.uid != 'HOOT-IS-AWESOME')) {
         _user = await getUserInfo();
-        print('User changed: $_user from $firebaseUser');
+      } else {
+        _user = U(uid: firebaseUser.uid);
       }
       notifyListeners();
     } catch (e) {
@@ -47,6 +47,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<String> signInWithApple() async {
     try {
+      _user = U(uid: 'HOOT-IS-AWESOME');
       final credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
@@ -62,9 +63,9 @@ class AuthProvider extends ChangeNotifier {
       final userCredential = await _auth.signInWithCredential(oauthCredential);
 
       if (userCredential.user == null) {
+        print('User is null');
         return "unknown-error";
       } else if (userCredential.additionalUserInfo!.isNewUser) {
-        _user = U(uid: 'HOOT-IS-AWESOME');
         notifyListeners();
         return "new-user";
       } else {
@@ -75,6 +76,7 @@ class AuthProvider extends ChangeNotifier {
 
     } catch (e) {
       print(e.toString());
+      _user = null;
       FirebaseAuthException exception = e as FirebaseAuthException;
       return exception.code;
     }
@@ -136,19 +138,21 @@ class AuthProvider extends ChangeNotifier {
 
   Future<String> signUpWithEmailAndPassword(String email, String password) async {
     try {
+      _user = U(uid: 'HOOT-IS-AWESOME');
       final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       if (userCredential.user != null) {
-        _user = U(uid: 'HOOT-IS-AWESOME');
         notifyListeners();
         return "success";
       } else {
+        _user = null;
         return "unknown-error";
       }
     } catch (e) {
+      _user = null;
       FirebaseAuthException exception = e as FirebaseAuthException;
       return exception.code;
     }
@@ -197,7 +201,6 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // Sign out
   Future<void> signOut() async {
     try {
       await _auth.signOut();

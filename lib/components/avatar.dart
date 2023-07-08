@@ -22,29 +22,45 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
         backgroundColor: Colors.black,
         child: Hero(
           tag: widget.image + widget.url + widget.size.toString(),
-          child: OctoImage.fromSet(
-            image: widget.image.isEmpty ? const NetworkImage('none') : NetworkImage(widget.image),
-            octoSet: OctoSet.circleAvatar(
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              text: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: widget.size.toDouble() / 2),
-            ),
-            fit: BoxFit.cover,
-            height: widget.size.toDouble(),
-            width: widget.size.toDouble(),
-          ),
+          child: Avatar(image: widget.image, size: widget.size),
         ),
       );
     } else {
-      return OctoImage.fromSet(
-        image: widget.image.isEmpty ? const NetworkImage('none') : NetworkImage(widget.image),
-        octoSet: OctoSet.circleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            text: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: widget.size.toDouble() / 2),
-        ),
-        fit: BoxFit.cover,
-        height: widget.size.toDouble(),
-        width: widget.size.toDouble(),
+      return Avatar(image: widget.image, size: widget.size);
+    }
+  }
+}
+
+class Avatar extends StatefulWidget {
+  final String image;
+  final int size;
+  const Avatar({super.key, required this.image, required this.size});
+
+  @override
+  State<Avatar> createState() => _AvatarState();
+}
+
+class _AvatarState extends State<Avatar> {
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.image.isEmpty) {
+      return CircleAvatar(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        radius: widget.size.toDouble() / 2,
+        child: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: widget.size.toDouble() / 2),
       );
     }
+
+    return OctoImage.fromSet(
+      image: NetworkImage(widget.image),
+      octoSet: OctoSet.circleAvatar(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        text: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: widget.size.toDouble() / 2),
+      ),
+      fit: BoxFit.cover,
+      height: widget.size.toDouble(),
+      width: widget.size.toDouble(),
+    );
   }
 }

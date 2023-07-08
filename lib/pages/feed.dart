@@ -47,7 +47,7 @@ class _FeedPageState extends State<FeedPage> {
         actions: [
           IconButton(
             icon: const Icon(LineIcons.search),
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).pushNamed('/search'),
           ),
         ],
       ),

@@ -7,6 +7,7 @@ import 'package:hoot/pages/create_post.dart';
 import 'package:hoot/pages/edit_profile.dart';
 import 'package:hoot/pages/home.dart';
 import 'package:hoot/pages/profile.dart';
+import 'package:hoot/pages/search.dart';
 import 'package:hoot/pages/sign_in.dart';
 import 'package:hoot/pages/sign_up.dart';
 import 'package:hoot/pages/terms.dart';
@@ -89,8 +90,10 @@ Future<void> main() async {
                 case '/profile':
                   final U user = settings.arguments as U;
                   return MaterialPageRoute(builder: (context) => ProfilePage(user: user));
-                  case '/edit_profile':
+                case '/edit_profile':
                   return MaterialPageRoute(builder: (context) => EditProfilePage());
+                case '/search':
+                  return MaterialPageRoute(builder: (context) => SearchPage());
                 default:
                   return MaterialPageRoute(builder: (context) => HomePage());
               }

@@ -440,10 +440,8 @@ class _FourthScreenState extends State<FourthScreen> {
       setState(() {
         _loading = false;
       });
-    } else {
-      setState(() {
-        ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
-      });
+    } else if (_selectedImage != null) {
+      ToastService.showToast(context, AppLocalizations.of(context)!.imageTooLarge, true);
     }
   }
 

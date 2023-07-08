@@ -24,18 +24,22 @@ class _UserSuggestionsState extends State<UserSuggestions> {
   }
 
   Future _loadUsers() async {
-    setState(() => _isLoading = true);
-    List<U> users = await Provider.of<AuthProvider>(context, listen: false).getSuggestions();
-    if (users.isNotEmpty) {
-      setState(() {
-        _isLoading = false;
-        _users = users;
-      });
-    } else {
-      setState(() {
-        _isLoading = false;
-        ToastService.showToast(context, 'No users found', true);
-      });
+    try {
+      setState(() => _isLoading = true);
+      List<U> users = await Provider.of<AuthProvider>(context, listen: false).getSuggestions();
+      if (users.isNotEmpty) {
+        setState(() {
+          _isLoading = false;
+          _users = users;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+          ToastService.showToast(context, 'No users found', true);
+        });
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
