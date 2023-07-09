@@ -206,3 +206,71 @@ exports.getSuggestedUsers = functions.region("europe-west1").https.onCall(async 
   }
 });
 
+exports.followUser = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const user = data;
+    await db.collection("users").doc(uid).collection("following").doc(user).set({
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    await db.collection("users").doc(user).collection("followers").doc(uid).set({
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.unfollowUser = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const user = data;
+    await db.collection("users").doc(uid).collection("following").doc(user).delete();
+    await db.collection("users").doc(user).collection("followers").doc(uid).delete();
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.getFollowers = functions.region("europe-west1").https.onCall(async (data) => {
+  try {
+    const uid = data;
+    const followers = await db.collection("users").doc(uid).collection("followers").get();
+    const results = [];
+    for (const follower of followers.docs) {
+      const user = await getUserObject(follower.id, true, follower.data());
+      results.push(user);
+    }
+    return results;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.getFollowing = functions.region("europe-west1").https.onCall(async (data) => {
+  try {
+    const uid = data;
+    const following = await db.collection("users").doc(uid).collection("following").get();
+    const results = [];
+    for (const follow of following.docs) {
+      const user = await getUserObject(follow.id, true, follow.data());
+      results.push(user);
+    }
+    return results;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.isFollowing = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const user = data;
+    const following = await db.collection("users").doc(uid).collection("following").doc(user).get();
+    return following.exists;
+  } catch (e) {
+    error(e);
+  }
+});
