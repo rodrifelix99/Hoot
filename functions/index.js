@@ -65,6 +65,37 @@ async function getUserObject(uid, addFollowers = true, built = null) {
   }
 }
 
+/**
+ * Sends a push notification to a user.
+ * @param {string} uid - The user ID.
+ * @param {string} title - The notification title.
+ * @param {string} body - The notification body.
+ * @param {object} data - The notification data.
+ * @param {string} [token=null] - The user's FCM token. If not provided, it will be retrieved from the database.
+ * @return {Promise<void>} A promise that resolves when the notification is sent.
+ */
+async function sendPushNotification(uid, title, body, data = null, token = null) {
+  try {
+    if (!token) {
+      const user = await getUserObject(uid, false);
+      token = user.fcmToken;
+    }
+    if (user.fcmToken) {
+      const message = {
+        notification: {
+          title: title,
+          body: body,
+        },
+        data: data,
+        token: token,
+      };
+      await admin.messaging().send(message);
+    }
+  } catch (e) {
+    error(e);
+  }
+}
+
 exports.createUserDocument = functions.region("europe-west1").auth.user().onCreate(async (user) => {
   try {
     // Create a document for the new user in Firestore
@@ -94,10 +125,8 @@ exports.deleteUserDocument = functions.region("europe-west1").auth.user().onDele
 // get authenticated user info from firestore
 exports.getUserInfo = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
-    const user = await db.collection("users").doc(context.auth.uid).get();
-    const userInfo = user.data();
-    userInfo.uid = user.id;
-    return userInfo;
+    const user = await getUserObject(context.auth.uid, true);
+    return user;
   } catch (e) {
     error(e);
   }
@@ -187,20 +216,21 @@ exports.getSuggestedUsers = functions.region("europe-west1").https.onCall(async 
         const user = await getUserObject(doc.id, true, doc.data());
         data.push(user);
       }
-      return data;
-    } else {
-      // get 10 users where the document id is not equal to the current user's id, must have a username and limit to 10
-      const users = await db.collection("users").where("username", "!=", "").limit(10).get();
-      const data = [];
-      for (const doc of users.docs) {
-        if (doc.id === uid) {
-          continue;
-        }
-        const user = await getUserObject(doc.id, true, doc.data());
-        data.push(user);
+      if (data.length > 3) {
+        return data;
       }
-      return data;
     }
+    // get 10 users where the document id is not equal to the current user's id, must have a username and limit to 10
+    const users = await db.collection("users").where("username", "!=", "").limit(10).get();
+    const data = [];
+    for (const doc of users.docs) {
+      if (doc.id === uid) {
+        continue;
+      }
+      const user = await getUserObject(doc.id, true, doc.data());
+      data.push(user);
+    }
+    return data;
   } catch (e) {
     error(e);
   }
@@ -216,6 +246,7 @@ exports.followUser = functions.region("europe-west1").https.onCall(async (data, 
     await db.collection("users").doc(user).collection("followers").doc(uid).set({
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
+    sendPushNotification(user, "New Follower", "You have a new follower");
     return true;
   } catch (e) {
     error(e);
@@ -228,6 +259,7 @@ exports.unfollowUser = functions.region("europe-west1").https.onCall(async (data
     const user = data;
     await db.collection("users").doc(uid).collection("following").doc(user).delete();
     await db.collection("users").doc(user).collection("followers").doc(uid).delete();
+    sendPushNotification(user, "Unfollowed", "You have been unfollowed");
     return true;
   } catch (e) {
     error(e);
@@ -240,7 +272,7 @@ exports.getFollowers = functions.region("europe-west1").https.onCall(async (data
     const followers = await db.collection("users").doc(uid).collection("followers").get();
     const results = [];
     for (const follower of followers.docs) {
-      const user = await getUserObject(follower.id, true, follower.data());
+      const user = await getUserObject(follower.id, true);
       results.push(user);
     }
     return results;
@@ -255,7 +287,7 @@ exports.getFollowing = functions.region("europe-west1").https.onCall(async (data
     const following = await db.collection("users").doc(uid).collection("following").get();
     const results = [];
     for (const follow of following.docs) {
-      const user = await getUserObject(follow.id, true, follow.data());
+      const user = await getUserObject(follow.id, true);
       results.push(user);
     }
     return results;

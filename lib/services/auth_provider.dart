@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -231,9 +233,13 @@ class AuthProvider extends ChangeNotifier {
 
   Future<bool> isFollowing(String uid) async {
     try {
-      HttpsCallable callable = _functions.httpsCallable('isFollowing');
-      final response = await callable.call(uid);
-      return response.data;
+      if (_user!.following.contains(uid)) {
+        return true;
+      } else {
+        HttpsCallable callable = _functions.httpsCallable('isFollowing');
+        final response = await callable.call(uid);
+        return response.data;
+      }
     } catch (e) {
       print(e.toString());
       return false;
@@ -242,9 +248,15 @@ class AuthProvider extends ChangeNotifier {
 
   Future<bool> follow(String uid) async {
     try {
-      HttpsCallable callable = _functions.httpsCallable('follow');
+      _user!.following.add(uid);
+      HttpsCallable callable = _functions.httpsCallable('followUser');
       final response = await callable.call(uid);
-      return response.data;
+      if (response.data == true) {
+        return true;
+      } else {
+        _user!.following.remove(uid);
+        return false;
+      }
     } catch (e) {
       print(e.toString());
       return false;
@@ -253,12 +265,36 @@ class AuthProvider extends ChangeNotifier {
 
   Future<bool> unfollow(String uid) async {
     try {
-      HttpsCallable callable = _functions.httpsCallable('unfollow');
+      _user!.following.remove(uid);
+      HttpsCallable callable = _functions.httpsCallable('unfollowUser');
       final response = await callable.call(uid);
-      return response.data;
+      if (response.data == true) {
+        return true;
+      } else {
+        _user!.following.add(uid);
+        return false;
+      }
     } catch (e) {
       print(e.toString());
       return false;
+    }
+  }
+
+  Future<List<U>> getFollows(String userId, bool following) async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable(following ? 'getFollowing' : 'getFollowers');
+      final response = await callable.call(userId);
+      final data = response.data;
+
+      if (data != null && data is List) {
+        final List<U> users = data.map<U>((user) => U.fromJson(Map<String, dynamic>.from(user))).toList();
+        return users;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print(e.toString());
+      return [];
     }
   }
 

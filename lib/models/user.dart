@@ -7,6 +7,7 @@ class U {
   String? smallProfilePictureUrl;
   String? largeProfilePictureUrl;
   String? bannerPictureUrl;
+  double? radius;
   String? color;
   String? musicUrl;
   String? bio;
@@ -22,6 +23,7 @@ class U {
     this.smallProfilePictureUrl,
     this.largeProfilePictureUrl,
     this.bannerPictureUrl,
+    this.radius,
     this.color, this.musicUrl,
     this.bio, this.location,
     this.website,
@@ -43,6 +45,7 @@ class U {
       smallProfilePictureUrl: json['smallAvatar'],
       largeProfilePictureUrl: json['bigAvatar'],
       bannerPictureUrl: json['banner'],
+      radius: double.tryParse(json['radius'].toString()),
       color: json['color'],
       musicUrl: json['music'],
       bio: json['bio'],
@@ -61,6 +64,7 @@ class U {
       'smallAvatar': smallProfilePictureUrl,
       'bigAvatar': largeProfilePictureUrl,
       'banner': bannerPictureUrl,
+      'radius': radius,
       'color': color,
       'music': musicUrl,
       'bio': bio,

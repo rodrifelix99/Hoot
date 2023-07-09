@@ -5,8 +5,7 @@ import '../services/auth_provider.dart';
 
 class FollowButton extends StatefulWidget {
   final String userId;
-  final bool isFollowing;
-  const FollowButton({super.key, this.userId = '', this.isFollowing = false});
+  const FollowButton({super.key, required this.userId});
 
   @override
   State<FollowButton> createState() => _FollowButtonState();
@@ -18,20 +17,15 @@ class _FollowButtonState extends State<FollowButton> {
 
   @override
   void initState() {
-    if (widget.userId.isEmpty) {
-      _isFollowing = widget.isFollowing;
-      _isLoading = false;
-    } else {
-      _checkIfFollowing();
-    }
     super.initState();
+    _checkIfFollowing();
   }
 
   Future _checkIfFollowing() async {
     bool isFollowing = await Provider.of<AuthProvider>(context, listen: false).isFollowing(widget.userId);
     setState(() {
-      _isLoading = false;
       _isFollowing = isFollowing;
+      _isLoading = false;
     });
   }
 
@@ -64,9 +58,15 @@ class _FollowButtonState extends State<FollowButton> {
   @override
   Widget build(BuildContext context) {
     return _isLoading
-        ? const Center(child: CircularProgressIndicator())
+        ? const SizedBox(
+        height: 20,
+        width: 20,
+        child: CircularProgressIndicator())
         : ElevatedButton(
       onPressed: _isFollowing ? _unfollow : _follow,
+      style: ElevatedButton.styleFrom(
+        foregroundColor: _isFollowing ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.primary
+      ),
       child: Text(_isFollowing ? AppLocalizations.of(context)!.unfollow : AppLocalizations.of(context)!.follow),
     );
   }

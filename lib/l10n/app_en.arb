@@ -265,5 +265,17 @@
   "searchPlaceholder": "Search by @username",
   "@searchPlaceholder": {
     "description": "Search for users label"
-  }
+  },
+  "followers": "Followers",
+    "@followers": {
+        "description": "Followers label"
+    },
+    "following": "Following",
+    "@following": {
+        "description": "Following label"
+    },
+  "noUsersToShow": "No users to show",
+    "@noUsersToShow": {
+        "description": "No users to show message"
+    }
 }

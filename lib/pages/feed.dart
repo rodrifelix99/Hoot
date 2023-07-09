@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/user_suggestions.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/services/error_service.dart';
@@ -64,24 +65,23 @@ class _FeedPageState extends State<FeedPage> {
                       'My Feeds will be a page where you can see all the feeds you subscribed to. '
                       'It can be a feed created by your roommate for their aesthetic and kinda gay living room, or a feed created by your friend for their cat tips.\n\n'
                       'My goal is to make something that no other social media has done before, and I think this is it. I\'m excited to see what you think about it. '
-                      'You can DM me @_felix_zinho_ on Twitter to share feedback and report bugs whenever you want\n\n'
-                      'From now on you\'re a part of Hoot, the very first people to see it from a simple authentication page to a full-fledged social media. '
-                      'Because of that, when Hoot is released, you\'ll have a special badge on your profile, and you\'ll be given 5 invitations to invite your friends to Hoot, '
-                      'while it\'s still invite-only. \n\n'
-                      'For now, there\'s not much to do, but I\'ll be adding more features regularly, so stay tuned! \n\n',
+                      'You can DM me @_felix_zinho_ on Twitter to share feedback and report bugs whenever you want\n\n',
                       textAlign: TextAlign.center
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-              ListView.builder(
+              _posts.length > 0 ? ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: _posts.length,
                 itemBuilder: (BuildContext context, int index) {
                   return PostComponent(post: _posts[index]);
                 },
-              ),
+              ) : const NothingToShowComponent(
+                icon: Icon(Icons.newspaper_rounded),
+                text: 'No posts to show',
+              )
             ],
           )
       ),

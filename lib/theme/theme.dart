@@ -6,17 +6,20 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    colorSchemeSeed: Colors.blue,
+    colorScheme: colorScheme,
     textTheme: GoogleFonts.interTextTheme(),
     snackBarTheme: snackBarTheme,
     elevatedButtonTheme: elevatedButtonTheme,
     inputDecorationTheme: inputDecorationTheme,
+    chipTheme: chipTheme,
   );
 
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
-    colorSchemeSeed: Colors.blue,
+    colorScheme: colorScheme.copyWith(
+      brightness: Brightness.dark,
+    ),
     textTheme: GoogleFonts.interTextTheme().apply(
       decorationColor: Colors.white, // Set the decoration color to white
       displayColor: Colors.white, // Set the display color to white
@@ -28,6 +31,12 @@ class AppTheme {
       labelStyle: const TextStyle(color: Colors.white),
       fillColor: Colors.grey.shade800,
     ),
+    chipTheme: chipTheme,
+  );
+
+  static ColorScheme colorScheme = ColorScheme.fromSeed(
+    seedColor: Colors.blue,
+    brightness: Brightness.light, // Set the brightness explicitly
   );
 
   static SnackBarThemeData snackBarTheme = SnackBarThemeData(
@@ -70,5 +79,23 @@ class AppTheme {
     filled: true,
     fillColor: Colors.grey.shade200,
     contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+  );
+
+  static ChipThemeData chipTheme = ChipThemeData(
+    padding: const EdgeInsets.all(8),
+    shape: const RoundedRectangleBorder(
+      side: BorderSide.none,
+      borderRadius: BorderRadius.all(Radius.circular(100)),
+    ),
+    side: BorderSide.none,
+    backgroundColor: colorScheme.primary.withOpacity(0.25),
+    labelStyle: TextStyle(
+      fontSize: 12,
+      color: colorScheme.primary,
+    ),
+    iconTheme: IconThemeData(
+      color: colorScheme.primary,
+      size: 16,
+    ),
   );
 }

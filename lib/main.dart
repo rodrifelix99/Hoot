@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/pages/create_post.dart';
 import 'package:hoot/pages/edit_profile.dart';
+import 'package:hoot/pages/follow_list.dart';
 import 'package:hoot/pages/home.dart';
 import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/search.dart';
@@ -94,6 +95,14 @@ Future<void> main() async {
                   return MaterialPageRoute(builder: (context) => EditProfilePage());
                 case '/search':
                   return MaterialPageRoute(builder: (context) => SearchPage());
+                case '/follow_list':
+                  final Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+                  return MaterialPageRoute(
+                    builder: (context) => FollowListPage(
+                      userId: args['userId'] as String,
+                      following: args['following'] as bool,
+                    ),
+                  );
                 default:
                   return MaterialPageRoute(builder: (context) => HomePage());
               }

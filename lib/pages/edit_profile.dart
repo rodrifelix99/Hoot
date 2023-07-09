@@ -193,7 +193,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 child: Stack(
                   children: [
                     _profilePicture == null ?
-                    ProfileAvatar(image: user.largeProfilePictureUrl ?? '', size: 100)
+                    ProfileAvatar(image: user.largeProfilePictureUrl ?? '', size: 150, radius: user.radius ?? 100)
                         : CircleAvatar(
                       radius: 50,
                       backgroundImage: FileImage(_profilePicture!),
@@ -219,6 +219,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Slider(
+                  value: user.radius ?? 100,
+                  min: 10,
+                  max: 100,
+                  onChanged: (value) => setState(() => user.radius = value),
                 ),
               ),
               const SizedBox(height: 16),

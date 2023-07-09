@@ -47,7 +47,8 @@ class _SearchPageState extends State<SearchPage> {
               padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
               child: TextField(
                 controller: _searchController,
-                onSubmitted: (_) => _search(),
+                onEditingComplete: () => _search(),
+                textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.searchPlaceholder,
                   suffixIcon: IconButton(
@@ -70,7 +71,7 @@ class _SearchPageState extends State<SearchPage> {
                       size: 40,
                     ),
                     title: Text(_users[index].name ?? ''),
-                    subtitle: Text("@${_users[index].username}" ?? ''),
+                    subtitle: Text("@${_users[index].username}"),
                     onTap: () => Navigator.of(context).pushNamed('/profile', arguments: _users[index]),
                   );
                 },
