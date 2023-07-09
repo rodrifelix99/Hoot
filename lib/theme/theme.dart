@@ -3,10 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
 
+  static Color primaryColor = Colors.blue;
+
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    colorScheme: colorScheme,
+    colorSchemeSeed: primaryColor,
     textTheme: GoogleFonts.interTextTheme(),
     snackBarTheme: snackBarTheme,
     elevatedButtonTheme: elevatedButtonTheme,
@@ -17,9 +19,7 @@ class AppTheme {
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
-    colorScheme: colorScheme.copyWith(
-      brightness: Brightness.dark,
-    ),
+    colorSchemeSeed: primaryColor,
     textTheme: GoogleFonts.interTextTheme().apply(
       decorationColor: Colors.white, // Set the decoration color to white
       displayColor: Colors.white, // Set the display color to white
@@ -31,12 +31,27 @@ class AppTheme {
       labelStyle: const TextStyle(color: Colors.white),
       fillColor: Colors.grey.shade800,
     ),
-    chipTheme: chipTheme,
+    chipTheme: chipTheme.copyWith(
+      backgroundColor: darkColorScheme.onPrimary,
+      labelStyle: TextStyle(
+        fontSize: 12,
+        color: darkColorScheme.primary,
+      ),
+      iconTheme: IconThemeData(
+        size: 16,
+        color: darkColorScheme.primary
+      ),
+    )
   );
-
-  static ColorScheme colorScheme = ColorScheme.fromSeed(
-    seedColor: Colors.blue,
-    brightness: Brightness.light, // Set the brightness explicitly
+  
+  static ColorScheme lightColorScheme = ColorScheme.fromSeed(
+    seedColor: primaryColor,
+    brightness: Brightness.light,
+  );
+  
+  static ColorScheme darkColorScheme = ColorScheme.fromSeed(
+    seedColor: primaryColor,
+    brightness: Brightness.dark,
   );
 
   static SnackBarThemeData snackBarTheme = SnackBarThemeData(
@@ -88,13 +103,13 @@ class AppTheme {
       borderRadius: BorderRadius.all(Radius.circular(100)),
     ),
     side: BorderSide.none,
-    backgroundColor: colorScheme.primary.withOpacity(0.25),
+    backgroundColor: lightColorScheme.primary.withOpacity(0.25),
     labelStyle: TextStyle(
       fontSize: 12,
-      color: colorScheme.primary,
+      color: lightColorScheme.primary,
     ),
     iconTheme: IconThemeData(
-      color: colorScheme.primary,
+      color: lightColorScheme.primary,
       size: 16,
     ),
   );

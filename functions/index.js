@@ -96,6 +96,27 @@ async function sendPushNotification(uid, title, body, data = null, token = null)
   }
 }
 
+/**
+ * Store notification in the database.
+ * @param {string} from - The sender ID.
+ * @param {string} to - The recipient ID.
+ * @param {int} type - The notification type.
+ * @return {Promise<void>} A promise that resolves when the notification is stored.
+ */
+async function saveNotification(from, to, type) {
+  try {
+    const notification = {
+      sender: db.collection("users").doc(from),
+      type: type,
+      read: false,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
+    await db.collection("users").doc(to).collection("notifications").add(notification);
+  } catch (e) {
+    error(e);
+  }
+}
+
 exports.createUserDocument = functions.region("europe-west1").auth.user().onCreate(async (user) => {
   try {
     // Create a document for the new user in Firestore
@@ -246,7 +267,8 @@ exports.followUser = functions.region("europe-west1").https.onCall(async (data, 
     await db.collection("users").doc(user).collection("followers").doc(uid).set({
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
-    sendPushNotification(user, "New Follower", "You have a new follower");
+    await saveNotification(user, uid, 1);
+    await sendPushNotification(user, "New Follower", "You have a new follower");
     return true;
   } catch (e) {
     error(e);
@@ -259,7 +281,7 @@ exports.unfollowUser = functions.region("europe-west1").https.onCall(async (data
     const user = data;
     await db.collection("users").doc(uid).collection("following").doc(user).delete();
     await db.collection("users").doc(user).collection("followers").doc(uid).delete();
-    sendPushNotification(user, "Unfollowed", "You have been unfollowed");
+    await sendPushNotification(user, "Unfollowed", "You have been unfollowed");
     return true;
   } catch (e) {
     error(e);
@@ -302,6 +324,49 @@ exports.isFollowing = functions.region("europe-west1").https.onCall(async (data,
     const user = data;
     const following = await db.collection("users").doc(uid).collection("following").doc(user).get();
     return following.exists;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.getNotifications = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const notifications = await db.collection("users").doc(uid).collection("notifications").orderBy("createdAt", "desc").limit(20).get();
+    const results = [];
+    for (const notification of notifications.docs) {
+      const user = await getUserObject(notification.data().sender.id, false);
+      results.push({
+        ...notification.data(),
+        user: user,
+      });
+    }
+    return results;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.countUnreadNotifications = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const notifications = await db.collection("users").doc(uid).collection("notifications").where("read", "==", false).get();
+    return notifications.size;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.markNotificationsRead = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const batch = db.batch();
+    for (const notification of data) {
+      const ref = db.collection("users").doc(uid).collection("notifications").doc(notification.id);
+      batch.update(ref, {read: true});
+    }
+    await batch.commit();
+    return true;
   } catch (e) {
     error(e);
   }

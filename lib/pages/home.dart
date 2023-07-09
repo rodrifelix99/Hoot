@@ -23,6 +23,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late PageController _pageController;
+  int unreadNotifications = 0;
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   Future _setFCMToken() async {
@@ -40,11 +41,20 @@ class _HomePageState extends State<HomePage> {
     if (user != null) {
       if (user.username == null || user.username!.isEmpty) {
         await Navigator.of(context).pushNamed('/welcome');
+      } else {
+        await _countUnreadNotifications();
       }
       await _setFCMToken();
     } else {
       Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
     }
+  }
+
+  Future _countUnreadNotifications() async {
+    int count = await Provider.of<AuthProvider>(context, listen: false).countUnreadNotifications();
+    setState(() {
+      unreadNotifications = count;
+    });
   }
 
   @override
@@ -129,13 +139,15 @@ class _HomePageState extends State<HomePage> {
               GButton(
                   icon: LineIcons.bell,
                   text: AppLocalizations.of(context)!.notifications,
-                  leading: Badge(
-                    label: const Text('3'),
+                  leading: unreadNotifications > 0 ? Badge(
+                    label: Text(unreadNotifications.toString()),
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     textColor: Theme.of(context).colorScheme.onPrimary,
                     child: const Icon(
                       LineIcons.bell,
                     ),
+                  ) : const Icon(
+                    LineIcons.bell,
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
               ),

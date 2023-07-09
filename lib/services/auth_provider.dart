@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hoot/models/user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:hoot/models/notification.dart' as n;
 
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -307,6 +308,41 @@ class AuthProvider extends ChangeNotifier {
       if (data != null && data is List) {
         final List<U> users = data.map<U>((user) => U.fromJson(Map<String, dynamic>.from(user))).toList();
         return users;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
+  Future<int> countUnreadNotifications() async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('countUnreadNotifications');
+      final response = await callable.call();
+      final data = response.data;
+
+      if (data != null && data is int) {
+        return data;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      print(e.toString());
+      return 0;
+    }
+  }
+
+  Future<List<n.Notification>> getNotifications() async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('getNotifications');
+      final response = await callable.call();
+      final data = response.data;
+
+      if (data != null && data is List) {
+        final List<n.Notification> notifications = data.map<n.Notification>((notification) => n.Notification.fromJson(Map<String, dynamic>.from(notification))).toList();
+        return notifications;
       } else {
         return [];
       }
