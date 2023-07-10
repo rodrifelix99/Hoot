@@ -22,21 +22,17 @@ const db = admin.firestore();
  * @param {object} [built=null] - An optional pre-built user object.
  * @return {Promise<object|null>} A promise that resolves with the user data or null if the user doesn't exist.
  */
-async function getUserObject(uid, addFollowers = true, built = null) {
+async function getUserObj(uid, addFollowers = true, built = null) {
   try {
-    if (!!built) {
+    if (built !== null) {
       const user = built;
       user.uid = uid;
       user.followers = [];
       user.following = [];
-      const followers = await db.collection("users").doc(uid).collection("followers").get() || [];
-      for (const follower of followers.docs) {
-        user.followers.push(follower.id);
-      }
-      const following = await db.collection("users").doc(uid).collection("following").get() || [];
-      for (const follow of following.docs) {
-        user.following.push(follow.id);
-      }
+      const followersSnapshot = await db.collection("users").doc(uid).collection("followers").get();
+      const followingSnapshot = await db.collection("users").doc(uid).collection("following").get();
+      followersSnapshot.forEach((follower) => user.followers.push(follower.id));
+      followingSnapshot.forEach((follow) => user.following.push(follow.id));
       return user;
     } else {
       const doc = await db.collection("users").doc(uid).get();
@@ -44,16 +40,10 @@ async function getUserObject(uid, addFollowers = true, built = null) {
         const user = doc.data();
         user.uid = doc.id;
         if (addFollowers) {
-          user.followers = [];
-          user.following = [];
-          const followers = await db.collection("users").doc(uid).collection("followers").get() || [];
-          for (const follower of followers.docs) {
-            user.followers.push(follower.id);
-          }
-          const following = await db.collection("users").doc(uid).collection("following").get() || [];
-          for (const follow of following.docs) {
-            user.following.push(follow.id);
-          }
+          const followersSnapshot = await db.collection("users").doc(uid).collection("followers").get();
+          const followingSnapshot = await db.collection("users").doc(uid).collection("following").get();
+          user.followers = followersSnapshot.docs.map((follower) => follower.id);
+          user.following = followingSnapshot.docs.map((follow) => follow.id);
         }
         return user;
       } else {
@@ -74,13 +64,13 @@ async function getUserObject(uid, addFollowers = true, built = null) {
  * @param {string} [token=null] - The user's FCM token. If not provided, it will be retrieved from the database.
  * @return {Promise<void>} A promise that resolves when the notification is sent.
  */
-async function sendPushNotification(uid, title, body, data = null, token = null) {
+async function pushNotification(uid, title, body, data = null, token = null) {
   try {
     if (!token) {
-      const user = await getUserObject(uid, false);
+      const user = await getUserObj(uid, false);
       token = user.fcmToken;
     }
-    if (user.fcmToken) {
+    if (token) {
       const message = {
         notification: {
           title: title,
@@ -103,10 +93,10 @@ async function sendPushNotification(uid, title, body, data = null, token = null)
  * @param {int} type - The notification type.
  * @return {Promise<void>} A promise that resolves when the notification is stored.
  */
-async function saveNotification(from, to, type) {
+async function sendNotification(from, to, type) {
   try {
     const notification = {
-      sender: db.collection("users").doc(from),
+      sender: from,
       type: type,
       read: false,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -146,7 +136,7 @@ exports.deleteUserDocument = functions.region("europe-west1").auth.user().onDele
 // get authenticated user info from firestore
 exports.getUserInfo = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
-    const user = await getUserObject(context.auth.uid, true);
+    const user = await getUserObj(context.auth.uid, true);
     return user;
   } catch (e) {
     error(e);
@@ -206,7 +196,7 @@ exports.searchUsers = functions.region("europe-west1").https.onCall(async (data)
     const users = await db.collection("users").where("username", ">=", query).where("username", "<=", query + "\uf8ff").get();
     const results = [];
     for (const user of users.docs) {
-      const userInfo = await getUserObject(user.id, true, user.data());
+      const userInfo = await getUserObj(user.id, true, user.data());
       results.push(userInfo);
     }
     return results;
@@ -234,7 +224,7 @@ exports.getSuggestedUsers = functions.region("europe-west1").https.onCall(async 
       const users = await db.collection("users").where("id", "not-in", [...following, uid]).limit(10).get();
       const data = [];
       for (const doc of users.docs) {
-        const user = await getUserObject(doc.id, true, doc.data());
+        const user = await getUserObj(doc.id, true, doc.data());
         data.push(user);
       }
       if (data.length > 3) {
@@ -248,7 +238,7 @@ exports.getSuggestedUsers = functions.region("europe-west1").https.onCall(async 
       if (doc.id === uid) {
         continue;
       }
-      const user = await getUserObject(doc.id, true, doc.data());
+      const user = await getUserObj(doc.id, true, doc.data());
       data.push(user);
     }
     return data;
@@ -267,8 +257,8 @@ exports.followUser = functions.region("europe-west1").https.onCall(async (data, 
     await db.collection("users").doc(user).collection("followers").doc(uid).set({
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
-    await saveNotification(user, uid, 1);
-    await sendPushNotification(user, "New Follower", "You have a new follower");
+    await sendNotification(uid, user, 1);
+    await pushNotification(user, "New Follower", "You have a new follower", {type: "1", uid});
     return true;
   } catch (e) {
     error(e);
@@ -281,7 +271,7 @@ exports.unfollowUser = functions.region("europe-west1").https.onCall(async (data
     const user = data;
     await db.collection("users").doc(uid).collection("following").doc(user).delete();
     await db.collection("users").doc(user).collection("followers").doc(uid).delete();
-    await sendPushNotification(user, "Unfollowed", "You have been unfollowed");
+    await pushNotification(user, "Unfollowed", "You have been unfollowed");
     return true;
   } catch (e) {
     error(e);
@@ -294,7 +284,7 @@ exports.getFollowers = functions.region("europe-west1").https.onCall(async (data
     const followers = await db.collection("users").doc(uid).collection("followers").get();
     const results = [];
     for (const follower of followers.docs) {
-      const user = await getUserObject(follower.id, true);
+      const user = await getUserObj(follower.id, true);
       results.push(user);
     }
     return results;
@@ -309,7 +299,7 @@ exports.getFollowing = functions.region("europe-west1").https.onCall(async (data
     const following = await db.collection("users").doc(uid).collection("following").get();
     const results = [];
     for (const follow of following.docs) {
-      const user = await getUserObject(follow.id, true);
+      const user = await getUserObj(follow.id, true);
       results.push(user);
     }
     return results;
@@ -333,19 +323,27 @@ exports.getNotifications = functions.region("europe-west1").https.onCall(async (
   try {
     const uid = context.auth.uid;
     const notifications = await db.collection("users").doc(uid).collection("notifications").orderBy("createdAt", "desc").limit(20).get();
-    const results = [];
-    for (const notification of notifications.docs) {
-      const user = await getUserObject(notification.data().sender.id, false);
-      results.push({
-        ...notification.data(),
-        user: user,
-      });
+    results = [];
+
+    if (notifications.size > 0) {
+      results = await Promise.all(
+        notifications.docs.map(async (doc) => {
+          const senderUser = await getUserObj(doc.data().sender, true);
+          return {
+            id: doc.id,
+            user: senderUser,
+            ...doc.data(),
+          };
+        })
+      );
     }
-    return results;
+
+    return JSON.stringify(results);
   } catch (e) {
     error(e);
   }
 });
+
 
 exports.countUnreadNotifications = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
@@ -361,7 +359,8 @@ exports.markNotificationsRead = functions.region("europe-west1").https.onCall(as
   try {
     const uid = context.auth.uid;
     const batch = db.batch();
-    for (const notification of data) {
+    const notifications = await db.collection("users").doc(uid).collection("notifications").where("read", "==", false).get();
+    for (const notification of notifications.docs) {
       const ref = db.collection("users").doc(uid).collection("notifications").doc(notification.id);
       batch.update(ref, {read: true});
     }

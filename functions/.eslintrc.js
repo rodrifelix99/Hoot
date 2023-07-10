@@ -6,15 +6,8 @@ module.exports = {
   parserOptions: {
     "ecmaVersion": 2018,
   },
-  extends: [
-    "google",
-  ],
-  rules: {
-    "no-restricted-globals": ["error", "name", "length"],
-    "prefer-arrow-callback": "error",
-    "quotes": ["error", "double", {"allowTemplateLiterals": true}],
-    "max-len": ["error", {"code": 200}],
-  },
+  extends: [ ],
+  rules: { },
   overrides: [
     {
       files: ["**/*.spec.*"],

@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,9 @@ class AuthProvider extends ChangeNotifier {
 
   U? _user;
   U? get user => _user;
+
+  int _notificationsCount = 0;
+  int get notificationsCount => _notificationsCount;
 
   AuthProvider() {
     _auth.authStateChanges().listen(_onAuthStateChanged); // Add listener
@@ -317,20 +321,19 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<int> countUnreadNotifications() async {
+  Future countUnreadNotifications() async {
     try {
       HttpsCallable callable = _functions.httpsCallable('countUnreadNotifications');
       final response = await callable.call();
       final data = response.data;
 
       if (data != null && data is int) {
-        return data;
+        _notificationsCount = data;
       } else {
-        return 0;
+        _notificationsCount = 0;
       }
     } catch (e) {
       print(e.toString());
-      return 0;
     }
   }
 
@@ -338,17 +341,23 @@ class AuthProvider extends ChangeNotifier {
     try {
       HttpsCallable callable = _functions.httpsCallable('getNotifications');
       final response = await callable.call();
-      final data = response.data;
-
-      if (data != null && data is List) {
-        final List<n.Notification> notifications = data.map<n.Notification>((notification) => n.Notification.fromJson(Map<String, dynamic>.from(notification))).toList();
-        return notifications;
-      } else {
-        return [];
-      }
+      final decodedData = jsonDecode(response.data);
+      final List<dynamic> data = decodedData is List<dynamic> ? decodedData : [];
+      return data.map<n.Notification>((notification) => n.Notification.fromJson(notification as Map<String, dynamic>)).toList();
     } catch (e) {
       print(e.toString());
       return [];
     }
   }
+
+  Future markNotificationsAsRead() async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('markNotificationsRead');
+      await callable.call();
+      _notificationsCount = 0;
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
 }

@@ -51,9 +51,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future _countUnreadNotifications() async {
-    int count = await Provider.of<AuthProvider>(context, listen: false).countUnreadNotifications();
+    await Provider.of<AuthProvider>(context, listen: false).countUnreadNotifications();
     setState(() {
-      unreadNotifications = count;
+      unreadNotifications = Provider.of<AuthProvider>(context, listen: false).notificationsCount;
     });
   }
 
