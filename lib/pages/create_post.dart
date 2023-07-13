@@ -10,8 +10,8 @@ import '../models/feed.dart';
 import '../services/auth_provider.dart';
 
 class CreatePostPage extends StatefulWidget {
-  String? feedId;
-  CreatePostPage({super.key, this.feedId});
+  final String? feedId;
+  const CreatePostPage({super.key, this.feedId});
 
   @override
   State<CreatePostPage> createState() => _CreatePostPageState();

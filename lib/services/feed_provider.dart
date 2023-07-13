@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hoot/models/post.dart';
+import 'package:hoot/models/user.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +29,7 @@ class FeedProvider extends ChangeNotifier {
       HttpsCallable callable = _functions.httpsCallable('createPost');
       await callable.call(post.toJson());
       mainFeedPosts.insert(0, post);
+      notifyListeners();
       return true;
     } catch (e) {
       print(e.toString());
@@ -59,6 +61,28 @@ class FeedProvider extends ChangeNotifier {
     } catch (e) {
       print(e.toString());
       return '';
+    }
+  }
+
+  Future<bool> editFeed(BuildContext context, Feed feed) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('editFeed');
+      final res = await callable.call({
+        'feedId': feed.id,
+        'title': feed.title,
+        'description': feed.description,
+        'icon': feed.icon,
+        'color': feed.color?.value.toString(),
+        'private': feed.private,
+        'nsfw': feed.nsfw
+      });
+      Provider.of<AuthProvider>(context, listen: false).user?.feeds?.removeWhere((f) => f.id == feed.id);
+      Provider.of<AuthProvider>(context, listen: false).addFeedToUser(feed);
+      return res.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
     }
   }
 
@@ -109,6 +133,107 @@ class FeedProvider extends ChangeNotifier {
       await callable.call({'postId': postId, 'feedId': feedId});
       notifyListeners();
       return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<List<Post>> getPosts(DateTime startAfter, U user, Feed feed) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('getFeedPosts');
+      final res = await callable.call({'startAfter': startAfter.millisecondsSinceEpoch, 'uid': user.uid, 'feedId': feed.id});
+      List<Post> posts = [];
+      if (res.data != null) {
+        dynamic responseData = jsonDecode(res.data);
+        for (var post in responseData) {
+          Post p = Post.fromJson(post);
+          p.user = user;
+          p.feed = feed;
+          posts.add(p);
+        }
+      }
+      return posts;
+    } catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
+  Future<bool> subscribeToFeed(String userId, String feedId) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('subscribeToFeed');
+      final res = await callable.call({'userId': userId, 'feedId': feedId});
+      return res.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> unsubscribeFromFeed(String userId, String feedId) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('unsubscribeFromFeed');
+      final res = await callable.call({'userId': userId, 'feedId': feedId});
+      return res.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> requestToJoinFeed(String userId, String feedId) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('requestPrivateFeed');
+      final res = await callable.call({'userId': userId, 'feedId': feedId});
+      return res.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<List<U>> getFeedRequests(String feedId) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('getFeedRequests');
+      final res = await callable.call({'feedId': feedId});
+      List<U> users = [];
+      if (res.data != null) {
+        dynamic responseData = jsonDecode(res.data);
+        for (var user in responseData) {
+          users.add(U.fromJson(user));
+        }
+      }
+      return users;
+    } catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
+  Future<bool> acceptRequest(String userId, String feedId) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('acceptFeedRequest');
+      final res = await callable.call({'userId': userId, 'feedId': feedId});
+      return res.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> declineRequest(String userId, String feedId) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('rejectFeedRequest');
+      final res = await callable.call({'userId': userId, 'feedId': feedId});
+      return res.data;
     } catch (e) {
       print(e.toString());
       return false;

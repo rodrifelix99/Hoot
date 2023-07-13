@@ -267,43 +267,115 @@
     "description": "Search for users label"
   },
   "followers": "Followers",
-    "@followers": {
-        "description": "Followers label"
-    },
-    "following": "Following",
-    "@following": {
-        "description": "Following label"
-    },
+  "@followers": {
+    "description": "Followers label"
+  },
+  "following": "Following",
+  "@following": {
+    "description": "Following label"
+  },
   "noUsersToShow": "No users to show",
-    "@noUsersToShow": {
-        "description": "No users to show message"
-    },
+  "@noUsersToShow": {
+    "description": "No users to show message"
+  },
   "noNotifications": "You have no notifications yet",
   "@noNotifications": {
     "description": "No notifications message"
   },
   "newFollower": "{username} started following you",
-    "@newFollower": {
-        "description": "New follower notification"
-    },
+  "@newFollower": {
+    "description": "New follower notification"
+  },
   "newUnfollower": "{username} unfollowed you",
-    "@newUnfollower": {
-        "description": "New unfollower notification"
-    },
+  "@newUnfollower": {
+    "description": "New unfollower notification"
+  },
   "createFeed": "Create a new Feed",
-    "@createFeed": {
-        "description": "Create Feed label"
-    },
+  "@createFeed": {
+    "description": "Create Feed label"
+  },
   "title": "Title",
-    "@title": {
-        "description": "Title label"
-    },
+  "@title": {
+    "description": "Title label"
+  },
   "description": "Description",
-    "@description": {
-        "description": "Description label"
-    },
+  "@description": {
+    "description": "Description label"
+  },
   "noResults": "No results",
-    "@noResults": {
-        "description": "No results message"
-    }
+  "@noResults": {
+    "description": "No results message"
+  },
+  "noFeeds": "{username} has no feeds yet",
+  "@noFeeds": {
+    "description": "No feeds message"
+  },
+  "noFeedsYou": "You have no feeds yet!",
+  "@noFeedsYou": {
+    "description": "No feeds message"
+  },
+  "createFeedMessage": "You can create a new feed by clicking the + button",
+  "@createFeedMessage": {
+    "description": "Create feed message"
+  },
+  "newSubscriber": "{username} subscribed to your feed",
+  "@newSubscriber": {
+    "description": "New subscriber notification"
+  },
+  "unsubscribe": "Unsubscribe",
+  "@unsubscribe": {
+    "description": "Unsubscribe button"
+  },
+  "unsubscribeConfirmation": "Are you sure you want to unsubscribe from this feed?",
+  "@unsubscribeConfirmation": {
+    "description": "Unsubscribe confirmation message"
+  },
+  "errorUnsubscribing": "There was an error unsubscribing from this feed",
+  "@errorUnsubscribing": {
+    "description": "Error unsubscribing message"
+  },
+  "subscribe": "Subscribe",
+  "@subscribe": {
+    "description": "Subscribe button"
+  },
+  "subscribeConfirmation": "Are you sure you want to subscribe to this feed?",
+  "@subscribeConfirmation": {
+    "description": "Subscribe confirmation message"
+  },
+  "errorSubscribing": "There was an error subscribing to this feed",
+  "@errorSubscribing": {
+    "description": "Error subscribing message"
+  },
+  "requestToJoin": "Request to join",
+  "@requestToJoin": {
+    "description": "Request to join button"
+  },
+  "requestToJoinConfirmation": "Are you sure you want to request to join this feed?",
+  "@requestToJoinConfirmation": {
+    "description": "Request to join confirmation message"
+  },
+  "errorRequestingToJoin": "There was an error requesting to join this feed",
+  "@errorRequestingToJoin": {
+    "description": "Error requesting to join message"
+  },
+  "editFeed": "Edit Feed",
+  "@editFeed": {
+    "description": "Edit Feed label"
+  },
+  "unsubscriber": " {username} unsubscribed from your feed",
+  "@unsubscriber": {
+    "description": "Unsubscriber label"
+  },
+  "privateFeedRequest": "{username} requested to join your private feed",
+  "@privateFeedRequest": {
+    "description": "Private feed request label"
+  },
+  "privateFeedRequestAccepted": "{username} accepted your request to join their private feed",
+  "@privateFeedRequestAccepted": {
+    "description": "Private feed request accepted label"
+  },
+  "privateFeedRequestRejected": "{username} rejected your request to join their private feed",
+  "@privateFeedRequestRejected": {
+    "description": "Private feed request rejected label"
+  }
 }

@@ -8,7 +8,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -65,6 +64,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
         return AppLocalizations.of(context)!.newFollower(username);
       case 2:
         return AppLocalizations.of(context)!.newUnfollower(username);
+      case 3:
+        return AppLocalizations.of(context)!.newSubscriber(username);
+      case 4:
+        return AppLocalizations.of(context)!.unsubscriber(username);
+      case 5:
+        return AppLocalizations.of(context)!.privateFeedRequest(username);
+      case 6:
+        return AppLocalizations.of(context)!.privateFeedRequestAccepted(username);
+      case 7:
+        return AppLocalizations.of(context)!.privateFeedRequestRejected(username);
       default:
         return "";
     }

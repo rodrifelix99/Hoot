@@ -33,9 +33,9 @@ class _PostComponentState extends State<PostComponent> {
   }
 
   Future _deletePost() async {
-    if (widget.post.user?.uid != _authProvider.user!.uid) return;
+    if (widget.post.user?.uid != _authProvider.user?.uid) return;
     // confirmation dialog
-    bool? result = await showDialog<bool>(
+    await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete'),
@@ -65,7 +65,7 @@ class _PostComponentState extends State<PostComponent> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return widget.post.user?.uid == _authProvider.user!.uid ? ListTile(
+        return widget.post.user?.uid == _authProvider.user?.uid ? ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           leading: const Icon(Icons.delete),
           title: const Text('Delete'),
@@ -103,7 +103,7 @@ class _PostComponentState extends State<PostComponent> {
                             strokeAlign: BorderSide.strokeAlignOutside,
                           ),
                         ),
-                        child: ProfileAvatar(image: widget.post.user!.smallProfilePictureUrl ?? '', size: 50, radius: (widget.post.user?.radius ?? 100)/3),
+                        child: ProfileAvatar(image: widget.post.user?.smallProfilePictureUrl ?? '', size: 50, radius: (widget.post.user?.radius ?? 100)/3),
                       )
                   ),
                   const SizedBox(width: 16),
@@ -111,13 +111,13 @@ class _PostComponentState extends State<PostComponent> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.post.user!.name ?? '',
+                        widget.post.user?.name ?? '',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        "${widget.post.feed?.title}" ?? '',
+                        "${widget.post.feed?.title}",
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],

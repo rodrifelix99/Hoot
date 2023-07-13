@@ -5,23 +5,37 @@ import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
+import '../models/feed.dart';
 import '../services/error_service.dart';
 import '../services/feed_provider.dart';
 
 class CreateFeedPage extends StatefulWidget {
-  const CreateFeedPage({super.key});
+  final Feed? feed;
+  const CreateFeedPage({super.key, this.feed});
 
   @override
   State<CreateFeedPage> createState() => _CreateFeedPageState();
 }
 
 class _CreateFeedPageState extends State<CreateFeedPage> {
+  bool _editing = false;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   Color color = Colors.blue;
   bool private = false;
   bool nsfw = false;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    _titleController.text = widget.feed?.title ?? '';
+    _descriptionController.text = widget.feed?.description ?? '';
+    color = widget.feed?.color ?? Colors.blue;
+    private = widget.feed?.private ?? false;
+    nsfw = widget.feed?.nsfw ?? false;
+    _editing = widget.feed != null;
+    super.initState();
+  }
 
   bool _isValid() => _titleController.text.isNotEmpty && _descriptionController.text.isNotEmpty;
 
@@ -47,11 +61,33 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
     }
   }
 
+  Future _editFeed() async {
+    if (!_isValid()) return;
+    setState(() => _isLoading = true);
+    widget.feed?.title = _titleController.text;
+    widget.feed?.description = _descriptionController.text;
+    widget.feed?.color = color;
+    widget.feed?.private = private;
+    widget.feed?.nsfw = nsfw;
+    bool res = await Provider.of<FeedProvider>(context, listen: false).editFeed(
+        context,
+        widget.feed!
+    );
+    if (res) {
+      Navigator.pop(context);
+    } else {
+      setState(() {
+        _isLoading = false;
+        ToastService.showToast(context, AppLocalizations.of(context)!.somethingWentWrong, true);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.createFeed),
+          title: Text(!_editing ? AppLocalizations.of(context)!.createFeed : AppLocalizations.of(context)!.editFeed),
         ),
         body: _isLoading ? const Center(child: CircularProgressIndicator()) :
         SingleChildScrollView(
@@ -92,9 +128,9 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
                     value: private,
                     onChanged: (value) => setState(() => private = value!),
                   ),
-                  Text("Private feed"),
+                  const Text("Private feed"),
                   const SizedBox(width: 8),
-                  private ? LineIcon(LineIcons.lock) : LineIcon(LineIcons.lockOpen),
+                  private ? const LineIcon(LineIcons.lock) : const LineIcon(LineIcons.lockOpen),
                 ],
               ),
               const SizedBox(height: 16),
@@ -104,15 +140,18 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
                     value: nsfw,
                     onChanged: (value) => setState(() => nsfw = value!),
                   ),
-                  Text("NSFW feed"),
+                  const Text("NSFW feed"),
                   const SizedBox(width: 8),
-                  nsfw ? LineIcon(LineIcons.exclamationTriangle) : LineIcon(LineIcons.sun),
+                  nsfw ? const LineIcon(LineIcons.exclamationTriangle) : const LineIcon(LineIcons.sun),
                 ],
               ),
               const SizedBox(height: 26),
-              ElevatedButton(
-                onPressed: _createFeed,
+              !_editing ? ElevatedButton(
+                onPressed: _isValid() ? _createFeed : null,
                 child: Text(AppLocalizations.of(context)!.createFeed),
+              ) : ElevatedButton(
+                onPressed: _isValid() ? _editFeed : null,
+                child: Text(AppLocalizations.of(context)!.editFeed),
               ),
               const SizedBox(height: 26),
             ],

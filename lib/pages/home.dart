@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
     _pageController = PageController();
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bool isSignedIn = _authProvider.isSignedIn;

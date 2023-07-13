@@ -396,6 +396,26 @@ exports.createFeed = functions.region("europe-west1").https.onCall(async (data, 
   }
 });
 
+exports.editFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { feedId, title, description, icon, color, private, nsfw } = data;
+    const ref = db.collection("users").doc(uid).collection("feeds").doc(feedId);
+    await ref.update({
+      title,
+      description,
+      icon,
+      color,
+      private,
+      nsfw,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
 exports.deleteFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const uid = context.auth.uid;
@@ -404,7 +424,7 @@ exports.deleteFeed = functions.region("europe-west1").https.onCall(async (data, 
     let writeCount = 0;
     const feed = await db.collection("users").doc(uid).collection("feeds").doc(feedId).get();
     if (feed.exists) {
-      const subscribers = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("subscribed").get();
+      const subscribers = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("subscribers").get();
       for (const subscriber of subscribers.docs) {
         const ref = db.collection("users").doc(subscriber.id).collection("subscriptions").doc(feedId);
         if (writeCount < 500) {
@@ -454,8 +474,10 @@ exports.getFeeds = functions.region("europe-west1").https.onCall(async (data, co
     for (const feed of feeds.docs) {
       const feedObj = feed.data();
       feedObj.id = feed.id;
-      const subscribersSnapshot = await db.collection("users").doc(uid).collection("feeds").doc(feed.id).collection("subscribed").get();
+      const subscribersSnapshot = await db.collection("users").doc(uid).collection("feeds").doc(feed.id).collection("subscribers").get();
       feedObj.subscribers = subscribersSnapshot.docs.map((doc) => doc.id);
+      const requestsSnapshot = await db.collection("users").doc(uid).collection("feeds").doc(feed.id).collection("requests").get();
+      feedObj.requests = requestsSnapshot.docs.map((doc) => doc.id);
       results.push(feedObj);
     }
     info(results);
@@ -468,10 +490,12 @@ exports.getFeeds = functions.region("europe-west1").https.onCall(async (data, co
 exports.requestPrivateFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const uid = context.auth.uid;
-    const { feedId } = data;
-    await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").doc(uid).set({
+    const { feedId, userId } = data;
+    await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("requests").doc(uid).set({
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
+    await sendNotification(uid, userId, 5);
+    await pushNotification(userId, "New feed request", "Someone wants to subscribe your private feed");
     return true;
   } catch (e) {
     error(e);
@@ -485,8 +509,7 @@ exports.getFeedRequests = functions.region("europe-west1").https.onCall(async (d
     const requests = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").get();
     const results = [];
     for (const request of requests.docs) {
-      const requestObj = request.data();
-      requestObj.id = request.id;
+      const requestObj = await getUserObj(request.id, false);
       results.push(requestObj);
     }
     return JSON.stringify(results);
@@ -502,7 +525,7 @@ exports.acceptFeedRequest = functions.region("europe-west1").https.onCall(async 
     const batch = db.batch();
     const requestRef = db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").doc(userId);
     batch.delete(requestRef);
-    const subscribedRef = db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("subscribed").doc(userId);
+    const subscribedRef = db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("subscribers").doc(userId);
     batch.set(subscribedRef, {
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
@@ -511,6 +534,8 @@ exports.acceptFeedRequest = functions.region("europe-west1").https.onCall(async 
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
     await batch.commit();
+    await sendNotification(uid, userId, 6);
+    await pushNotification(userId, "Feed request accepted", "Your request to subscribe a private feed was accepted");
     return true;
   } catch (e) {
     error(e);
@@ -522,6 +547,8 @@ exports.rejectFeedRequest = functions.region("europe-west1").https.onCall(async 
     const uid = context.auth.uid;
     const { feedId, userId } = data;
     await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").doc(userId).delete();
+    await sendNotification(uid, userId, 7);
+    await pushNotification(userId, "Feed request rejected", "Your request to subscribe a private feed was rejected");
     return true;
   } catch (e) {
     error(e);
@@ -531,9 +558,9 @@ exports.rejectFeedRequest = functions.region("europe-west1").https.onCall(async 
 exports.subscribeToFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const uid = context.auth.uid;
-    const { feedId } = data;
+    const { feedId, userId } = data;
     const batch = db.batch();
-    const subscribedRef = db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("subscribers").doc(uid);
+    const subscribedRef = db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("subscribers").doc(uid);
     batch.set(subscribedRef, {
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
@@ -542,6 +569,8 @@ exports.subscribeToFeed = functions.region("europe-west1").https.onCall(async (d
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
     await batch.commit();
+    await sendNotification(uid, userId, 3);
+    await pushNotification(userId, "New subscriber", "Someone subscribed to one of your feeds");
     return true;
   } catch (e) {
     error(e);
@@ -551,9 +580,9 @@ exports.subscribeToFeed = functions.region("europe-west1").https.onCall(async (d
 exports.unsubscribeFromFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const uid = context.auth.uid;
-    const { feedId } = data;
+    const { feedId, userId } = data;
     const batch = db.batch();
-    const subscribedRef = db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("subscribers").doc(uid);
+    const subscribedRef = db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("subscribers").doc(uid);
     batch.delete(subscribedRef);
     const userSubscribedRef = db.collection("users").doc(uid).collection("subscriptions").doc(feedId);
     batch.delete(userSubscribedRef);
@@ -565,21 +594,25 @@ exports.unsubscribeFromFeed = functions.region("europe-west1").https.onCall(asyn
 });
 
 // on subscribing to feed copy all posts to main feed collection
-exports.onSubscribe = functions.region("europe-west1").firestore.document("users/{userId}/feeds/{feedId}/subscribed/{subscribedId}").onCreate(async (snap, context) => {
+exports.onSubscribe = functions.region("europe-west1").firestore.document("users/{userId}/feeds/{feedId}/subscribers/{subscribedId}").onCreate(async (snap, context) => {
   try {
-    const { userId, feedId } = context.params;
+    const { subscribedId, userId, feedId } = context.params;
     const feedPosts = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").get();
     const batch = db.batch();
     let writeCount = 0;
     for (const feedPost of feedPosts.docs) {
-      const feedPostRef = db.collection("users").doc(userId).collection("mainFeed").doc(feedPost.id);
+      const feedPostRef = db.collection("users").doc(subscribedId).collection("mainFeed").doc(feedPost.id);
       writeCount++;
       if (writeCount > 499) {
         await batch.commit();
         batch = db.batch();
         writeCount = 0;
       } else {
-        batch.set(feedPostRef, feedPost.data());
+        batch.set(feedPostRef, {
+          feedId,
+          userId,
+          ...feedPost.data()
+        });
       }
     }
     await batch.commit();
@@ -589,14 +622,14 @@ exports.onSubscribe = functions.region("europe-west1").firestore.document("users
 });
 
 // on unsubscribing to feed delete all posts from main feed collection
-exports.onUnsubscribe = functions.region("europe-west1").firestore.document("users/{userId}/feeds/{feedId}/subscribed/{subscribedId}").onDelete(async (snap, context) => {
+exports.onUnsubscribe = functions.region("europe-west1").firestore.document("users/{userId}/feeds/{feedId}/subscribers/{subscribedId}").onDelete(async (snap, context) => {
   try {
-    const { userId, feedId } = context.params;
+    const { subscribedId, userId, feedId } = context.params;
     const feedPosts = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").get();
     const batch = db.batch();
     let writeCount = 0;
     for (const feedPost of feedPosts.docs) {
-      const feedPostRef = db.collection("users").doc(userId).collection("mainFeed").doc(feedPost.id);
+      const feedPostRef = db.collection("users").doc(subscribedId).collection("mainFeed").doc(feedPost.id);
       writeCount++;
       if (writeCount > 499) {
         await batch.commit();
@@ -691,17 +724,13 @@ exports.onDeletePost = functions.region("europe-west1").firestore.document("user
 
 exports.getFeedPosts = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
-    const uid = context.auth.uid;
-    let { startAfter, feedId } = data;
-    if (!startAfter) {
-      startAfter = new Date();
-    }
-    const feedPosts = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("posts").orderBy("createdAt", "desc").startAfter(startAfter).limit(10).get();
+    let { startAfter, uid, feedId } = data;
+    const startAfterTimestamp = startAfter ? admin.firestore.Timestamp.fromDate(new Date(startAfter)) : admin.firestore.Timestamp.fromDate(new Date());
+    const feedPosts = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("posts").orderBy("createdAt", "desc").startAfter(startAfterTimestamp).limit(10).get();
     const results = [];
     for (const feedPost of feedPosts.docs) {
       const feedPostObj = feedPost.data();
       feedPostObj.id = feedPost.id;
-      feedPostObj.user = await getUser(feedPostObj.userId);
       results.push(feedPostObj);
     }
     return JSON.stringify(results);

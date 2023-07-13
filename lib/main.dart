@@ -6,6 +6,7 @@ import 'package:hoot/models/user.dart';
 import 'package:hoot/pages/create_feed.dart';
 import 'package:hoot/pages/create_post.dart';
 import 'package:hoot/pages/edit_profile.dart';
+import 'package:hoot/pages/feed_requests.dart';
 import 'package:hoot/pages/follow_list.dart';
 import 'package:hoot/pages/home.dart';
 import 'package:hoot/pages/profile.dart';
@@ -22,6 +23,8 @@ import 'package:hoot/pages/login.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'models/feed.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -88,7 +91,7 @@ Future<void> main() async {
                       case '/create_post':
                         final String? feedId = settings.arguments as String?;
                         return MaterialPageRoute(
-                          builder: (context) => CreatePostPage(feedId: feedId));
+                            builder: (context) => CreatePostPage(feedId: feedId));
                       case '/profile':
                         final U user = settings.arguments as U;
                         return MaterialPageRoute(builder: (context) => ProfilePage(user: user));
@@ -106,6 +109,12 @@ Future<void> main() async {
                         );
                       case '/create_feed':
                         return MaterialPageRoute(builder: (context) => CreateFeedPage());
+                      case '/edit_feed':
+                        final Feed feed = settings.arguments as Feed;
+                        return MaterialPageRoute(builder: (context) => CreateFeedPage(feed: feed));
+                      case '/feed_requests':
+                        final int feedIndex = settings.arguments as int;
+                        return MaterialPageRoute(builder: (context) => FeedRequestsPage(feedIndex: feedIndex));
                       default:
                         return MaterialPageRoute(builder: (context) => HomePage());
                     }
