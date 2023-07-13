@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'feed.dart';
+
 class U {
   final String uid;
   String? name;
@@ -16,6 +18,7 @@ class U {
   DateTime? birthday;
   List<String?> followers = [];
   List<String?> following = [];
+  List<Feed>? feeds;
 
   U({
     required this.uid,
@@ -30,6 +33,7 @@ class U {
     this.birthday,
     this.followers = const [],
     this.following = const [],
+    this.feeds,
   });
 
   @override
@@ -54,6 +58,7 @@ class U {
       birthday: json['birthday'],
       followers: json['followers'] != null ? List<String>.from(json['followers']) : [],
       following: json['following'] != null ? List<String>.from(json['following']) : [],
+      feeds: json['feeds'] != null ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x))) : [],
     );
   }
 

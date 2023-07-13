@@ -1,3 +1,4 @@
+import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
 
 class Post {
@@ -5,6 +6,8 @@ class Post {
   String? text;
   String? media;
   U? user;
+  String? feedId;
+  Feed? feed;
   List<dynamic>? likes;
   List<dynamic>? comments;
   DateTime? createdAt;
@@ -15,6 +18,8 @@ class Post {
     this.text,
     this.media,
     this.user,
+    this.feedId,
+    this.feed,
     this.likes,
     this.comments,
     this.createdAt,
@@ -22,15 +27,15 @@ class Post {
   });
 
   static Post fromJson(Map<String, dynamic> json) {
-    print(json['createdAt']);
     return Post(
       id: json['id'],
       text: json['text'],
       media: json['media'],
-      user: U.fromJson(json['user']),
+      feedId: json['feedId'],
+      feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
+      user: json['user'] != null ? U.fromJson(json['user']) : null,
       likes: json['likes'],
       comments: json['comments'],
-      // json['createdAt'] = {_seconds: 1688489289, _nanoseconds: 105000000}
       createdAt: json['createdAt'] != null ? DateTime.fromMillisecondsSinceEpoch(json['createdAt']['_seconds'] * 1000) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.fromMillisecondsSinceEpoch(json['updatedAt']['_seconds'] * 1000) : null,
     );
@@ -39,7 +44,8 @@ class Post {
   Map<String, dynamic> toJson() {
     return {
       'text': text,
-      'media': media
+      'image': media,
+      'feedId': feedId,
     };
   }
 }

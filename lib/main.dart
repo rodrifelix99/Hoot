@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/pages/create_feed.dart';
 import 'package:hoot/pages/create_post.dart';
 import 'package:hoot/pages/edit_profile.dart';
 import 'package:hoot/pages/follow_list.dart';
@@ -50,66 +51,69 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => FeedProvider()),
       ],
       child: Consumer<AuthProvider>(
-        builder: (context, authProvider, _) {
-          return MaterialApp(
-            title: 'Hoot',
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en'), // English
-            ],
-            home: AnimatedSplashScreen(
-              nextScreen: authProvider.isSignedIn ? HomePage() : LoginPage(),
-              splash: Image.asset('assets/logo.png'),
-              splashTransition: SplashTransition.fadeTransition,
-            ),
-            onGenerateRoute: (settings) {
-              switch (settings.name) {
-                case '/login':
-                  return MaterialPageRoute(builder: (context) => LoginPage());
-                case '/home':
-                  return MaterialPageRoute(builder: (context) => HomePage());
-                case '/signup':
-                  return MaterialPageRoute(builder: (context) => SignUpPage());
-                case '/signin':
-                  return MaterialPageRoute(builder: (context) => SignInPage());
-                case '/terms_of_service':
-                  return MaterialPageRoute(builder: (context) => TermsOfService());
-                case '/welcome':
-                  return MaterialPageRoute(builder: (context) => WelcomePage());
-                case '/create':
-                  return MaterialPageRoute(
-                    builder: (context) {
-                      final feedProvider = Provider.of<FeedProvider>(context, listen: false);
-                      return CreatePostPage(feedProvider: feedProvider);
-                    },
-                  );
-                case '/profile':
-                  final U user = settings.arguments as U;
-                  return MaterialPageRoute(builder: (context) => ProfilePage(user: user));
-                case '/edit_profile':
-                  return MaterialPageRoute(builder: (context) => EditProfilePage());
-                case '/search':
-                  return MaterialPageRoute(builder: (context) => SearchPage());
-                case '/follow_list':
-                  final Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
-                  return MaterialPageRoute(
-                    builder: (context) => FollowListPage(
-                      userId: args['userId'] as String,
-                      following: args['following'] as bool,
-                    ),
-                  );
-                default:
-                  return MaterialPageRoute(builder: (context) => HomePage());
-              }
-            },
-          );
-        },
-      ),
+          builder: (context, authProvider, _) {
+            return Consumer<FeedProvider>(
+              builder: (context, feedProvider, _) {
+                return MaterialApp(
+                  title: 'Hoot',
+                  theme: AppTheme.lightTheme,
+                  darkTheme: AppTheme.darkTheme,
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                  ],
+                  supportedLocales: const [
+                    Locale('en'), // English
+                  ],
+                  home: AnimatedSplashScreen(
+                    nextScreen: authProvider.isSignedIn ? HomePage() : LoginPage(),
+                    splash: Image.asset('assets/logo.png'),
+                    splashTransition: SplashTransition.fadeTransition,
+                    backgroundColor: Theme.of(context).colorScheme.background,
+                  ),
+                  onGenerateRoute: (settings) {
+                    switch (settings.name) {
+                      case '/login':
+                        return MaterialPageRoute(builder: (context) => LoginPage());
+                      case '/home':
+                        return MaterialPageRoute(builder: (context) => HomePage());
+                      case '/signup':
+                        return MaterialPageRoute(builder: (context) => SignUpPage());
+                      case '/signin':
+                        return MaterialPageRoute(builder: (context) => SignInPage());
+                      case '/terms_of_service':
+                        return MaterialPageRoute(builder: (context) => TermsOfService());
+                      case '/welcome':
+                        return MaterialPageRoute(builder: (context) => WelcomePage());
+                      case '/create_post':
+                        final String? feedId = settings.arguments as String?;
+                        return MaterialPageRoute(
+                          builder: (context) => CreatePostPage(feedId: feedId));
+                      case '/profile':
+                        final U user = settings.arguments as U;
+                        return MaterialPageRoute(builder: (context) => ProfilePage(user: user));
+                      case '/edit_profile':
+                        return MaterialPageRoute(builder: (context) => EditProfilePage());
+                      case '/search':
+                        return MaterialPageRoute(builder: (context) => SearchPage());
+                      case '/follow_list':
+                        final Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+                        return MaterialPageRoute(
+                          builder: (context) => FollowListPage(
+                            userId: args['userId'] as String,
+                            following: args['following'] as bool,
+                          ),
+                        );
+                      case '/create_feed':
+                        return MaterialPageRoute(builder: (context) => CreateFeedPage());
+                      default:
+                        return MaterialPageRoute(builder: (context) => HomePage());
+                    }
+                  },
+                );
+              },
+            );
+          }),
     ),
   );
 }

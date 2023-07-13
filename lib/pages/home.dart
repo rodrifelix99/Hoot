@@ -21,28 +21,40 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late PageController _pageController;
-  int unreadNotifications = 0;
+  late AuthProvider _authProvider;
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   Future _setFCMToken() async {
     String? fcmToken = await messaging.getToken();
     if (fcmToken != null) {
-      await Provider.of<AuthProvider>(context, listen: false).setFCMToken(fcmToken);
+      await _authProvider.setFCMToken(fcmToken);
     }
     FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
-      await Provider.of<AuthProvider>(context, listen: false).setFCMToken(fcmToken);
+      await _authProvider.setFCMToken(fcmToken);
+    });
+  }
+
+  Future _listenForNotifications() async {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+      _countUnreadNotifications();
     });
   }
 
   Future isNewUser() async {
-    U? user = Provider.of<AuthProvider>(context, listen: false).user;
+    U? user = _authProvider.user;
     if (user != null) {
       if (user.username == null || user.username!.isEmpty) {
         await Navigator.of(context).pushNamed('/welcome');
       } else {
         await _countUnreadNotifications();
+        _listenForNotifications();
       }
       await _setFCMToken();
     } else {
@@ -51,18 +63,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future _countUnreadNotifications() async {
-    await Provider.of<AuthProvider>(context, listen: false).countUnreadNotifications();
-    setState(() {
-      unreadNotifications = Provider.of<AuthProvider>(context, listen: false).notificationsCount;
-    });
+    await _authProvider.countUnreadNotifications();
   }
 
   @override
   void initState() {
+    _authProvider = Provider.of<AuthProvider>(context, listen: false);
     _pageController = PageController();
+    WidgetsBinding.instance?.addObserver(this);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      bool isSignedIn = Provider.of<AuthProvider>(context, listen: false).isSignedIn;
+      bool isSignedIn = _authProvider.isSignedIn;
       if (!isSignedIn) {
         Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
       } else {
@@ -72,8 +83,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _countUnreadNotifications();
+    }
+  }
+
+  @override
   void dispose() {
-    _pageController.dispose(); // Dispose the PageController
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -112,7 +130,7 @@ class _HomePageState extends State<HomePage> {
       extendBody: true,
       floatingActionButton: (_pageController.hasClients && _pageController.page!.round() == 0) || !_pageController.hasClients ?
       FloatingActionButton(
-        onPressed: () => Navigator.of(context).pushNamed('/create'),
+        onPressed: () => Navigator.of(context).pushNamed('/create_post', arguments: null),
         child: const LineIcon(LineIcons.alternateFeather),
       ) : const SizedBox(),
       bottomNavigationBar: Container(
@@ -139,8 +157,8 @@ class _HomePageState extends State<HomePage> {
               GButton(
                   icon: LineIcons.bell,
                   text: AppLocalizations.of(context)!.notifications,
-                  leading: unreadNotifications > 0 ? Badge(
-                    label: Text(unreadNotifications.toString()),
+                  leading: _authProvider.notificationsCount > 0 ? Badge(
+                    label: Text( _authProvider.notificationsCount > 30 ? '30+' :  _authProvider.notificationsCount.toString()),
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     textColor: Theme.of(context).colorScheme.onPrimary,
                     child: const Icon(

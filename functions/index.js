@@ -143,14 +143,6 @@ exports.getUserInfo = functions.region("europe-west1").https.onCall(async (data,
   }
 });
 
-exports.testEndpoint = functions.region("europe-west1").https.onCall(async () => {
-  try {
-    return "Hello World";
-  } catch (e) {
-    error(e);
-  }
-});
-
 exports.updateUser = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const info = JSON.parse(data);
@@ -271,7 +263,8 @@ exports.unfollowUser = functions.region("europe-west1").https.onCall(async (data
     const user = data;
     await db.collection("users").doc(uid).collection("following").doc(user).delete();
     await db.collection("users").doc(user).collection("followers").doc(uid).delete();
-    await pushNotification(user, "Unfollowed", "You have been unfollowed");
+    await sendNotification(uid, user, 2);
+    await pushNotification(user, "Unfollowed", "You have beed unfollowed", {type: "2", uid});
     return true;
   } catch (e) {
     error(e);
@@ -322,7 +315,14 @@ exports.isFollowing = functions.region("europe-west1").https.onCall(async (data,
 exports.getNotifications = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const uid = context.auth.uid;
-    const notifications = await db.collection("users").doc(uid).collection("notifications").orderBy("createdAt", "desc").limit(20).get();
+    const { startAfter } = data || { startAfter: null };
+    let notifications = null;
+    if (startAfter) {
+      const startAfterTimestamp = admin.firestore.Timestamp.fromDate(new Date(startAfter));
+      notifications = await db.collection("users").doc(uid).collection("notifications").orderBy("createdAt", "desc").startAfter(startAfterTimestamp).limit(10).get();
+    } else {
+      notifications = await db.collection("users").doc(uid).collection("notifications").orderBy("createdAt", "desc").limit(10).get();
+    }
     results = [];
 
     if (notifications.size > 0) {
@@ -343,7 +343,6 @@ exports.getNotifications = functions.region("europe-west1").https.onCall(async (
     error(e);
   }
 });
-
 
 exports.countUnreadNotifications = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
@@ -366,6 +365,385 @@ exports.markNotificationsRead = functions.region("europe-west1").https.onCall(as
     }
     await batch.commit();
     return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.createFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { title, description, icon, color, private, nsfw } = data;
+    const feed = await db.collection("users").doc(uid).collection("feeds").add({
+      title,
+      description,
+      icon,
+      color,
+      private,
+      nsfw,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    await db.collection("users").doc(uid).collection("feeds").doc(feed.id).collection("subscribers").doc(uid).set({
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    await db.collection("users").doc(uid).collection("subscriptions").doc(feed.id).set({
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    return feed.id;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.deleteFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { feedId } = data;
+    const batch = db.batch();
+    let writeCount = 0;
+    const feed = await db.collection("users").doc(uid).collection("feeds").doc(feedId).get();
+    if (feed.exists) {
+      const subscribers = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("subscribed").get();
+      for (const subscriber of subscribers.docs) {
+        const ref = db.collection("users").doc(subscriber.id).collection("subscriptions").doc(feedId);
+        if (writeCount < 500) {
+          batch.delete(ref);
+          writeCount++;
+        } else {
+          await batch.commit();
+          batch = db.batch();
+          batch.delete(ref);
+          writeCount = 1;
+        }
+      }
+      const posts = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("posts").get();
+      for (const post of posts.docs) {
+        const ref = db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("posts").doc(post.id);
+        if (writeCount < 500) {
+          batch.delete(ref);
+          writeCount++;
+        } else {
+          await batch.commit();
+          batch = db.batch();
+          batch.delete(ref);
+          writeCount = 1;
+        }
+      }
+      const feedRef = db.collection("users").doc(uid).collection("feeds").doc(feedId);
+      if (writeCount < 500) {
+        batch.delete(feedRef);
+        writeCount++;
+      } else {
+        await batch.commit();
+        batch = db.batch();
+        batch.delete(feedRef);
+        writeCount = 1;
+      }
+    }
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.getFeeds = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const { uid } = data;
+    const feeds = await db.collection("users").doc(uid).collection("feeds").orderBy("updatedAt", "desc").get();
+    const results = [];
+    for (const feed of feeds.docs) {
+      const feedObj = feed.data();
+      feedObj.id = feed.id;
+      const subscribersSnapshot = await db.collection("users").doc(uid).collection("feeds").doc(feed.id).collection("subscribed").get();
+      feedObj.subscribers = subscribersSnapshot.docs.map((doc) => doc.id);
+      results.push(feedObj);
+    }
+    info(results);
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.requestPrivateFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { feedId } = data;
+    await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").doc(uid).set({
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.getFeedRequests = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { feedId } = data;
+    const requests = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").get();
+    const results = [];
+    for (const request of requests.docs) {
+      const requestObj = request.data();
+      requestObj.id = request.id;
+      results.push(requestObj);
+    }
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.acceptFeedRequest = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { feedId, userId } = data;
+    const batch = db.batch();
+    const requestRef = db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").doc(userId);
+    batch.delete(requestRef);
+    const subscribedRef = db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("subscribed").doc(userId);
+    batch.set(subscribedRef, {
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    const userSubscribedRef = db.collection("users").doc(userId).collection("subscriptions").doc(feedId);
+    batch.set(userSubscribedRef, {
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    await batch.commit();
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.rejectFeedRequest = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { feedId, userId } = data;
+    await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").doc(userId).delete();
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.subscribeToFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { feedId } = data;
+    const batch = db.batch();
+    const subscribedRef = db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("subscribers").doc(uid);
+    batch.set(subscribedRef, {
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    const userSubscribedRef = db.collection("users").doc(uid).collection("subscriptions").doc(feedId);
+    batch.set(userSubscribedRef, {
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    await batch.commit();
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.unsubscribeFromFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { feedId } = data;
+    const batch = db.batch();
+    const subscribedRef = db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("subscribers").doc(uid);
+    batch.delete(subscribedRef);
+    const userSubscribedRef = db.collection("users").doc(uid).collection("subscriptions").doc(feedId);
+    batch.delete(userSubscribedRef);
+    await batch.commit();
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+// on subscribing to feed copy all posts to main feed collection
+exports.onSubscribe = functions.region("europe-west1").firestore.document("users/{userId}/feeds/{feedId}/subscribed/{subscribedId}").onCreate(async (snap, context) => {
+  try {
+    const { userId, feedId } = context.params;
+    const feedPosts = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").get();
+    const batch = db.batch();
+    let writeCount = 0;
+    for (const feedPost of feedPosts.docs) {
+      const feedPostRef = db.collection("users").doc(userId).collection("mainFeed").doc(feedPost.id);
+      writeCount++;
+      if (writeCount > 499) {
+        await batch.commit();
+        batch = db.batch();
+        writeCount = 0;
+      } else {
+        batch.set(feedPostRef, feedPost.data());
+      }
+    }
+    await batch.commit();
+  } catch (e) {
+    error(e);
+  }
+});
+
+// on unsubscribing to feed delete all posts from main feed collection
+exports.onUnsubscribe = functions.region("europe-west1").firestore.document("users/{userId}/feeds/{feedId}/subscribed/{subscribedId}").onDelete(async (snap, context) => {
+  try {
+    const { userId, feedId } = context.params;
+    const feedPosts = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").get();
+    const batch = db.batch();
+    let writeCount = 0;
+    for (const feedPost of feedPosts.docs) {
+      const feedPostRef = db.collection("users").doc(userId).collection("mainFeed").doc(feedPost.id);
+      writeCount++;
+      if (writeCount > 499) {
+        await batch.commit();
+        batch = db.batch();
+        writeCount = 0;
+      } else {
+        batch.delete(feedPostRef);
+      }
+    }
+    await batch.commit();
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.createPost = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { feedId, text, image } = data;
+    await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("posts").add({
+      text,
+      image,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+// on creating a post add it to all subscribed feeds
+exports.onCreatePost = functions.region("europe-west1").firestore.document("users/{userId}/feeds/{feedId}/posts/{postId}").onCreate(async (snap, context) => {
+  try {
+    const { userId, feedId, postId } = context.params;
+    const feedSubscribers = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("subscribers").get();
+    const batch = db.batch();
+    let writeCount = 0;
+    for (const feedSubscriber of feedSubscribers.docs) {
+      const feedPostRef = db.collection("users").doc(feedSubscriber.id).collection("mainFeed").doc(postId);
+      writeCount++;
+      if (writeCount > 499) {
+        await batch.commit();
+        batch = db.batch();
+        writeCount = 0;
+      }
+      batch.set(feedPostRef, {
+        feedId,
+        userId,
+        ...snap.data(),
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    }
+    await batch.commit();
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.deletePost = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { feedId, postId } = data;
+    await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("posts").doc(postId).delete();
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+// on deleting a post delete it from all subscribed feeds
+exports.onDeletePost = functions.region("europe-west1").firestore.document("users/{userId}/feeds/{feedId}/posts/{postId}").onDelete(async (snap, context) => {
+  try {
+    const { userId, feedId, postId } = context.params;
+    const feedSubscribers = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("subscribers").get();
+    const batch = db.batch();
+    let writeCount = 0;
+    for (const feedSubscriber of feedSubscribers.docs) {
+      const feedPostRef = db.collection("users").doc(feedSubscriber.id).collection("mainFeed").doc(postId);
+      writeCount++;
+      if (writeCount > 499) {
+        await batch.commit();
+        batch = db.batch();
+        writeCount = 0;
+      }
+      batch.delete(feedPostRef);
+    }
+    await batch.commit();
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.getFeedPosts = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    let { startAfter, feedId } = data;
+    if (!startAfter) {
+      startAfter = new Date();
+    }
+    const feedPosts = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("posts").orderBy("createdAt", "desc").startAfter(startAfter).limit(10).get();
+    const results = [];
+    for (const feedPost of feedPosts.docs) {
+      const feedPostObj = feedPost.data();
+      feedPostObj.id = feedPost.id;
+      feedPostObj.user = await getUser(feedPostObj.userId);
+      results.push(feedPostObj);
+    }
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.getMainFeedPosts = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    let { startAfter } = data || { startAfter: null };
+    const startAfterTimestamp = startAfter ? admin.firestore.Timestamp.fromDate(new Date(startAfter)) : admin.firestore.Timestamp.fromDate(new Date());
+    const feedPosts = await db.collection("users").doc(uid).collection("mainFeed").orderBy("createdAt", "desc").startAfter(startAfterTimestamp).limit(10).get();
+    const results = [];
+
+    let cachedUsers = [];
+    let cachedFeeds = [];
+
+    for (const feedPost of feedPosts.docs) {
+      const feedPostObj = feedPost.data();
+      feedPostObj.id = feedPost.id;
+      if (cachedFeeds.find((feed) => feed.id === feedPostObj.feedId)) {
+        feedPostObj.feed = cachedFeeds.find((feed) => feed.id === feedPostObj.feedId);
+      } else {
+        const feedDoc = await db.collection("users").doc(feedPostObj.userId).collection("feeds").doc(feedPostObj.feedId).get();
+        if (!feedDoc.exists) {
+          continue;
+        }
+        feedPostObj.feed = feedDoc.data();
+        feedPostObj.feed.id = feedPostObj.feedId;
+        cachedFeeds.push(feedPostObj.feed);
+      }
+      if (cachedUsers.find((user) => user.uid === feedPostObj.userId)) {
+        feedPostObj.user = cachedUsers.find((user) => user.uid === feedPostObj.userId);
+      } else {
+        feedPostObj.user = await getUserObj(feedPostObj.userId);
+        cachedUsers.push(feedPostObj.user);
+      }
+      results.push(feedPostObj);
+    }
+    return JSON.stringify(results);
   } catch (e) {
     error(e);
   }

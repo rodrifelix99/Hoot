@@ -147,62 +147,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    height: 200,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      image: _bannerPicture == null ? user.bannerPictureUrl != null ? DecorationImage(
-                        image: NetworkImage(user.bannerPictureUrl!),
-                        fit: BoxFit.cover,
-                      ) : null : DecorationImage(
-                        image: FileImage(_bannerPicture!),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 10,
-                    right: 10,
-                    child: GestureDetector(
-                      onTap: () => _pickBannerPicture(),
-                      child: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: LineIcon(
-                          LineIcons.image,
-                          color: Theme.of(context).colorScheme.onSurface,
-                          size: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Center(
-                child: Stack(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Stack(
                   children: [
-                    _profilePicture == null ?
-                    ProfileAvatar(image: user.largeProfilePictureUrl ?? '', size: 150, radius: user.radius ?? 100)
-                        : CircleAvatar(
-                      radius: 50,
-                      backgroundImage: FileImage(_profilePicture!),
+                    Container(
+                      height: 200,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        image: _bannerPicture == null ? user.bannerPictureUrl != null ? DecorationImage(
+                          image: NetworkImage(user.bannerPictureUrl!),
+                          fit: BoxFit.cover,
+                        ) : null : DecorationImage(
+                          image: FileImage(_bannerPicture!),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                     Positioned(
-                      bottom: 0,
-                      right: 0,
+                      bottom: 10,
+                      right: 10,
                       child: GestureDetector(
-                        onTap: () => _pickProfilePicture(),
+                        onTap: () => _pickBannerPicture(),
                         child: Container(
                           height: 30,
                           width: 30,
@@ -211,7 +180,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: LineIcon(
-                            LineIcons.camera,
+                            LineIcons.image,
                             color: Theme.of(context).colorScheme.onSurface,
                             size: 16,
                           ),
@@ -220,65 +189,98 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Slider(
-                  value: user.radius ?? 100,
-                  min: 10,
-                  max: 100,
-                  onChanged: (value) => setState(() => user.radius = value),
+                const SizedBox(height: 16),
+                Center(
+                  child: Stack(
+                    children: [
+                      _profilePicture == null ?
+                      ProfileAvatar(image: user.largeProfilePictureUrl ?? '', size: 150, radius: user.radius ?? 100)
+                          : CircleAvatar(
+                        radius: 50,
+                        backgroundImage: FileImage(_profilePicture!),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: GestureDetector(
+                          onTap: () => _pickProfilePicture(),
+                          child: Container(
+                            height: 30,
+                            width: 30,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: LineIcon(
+                              LineIcons.camera,
+                              color: Theme.of(context).colorScheme.onSurface,
+                              size: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: _nameController,
-                      maxLength: 30,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.displayName,
-                        counter: const SizedBox(),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    TextField(
-                      controller: _usernameController,
-                      maxLength: 15,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.username,
-                        counter: const SizedBox(),
-                        enabled: false,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    TextField(
-                      controller: _bioController,
-                      maxLines: 3,
-                      maxLength: 150,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.bio,
-                        alignLabelWithHint: true,
-                      ),
-                    ),
-                    const SizedBox(height: 50),
-                    Text(
-                      'Please note that this options are just for testing purposes.\n'
-                          'Hoot profiles will be completely customizable in the future. Here are some examples of what you will be able to do:\n'
-                          '- Choose a background image for your profile\n'
-                          '- Choose a color for your profile\n'
-                          '- Choose your anthem song from Spotify\n'
-                          '- Add a frame to your profile picture\n'
-                          '- Etc...',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Slider(
+                    value: user.radius ?? 100,
+                    min: 10,
+                    max: 100,
+                    onChanged: (value) => setState(() => user.radius = value),
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 16),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: _nameController,
+                        maxLength: 30,
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.displayName,
+                          counter: const SizedBox(),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      TextField(
+                        controller: _usernameController,
+                        maxLength: 15,
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.username,
+                          counter: const SizedBox(),
+                          enabled: false,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      TextField(
+                        controller: _bioController,
+                        maxLines: 3,
+                        maxLength: 150,
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.bio,
+                          alignLabelWithHint: true,
+                        ),
+                      ),
+                      const SizedBox(height: 50),
+                      Text(
+                        'Please note that this options are just for testing purposes.\n'
+                            'Hoot profiles will be completely customizable in the future. Here are some examples of what you will be able to do:\n'
+                            '- Choose a background image for your profile\n'
+                            '- Choose a color for your profile\n'
+                            '- Choose your anthem song from Spotify\n'
+                            '- Add a frame to your profile picture\n'
+                            '- Etc...',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         )
     );

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/user_suggestions.dart';
-import 'package:hoot/models/post.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../components/post_component.dart';
@@ -17,27 +17,26 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-  List<Post> _posts = [];
+  late FeedProvider _feedProvider;
   bool _isLoading = false;
 
-  Future _getPosts() async {
+  Future _getPosts(DateTime startAfter, { bool refresh = false }) async {
     try {
-      setState(() => _isLoading = true);
-      await Provider.of<FeedProvider>(context, listen: false).getFeed();
-      setState(() {
-        _posts = Provider.of<FeedProvider>(context, listen: false).feed;
-        _isLoading = false;
-      });
+      !refresh ? setState(() => _isLoading = true) : null;
+      await _feedProvider.getMainFeed(startAfter, refresh);
     } catch (e) {
       print(e);
       ToastService.showToast(context, e.toString(), true);
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   @override
   void initState() {
-    _getPosts();
+    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
     super.initState();
+    _getPosts(DateTime.now());
   }
 
   @override
@@ -52,38 +51,32 @@ class _FeedPageState extends State<FeedPage> {
           ),
         ],
       ),
-      body: _isLoading ? const Center(child: CircularProgressIndicator()) : SingleChildScrollView(
-          child: Column(
-            children: [
-              const UserSuggestions(),
-              const Divider(),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
-                child: Center(
-                  child: Text(
-                      'Thank you for being a tester, you\'re awesome! \n\n'
-                      'My Feeds will be a page where you can see all the feeds you subscribed to. '
-                      'It can be a feed created by your roommate for their aesthetic and kinda gay living room, or a feed created by your friend for their cat tips.\n\n'
-                      'My goal is to make something that no other social media has done before, and I think this is it. I\'m excited to see what you think about it. '
-                      'You can DM me @_felix_zinho_ on Twitter to share feedback and report bugs whenever you want\n\n',
-                      textAlign: TextAlign.center
+      body: _isLoading ? const Center(child: CircularProgressIndicator()) : LiquidPullToRefresh(
+        onRefresh: () async => await _getPosts(DateTime.now(), refresh: true),
+        springAnimationDurationInMilliseconds: 500,
+        child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                const UserSuggestions(),
+                const Divider(),
+                _feedProvider.mainFeedPosts.isNotEmpty ? Padding(
+                  padding: const EdgeInsets.only(bottom: 100),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _feedProvider.mainFeedPosts.length,
+                    itemBuilder: (context, index) {
+                      return PostComponent(post: _feedProvider.mainFeedPosts[index]);
+                    },
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              _posts.length > 0 ? ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _posts.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return PostComponent(post: _posts[index]);
-                },
-              ) : const NothingToShowComponent(
-                icon: Icon(Icons.newspaper_rounded),
-                text: 'No posts to show',
-              )
-            ],
-          )
+                ) : const NothingToShowComponent(
+                  icon: Icon(Icons.newspaper_rounded),
+                  text: 'No posts to show',
+                )
+              ],
+            )
+        ),
       ),
     );
   }

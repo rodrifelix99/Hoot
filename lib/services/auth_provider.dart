@@ -5,6 +5,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:hoot/models/notification.dart' as n;
@@ -337,10 +338,12 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<n.Notification>> getNotifications() async {
+  Future<List<n.Notification>> getNotifications(DateTime startAt) async {
     try {
       HttpsCallable callable = _functions.httpsCallable('getNotifications');
-      final response = await callable.call();
+      final response = await callable.call({
+        'startAfter': startAt.toIso8601String(), // Convert DateTime to a string representation
+      });
       final decodedData = jsonDecode(response.data);
       final List<dynamic> data = decodedData is List<dynamic> ? decodedData : [];
       return data.map<n.Notification>((notification) => n.Notification.fromJson(notification as Map<String, dynamic>)).toList();
@@ -358,6 +361,16 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  void addFeedToUser(Feed feed) {
+    _user!.feeds?.insert(0, feed);
+    notifyListeners();
+  }
+
+  void addAllFeedsToUser(List<Feed> feeds) {
+    _user!.feeds?.insertAll(0, feeds);
+    notifyListeners();
   }
 
 }

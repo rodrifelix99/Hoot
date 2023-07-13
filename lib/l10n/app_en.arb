@@ -277,5 +277,33 @@
   "noUsersToShow": "No users to show",
     "@noUsersToShow": {
         "description": "No users to show message"
+    },
+  "noNotifications": "You have no notifications yet",
+  "@noNotifications": {
+    "description": "No notifications message"
+  },
+  "newFollower": "{username} started following you",
+    "@newFollower": {
+        "description": "New follower notification"
+    },
+  "newUnfollower": "{username} unfollowed you",
+    "@newUnfollower": {
+        "description": "New unfollower notification"
+    },
+  "createFeed": "Create a new Feed",
+    "@createFeed": {
+        "description": "Create Feed label"
+    },
+  "title": "Title",
+    "@title": {
+        "description": "Title label"
+    },
+  "description": "Description",
+    "@description": {
+        "description": "Description label"
+    },
+  "noResults": "No results",
+    "@noResults": {
+        "description": "No results message"
     }
 }
