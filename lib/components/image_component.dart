@@ -29,9 +29,7 @@ class _ImageComponentState extends State<ImageComponent> {
             fit: widget.fit,
             alignment: widget.alignment,
             repeat: widget.repeat,
-            placeholderBuilder: OctoPlaceholder.blurHash(
-              'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-            ),
+            placeholderBuilder: OctoPlaceholder.circularProgressIndicator(),
             errorBuilder: OctoError.blurHash(
               'LPOe[M{tZjj;KnPTowa#4=xtyBbJ',
               icon: null,
