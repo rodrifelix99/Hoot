@@ -57,6 +57,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
     if (_isValid()) {
       setState(() => _isLoading = true);
       bool code = await _feedProvider.createPost(
+        context,
         feedId: _selectedFeedId,
         text: text,
       );

@@ -38,6 +38,10 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  void notify() {
+    notifyListeners();
+  }
+
   bool get isSignedIn => _auth.currentUser != null;
 
   Future<U?> getUserInfo() async {
@@ -332,6 +336,7 @@ class AuthProvider extends ChangeNotifier {
       } else {
         _notificationsCount = 0;
       }
+      notifyListeners();
     } catch (e) {
       print(e.toString());
     }

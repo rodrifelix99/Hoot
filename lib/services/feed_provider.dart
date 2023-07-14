@@ -17,8 +17,9 @@ class FeedProvider extends ChangeNotifier {
   List<Post> _mainFeedPosts = [];
   List<Post> get mainFeedPosts => _mainFeedPosts;
 
-  Future<bool> createPost({required String feedId, String? text, String? media}) async {
+  Future<bool> createPost(context, {required String feedId, String? text, String? media}) async {
     try {
+      AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
       Post post = Post(
         id: '',
         text: text,
@@ -28,7 +29,26 @@ class FeedProvider extends ChangeNotifier {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('createPost');
       await callable.call(post.toJson());
+      post.user = authProvider.user;
+      post.feed = authProvider.user?.feeds?.firstWhere((f) => f.id == feedId) ?? Feed(id: feedId, title: 'Posted just now', description: '', icon: '', color: Colors.white, private: false, nsfw: false);
       mainFeedPosts.insert(0, post);
+      authProvider.user?.feeds != null ? authProvider.user?.feeds?.firstWhere((f) => f.id == feedId).posts?.insert(0, post) : null;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> deletePost(BuildContext context, String postId, String feedId) async {
+    try {
+      AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+      _mainFeedPosts.removeWhere((post) => post.id == postId);
+      authProvider.user?.feeds != null ? authProvider.user?.feeds?.firstWhere((f) => f.id == feedId).posts?.removeWhere((post) => post.id == postId) : null;
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('deletePost');
+      await callable.call({'postId': postId, 'feedId': feedId});
       notifyListeners();
       return true;
     } catch (e) {
@@ -122,20 +142,6 @@ class FeedProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print(e.toString());
-    }
-  }
-
-  Future<bool> deletePost(String postId, String feedId) async {
-    try {
-      _mainFeedPosts.removeWhere((post) => post.id == postId);
-      await _auth.currentUser!.getIdToken(true);
-      HttpsCallable callable = _functions.httpsCallable('deletePost');
-      await callable.call({'postId': postId, 'feedId': feedId});
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print(e.toString());
-      return false;
     }
   }
 

@@ -17,6 +17,7 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+  late AuthProvider _authProvider;
   List<Notif.Notification> _notifications = [];
   final ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
@@ -25,6 +26,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   void initState() {
+    _authProvider = Provider.of<AuthProvider>(context, listen: false);
     super.initState();
     _loadNotifications();
     _scrollController.addListener(() {
@@ -41,12 +43,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
       setState(() => _loadingMore = true);
     }
     try {
-      List<Notif.Notification> notifications = await Provider.of<AuthProvider>(context, listen: false).getNotifications(startAt ?? DateTime.now());
+      List<Notif.Notification> notifications = await _authProvider.getNotifications(startAt ?? DateTime.now());
       setState(() {
         _hasMore = notifications.length >= 10;
         startAt != null ? _notifications.addAll(notifications) : _notifications = notifications;
       });
-      Provider.of<AuthProvider>(context, listen: false).markNotificationsAsRead();
+      _authProvider.markNotificationsAsRead();
     } catch (e) {
       print(e);
       ToastService.showToast(context, e.toString(), true);
@@ -78,6 +80,22 @@ class _NotificationsPageState extends State<NotificationsPage> {
         return "";
     }
   }
+  
+  void _handleNotificationTap(Notif.Notification notification) {
+    switch (notification.type) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 6:
+      case 7:
+        Navigator.pushNamed(context, '/profile', arguments: notification.user);
+        break;
+      case 5:
+        Navigator.pushNamed(context, '/profile', arguments: _authProvider.user);
+        break;
+    }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -92,21 +110,30 @@ class _NotificationsPageState extends State<NotificationsPage> {
               icon: Icon(Icons.notifications_off_rounded),
               text: AppLocalizations.of(context)!.noNotifications
           )
-      ) : LiquidPullToRefresh(
-        onRefresh: () => _loadNotifications(),
-        showChildOpacityTransition: false,
-        color: Theme.of(context).colorScheme.primary,
-        child: ListView.builder(
-          controller: _scrollController,
-          itemCount: _notifications.length,
-          itemBuilder: (context, index) => ListTile(
-            onTap: () => Navigator.pushNamed(context, '/profile', arguments: _notifications[index].user),
-            leading: ProfileAvatar(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
-            title: Text(_notifications[index].user.name ?? _notifications[index].user.username ?? ''),
-            subtitle: Text(_getNotificationText(_notifications[index].type, _notifications[index].user.name ?? _notifications[index].user.username ?? '')),
-            trailing: _notifications[index].read ? Text(timeago.format(_notifications[index].createdAt)) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),
+      ) : Column(
+        children: [
+          LiquidPullToRefresh(
+            onRefresh: () => _loadNotifications(),
+            showChildOpacityTransition: false,
+            color: Theme.of(context).colorScheme.primary,
+            child: Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: _notifications.length,
+                itemBuilder: (context, index) => ListTile(
+                  onTap: () => _handleNotificationTap(_notifications[index]),
+                  leading: ProfileAvatar(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
+                  title: Text(_notifications[index].user.name ?? _notifications[index].user.username ?? ''),
+                  subtitle: Text(_getNotificationText(_notifications[index].type, _notifications[index].user.name ?? _notifications[index].user.username ?? '')),
+                  trailing: _notifications[index].read ? Text(timeago.format(_notifications[index].createdAt)) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),
+                ),
+              ),
+            ),
           ),
-        ),
+          _loadingMore ? const Center(
+            child: CircularProgressIndicator(),
+          ) : Container()
+        ],
       ),
     );
   }

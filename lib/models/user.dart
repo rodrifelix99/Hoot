@@ -15,6 +15,8 @@ class U {
   String? bio;
   String? location;
   String? website;
+  bool? verified;
+  bool? tester;
   DateTime? birthday;
   List<String?> followers = [];
   List<String?> following = [];
@@ -30,6 +32,8 @@ class U {
     this.color, this.musicUrl,
     this.bio, this.location,
     this.website,
+    this.verified = false,
+    this.tester = false,
     this.birthday,
     this.followers = const [],
     this.following = const [],
@@ -55,6 +59,8 @@ class U {
       bio: json['bio'],
       location: json['location'],
       website: json['website'],
+      verified: json['verified'],
+      tester: json['tester'],
       birthday: json['birthday'],
       followers: json['followers'] != null ? List<String>.from(json['followers']) : [],
       following: json['following'] != null ? List<String>.from(json['following']) : [],

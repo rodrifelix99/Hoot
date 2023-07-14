@@ -3,6 +3,7 @@ import 'package:hoot/components/avatar.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/follow_button.dart';
 import 'package:hoot/components/image_component.dart';
+import 'package:hoot/components/name_component.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
@@ -31,6 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late U _user;
   late bool _isCurrentUser;
   int _selectedFeedIndex = 0;
+  bool _loadingFeeds = false;
 
   @override
   void initState() {
@@ -69,9 +71,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future _getFeeds() async {
     if (_user.feeds == null || _user.feeds!.isEmpty) {
+      setState(() => _loadingFeeds = true);
       List<Feed> feeds = await _feedProvider.getFeeds(_user.uid);
       if (_isCurrentUser) _authProvider.addAllFeedsToUser(feeds);
-      print(feeds[1].subscribers!.length);
       setState(() {
         _user.feeds = feeds;
         _selectedFeedIndex = 0;
@@ -79,6 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       setState(() => _selectedFeedIndex = 0);
     }
+    setState(() => _loadingFeeds = false);
   }
 
   bool _isSubscribedToFeed() {
@@ -239,17 +242,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                          _user.name!,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          )
-                      ),
-                      Text(
-                          '@${_user.username}',
-                          style: Theme.of(context).textTheme.bodySmall
-                      ),
+                      NameComponent(user: _user, showUsername: true, size: 20),
                       _user.bio != null ? Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -275,6 +268,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ) : const SizedBox(),
                         const SizedBox(width: 10),
+                        _loadingFeeds ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(),
+                        ) : const SizedBox(),
                         for (Feed feed in _user.feeds ?? []) Row(
                           children: [
                             GestureDetector(
@@ -308,8 +306,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.max,
                         children: [
-                          Text(_user.feeds![_selectedFeedIndex].description!, style: Theme.of(context).textTheme.bodyLarge),
+                          Flexible(child: Text(_user.feeds![_selectedFeedIndex].description!, style: Theme.of(context).textTheme.bodyLarge)),
                           _isCurrentUser ? Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
@@ -415,6 +414,13 @@ class _FeedPostsState extends State<FeedPosts> {
     super.didUpdateWidget(oldWidget);
   }
 
+  @override
+  void dispose() {
+    _feedProvider.dispose();
+    _authProvider.dispose();
+    super.dispose();
+  }
+
   _getPosts(DateTime startAfter) async {
     List<Post> posts = await _feedProvider.getPosts(startAfter, widget.user, widget.user.feeds![widget.feedIndex]);
     widget.user.feeds?[widget.feedIndex].posts = posts;
@@ -449,6 +455,7 @@ class _FeedPostsState extends State<FeedPosts> {
     widget.user.feeds?[widget.feedIndex].posts?.isNotEmpty == true ? Column(
       children: [
         for (Post post in widget.user.feeds?[widget.feedIndex].posts ?? []) PostComponent(post: post),
+        const SizedBox(height: 100),
       ],
     ) : NothingToShowComponent(
       icon: const Icon(Icons.article_rounded),

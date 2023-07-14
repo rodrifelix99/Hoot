@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Future _countUnreadNotifications() async {
     await _authProvider.countUnreadNotifications();
+    setState(() {});
   }
 
   @override

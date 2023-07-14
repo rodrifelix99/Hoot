@@ -31,6 +31,13 @@ class _FeedRequestsPageState extends State<FeedRequestsPage> {
     _getRequests();
   }
 
+  @override
+  void dispose() {
+    _feedProvider.dispose();
+    _authProvider.dispose();
+    super.dispose();
+  }
+
   Future _getRequests() async {
     setState(() => _loading = true);
     List<U> requests = await _feedProvider.getFeedRequests(_authProvider.user!.feeds![widget.feedIndex].id);
@@ -43,6 +50,7 @@ class _FeedRequestsPageState extends State<FeedRequestsPage> {
   Future _acceptRequest(String uid) async {
     U cachedUser = _requests.firstWhere((element) => element.uid == uid);
     setState(() => _requests.removeWhere((element) => element.uid == uid));
+    _authProvider.notify();
     bool res = await _feedProvider.acceptRequest(uid, _authProvider.user!.feeds![widget.feedIndex].id);
     if (!res) {
       setState(() => _requests.add(cachedUser));
@@ -50,7 +58,8 @@ class _FeedRequestsPageState extends State<FeedRequestsPage> {
     } else {
       setState(() => {
         _authProvider.user!.feeds![widget.feedIndex].requests!.remove(uid),
-        _authProvider.user!.feeds![widget.feedIndex].subscribers!.add(uid)
+        _authProvider.user!.feeds![widget.feedIndex].subscribers!.add(uid),
+        _authProvider.notify()
       });
     }
   }

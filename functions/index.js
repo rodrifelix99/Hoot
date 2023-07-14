@@ -56,6 +56,37 @@ async function getUserObj(uid, addFollowers = true, built = null) {
 }
 
 /**
+ * Retrieves a Feed object from the database.
+ * @param {string} uid - The user ID.
+ * @param {string} feedId - The feed ID.
+ * @param {boolean} [listSubscriberIds=false] - Indicates whether to include subscriber IDs. Default is false.
+ * @param {boolean} [requests=false] - Indicates whether to include request IDs. Default is false.
+ * @return {Promise<object|null>} A promise that resolves with the feed object or null if the feed doesn't exist.
+ */
+async function getFeedObj(uid, feedId, requests = false, listSubscriberIds = false) {
+  try {
+    const doc = await db.collection("users").doc(uid).collection("feeds").doc(feedId).get();
+    if (doc.exists) {
+      const feed = doc.data();
+      feed.id = doc.id;
+      if (listSubscriberIds) {
+        const subscribersSnapshot = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("subscribers").get();
+        feed.subscribers = subscribersSnapshot.docs.map((subscriber) => subscriber.id);
+      }
+      if (requests) {
+        const requestsSnapshot = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").get();
+        feed.requests = requestsSnapshot.docs.map((request) => request.id);
+      }
+      return feed;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    error(e);
+  }
+}
+
+/**
  * Sends a push notification to a user.
  * @param {string} uid - The user ID.
  * @param {string} title - The notification title.
@@ -93,10 +124,13 @@ async function pushNotification(uid, title, body, data = null, token = null) {
  * @param {int} type - The notification type.
  * @return {Promise<void>} A promise that resolves when the notification is stored.
  */
-async function sendNotification(from, to, type) {
+async function sendDatabaseNotification(from, to, type, feedAuthor = null, feedId = null, postId = null) {
   try {
     const notification = {
       sender: from,
+      feedAuthor: feedAuthor,
+      feedId: feedId,
+      postId: postId,
       type: type,
       read: false,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -200,40 +234,14 @@ exports.searchUsers = functions.region("europe-west1").https.onCall(async (data)
 exports.getSuggestedUsers = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const uid = context.auth.uid;
-    const query = await db.collection("users").doc(uid).collection("following").get();
-    const promises = [];
-    if (query.size > 0) {
-      for (const doc of query.docs) {
-        promises.push(db.collection("users").doc(doc.id).collection("following").get());
-      }
-      const results = await Promise.all(promises);
-      const following = new Set();
-      for (const result of results) {
-        for (const doc of result.docs) {
-          following.add(doc.id);
-        }
-      }
-      const users = await db.collection("users").where("id", "not-in", [...following, uid]).limit(10).get();
-      const data = [];
-      for (const doc of users.docs) {
-        const user = await getUserObj(doc.id, true, doc.data());
-        data.push(user);
-      }
-      if (data.length > 3) {
-        return data;
+    const users = await db.collection("users").where("username", "!=", null).limit(10).get();
+    const results = [];
+    for (const user of users.docs) {
+      if (user.id !== uid) {
+        results.push(await getUserObj(user.id, true, user.data()));
       }
     }
-    // get 10 users where the document id is not equal to the current user's id, must have a username and limit to 10
-    const users = await db.collection("users").where("username", "!=", "").limit(10).get();
-    const data = [];
-    for (const doc of users.docs) {
-      if (doc.id === uid) {
-        continue;
-      }
-      const user = await getUserObj(doc.id, true, doc.data());
-      data.push(user);
-    }
-    return data;
+    return results;
   } catch (e) {
     error(e);
   }
@@ -249,7 +257,7 @@ exports.followUser = functions.region("europe-west1").https.onCall(async (data, 
     await db.collection("users").doc(user).collection("followers").doc(uid).set({
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
-    await sendNotification(uid, user, 1);
+    await sendDatabaseNotification(uid, user, 1);
     await pushNotification(user, "New Follower", "You have a new follower", {type: "1", uid});
     return true;
   } catch (e) {
@@ -263,7 +271,7 @@ exports.unfollowUser = functions.region("europe-west1").https.onCall(async (data
     const user = data;
     await db.collection("users").doc(uid).collection("following").doc(user).delete();
     await db.collection("users").doc(user).collection("followers").doc(uid).delete();
-    await sendNotification(uid, user, 2);
+    await sendDatabaseNotification(uid, user, 2);
     await pushNotification(user, "Unfollowed", "You have beed unfollowed", {type: "2", uid});
     return true;
   } catch (e) {
@@ -329,9 +337,11 @@ exports.getNotifications = functions.region("europe-west1").https.onCall(async (
       results = await Promise.all(
         notifications.docs.map(async (doc) => {
           const senderUser = await getUserObj(doc.data().sender, true);
+          const feed = doc.data().feedId && doc.data().feedAuthor ? await getFeedObj(doc.data().feedAuthor, doc.data().feedId) : null;
           return {
             id: doc.id,
             user: senderUser,
+            feed: feed,
             ...doc.data(),
           };
         })
@@ -472,12 +482,7 @@ exports.getFeeds = functions.region("europe-west1").https.onCall(async (data, co
     const feeds = await db.collection("users").doc(uid).collection("feeds").orderBy("updatedAt", "desc").get();
     const results = [];
     for (const feed of feeds.docs) {
-      const feedObj = feed.data();
-      feedObj.id = feed.id;
-      const subscribersSnapshot = await db.collection("users").doc(uid).collection("feeds").doc(feed.id).collection("subscribers").get();
-      feedObj.subscribers = subscribersSnapshot.docs.map((doc) => doc.id);
-      const requestsSnapshot = await db.collection("users").doc(uid).collection("feeds").doc(feed.id).collection("requests").get();
-      feedObj.requests = requestsSnapshot.docs.map((doc) => doc.id);
+      const feedObj = await getFeedObj(uid, feed.id, true, true);
       results.push(feedObj);
     }
     info(results);
@@ -494,7 +499,7 @@ exports.requestPrivateFeed = functions.region("europe-west1").https.onCall(async
     await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("requests").doc(uid).set({
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
-    await sendNotification(uid, userId, 5);
+    await sendDatabaseNotification(uid, userId, 5, userId, feedId);
     await pushNotification(userId, "New feed request", "Someone wants to subscribe your private feed");
     return true;
   } catch (e) {
@@ -534,7 +539,7 @@ exports.acceptFeedRequest = functions.region("europe-west1").https.onCall(async 
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
     await batch.commit();
-    await sendNotification(uid, userId, 6);
+    await sendDatabaseNotification(uid, userId, 6, uid, feedId);
     await pushNotification(userId, "Feed request accepted", "Your request to subscribe a private feed was accepted");
     return true;
   } catch (e) {
@@ -547,7 +552,7 @@ exports.rejectFeedRequest = functions.region("europe-west1").https.onCall(async 
     const uid = context.auth.uid;
     const { feedId, userId } = data;
     await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").doc(userId).delete();
-    await sendNotification(uid, userId, 7);
+    await sendDatabaseNotification(uid, userId, 7, uid, feedId);
     await pushNotification(userId, "Feed request rejected", "Your request to subscribe a private feed was rejected");
     return true;
   } catch (e) {
@@ -569,7 +574,7 @@ exports.subscribeToFeed = functions.region("europe-west1").https.onCall(async (d
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
     await batch.commit();
-    await sendNotification(uid, userId, 3);
+    await sendDatabaseNotification(uid, userId, 3, userId, feedId);
     await pushNotification(userId, "New subscriber", "Someone subscribed to one of your feeds");
     return true;
   } catch (e) {

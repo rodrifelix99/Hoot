@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/name_component.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/error_service.dart';
@@ -49,7 +50,8 @@ class _PostComponentState extends State<PostComponent> {
             onPressed: () async {
               Navigator.of(context).pop(true);
               setState(() => _deleted = true);
-              bool res = await _feedProvider.deletePost(widget.post.id, widget.post.feed!.id);
+              bool res = await _feedProvider.deletePost(context, widget.post.id, widget.post.feed!.id);
+
               if (!res) {
                 ToastService.showToast(context, 'Error deleting post', true);
               }
@@ -107,21 +109,7 @@ class _PostComponentState extends State<PostComponent> {
                       )
                   ),
                   const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.post.user?.name ?? '',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        "${widget.post.feed?.title}",
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
+                  NameComponent(user: widget.post.user!, feedName: widget.post.feed!.title, color: widget.post.feed!.color ?? Colors.blue),
                   const Spacer(),
                   IconButton(
                     onPressed: _handleMenuTap,
