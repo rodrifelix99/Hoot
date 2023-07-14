@@ -40,7 +40,10 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
   bool _isValid() => _titleController.text.isNotEmpty && _descriptionController.text.isNotEmpty;
 
   Future _createFeed() async {
-    if (!_isValid()) return;
+    if (!_isValid()) {
+      ToastService.showToast(context, "Make sure you fill the title and description fields", true);
+      return;
+    }
     setState(() => _isLoading = true);
     String feedId = await Provider.of<FeedProvider>(context, listen: false).createFeed(
         context,
@@ -97,6 +100,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
               TextField(
                 controller: _titleController,
                 maxLength: 20,
+                onChanged: (value) => setState(() {}),
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.title,
                 ),
@@ -106,6 +110,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
                 controller: _descriptionController,
                 maxLength: 280,
                 maxLines: 5,
+                onChanged: (value) => setState(() {}),
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.description,
                 ),
@@ -115,11 +120,14 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
                   onColorChanged: (Color color) => setState(() => this.color = color),
                   enableShadesSelection: false,
                   enableTonalPalette: false,
-                  color: color,
-                  heading: Text(
-                    "Select a color for your feed",
-                    style: Theme.of(context).textTheme.labelLarge,
-                  )
+                  pickersEnabled: const <ColorPickerType, bool>{
+                    ColorPickerType.primary: true,
+                    ColorPickerType.accent: false,
+                    ColorPickerType.bw: false,
+                    ColorPickerType.custom: false,
+                    ColorPickerType.wheel: false,
+                  },
+                  color: color
               ),
               const SizedBox(height: 16),
               Row(

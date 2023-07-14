@@ -1,5 +1,7 @@
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/services/auth_provider.dart';
@@ -123,21 +125,26 @@ class _PostComponentState extends State<PostComponent> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 10),
-              widget.post.media != null ? Column(
-                children: [
-                  OctoImage(
-                    image: NetworkImage(widget.post.media ?? ''),
-                    placeholderBuilder: OctoPlaceholder.blurHash(
-                      'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                    ),
-                    errorBuilder: OctoError.icon(color: Colors.red),
-                    fit: BoxFit.cover,
+              widget.post.media != null ?
+                  Container(
                     height: 300,
                     width: double.infinity,
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ) : const SizedBox(),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Swiper(
+                      itemCount: widget.post.media!.length,
+                      itemBuilder: (context, index) {
+                        return ImageComponent(url: widget.post.media![index]);
+                      },
+                      pagination: SwiperPagination(
+                        alignment: Alignment.bottomCenter,
+                        builder: DotSwiperPaginationBuilder(
+                          color: Colors.white,
+                          activeColor: widget.post.feed?.color ?? Colors.blue,
+                        ),
+                      ),
+                    ),
+                  )
+                  : const SizedBox(),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(

@@ -19,8 +19,6 @@ class _ImageComponentState extends State<ImageComponent> {
   @override
   Widget build(BuildContext context) {
     return FullScreenWidget(
-      //maintain image aspect ratio
-      backgroundColor: Colors.black,
       child: Center(
         child: Hero(
           tag: widget.url + widget.width.toString() + widget.height.toString(),

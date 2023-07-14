@@ -17,7 +17,7 @@ class FeedProvider extends ChangeNotifier {
   List<Post> _mainFeedPosts = [];
   List<Post> get mainFeedPosts => _mainFeedPosts;
 
-  Future<bool> createPost(context, {required String feedId, String? text, String? media}) async {
+  Future<bool> createPost(context, {required String feedId, String? text, List<String>? media}) async {
     try {
       AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
       Post post = Post(

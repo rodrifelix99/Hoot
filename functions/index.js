@@ -95,7 +95,7 @@ async function getFeedObj(uid, feedId, requests = false, listSubscriberIds = fal
  * @param {string} [token=null] - The user's FCM token. If not provided, it will be retrieved from the database.
  * @return {Promise<void>} A promise that resolves when the notification is sent.
  */
-async function pushNotification(uid, title, body, data = null, token = null) {
+async function sendPush(uid, title, body, data = {}, token = null) {
   try {
     if (!token) {
       const user = await getUserObj(uid, false);
@@ -258,7 +258,7 @@ exports.followUser = functions.region("europe-west1").https.onCall(async (data, 
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
     await sendDatabaseNotification(uid, user, 1);
-    await pushNotification(user, "New Follower", "You have a new follower", {type: "1", uid});
+    await sendPush(user, "New Follower", "You have a new follower", {type: "1", uid});
     return true;
   } catch (e) {
     error(e);
@@ -272,7 +272,7 @@ exports.unfollowUser = functions.region("europe-west1").https.onCall(async (data
     await db.collection("users").doc(uid).collection("following").doc(user).delete();
     await db.collection("users").doc(user).collection("followers").doc(uid).delete();
     await sendDatabaseNotification(uid, user, 2);
-    await pushNotification(user, "Unfollowed", "You have beed unfollowed", {type: "2", uid});
+    await sendPush(user, "Unfollowed", "You have beed unfollowed", {type: "2", uid});
     return true;
   } catch (e) {
     error(e);
@@ -500,7 +500,7 @@ exports.requestPrivateFeed = functions.region("europe-west1").https.onCall(async
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
     await sendDatabaseNotification(uid, userId, 5, userId, feedId);
-    await pushNotification(userId, "New feed request", "Someone wants to subscribe your private feed");
+    await sendPush(userId, "New feed request", "Someone wants to subscribe your private feed");
     return true;
   } catch (e) {
     error(e);
@@ -540,7 +540,7 @@ exports.acceptFeedRequest = functions.region("europe-west1").https.onCall(async 
     });
     await batch.commit();
     await sendDatabaseNotification(uid, userId, 6, uid, feedId);
-    await pushNotification(userId, "Feed request accepted", "Your request to subscribe a private feed was accepted");
+    await sendPush(userId, "Feed request accepted", "Your request to subscribe a private feed was accepted");
     return true;
   } catch (e) {
     error(e);
@@ -553,7 +553,7 @@ exports.rejectFeedRequest = functions.region("europe-west1").https.onCall(async 
     const { feedId, userId } = data;
     await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").doc(userId).delete();
     await sendDatabaseNotification(uid, userId, 7, uid, feedId);
-    await pushNotification(userId, "Feed request rejected", "Your request to subscribe a private feed was rejected");
+    await sendPush(userId, "Feed request rejected", "Your request to subscribe a private feed was rejected");
     return true;
   } catch (e) {
     error(e);
@@ -575,7 +575,7 @@ exports.subscribeToFeed = functions.region("europe-west1").https.onCall(async (d
     });
     await batch.commit();
     await sendDatabaseNotification(uid, userId, 3, userId, feedId);
-    await pushNotification(userId, "New subscriber", "Someone subscribed to one of your feeds");
+    await sendPush(userId, "New subscriber", "Someone subscribed to one of your feeds");
     return true;
   } catch (e) {
     error(e);
@@ -653,10 +653,10 @@ exports.onUnsubscribe = functions.region("europe-west1").firestore.document("use
 exports.createPost = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const uid = context.auth.uid;
-    const { feedId, text, image } = data;
+    const { feedId, text, images } = data;
     await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("posts").add({
       text,
-      image,
+      images,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
     return true;

@@ -4,7 +4,7 @@ import 'package:hoot/models/user.dart';
 class Post {
   String id;
   String? text;
-  String? media;
+  List<String>? media;
   U? user;
   String? feedId;
   Feed? feed;
@@ -30,7 +30,7 @@ class Post {
     return Post(
       id: json['id'],
       text: json['text'],
-      media: json['media'],
+      media: json['images'] != null ? List<String>.from(json['images']) : null,
       feedId: json['feedId'],
       feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
       user: json['user'] != null ? U.fromJson(json['user']) : null,
@@ -44,7 +44,7 @@ class Post {
   Map<String, dynamic> toJson() {
     return {
       'text': text,
-      'image': media,
+      'images': media,
       'feedId': feedId,
     };
   }
