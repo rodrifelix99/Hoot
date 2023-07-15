@@ -343,8 +343,7 @@ exports.editFeed = functions.region("europe-west1").https.onCall(async (data, co
       icon,
       color,
       private,
-      nsfw,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      nsfw
     });
     return true;
   } catch (e) {
@@ -589,6 +588,7 @@ exports.createPost = functions.region("europe-west1").https.onCall(async (data, 
       images,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
+
     return true;
   } catch (e) {
     error(e);
@@ -602,6 +602,12 @@ exports.onCreatePost = functions.region("europe-west1").firestore.document("user
     const feedSubscribers = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("subscribers").get();
     const batch = db.batch();
     let writeCount = 0;
+    //update feed 'updatedAt' field
+    const feedRef = db.collection("users").doc(userId).collection("feeds").doc(feedId);
+    batch.update(feedRef, {
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    writeCount++;
     for (const feedSubscriber of feedSubscribers.docs) {
       const feedPostRef = db.collection("users").doc(feedSubscriber.id).collection("mainFeed").doc(postId);
       writeCount++;
