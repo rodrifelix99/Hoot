@@ -66,7 +66,7 @@ class _UserSuggestionsState extends State<UserSuggestions> {
                   child: ProfileAvatar(
                     image: _users[index].smallProfilePictureUrl ?? '',
                     size: 60,
-                    radius: (_users[index].radius ?? 100)/2,
+                    radius: (_users[index].radius ?? 100)/3,
                   ),
                 ),
                 const SizedBox(height: 5),

@@ -7,12 +7,12 @@ import 'package:hoot/pages/create_feed.dart';
 import 'package:hoot/pages/create_post.dart';
 import 'package:hoot/pages/edit_profile.dart';
 import 'package:hoot/pages/feed_requests.dart';
-import 'package:hoot/pages/follow_list.dart';
 import 'package:hoot/pages/home.dart';
 import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/search.dart';
 import 'package:hoot/pages/sign_in.dart';
 import 'package:hoot/pages/sign_up.dart';
+import 'package:hoot/pages/subscriptions_list.dart';
 import 'package:hoot/pages/terms.dart';
 import 'package:hoot/pages/welcome.dart';
 import 'package:hoot/services/auth_provider.dart';
@@ -99,14 +99,6 @@ Future<void> main() async {
                         return MaterialPageRoute(builder: (context) => EditProfilePage());
                       case '/search':
                         return MaterialPageRoute(builder: (context) => SearchPage());
-                      case '/follow_list':
-                        final Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
-                        return MaterialPageRoute(
-                          builder: (context) => FollowListPage(
-                            userId: args['userId'] as String,
-                            following: args['following'] as bool,
-                          ),
-                        );
                       case '/create_feed':
                         return MaterialPageRoute(builder: (context) => CreateFeedPage());
                       case '/edit_feed':
@@ -115,6 +107,9 @@ Future<void> main() async {
                       case '/feed_requests':
                         final int feedIndex = settings.arguments as int;
                         return MaterialPageRoute(builder: (context) => FeedRequestsPage(feedIndex: feedIndex));
+                        case '/subscriptions':
+                          final String userId = settings.arguments as String;
+                          return MaterialPageRoute(builder: (context) => SubscriptionsListPage(userId: userId));
                       default:
                         return MaterialPageRoute(builder: (context) => HomePage());
                     }

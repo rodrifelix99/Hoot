@@ -114,7 +114,7 @@ class _FeedRequestsPageState extends State<FeedRequestsPage> {
           ),
         ) : const Center(
           child: NothingToShowComponent(
-            icon: Icon(Icons.check_circle_outline),
+            icon: Icon(Icons.check_circle_outline_rounded),
             text: 'There are no requests for this feed',
           ),
         )

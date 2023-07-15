@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:octo_image/octo_image.dart';
 
 class ImageComponent extends StatefulWidget {
@@ -29,7 +30,10 @@ class _ImageComponentState extends State<ImageComponent> {
             fit: widget.fit,
             alignment: widget.alignment,
             repeat: widget.repeat,
-            placeholderBuilder: OctoPlaceholder.circularProgressIndicator(),
+            placeholderBuilder: (context) => LoadingAnimationWidget.staggeredDotsWave(
+              color: Theme.of(context).colorScheme.onSurface,
+              size: 50,
+            ),
             errorBuilder: OctoError.blurHash(
               'LPOe[M{tZjj;KnPTowa#4=xtyBbJ',
               icon: null,

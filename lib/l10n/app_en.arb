@@ -377,5 +377,17 @@
   "privateFeedRequestRejected": "{username} rejected your request to join their private feed",
   "@privateFeedRequestRejected": {
     "description": "Private feed request rejected label"
+  },
+  "comingSoon": "Coming soon!",
+  "@comingSoon": {
+    "description": "Coming soon message"
+  },
+  "numberOfSubscriptions": "{count, plural, =0 {No subscriptions} one {1 subscription} other {{count} subscriptions}}",
+    "@numberOfSubscriptions": {
+        "description": "Number of subscriptions label"
+    },
+  "subscriptions": "Subscriptions",
+  "@subscriptions": {
+    "description": "Subscriptions label"
   }
 }

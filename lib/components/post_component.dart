@@ -73,7 +73,10 @@ class _PostComponentState extends State<PostComponent> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           leading: const Icon(Icons.delete),
           title: const Text('Delete'),
-          onTap: _deletePost,
+          onTap: () {
+            Navigator.of(context).pop();
+            _deletePost();
+          },
         ) : ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           leading: const Icon(Icons.report),
@@ -125,7 +128,7 @@ class _PostComponentState extends State<PostComponent> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 10),
-              widget.post.media != null ?
+              widget.post.media != null && widget.post.media!.isNotEmpty ?
                   Container(
                     height: 300,
                     width: double.infinity,
@@ -135,13 +138,14 @@ class _PostComponentState extends State<PostComponent> {
                       itemBuilder: (context, index) {
                         return ImageComponent(url: widget.post.media![index]);
                       },
-                      pagination: SwiperPagination(
+                      loop: widget.post.media!.length >= 5,
+                      pagination: widget.post.media!.length > 1 ? SwiperPagination(
                         alignment: Alignment.bottomCenter,
                         builder: DotSwiperPaginationBuilder(
                           color: Colors.white,
                           activeColor: widget.post.feed?.color ?? Colors.blue,
                         ),
-                      ),
+                      ) : null,
                     ),
                   )
                   : const SizedBox(),

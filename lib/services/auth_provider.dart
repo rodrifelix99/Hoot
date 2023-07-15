@@ -240,55 +240,6 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> isFollowing(String uid) async {
-    try {
-      if (_user!.following.contains(uid)) {
-        return true;
-      } else {
-        HttpsCallable callable = _functions.httpsCallable('isFollowing');
-        final response = await callable.call(uid);
-        return response.data;
-      }
-    } catch (e) {
-      print(e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> follow(String uid) async {
-    try {
-      _user!.following.add(uid);
-      HttpsCallable callable = _functions.httpsCallable('followUser');
-      final response = await callable.call(uid);
-      if (response.data == true) {
-        return true;
-      } else {
-        _user!.following.remove(uid);
-        return false;
-      }
-    } catch (e) {
-      print(e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> unfollow(String uid) async {
-    try {
-      _user!.following.remove(uid);
-      HttpsCallable callable = _functions.httpsCallable('unfollowUser');
-      final response = await callable.call(uid);
-      if (response.data == true) {
-        return true;
-      } else {
-        _user!.following.add(uid);
-        return false;
-      }
-    } catch (e) {
-      print(e.toString());
-      return false;
-    }
-  }
-
   Future<List<U>> getFollows(String userId, bool following) async {
     try {
       HttpsCallable callable = _functions.httpsCallable(following ? 'getFollowing' : 'getFollowers');

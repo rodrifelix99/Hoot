@@ -9,6 +9,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:provider/provider.dart';
 
@@ -129,7 +130,10 @@ class _CreatePostPageState extends State<CreatePostPage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.createPost),
       ),
-      body: _isLoading ? const Center(child: CircularProgressIndicator()) :
+      body: _isLoading ? Center(child: LoadingAnimationWidget.inkDrop(
+          color: Theme.of(context).colorScheme.onSurface,
+          size: 50,
+      )) :
       SingleChildScrollView(
         child: Column(
           children: [

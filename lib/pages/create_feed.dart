@@ -121,15 +121,25 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
                   enableShadesSelection: false,
                   enableTonalPalette: false,
                   pickersEnabled: const <ColorPickerType, bool>{
-                    ColorPickerType.primary: true,
+                    ColorPickerType.primary: false,
                     ColorPickerType.accent: false,
                     ColorPickerType.bw: false,
                     ColorPickerType.custom: false,
-                    ColorPickerType.wheel: false,
+                    ColorPickerType.wheel: true,
                   },
                   color: color
               ),
-              const SizedBox(height: 16),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: SizedBox(
+                  height: 50,
+                  width: 100,
+                  child: Container(
+                    color: color,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 26),
               Row(
                 children: [
                   Checkbox(

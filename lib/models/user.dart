@@ -18,8 +18,7 @@ class U {
   bool? verified;
   bool? tester;
   DateTime? birthday;
-  List<String?> followers = [];
-  List<String?> following = [];
+  List<String?> subscriptions = [];
   List<Feed>? feeds;
 
   U({
@@ -35,8 +34,7 @@ class U {
     this.verified = false,
     this.tester = false,
     this.birthday,
-    this.followers = const [],
-    this.following = const [],
+    this.subscriptions = const [],
     this.feeds,
   });
 
@@ -62,8 +60,7 @@ class U {
       verified: json['verified'],
       tester: json['tester'],
       birthday: json['birthday'],
-      followers: json['followers'] != null ? List<String>.from(json['followers']) : [],
-      following: json['following'] != null ? List<String>.from(json['following']) : [],
+      subscriptions: json['subscriptions'] != null ? List<String>.from(json['subscriptions'].map((x) => x)) : [],
       feeds: json['feeds'] != null ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x))) : [],
     );
   }

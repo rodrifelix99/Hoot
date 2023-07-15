@@ -18,32 +18,28 @@ const db = admin.firestore();
 /**
  * Retrieves user data from the database.
  * @param {string} uid - The user ID.
- * @param {boolean} [addFollowers=true] - Indicates whether to include follower information. Default is true.
+ * @param {boolean} [addSubscribed=true] - Indicates whether to include follower information. Default is true.
  * @param {object} [built=null] - An optional pre-built user object.
  * @return {Promise<object|null>} A promise that resolves with the user data or null if the user doesn't exist.
  */
-async function getUserObj(uid, addFollowers = true, built = null) {
+async function getUser(uid, addSubscribed = true, built = null) {
   try {
     if (built !== null) {
       const user = built;
       user.uid = uid;
       user.followers = [];
       user.following = [];
-      const followersSnapshot = await db.collection("users").doc(uid).collection("followers").get();
-      const followingSnapshot = await db.collection("users").doc(uid).collection("following").get();
-      followersSnapshot.forEach((follower) => user.followers.push(follower.id));
-      followingSnapshot.forEach((follow) => user.following.push(follow.id));
+      const subscribedSnapshot = await db.collection("users").doc(uid).collection("subscriptions").get();
+      user.subscriptions = subscribedSnapshot.docs.map((subscription) => subscription.id);
       return user;
     } else {
       const doc = await db.collection("users").doc(uid).get();
       if (doc.exists) {
         const user = doc.data();
         user.uid = doc.id;
-        if (addFollowers) {
-          const followersSnapshot = await db.collection("users").doc(uid).collection("followers").get();
-          const followingSnapshot = await db.collection("users").doc(uid).collection("following").get();
-          user.followers = followersSnapshot.docs.map((follower) => follower.id);
-          user.following = followingSnapshot.docs.map((follow) => follow.id);
+        if (addSubscribed) {
+          const subscribedSnapshot = await db.collection("users").doc(uid).collection("subscriptions").get();
+          user.subscriptions = subscribedSnapshot.docs.map((subscription) => subscription.id);
         }
         return user;
       } else {
@@ -61,9 +57,10 @@ async function getUserObj(uid, addFollowers = true, built = null) {
  * @param {string} feedId - The feed ID.
  * @param {boolean} [listSubscriberIds=false] - Indicates whether to include subscriber IDs. Default is false.
  * @param {boolean} [requests=false] - Indicates whether to include request IDs. Default is false.
+ * @param {boolean} [addUserObj=false] - Indicates whether to include the user object. Default is false.
  * @return {Promise<object|null>} A promise that resolves with the feed object or null if the feed doesn't exist.
  */
-async function getFeedObj(uid, feedId, requests = false, listSubscriberIds = false) {
+async function getFeed(uid, feedId, requests = false, listSubscriberIds = false, addUserObj = false) {
   try {
     const doc = await db.collection("users").doc(uid).collection("feeds").doc(feedId).get();
     if (doc.exists) {
@@ -76,6 +73,9 @@ async function getFeedObj(uid, feedId, requests = false, listSubscriberIds = fal
       if (requests) {
         const requestsSnapshot = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").get();
         feed.requests = requestsSnapshot.docs.map((request) => request.id);
+      }
+      if (addUserObj) {
+        feed.user = await getUser(uid, true);
       }
       return feed;
     } else {
@@ -98,7 +98,7 @@ async function getFeedObj(uid, feedId, requests = false, listSubscriberIds = fal
 async function sendPush(uid, title, body, data = {}, token = null) {
   try {
     if (!token) {
-      const user = await getUserObj(uid, false);
+      const user = await getUser(uid, false);
       token = user.fcmToken;
     }
     if (token) {
@@ -170,7 +170,7 @@ exports.deleteUserDocument = functions.region("europe-west1").auth.user().onDele
 // get authenticated user info from firestore
 exports.getUserInfo = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
-    const user = await getUserObj(context.auth.uid, true);
+    const user = await getUser(context.auth.uid, true);
     return user;
   } catch (e) {
     error(e);
@@ -222,7 +222,7 @@ exports.searchUsers = functions.region("europe-west1").https.onCall(async (data)
     const users = await db.collection("users").where("username", ">=", query).where("username", "<=", query + "\uf8ff").get();
     const results = [];
     for (const user of users.docs) {
-      const userInfo = await getUserObj(user.id, true, user.data());
+      const userInfo = await getUser(user.id, true, user.data());
       results.push(userInfo);
     }
     return results;
@@ -238,7 +238,7 @@ exports.getSuggestedUsers = functions.region("europe-west1").https.onCall(async 
     const results = [];
     for (const user of users.docs) {
       if (user.id !== uid) {
-        results.push(await getUserObj(user.id, true, user.data()));
+        results.push(await getUser(user.id, true, user.data()));
       }
     }
     return results;
@@ -285,7 +285,7 @@ exports.getFollowers = functions.region("europe-west1").https.onCall(async (data
     const followers = await db.collection("users").doc(uid).collection("followers").get();
     const results = [];
     for (const follower of followers.docs) {
-      const user = await getUserObj(follower.id, true);
+      const user = await getUser(follower.id, true);
       results.push(user);
     }
     return results;
@@ -300,7 +300,7 @@ exports.getFollowing = functions.region("europe-west1").https.onCall(async (data
     const following = await db.collection("users").doc(uid).collection("following").get();
     const results = [];
     for (const follow of following.docs) {
-      const user = await getUserObj(follow.id, true);
+      const user = await getUser(follow.id, true);
       results.push(user);
     }
     return results;
@@ -336,8 +336,8 @@ exports.getNotifications = functions.region("europe-west1").https.onCall(async (
     if (notifications.size > 0) {
       results = await Promise.all(
         notifications.docs.map(async (doc) => {
-          const senderUser = await getUserObj(doc.data().sender, true);
-          const feed = doc.data().feedId && doc.data().feedAuthor ? await getFeedObj(doc.data().feedAuthor, doc.data().feedId) : null;
+          const senderUser = await getUser(doc.data().sender, true);
+          const feed = doc.data().feedId && doc.data().feedAuthor ? await getFeed(doc.data().feedAuthor, doc.data().feedId) : null;
           return {
             id: doc.id,
             user: senderUser,
@@ -399,6 +399,7 @@ exports.createFeed = functions.region("europe-west1").https.onCall(async (data, 
     });
     await db.collection("users").doc(uid).collection("subscriptions").doc(feed.id).set({
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      userId: uid,
     });
     return feed.id;
   } catch (e) {
@@ -482,7 +483,7 @@ exports.getFeeds = functions.region("europe-west1").https.onCall(async (data, co
     const feeds = await db.collection("users").doc(uid).collection("feeds").orderBy("updatedAt", "desc").get();
     const results = [];
     for (const feed of feeds.docs) {
-      const feedObj = await getFeedObj(uid, feed.id, true, true);
+      const feedObj = await getFeed(uid, feed.id, true, true);
       results.push(feedObj);
     }
     info(results);
@@ -514,7 +515,7 @@ exports.getFeedRequests = functions.region("europe-west1").https.onCall(async (d
     const requests = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("requests").get();
     const results = [];
     for (const request of requests.docs) {
-      const requestObj = await getUserObj(request.id, false);
+      const requestObj = await getUser(request.id, false);
       results.push(requestObj);
     }
     return JSON.stringify(results);
@@ -571,6 +572,7 @@ exports.subscribeToFeed = functions.region("europe-west1").https.onCall(async (d
     });
     const userSubscribedRef = db.collection("users").doc(uid).collection("subscriptions").doc(feedId);
     batch.set(userSubscribedRef, {
+      userId: userId,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
     await batch.commit();
@@ -772,10 +774,29 @@ exports.getMainFeedPosts = functions.region("europe-west1").https.onCall(async (
       if (cachedUsers.find((user) => user.uid === feedPostObj.userId)) {
         feedPostObj.user = cachedUsers.find((user) => user.uid === feedPostObj.userId);
       } else {
-        feedPostObj.user = await getUserObj(feedPostObj.userId);
+        feedPostObj.user = await getUser(feedPostObj.userId);
         cachedUsers.push(feedPostObj.user);
       }
       results.push(feedPostObj);
+    }
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.getSubscriptions = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const { uid } = data;
+    const subscriptions = await db.collection("users").doc(uid).collection("subscriptions").get();
+    const results = [];
+    for (const subscription of subscriptions.docs) {
+      const userId = subscription.data().userId || null;
+      if (!userId) {
+        continue;
+      }
+      const feed = await getFeed(userId, subscription.id, false, false, true);
+      results.push(feed);
     }
     return JSON.stringify(results);
   } catch (e) {

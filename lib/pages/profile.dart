@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar.dart';
 import 'package:hoot/components/empty_message.dart';
-import 'package:hoot/components/follow_button.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/models/feed.dart';
@@ -176,17 +175,28 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  _refreshUser() async {
+    setState(() => _loadingFeeds = true);
+    await _authProvider.getUserInfo();
+    await _getFeeds();
+    setState(() => _loadingFeeds = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text(_user.name!),
-          actions: [
-            if (_isCurrentUser) IconButton(
+          actions: _isCurrentUser ? [
+            IconButton(
+              onPressed: _refreshUser,
+              icon: const LineIcon(LineIcons.download),
+            ),
+            IconButton(
               onPressed: _signOut,
               icon: const LineIcon(LineIcons.alternateSignOut),
             ),
-          ],
+          ] : null,
         ),
         body: SingleChildScrollView(
           child: LiquidPullToRefresh(
@@ -233,7 +243,21 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         onPressed: () => Navigator.of(context).pushNamed('/edit_profile'),
                         child: Text(AppLocalizations.of(context)!.editProfile),
-                      ) : FollowButton(userId: _user.uid),
+                      ) : ElevatedButton(
+                        style: ElevatedButtonTheme.of(context).style?.copyWith(
+                          backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary),
+                          foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onPrimary),
+                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                        ),
+                        onPressed: () => ToastService.showToast(context, AppLocalizations.of(context)!.comingSoon, false),
+                        child: const Row(
+                          children: [
+                            Icon(Icons.star_rounded),
+                            SizedBox(width: 10),
+                            Text("Super sub"),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -243,19 +267,28 @@ class _ProfilePageState extends State<ProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       NameComponent(user: _user, showUsername: true, size: 20),
-                      _user.bio != null ? Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          _user.bio!.isNotEmpty ? const SizedBox(height: 10) : const SizedBox(),
+                          _user.bio?.isNotEmpty ?? false ? const SizedBox(height: 10) : const SizedBox(),
                           Text(
                               _user.bio ?? ''
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pushNamed('/subscriptions', arguments: _user.uid),
+                                child: Text(AppLocalizations.of(context)!.numberOfSubscriptions(_user.subscriptions.length)),
+                              )
+                            ],
+                          )
                         ],
-                      ) : const SizedBox(),
+                      ),
                     ],
                   ),
                 ),
-                Divider(),
+                const Divider(),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -279,14 +312,14 @@ class _ProfilePageState extends State<ProfilePage> {
                               onTap: () => setState(() => _selectedFeedIndex = _user.feeds?.indexOf(feed) ?? 0),
                               child: _selectedFeedIndex == _user.feeds?.indexOf(feed) ? Chip(
                                 label: Text(feed.title),
-                                avatar: feed.private == true ? LineIcon(LineIcons.lock, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : null,
+                                avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : feed.private == true ? LineIcon(LineIcons.lock, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : null,
                                 labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
                                 ),
                                 backgroundColor: feed.color,
                               ) : Chip(
-                                avatar: feed.private == true ? LineIcon(LineIcons.lock, color: Theme.of(context).colorScheme.primary) : feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: Theme.of(context).colorScheme.primary) : null,
+                                avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: Theme.of(context).colorScheme.primary) : feed.private == true ? LineIcon(LineIcons.lock, color: Theme.of(context).colorScheme.primary) : null,
                                 label: Text(feed.title),
                                 // avatar: LineIcon(LineIcons.user)
                               ),
@@ -300,7 +333,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 _user.feeds!.isNotEmpty ?
                 Column(
                   children: [
-                    Divider(),
+                    const Divider(),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       child: Row(
@@ -328,7 +361,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
                                   padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
                                 ),
-                                child: Text("Edit feed"),
+                                child: const Text("Edit feed"),
                               ),
                             ],
                           ) : Container(
@@ -375,7 +408,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     : NothingToShowComponent(
                   icon: const LineIcon(LineIcons.newspaperAlt),
                   text: "${!_isCurrentUser ? AppLocalizations.of(context)!.noFeeds(_user.name ?? _user.username ?? 'This user') : AppLocalizations.of(context)!.noFeedsYou}\n${_isCurrentUser ? AppLocalizations.of(context)!.createFeedMessage : ''}",
-                )
+                ),
+                const SizedBox(height: 100),
               ],
             ),
           ),
@@ -414,13 +448,6 @@ class _FeedPostsState extends State<FeedPosts> {
     super.didUpdateWidget(oldWidget);
   }
 
-  @override
-  void dispose() {
-    _feedProvider.dispose();
-    _authProvider.dispose();
-    super.dispose();
-  }
-
   _getPosts(DateTime startAfter) async {
     List<Post> posts = await _feedProvider.getPosts(startAfter, widget.user, widget.user.feeds![widget.feedIndex]);
     widget.user.feeds?[widget.feedIndex].posts = posts;
@@ -455,7 +482,6 @@ class _FeedPostsState extends State<FeedPosts> {
     widget.user.feeds?[widget.feedIndex].posts?.isNotEmpty == true ? Column(
       children: [
         for (Post post in widget.user.feeds?[widget.feedIndex].posts ?? []) PostComponent(post: post),
-        const SizedBox(height: 100),
       ],
     ) : NothingToShowComponent(
       icon: const Icon(Icons.article_rounded),

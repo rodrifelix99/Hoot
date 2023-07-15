@@ -112,7 +112,6 @@ class FeedProvider extends ChangeNotifier {
       HttpsCallable callable = _functions.httpsCallable('getFeeds');
       final res = await callable.call({'uid': uid});
       List<Feed> feeds = [];
-      print(res.data);
       if (res.data != null) {
         dynamic responseData = jsonDecode(res.data);
         for (var feed in responseData) {
@@ -243,6 +242,25 @@ class FeedProvider extends ChangeNotifier {
     } catch (e) {
       print(e.toString());
       return false;
+    }
+  }
+
+  Future<List<Feed>> getSubscriptions(String uid) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('getSubscriptions');
+      final res = await callable.call({'uid': uid});
+      List<Feed> feeds = [];
+      if (res.data != null) {
+        dynamic responseData = jsonDecode(res.data);
+        for (var feed in responseData) {
+          feeds.add(Feed.fromJson(feed));
+        }
+      }
+      return feeds;
+    } catch (e) {
+      print(e.toString());
+      return [];
     }
   }
 }

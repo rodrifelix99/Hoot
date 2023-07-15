@@ -36,7 +36,7 @@ class _FeedPageState extends State<FeedPage> {
   void initState() {
     _feedProvider = Provider.of<FeedProvider>(context, listen: false);
     super.initState();
-    _getPosts(DateTime.now());
+    _feedProvider.mainFeedPosts.isEmpty ? _getPosts(DateTime.now()) : null;
   }
 
   @override

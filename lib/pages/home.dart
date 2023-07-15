@@ -119,11 +119,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           physics: const NeverScrollableScrollPhysics(),
           onPageChanged: (i) => setState(() {}),
           children: [
-            ChangeNotifierProvider<FeedProvider>(
-              create: (_) => FeedProvider(),
-              child: const FeedPage(),
-            ),
-            const NotificationsPage(),
+            FeedPage(),
+            NotificationsPage(),
             ProfilePage(),
           ],
         ),
