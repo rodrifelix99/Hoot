@@ -60,27 +60,29 @@ class _NotificationsPageState extends State<NotificationsPage> {
     }
   }
 
-  String _getNotificationText(int type, String username) {
-    switch (type) {
+  String _getNotificationText(Notif.Notification notification) {
+    String username = notification.user.username ?? 'User';
+    String feedName = notification.feed?.title ?? 'Feed';
+    switch (notification.type) {
       case 1:
         return AppLocalizations.of(context)!.newFollower(username);
       case 2:
         return AppLocalizations.of(context)!.newUnfollower(username);
       case 3:
-        return AppLocalizations.of(context)!.newSubscriber(username);
+        return AppLocalizations.of(context)!.newSubscriber(feedName, username);
       case 4:
-        return AppLocalizations.of(context)!.unsubscriber(username);
+        return AppLocalizations.of(context)!.unsubscriber(feedName, username);
       case 5:
-        return AppLocalizations.of(context)!.privateFeedRequest(username);
+        return AppLocalizations.of(context)!.privateFeedRequest(feedName, username);
       case 6:
-        return AppLocalizations.of(context)!.privateFeedRequestAccepted(username);
+        return AppLocalizations.of(context)!.privateFeedRequestAccepted(feedName, username);
       case 7:
-        return AppLocalizations.of(context)!.privateFeedRequestRejected(username);
+        return AppLocalizations.of(context)!.privateFeedRequestRejected(feedName, username);
       default:
         return "";
     }
   }
-  
+
   void _handleNotificationTap(Notif.Notification notification) {
     switch (notification.type) {
       case 1:
@@ -92,10 +94,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
         Navigator.pushNamed(context, '/profile', arguments: notification.user);
         break;
       case 5:
-        Navigator.pushNamed(context, '/profile', arguments: _authProvider.user);
+        Navigator.pushNamed(context, '/feed_requests', arguments: notification.feed?.id ?? '');
         break;
     }
-}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +126,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   onTap: () => _handleNotificationTap(_notifications[index]),
                   leading: ProfileAvatar(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
                   title: Text(_notifications[index].user.name ?? _notifications[index].user.username ?? ''),
-                  subtitle: Text(_getNotificationText(_notifications[index].type, _notifications[index].user.name ?? _notifications[index].user.username ?? '')),
+                  subtitle: Text(_getNotificationText(_notifications[index])),
                   trailing: _notifications[index].read ? Text(timeago.format(_notifications[index].createdAt)) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),
                 ),
               ),

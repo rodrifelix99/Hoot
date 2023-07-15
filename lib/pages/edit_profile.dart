@@ -95,8 +95,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         user.bio = _bioController.text;
 
         if(_profilePicture != null) {
-          user.smallProfilePictureUrl = await UploadService().uploadFile(_profilePicture!, 'avatars/${user.uid}/small', compressed: true, size: 50, square: true);
-          user.largeProfilePictureUrl = await UploadService().uploadFile(_profilePicture!, 'avatars/${user.uid}/big', compressed: true, size: 200, square: true);
+          user.smallProfilePictureUrl = await UploadService().uploadFile(_profilePicture!, 'avatars/${user.uid}/small', compressed: true, size: 100, square: true);
+          user.largeProfilePictureUrl = await UploadService().uploadFile(_profilePicture!, 'avatars/${user.uid}/big', compressed: true, size: 250, square: true);
         }
 
         if (_bannerPicture != null) {

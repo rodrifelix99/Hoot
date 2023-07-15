@@ -18,6 +18,7 @@ class CreateFeedPage extends StatefulWidget {
 }
 
 class _CreateFeedPageState extends State<CreateFeedPage> {
+  late FeedProvider _feedProvider;
   bool _editing = false;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -28,6 +29,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
 
   @override
   void initState() {
+    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
     _titleController.text = widget.feed?.title ?? '';
     _descriptionController.text = widget.feed?.description ?? '';
     color = widget.feed?.color ?? Colors.blue;
@@ -45,7 +47,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
       return;
     }
     setState(() => _isLoading = true);
-    String feedId = await Provider.of<FeedProvider>(context, listen: false).createFeed(
+    String feedId = await _feedProvider.createFeed(
         context,
         title: _titleController.text,
         description: _descriptionController.text,
@@ -72,7 +74,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
     widget.feed?.color = color;
     widget.feed?.private = private;
     widget.feed?.nsfw = nsfw;
-    bool res = await Provider.of<FeedProvider>(context, listen: false).editFeed(
+    bool res = await _feedProvider.editFeed(
         context,
         widget.feed!
     );
@@ -83,6 +85,42 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
         _isLoading = false;
         ToastService.showToast(context, AppLocalizations.of(context)!.somethingWentWrong, true);
       });
+    }
+  }
+
+  Future _deleteFeed() async {
+    bool confirm = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.deleteFeed),
+        content: Text(AppLocalizations.of(context)!.deleteFeedConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(AppLocalizations.of(context)!.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(AppLocalizations.of(context)!.deleteFeed),
+          ),
+        ],
+      ),
+    );
+
+    if(confirm) {
+      setState(() => _isLoading = true);
+      bool res = await _feedProvider.deleteFeed(
+          context,
+          widget.feed?.id ?? ''
+      );
+      if (res) {
+        Navigator.pop(context);
+      } else {
+        setState(() {
+          _isLoading = false;
+          ToastService.showToast(context, AppLocalizations.of(context)!.somethingWentWrong, true);
+        });
+      }
     }
   }
 
@@ -169,8 +207,25 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
                 child: Text(AppLocalizations.of(context)!.createFeed),
               ) : ElevatedButton(
                 onPressed: _isValid() ? _editFeed : null,
+                style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
+                  backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
+                  foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onSecondary),
+                ),
                 child: Text(AppLocalizations.of(context)!.editFeed),
               ),
+              _editing ? Column(
+                children: [
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _deleteFeed,
+                    style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
+                      backgroundColor: MaterialStateProperty.all(Colors.red),
+                      foregroundColor: MaterialStateProperty.all(Colors.white),
+                    ),
+                    child: Text(AppLocalizations.of(context)!.deleteFeed),
+                  )
+                ],
+              ) : const SizedBox(),
               const SizedBox(height: 26),
             ],
           ),

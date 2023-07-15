@@ -18,7 +18,7 @@ const db = admin.firestore();
 /**
  * Retrieves user data from the database.
  * @param {string} uid - The user ID.
- * @param {boolean} [addSubscribed=true] - Indicates whether to include follower information. Default is true.
+ * @param {boolean} [addSubscribed=true] - Indicates whether to include subscribed feeds. Default is true.
  * @param {object} [built=null] - An optional pre-built user object.
  * @return {Promise<object|null>} A promise that resolves with the user data or null if the user doesn't exist.
  */
@@ -27,8 +27,6 @@ async function getUser(uid, addSubscribed = true, built = null) {
     if (built !== null) {
       const user = built;
       user.uid = uid;
-      user.followers = [];
-      user.following = [];
       const subscribedSnapshot = await db.collection("users").doc(uid).collection("subscriptions").get();
       user.subscriptions = subscribedSnapshot.docs.map((subscription) => subscription.id);
       return user;
@@ -247,79 +245,6 @@ exports.getSuggestedUsers = functions.region("europe-west1").https.onCall(async 
   }
 });
 
-exports.followUser = functions.region("europe-west1").https.onCall(async (data, context) => {
-  try {
-    const uid = context.auth.uid;
-    const user = data;
-    await db.collection("users").doc(uid).collection("following").doc(user).set({
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-    await db.collection("users").doc(user).collection("followers").doc(uid).set({
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-    await sendDatabaseNotification(uid, user, 1);
-    await sendPush(user, "New Follower", "You have a new follower", {type: "1", uid});
-    return true;
-  } catch (e) {
-    error(e);
-  }
-});
-
-exports.unfollowUser = functions.region("europe-west1").https.onCall(async (data, context) => {
-  try {
-    const uid = context.auth.uid;
-    const user = data;
-    await db.collection("users").doc(uid).collection("following").doc(user).delete();
-    await db.collection("users").doc(user).collection("followers").doc(uid).delete();
-    await sendDatabaseNotification(uid, user, 2);
-    await sendPush(user, "Unfollowed", "You have beed unfollowed", {type: "2", uid});
-    return true;
-  } catch (e) {
-    error(e);
-  }
-});
-
-exports.getFollowers = functions.region("europe-west1").https.onCall(async (data) => {
-  try {
-    const uid = data;
-    const followers = await db.collection("users").doc(uid).collection("followers").get();
-    const results = [];
-    for (const follower of followers.docs) {
-      const user = await getUser(follower.id, true);
-      results.push(user);
-    }
-    return results;
-  } catch (e) {
-    error(e);
-  }
-});
-
-exports.getFollowing = functions.region("europe-west1").https.onCall(async (data) => {
-  try {
-    const uid = data;
-    const following = await db.collection("users").doc(uid).collection("following").get();
-    const results = [];
-    for (const follow of following.docs) {
-      const user = await getUser(follow.id, true);
-      results.push(user);
-    }
-    return results;
-  } catch (e) {
-    error(e);
-  }
-});
-
-exports.isFollowing = functions.region("europe-west1").https.onCall(async (data, context) => {
-  try {
-    const uid = context.auth.uid;
-    const user = data;
-    const following = await db.collection("users").doc(uid).collection("following").doc(user).get();
-    return following.exists;
-  } catch (e) {
-    error(e);
-  }
-});
-
 exports.getNotifications = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const uid = context.auth.uid;
@@ -472,8 +397,11 @@ exports.deleteFeed = functions.region("europe-west1").https.onCall(async (data, 
         writeCount = 1;
       }
     }
+    await batch.commit();
+    return true;
   } catch (e) {
     error(e);
+    return false;
   }
 });
 

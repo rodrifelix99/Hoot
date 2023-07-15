@@ -6,7 +6,7 @@ import 'package:hoot/components/name_component.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/error_service.dart';
-import 'package:octo_image/octo_image.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:provider/provider.dart';
 
 import '../services/feed_provider.dart';
@@ -114,7 +114,16 @@ class _PostComponentState extends State<PostComponent> {
                       )
                   ),
                   const SizedBox(width: 16),
-                  NameComponent(user: widget.post.user!, feedName: widget.post.feed!.title, color: widget.post.feed!.color ?? Colors.blue),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      NameComponent(user: widget.post.user!, feedName: widget.post.feed!.title, color: widget.post.feed!.color ?? Colors.blue),
+                      Text(
+                        timeago.format(widget.post.createdAt ?? DateTime.now()),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
                   const Spacer(),
                   IconButton(
                     onPressed: _handleMenuTap,

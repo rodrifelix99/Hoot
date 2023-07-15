@@ -12,6 +12,7 @@ import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../components/post_component.dart';
@@ -32,6 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late bool _isCurrentUser;
   int _selectedFeedIndex = 0;
   bool _loadingFeeds = false;
+  bool _loadingUser = false;
 
   @override
   void initState() {
@@ -68,8 +70,8 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  Future _getFeeds() async {
-    if (_user.feeds == null || _user.feeds!.isEmpty) {
+  Future _getFeeds({bool refresh = false}) async {
+    if (refresh || _user.feeds == null || _user.feeds!.isEmpty) {
       setState(() => _loadingFeeds = true);
       List<Feed> feeds = await _feedProvider.getFeeds(_user.uid);
       if (_isCurrentUser) _authProvider.addAllFeedsToUser(feeds);
@@ -176,10 +178,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   _refreshUser() async {
-    setState(() => _loadingFeeds = true);
+    setState(() => _loadingUser = true);
     await _authProvider.getUserInfo();
-    await _getFeeds();
-    setState(() => _loadingFeeds = false);
+    await _getFeeds(refresh: true);
+    setState(() => _loadingUser = false);
   }
 
   @override
@@ -190,7 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
           actions: _isCurrentUser ? [
             IconButton(
               onPressed: _refreshUser,
-              icon: const LineIcon(LineIcons.download),
+              icon: const LineIcon(LineIcons.alternateSync),
             ),
             IconButton(
               onPressed: _signOut,
@@ -198,7 +200,12 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ] : null,
         ),
-        body: SingleChildScrollView(
+        body: _loadingUser ? Center(
+          child: LoadingAnimationWidget.inkDrop(
+            color: Theme.of(context).colorScheme.onSurface,
+            size: 50,
+          )
+        ) : SingleChildScrollView(
           child: LiquidPullToRefresh(
             onRefresh: _getFeeds,
             child: Column(
@@ -346,7 +353,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               _user.feeds![_selectedFeedIndex].requests?.isNotEmpty ?? false ? ElevatedButton(
-                                onPressed: () => Navigator.of(context).pushNamed('/feed_requests', arguments: _selectedFeedIndex),
+                                onPressed: () => Navigator.of(context).pushNamed('/feed_requests', arguments: _user.feeds![_selectedFeedIndex].id),
                                 style: ElevatedButtonTheme.of(context).style?.copyWith(
                                   backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
                                   foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),

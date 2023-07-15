@@ -282,11 +282,11 @@
   "@noNotifications": {
     "description": "No notifications message"
   },
-  "newFollower": "{username} started following you",
+  "newFollower": "@{username} started following you",
   "@newFollower": {
     "description": "New follower notification"
   },
-  "newUnfollower": "{username} unfollowed you",
+  "newUnfollower": "@{username} unfollowed you",
   "@newUnfollower": {
     "description": "New unfollower notification"
   },
@@ -318,7 +318,7 @@
   "@createFeedMessage": {
     "description": "Create feed message"
   },
-  "newSubscriber": "{username} subscribed to your feed",
+  "newSubscriber": "@{username} subscribed to {feedName}",
   "@newSubscriber": {
     "description": "New subscriber notification"
   },
@@ -362,19 +362,19 @@
   "@editFeed": {
     "description": "Edit Feed label"
   },
-  "unsubscriber": " {username} unsubscribed from your feed",
+  "unsubscriber": " @{username} unsubscribed from {feedName}",
   "@unsubscriber": {
     "description": "Unsubscriber label"
   },
-  "privateFeedRequest": "{username} requested to join your private feed",
+  "privateFeedRequest": "@{username} requested to join {feedName}",
   "@privateFeedRequest": {
     "description": "Private feed request label"
   },
-  "privateFeedRequestAccepted": "{username} accepted your request to join their private feed",
+  "privateFeedRequestAccepted": "@{username} accepted your request to join {feedName}",
   "@privateFeedRequestAccepted": {
     "description": "Private feed request accepted label"
   },
-  "privateFeedRequestRejected": "{username} rejected your request to join their private feed",
+  "privateFeedRequestRejected": "@{username} rejected your request to join {feedName}",
   "@privateFeedRequestRejected": {
     "description": "Private feed request rejected label"
   },
@@ -389,5 +389,13 @@
   "subscriptions": "Subscriptions",
   "@subscriptions": {
     "description": "Subscriptions label"
-  }
+  },
+  "deleteFeed": "Delete Feed",
+    "@deleteFeed": {
+        "description": "Delete Feed label"
+    },
+  "deleteFeedConfirmation": "Are you sure you want to delete this feed?",
+    "@deleteFeedConfirmation": {
+        "description": "Delete Feed confirmation message"
+    }
 }

@@ -106,6 +106,19 @@ class FeedProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> deleteFeed(BuildContext context, String feedId) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('deleteFeed');
+      final res = await callable.call({'feedId': feedId});
+      Provider.of<AuthProvider>(context, listen: false).user?.feeds?.removeWhere((f) => f.id == feedId);
+      return res.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
   Future<List<Feed>> getFeeds(String uid) async {
     try {
       await _auth.currentUser!.getIdToken(true);

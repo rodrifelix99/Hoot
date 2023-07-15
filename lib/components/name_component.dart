@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/services/error_service.dart';
-import 'package:line_icons/line_icon.dart';
-import 'package:line_icons/line_icons.dart';
 
 import '../models/user.dart';
 

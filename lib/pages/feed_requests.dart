@@ -6,12 +6,11 @@ import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
-
 import '../models/user.dart';
 
 class FeedRequestsPage extends StatefulWidget {
-  final int feedIndex;
-  const FeedRequestsPage({super.key, required this.feedIndex});
+  final String feedId;
+  const FeedRequestsPage({super.key, required this.feedId});
 
   @override
   State<FeedRequestsPage> createState() => _FeedRequestsPageState();
@@ -31,16 +30,9 @@ class _FeedRequestsPageState extends State<FeedRequestsPage> {
     _getRequests();
   }
 
-  @override
-  void dispose() {
-    _feedProvider.dispose();
-    _authProvider.dispose();
-    super.dispose();
-  }
-
   Future _getRequests() async {
     setState(() => _loading = true);
-    List<U> requests = await _feedProvider.getFeedRequests(_authProvider.user!.feeds![widget.feedIndex].id);
+    List<U> requests = await _feedProvider.getFeedRequests(widget.feedId);
     setState(() {
       _requests = requests;
       _loading = false;
@@ -50,16 +42,15 @@ class _FeedRequestsPageState extends State<FeedRequestsPage> {
   Future _acceptRequest(String uid) async {
     U cachedUser = _requests.firstWhere((element) => element.uid == uid);
     setState(() => _requests.removeWhere((element) => element.uid == uid));
-    _authProvider.notify();
-    bool res = await _feedProvider.acceptRequest(uid, _authProvider.user!.feeds![widget.feedIndex].id);
+    bool res = await _feedProvider.acceptRequest(uid, widget.feedId);
     if (!res) {
       setState(() => _requests.add(cachedUser));
       ToastService.showToast(context, 'Error accepting request', true);
     } else {
+      int feedIndex = _authProvider.user!.feeds!.indexWhere((element) => element.id == widget.feedId);
       setState(() => {
-        _authProvider.user!.feeds![widget.feedIndex].requests!.remove(uid),
-        _authProvider.user!.feeds![widget.feedIndex].subscribers!.add(uid),
-        _authProvider.notify()
+        _authProvider.user!.feeds![feedIndex].requests!.remove(uid),
+        _authProvider.user!.feeds![feedIndex].subscribers!.add(uid),
       });
     }
   }
@@ -67,14 +58,15 @@ class _FeedRequestsPageState extends State<FeedRequestsPage> {
   Future _declineRequest(String uid) async {
     U cachedUser = _requests.firstWhere((element) => element.uid == uid);
     setState(() => _requests.removeWhere((element) => element.uid == uid));
-    bool res = await _feedProvider.declineRequest(uid, _authProvider.user!.feeds![widget.feedIndex].id);
+    bool res = await _feedProvider.declineRequest(uid, widget.feedId);
     if (!res) {
       setState(() => _requests.add(cachedUser));
       ToastService.showToast(context, 'Error declining request', true);
     } else {
+      int feedIndex = _authProvider.user!.feeds!.indexWhere((element) => element.id == widget.feedId);
       setState(() => {
-        _authProvider.user!.feeds![widget.feedIndex].requests!.remove(uid),
-        _authProvider.user!.feeds![widget.feedIndex].subscribers!.add(uid)
+        _authProvider.user!.feeds![feedIndex].requests!.remove(uid),
+        _authProvider.user!.feeds![feedIndex].subscribers!.add(uid)
       });
     }
   }

@@ -69,7 +69,7 @@ Future<void> main() async {
                     Locale('en'), // English
                   ],
                   home: AnimatedSplashScreen(
-                    nextScreen: authProvider.isSignedIn ? HomePage() : LoginPage(),
+                    nextScreen: HomePage(),
                     splash: Image.asset('assets/logo.png'),
                     splashTransition: SplashTransition.fadeTransition,
                     backgroundColor: Theme.of(context).colorScheme.background,
@@ -105,8 +105,8 @@ Future<void> main() async {
                         final Feed feed = settings.arguments as Feed;
                         return MaterialPageRoute(builder: (context) => CreateFeedPage(feed: feed));
                       case '/feed_requests':
-                        final int feedIndex = settings.arguments as int;
-                        return MaterialPageRoute(builder: (context) => FeedRequestsPage(feedIndex: feedIndex));
+                        final String feedId = settings.arguments as String;
+                        return MaterialPageRoute(builder: (context) => FeedRequestsPage(feedId: feedId));
                         case '/subscriptions':
                           final String userId = settings.arguments as String;
                           return MaterialPageRoute(builder: (context) => SubscriptionsListPage(userId: userId));
