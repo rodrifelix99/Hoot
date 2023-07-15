@@ -44,11 +44,15 @@ class _NameComponentState extends State<NameComponent> {
                 padding: const EdgeInsets.only(left: 4),
                 child: GestureDetector(
                   onTap: _onTapVerified,
-                  child: Icon(
+                  child: widget.color != Colors.blue ? Icon(
                     Icons.verified_rounded,
                     color: widget.color,
                     size: widget.size.toDouble(),
-                  ),
+                  ) : Image.asset(
+                    'assets/images/verified.gif',
+                    width: widget.size.toDouble(),
+                    height: widget.size.toDouble(),
+                  )
                 ),
               ),
             if (widget.user.tester == true)
@@ -56,11 +60,15 @@ class _NameComponentState extends State<NameComponent> {
                 padding: const EdgeInsets.only(left: 4),
                 child: GestureDetector(
                   onTap: _onTapTester,
-                  child: Icon(
+                  child: widget.color != Colors.blue ? Icon(
                     Icons.bug_report_rounded,
                     color: widget.color,
                     size: widget.size.toDouble(),
-                  ),
+                  ) : Image.asset(
+                    'assets/images/bug.gif',
+                    width: widget.size.toDouble(),
+                    height: widget.size.toDouble(),
+                  )
                 ),
               ),
           ],

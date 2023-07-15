@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/services/auth_provider.dart';
+import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
@@ -21,12 +22,14 @@ class SubscriptionsListPage extends StatefulWidget {
 
 class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
   late FeedProvider _feedProvider;
+  late AuthProvider _authProvider;
   List<Feed> _subscriptions = [];
   bool _loading = true;
 
   @override
   void initState() {
     _feedProvider = Provider.of<FeedProvider>(context, listen: false);
+    _authProvider = Provider.of<AuthProvider>(context, listen: false);
     super.initState();
     _getSubscriptions();
   }
@@ -48,6 +51,25 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
       });
     }
   }
+
+  Future _unsubscribe(String userId, String feedId) async {
+    try {
+      Feed cachedFeed = _subscriptions.firstWhere((element) => element.id == feedId);
+      setState(() => _subscriptions.remove(cachedFeed));
+      bool res = await _feedProvider.unsubscribeFromFeed(userId, feedId);
+      if (!res) {
+        setState(() {
+          _subscriptions.add(cachedFeed);
+          ToastService.showToast(context, "Something went wrong", true);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  bool _isAuthor(String userId) => _authProvider.user?.uid == userId;
+  bool _isUser() => _authProvider.user?.uid == widget.userId;
 
   @override
   Widget build(BuildContext context) {
@@ -76,11 +98,10 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
             ),
             title: Text(_subscriptions[index].title),
             subtitle: Text(_subscriptions[index].description ?? ''),
-            trailing: LineIcon(LineIcons.arrowRight),
-            /*trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {},
-            ),*/
+            trailing: !_isAuthor(_subscriptions[index].user!.uid) && _isUser() ? IconButton(
+              icon: const LineIcon(LineIcons.minusCircle, color: Colors.red, size: 30),
+              onPressed: () => _unsubscribe(_subscriptions[index].user!.uid, _subscriptions[index].id),
+            ) : null,
           );
         },
       )
