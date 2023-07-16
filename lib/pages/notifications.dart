@@ -89,10 +89,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case 2:
       case 3:
       case 4:
-      case 6:
-      case 7:
         Navigator.pushNamed(context, '/profile', arguments: notification.user);
         break;
+      case 6:
+      case 7:
+      Navigator.pushNamed(context, '/profile', arguments: [notification.user, notification.feed?.id]);
+      break;
       case 5:
         Navigator.pushNamed(context, '/feed_requests', arguments: notification.feed?.id ?? '');
         break;
