@@ -36,10 +36,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
     });
   }
 
-  Future _loadNotifications({DateTime? startAt}) async {
-    if (startAt == null) {
+  Future _loadNotifications({DateTime? startAt, bool refresh = false}) async {
+    if (startAt == null && !refresh) {
       setState(() => _isLoading = true);
-    } else {
+    } else if (!refresh) {
       setState(() => _loadingMore = true);
     }
     try {
@@ -118,7 +118,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       ) : Column(
         children: [
           LiquidPullToRefresh(
-            onRefresh: () => _loadNotifications(),
+            onRefresh: () => _loadNotifications(refresh: true),
             showChildOpacityTransition: false,
             color: Theme.of(context).colorScheme.primary,
             child: Expanded(
