@@ -773,7 +773,7 @@ exports.top10MostSubscribedFeeds = functions.region("europe-west1").https.onCall
       if (!feedSub) {
         break;
       }
-      const feed = await getFeed(feedSub.userId, feedSub.feedId, false, false, true);
+      const feed = await getFeed(feedSub.userId, feedSub.feedId, false, true, true);
       results.push(feed);
     }
     

@@ -83,6 +83,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     }
   }
 
+
   void _handleNotificationTap(Notif.Notification notification) {
     switch (notification.type) {
       case 1:
