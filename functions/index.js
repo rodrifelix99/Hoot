@@ -737,3 +737,65 @@ exports.getSubscriptions = functions.region("europe-west1").https.onCall(async (
     error(e);
   }
 });
+
+exports.top10MostSubscribedFeeds = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    // Fetch the top 10 most subscribed feeds
+    const subRefs = await db.collectionGroup("subscribers").get();
+    const feedIds = [];
+    for (const subRef of subRefs.docs) {
+      const feedId = subRef.ref.parent.parent.id;
+      if (feedIds.includes(feedId)) {
+        continue;
+      }
+      feedIds.push({ feedId, userId: subRef.ref.parent.parent.parent.parent.id });
+    }
+    
+    const feedSubs = {};
+    for (const feedId of feedIds) {
+      if (feedSubs[feedId.feedId]) {
+        feedSubs[feedId.feedId].count++;
+      } else {
+        feedSubs[feedId.feedId] = { count: 1, userId: feedId.userId };
+      }
+    }
+
+    const feedSubsArr = [];
+    for (const feedId in feedSubs) {
+      feedSubsArr.push({ feedId, ...feedSubs[feedId] });
+    }
+
+    feedSubsArr.sort((a, b) => b.count - a.count);
+
+    const results = [];
+    for (let i = 0; i < 10; i++) {
+      const feedSub = feedSubsArr[i];
+      if (!feedSub) {
+        break;
+      }
+      const feed = await getFeed(feedSub.userId, feedSub.feedId, false, false, true);
+      results.push(feed);
+    }
+    
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.recentlyAddedFeeds = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const feeds = await db.collectionGroup("feeds").get();
+    // order by createdAt and limit to 10
+    feeds.docs.sort((a, b) => b.data().createdAt - a.data().createdAt);
+    const results = [];
+    for (let i = 0; i < 10; i++) {
+      const feed = feeds.docs[i];
+      const feedObj = await getFeed(feed.ref.parent.parent.id, feed.id, false, false, true);
+      results.push(feedObj);
+    }
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});

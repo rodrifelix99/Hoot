@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hoot/components/avatar.dart';
+import 'package:hoot/pages/explore.dart';
 import 'package:hoot/pages/feed.dart';
 import 'package:hoot/pages/notifications.dart';
 import 'package:hoot/pages/profile.dart';
@@ -120,6 +121,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           onPageChanged: (i) => setState(() {}),
           children: [
             FeedPage(),
+            ExplorePage(),
             NotificationsPage(),
             ProfilePage(),
           ],
@@ -145,11 +147,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             backgroundColor: Theme.of(context).colorScheme.surface,
             tabBackgroundColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
             activeColor: Theme.of(context).colorScheme.onSurface,
-            tabMargin: const EdgeInsets.all(16),
+            tabMargin: const EdgeInsets.all(10),
             tabs: [
               GButton(
                   icon: LineIcons.feather,
                   text: AppLocalizations.of(context)!.myFeeds,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+              ),
+              GButton(
+                  icon: LineIcons.compass,
+                  text: AppLocalizations.of(context)!.explore,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
               ),
               GButton(

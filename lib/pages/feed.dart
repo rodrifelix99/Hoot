@@ -70,9 +70,11 @@ class _FeedPageState extends State<FeedPage> {
                       return PostComponent(post: _feedProvider.mainFeedPosts[index]);
                     },
                   ),
-                ) : const NothingToShowComponent(
-                  icon: Icon(Icons.newspaper_rounded),
-                  text: 'No posts to show',
+                ) : const Center(
+                  child: NothingToShowComponent(
+                    icon: Icon(Icons.newspaper_rounded),
+                    text: 'No hoots to show\nSubscribe to some feeds to see hoots here',
+                  ),
                 )
               ],
             )

@@ -48,12 +48,12 @@ class _CreatePostPageState extends State<CreatePostPage> {
       } else {
         setState(() {
           _authProvider.user!.feeds = feeds;
-          _selectedFeedId = feeds[0].id;
+          widget.feedId == null ? _selectedFeedId = feeds[0].id : _selectedFeedId = widget.feedId!;
         });
       }
     } else {
       setState(() {
-        _selectedFeedId = _authProvider.user!.feeds![0].id;
+        widget.feedId == null ? _selectedFeedId = _authProvider.user!.feeds![0].id : _selectedFeedId = widget.feedId!;
       });
     }
   }

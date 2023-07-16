@@ -93,8 +93,20 @@ Future<void> main() async {
                         return MaterialPageRoute(
                             builder: (context) => CreatePostPage(feedId: feedId));
                       case '/profile':
-                        final U user = settings.arguments as U;
-                        return MaterialPageRoute(builder: (context) => ProfilePage(user: user));
+                        if (settings.arguments == null) {
+                          return MaterialPageRoute(builder: (context) => ProfilePage());
+                        } else if (settings.arguments.runtimeType != String && settings.arguments.runtimeType != U) {
+                          final List<dynamic> args = settings.arguments as List<dynamic>;
+                          final U user = args[0] as U;
+                          final String feedId = args[1] as String;
+                          return MaterialPageRoute(builder: (context) => ProfilePage(user: user, feedId: feedId));
+                        } else if (settings.arguments.runtimeType == String) {
+                          final String feedId = settings.arguments as String;
+                          return MaterialPageRoute(builder: (context) => ProfilePage(feedId: feedId));
+                        } else {
+                          final U user = settings.arguments as U;
+                          return MaterialPageRoute(builder: (context) => ProfilePage(user: user));
+                        }
                       case '/edit_profile':
                         return MaterialPageRoute(builder: (context) => EditProfilePage());
                       case '/search':

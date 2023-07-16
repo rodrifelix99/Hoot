@@ -397,5 +397,13 @@
   "deleteFeedConfirmation": "Are you sure you want to delete this feed?",
     "@deleteFeedConfirmation": {
         "description": "Delete Feed confirmation message"
+    },
+  "explore": "Explore",
+    "@explore": {
+        "description": "Explore label"
+    },
+  "topFeeds": "Top Feeds",
+    "@topFeeds": {
+        "description": "Top Feeds label"
     }
 }

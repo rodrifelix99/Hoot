@@ -8,9 +8,10 @@ class NameComponent extends StatefulWidget {
   int size;
   bool bold;
   Color color;
+  Color? textColor;
   bool showUsername;
   String feedName;
-  NameComponent({super.key, required this.user, this.size = 16, this.bold = true, this.color = Colors.blue, this.showUsername = false, this.feedName = ''});
+  NameComponent({super.key, required this.user, this.size = 16, this.bold = true, this.color = Colors.blue, this.showUsername = false, this.feedName = '', this.textColor});
 
   @override
   State<NameComponent> createState() => _NameComponentState();
@@ -35,6 +36,7 @@ class _NameComponentState extends State<NameComponent> {
             Text(
               widget.user.name ?? widget.user.username ?? 'User',
               style: TextStyle(
+                color: widget.textColor ?? Theme.of(context).textTheme.bodyLarge!.color,
                 fontSize: widget.size.toDouble(),
                 fontWeight: widget.bold ? FontWeight.bold : FontWeight.normal,
               ),

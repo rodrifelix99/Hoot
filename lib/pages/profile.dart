@@ -1,3 +1,4 @@
+import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar.dart';
 import 'package:hoot/components/empty_message.dart';
@@ -20,13 +21,14 @@ import '../models/post.dart';
 
 class ProfilePage extends StatefulWidget {
   final U? user;
-  const ProfilePage({super.key, this.user});
+  final String feedId;
+  const ProfilePage({super.key, this.user, this.feedId = ''});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStateMixin {
   late AuthProvider _authProvider;
   late FeedProvider _feedProvider;
   late U _user;
@@ -35,14 +37,23 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _loadingFeeds = false;
   bool _loadingUser = false;
 
+  late Animation<double> _animation;
+  late AnimationController _animationController;
+
   @override
   void initState() {
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
     _feedProvider = Provider.of<FeedProvider>(context, listen: false);
     _user = widget.user ?? _authProvider.user!;
     _isCurrentUser = _user.uid == _authProvider.user!.uid;
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 260),
+      vsync: this,
+    );
+    final curvedAnimation = CurvedAnimation(curve: Curves.decelerate, parent: _animationController);
+    _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
     super.initState();
-    _getFeeds();
+    widget.feedId.isNotEmpty ? _getFeeds(feedToFocus: widget.feedId) : _getFeeds();
   }
 
   Future _signOut() async {
@@ -70,17 +81,17 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  Future _getFeeds({bool refresh = false}) async {
+  Future _getFeeds({bool refresh = false, String? feedToFocus}) async {
     if (refresh || _user.feeds == null || _user.feeds!.isEmpty) {
       setState(() => _loadingFeeds = true);
       List<Feed> feeds = await _feedProvider.getFeeds(_user.uid);
       if (_isCurrentUser) _authProvider.addAllFeedsToUser(feeds);
       setState(() {
         _user.feeds = feeds;
-        _selectedFeedIndex = 0;
+        feedToFocus != null ? _selectedFeedIndex = _user.feeds!.indexWhere((feed) => feed.id == feedToFocus) : 0;
       });
     } else {
-      setState(() => _selectedFeedIndex = 0);
+      setState(() => feedToFocus != null ? _selectedFeedIndex = _user.feeds!.indexWhere((feed) => feed.id == feedToFocus) : 0);
     }
     setState(() => _loadingFeeds = false);
   }
@@ -184,6 +195,15 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() => _loadingUser = false);
   }
 
+  Feed? _mostSubscribedFeed() {
+    Feed mostSubscribed = _user.feeds!.first;
+    _user.feeds!.forEach((feed) {
+      if (feed.subscribers!.length > mostSubscribed.subscribers!.length) mostSubscribed = feed;
+    });
+    if (mostSubscribed.subscribers!.isEmpty) return null;
+    return mostSubscribed;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,11 +220,58 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ] : null,
         ),
+        floatingActionButton: _isCurrentUser && _user.feeds!.isNotEmpty ? Padding(
+            padding: const EdgeInsets.only(bottom: 100),
+            child: FloatingActionBubble(
+              items: <Bubble>[
+                Bubble(
+                  title: "${_user.feeds![_selectedFeedIndex].subscribers!.length} subscribers",
+                  iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                  bubbleColor : _user.feeds![_selectedFeedIndex].color!,
+                  icon: LineIcons.users,
+                  titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                  onPress: () {
+                    ToastService.showToast(context, "Coming soon!", false);
+                    _animationController.reverse();
+                  },
+                ),
+                Bubble(
+                  title: "Edit feed",
+                  iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                  bubbleColor : _user.feeds![_selectedFeedIndex].color!,
+                  icon: LineIcons.edit,
+                  titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                  onPress: () {
+                    Navigator.of(context).pushNamed('/edit_feed', arguments: _user.feeds![_selectedFeedIndex]);
+                    _animationController.reverse();
+                  },
+                ),
+                Bubble(
+                  title: "Hoot",
+                  iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                  bubbleColor : _user.feeds![_selectedFeedIndex].color!,
+                  icon: LineIcons.feather,
+                  titleStyle: TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                  onPress: () {
+                    Navigator.of(context).pushNamed('/create_post', arguments: _user.feeds![_selectedFeedIndex].id);
+                    _animationController.reverse();
+                  },
+                ),
+              ],
+              animation: _animation,
+              onPress: () => _animationController.isCompleted
+                  ? _animationController.reverse()
+                  : _animationController.forward(),
+              iconColor: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+              iconData: Icons.menu_rounded,
+              backGroundColor: _user.feeds![_selectedFeedIndex].color!,
+            )
+        ) : null,
         body: _loadingUser ? Center(
-          child: LoadingAnimationWidget.inkDrop(
-            color: Theme.of(context).colorScheme.onSurface,
-            size: 50,
-          )
+            child: LoadingAnimationWidget.inkDrop(
+              color: Theme.of(context).colorScheme.onSurface,
+              size: 50,
+            )
         ) : SingleChildScrollView(
           child: LiquidPullToRefresh(
             onRefresh: _getFeeds,
@@ -278,9 +345,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           _user.bio?.isNotEmpty ?? false ? const SizedBox(height: 10) : const SizedBox(),
-                          Text(
+                          _user.bio?.isNotEmpty ?? false ? Text(
                               _user.bio ?? ''
-                          ),
+                          ) : const SizedBox(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -349,29 +416,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Flexible(child: Text(_user.feeds![_selectedFeedIndex].description!, style: Theme.of(context).textTheme.bodyLarge)),
-                          _isCurrentUser ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              _user.feeds![_selectedFeedIndex].requests?.isNotEmpty ?? false ? ElevatedButton(
-                                onPressed: () => Navigator.of(context).pushNamed('/feed_requests', arguments: _user.feeds![_selectedFeedIndex].id),
-                                style: ElevatedButtonTheme.of(context).style?.copyWith(
-                                  backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
-                                  foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                                  padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                                ),
-                                child: Text("${_user.feeds![_selectedFeedIndex].requests!.length} requests"),
-                              ) : const SizedBox(),
-                              ElevatedButton(
-                                onPressed: () => Navigator.of(context).pushNamed('/edit_feed', arguments: _user.feeds![_selectedFeedIndex]),
-                                style: ElevatedButtonTheme.of(context).style?.copyWith(
-                                  backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
-                                  foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                                  padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                                ),
-                                child: const Text("Edit feed"),
-                              ),
-                            ],
-                          ) : Container(
+                          _isCurrentUser ? _user.feeds![_selectedFeedIndex].requests?.isNotEmpty ?? false ? ElevatedButton(
+                            onPressed: () => Navigator.of(context).pushNamed('/feed_requests', arguments: _user.feeds![_selectedFeedIndex].id),
+                            style: ElevatedButtonTheme.of(context).style?.copyWith(
+                              backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
+                              foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                              padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                            ),
+                            child: Text("${_user.feeds![_selectedFeedIndex].requests!.length} requests"),
+                          ) : const SizedBox() : Container(
                             child: _isSubscribedToFeed() ? ElevatedButton(
                               style: ElevatedButtonTheme.of(context).style?.copyWith(
                                 backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.error),

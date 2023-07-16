@@ -17,6 +17,12 @@ class FeedProvider extends ChangeNotifier {
   List<Post> _mainFeedPosts = [];
   List<Post> get mainFeedPosts => _mainFeedPosts;
 
+  List<Feed> _topFeeds = [];
+  List<Feed> get topFeeds => _topFeeds;
+
+  List<Feed> _newFeeds = [];
+  List<Feed> get newFeeds => _newFeeds;
+
   Future<bool> createPost(context, {required String feedId, String? text, List<String>? media}) async {
     try {
       AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -270,6 +276,48 @@ class FeedProvider extends ChangeNotifier {
           feeds.add(Feed.fromJson(feed));
         }
       }
+      return feeds;
+    } catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<Feed>> top10MostSubscribedFeeds() async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('top10MostSubscribedFeeds');
+      final res = await callable.call();
+      List<Feed> feeds = [];
+      if (res.data != null) {
+        dynamic responseData = jsonDecode(res.data);
+        for (var feed in responseData) {
+          feeds.add(Feed.fromJson(feed));
+        }
+      }
+      _topFeeds = feeds;
+      notifyListeners();
+      return feeds;
+    } catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<Feed>> recentlyAddedFeeds() async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('recentlyAddedFeeds');
+      final res = await callable.call();
+      List<Feed> feeds = [];
+      if (res.data != null) {
+        dynamic responseData = jsonDecode(res.data);
+        for (var feed in responseData) {
+          feeds.add(Feed.fromJson(feed));
+        }
+      }
+      _newFeeds = feeds;
+      notifyListeners();
       return feeds;
     } catch (e) {
       print(e.toString());

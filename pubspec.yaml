@@ -65,6 +65,9 @@ dependencies:
   liquid_pull_to_refresh: ^3.0.1
   flex_color_picker: ^3.2.2
   loading_animation_widget: ^1.2.0+4
+  blur: ^3.1.0
+  flutter_gallery_3d: ^1.1.1
+  floating_action_bubble: ^1.1.4
 
 dev_dependencies:
   flutter_test:
