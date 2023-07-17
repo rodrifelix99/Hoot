@@ -66,7 +66,10 @@ Future<void> main() async {
                     GlobalMaterialLocalizations.delegate,
                   ],
                   supportedLocales: const [
-                    Locale('en'), // English
+                    Locale('en'),
+                    Locale('es'),
+                    Locale('pt'),
+                    Locale('pt', 'BR'),
                   ],
                   home: AnimatedSplashScreen(
                     nextScreen: HomePage(),

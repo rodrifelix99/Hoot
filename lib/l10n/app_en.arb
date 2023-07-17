@@ -1,409 +1,400 @@
 {
-  "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  },
-  "welcome": "Welcome to Hoot",
-  "@welcome": {
-    "description": "Welcome message"
-  },
-  "welcomeTo": "Welcome to",
-  "@welcomeTo": {
-    "description": "Welcome to label"
-  },
-  "appName": "Hoot",
-  "@appName": {
-    "description": "App name"
-  },
-  "welcomeDescription": "Are you ready to start hooting? With Hoot there's no rate limits, no ads and no tracking. Just you and your friends.",
-  "@welcomeDescription": {
-    "description": "Welcome description"
-  },
-  "getStarted": "Get Started",
-  "@getStarted": {
-    "description": "Get Started button"
-  },
-  "displayName": "Display Name",
-  "@displayName": {
-    "description": "Display Name label"
-  },
-  "displayNameTooShort": "Your name must be at least 3 characters long",
-  "@displayNameTooShort": {
-    "description": "Display name too short message"
-  },
-  "email": "Email",
-  "@email":{
-    "description": "Email label"
-  },
-  "emailInvalid": "Invalid email address",
-  "@emailInvalid":{
-    "description": "Invalid email address message"
-  },
-  "password": "Password",
-  "@password": {
-    "description": "Password label"
-  },
-  "passwordTooShort": "Your password must be at least 6 characters long",
-  "@passwordTooShort": {
-    "description": "Password too short message"
-  },
-  "repeatPassword": "Repeat Password",
-  "@repeatPassword": {
-    "description": "Repeat Password label"
-  },
-  "passwordsDontMatch": "Passwords don't match",
-  "@passwordsDontMatch": {
-    "description": "Passwords don't match message"
-  },
-  "alreadyHaveAnAccount": "Already have an account?",
-  "@alreadyHaveAnAccount": {
-    "description": "Already have an account? label"
-  },
-  "signIn": "Sign In",
-  "@signIn": {
-    "description": "Sign In button"
-  },
-  "signUp": "Sign Up",
-  "@signUp": {
-    "description": "Sign Up button"
-  },
-  "createMyAccount": "Create my account",
-  "@createMyAccount": {
-    "description": "Create my account button"
-  },
-  "signOut": "Sign Out",
-  "@signOut": {
-    "description": "Sign Out button"
-  },
-  "bySigningUpYouAgreeToOur": "By signing up you agree to our",
-  "@bySigningUpYouAgreeToOur": {
-    "description": "By signing up you agree to our label"
-  },
-  "termsOfService": "Terms of Service and Privacy Policy",
-  "@privacyPolicy": {
-    "description": "Terms of Service and Privacy Policy link"
-  },
-  "forgotPassword": "Forgot Password?",
-  "@forgotPassword": {
-    "description": "Forgot Password link"
-  },
-  "resetPassword": "Reset Password",
-  "@resetPassword": {
-    "description": "Reset Password button"
-  },
-  "signInFailed": "Sign in failed",
-  "@signInFailed": {
-    "description": "Sign in failed message"
-  },
-  "errorInvalidEmail": "Invalid email",
-  "@errorInvalidEmailOrPassword": {
-    "description": "Invalid email message"
-  },
-  "errorEmailAlreadyInUse": "Email already in use",
-  "@errorEmailAlreadyInUse": {
-    "description": "Email already in use message"
-  },
-  "errorWeakPassword": "Weak password",
-  "@errorWeakPassword": {
-    "description": "Weak password message"
-  },
-  "userDisabled": "User disabled",
-  "@userDisabled": {
-    "description": "User disabled message"
-  },
-  "errorWrongPassword": "Wrong password",
-  "@errorWrongPassword": {
-    "description": "Wrong password message"
-  },
-  "errorUserNotFound": "Email or password incorrect",
-  "@errorUserNotFound": {
-    "description": "Email or password incorrect message"
-  },
-  "errorUnknown": "Unknown error occurred",
-  "@errorUnknown": {
-    "description": "Unknown error message"
-  },
-  "whatsYourName": "What's your name?",
-  "@whatsYourName": {
-    "description": "What's your name? label"
-  },
-  "displayNameDescription": "This is the name that will be displayed to other users as your identity.",
-  "@displayNameDescription": {
-    "description": "Display name description"
-  },
-  "letsSpiceItUp": "Let's spice it up!",
-  "@letsSpiceItUp": {
-    "description": "Let's spice it up! label"
-  },
-  "usernameDescription": "A username is a unique identifier that will be used to identify you in the network. It can only contain letters, numbers and underscores.",
-  "@usernameDescription": {
-    "description": "Username description"
-  },
-  "username": "@username",
-  "@username": {
-    "description": "Username label"
-  },
-  "usernameTaken": "Username already taken",
-  "@usernameTaken": {
-    "description": "Username already taken message"
-  },
-  "usernameTooShort": "Your username must be at least 6 characters long",
-  "@usernameTooShort": {
-    "description": "Username too short message"
-  },
-  "pressEnterToContinue": "Press enter to continue",
-  "@pressEnterToContinue": {
-    "description": "Press enter to continue label"
-  },
-  "almostThere": "Almost there!",
-  "@almostThere": {
-    "description": "Almost there! label"
-  },
-  "avatarDescription": "Choose an avatar to represent you as a fancy owl.",
-  "@avatarDescription": {
-    "description": "Avatar description"
-  },
-  "avatarSelectedFunny1": "Oh wow, that's a great choice!",
-  "avatarSelectedFunny2": "Now that's a good looking owl!",
-  "avatarSelectedFunny3": "What a great choice!",
-  "skip": "Skip",
-  "@skip": {
-    "description": "Skip button"
-  },
-  "skipForNow": "Skip for now",
-  "@skipForNow": {
-    "description": "Skip for now button"
-  },
-  "continueButton": "Continue",
-  "@continueButton": {
-    "description": "Continue button"
-  },
-  "feed": "Feed",
-  "@feed": {
-    "description": "Feed label"
-  },
-  "myFeeds": "My Feeds",
-  "@myFeeds": {
-    "description": "My Feeds label"
-  },
-  "search": "Search",
-  "@search": {
-    "description": "Search label"
-  },
-  "notifications": "Notifications",
-  "@notifications": {
-    "description": "Notifications label"
-  },
-  "profile": "Profile",
-  "@profile": {
-    "description": "Profile label"
-  },
-  "follow": "Follow",
-  "@follow": {
-    "description": "Follow button"
-  },
-  "unfollow": "Unfollow",
-  "@unfollow": {
-    "description": "Unfollow button"
-  },
-  "errorFollow": "Error following user",
-  "@errorFollow": {
-    "description": "Error following user message"
-  },
-  "errorUnfollow": "Error unfollowing user",
-  "@errorUnfollow": {
-    "description": "Error unfollowing user message"
-  },
-  "settings": "Settings",
-  "@settings": {
-    "description": "Settings label"
-  },
-  "createPost": "Make a Hoot",
-  "@createPost": {
-    "description": "Create post label"
-  },
-  "postPlaceholder": "What's on your mind?",
-  "@hootTextField": {
-    "description": "What's on your mind? label"
-  },
-  "publish": "Publish",
-  "@publish": {
-    "description": "Publish button"
-  },
-  "somethingWentWrong": "Something went wrong, please try again later",
-  "@somethingWentWrong": {
-    "description": "Something went wrong message"
-  },
-  "imageTooLarge": "Image too large, please choose a smaller one",
-  "@imageTooLarge": {
-    "description": "Image too large message"
-  },
-  "editProfile": "Edit Profile",
-  "@editProfile": {
-    "description": "Edit Profile label"
-  },
-  "signOutConfirmation": "Are you sure you want to sign out?",
-  "@signOutConfirmation": {
-    "description": "Sign out confirmation message"
-  },
-  "cancel": "Cancel",
-  "@cancel": {
-    "description": "Cancel button"
-  },
-  "bio": "Bio",
-  "@bio": {
-    "description": "Bio label"
-  },
-  "done": "Done",
-  "@done": {
-    "description": "Done button"
-  },
-  "errorEditingProfile": "There was an error editing your profile",
-  "@errorEditingProfile": {
-    "description": "Error editing profile message"
-  },
-  "searchPlaceholder": "Search by @username",
-  "@searchPlaceholder": {
-    "description": "Search for users label"
-  },
-  "followers": "Followers",
-  "@followers": {
-    "description": "Followers label"
-  },
-  "following": "Following",
-  "@following": {
-    "description": "Following label"
-  },
-  "noUsersToShow": "No users to show",
-  "@noUsersToShow": {
-    "description": "No users to show message"
-  },
-  "noNotifications": "You have no notifications yet",
-  "@noNotifications": {
-    "description": "No notifications message"
-  },
-  "newFollower": "@{username} started following you",
-  "@newFollower": {
-    "description": "New follower notification"
-  },
-  "newUnfollower": "@{username} unfollowed you",
-  "@newUnfollower": {
-    "description": "New unfollower notification"
-  },
-  "createFeed": "Create a new Feed",
-  "@createFeed": {
-    "description": "Create Feed label"
-  },
-  "title": "Title",
-  "@title": {
-    "description": "Title label"
-  },
-  "description": "Description",
-  "@description": {
-    "description": "Description label"
-  },
-  "noResults": "No results",
-  "@noResults": {
-    "description": "No results message"
-  },
-  "noFeeds": "{username} has no feeds yet",
-  "@noFeeds": {
-    "description": "No feeds message"
-  },
-  "noFeedsYou": "You have no feeds yet!",
-  "@noFeedsYou": {
-    "description": "No feeds message"
-  },
-  "createFeedMessage": "You can create a new feed by clicking the + button",
-  "@createFeedMessage": {
-    "description": "Create feed message"
-  },
-  "newSubscriber": "@{username} subscribed to {feedName}",
-  "@newSubscriber": {
-    "description": "New subscriber notification"
-  },
-  "unsubscribe": "Unsubscribe",
-  "@unsubscribe": {
-    "description": "Unsubscribe button"
-  },
-  "unsubscribeConfirmation": "Are you sure you want to unsubscribe from this feed?",
-  "@unsubscribeConfirmation": {
-    "description": "Unsubscribe confirmation message"
-  },
-  "errorUnsubscribing": "There was an error unsubscribing from this feed",
-  "@errorUnsubscribing": {
-    "description": "Error unsubscribing message"
-  },
-  "subscribe": "Subscribe",
-  "@subscribe": {
-    "description": "Subscribe button"
-  },
-  "subscribeConfirmation": "Are you sure you want to subscribe to this feed?",
-  "@subscribeConfirmation": {
-    "description": "Subscribe confirmation message"
-  },
-  "errorSubscribing": "There was an error subscribing to this feed",
-  "@errorSubscribing": {
-    "description": "Error subscribing message"
-  },
-  "requestToJoin": "Request to join",
-  "@requestToJoin": {
-    "description": "Request to join button"
-  },
-  "requestToJoinConfirmation": "Are you sure you want to request to join this feed?",
-  "@requestToJoinConfirmation": {
-    "description": "Request to join confirmation message"
-  },
-  "errorRequestingToJoin": "There was an error requesting to join this feed",
-  "@errorRequestingToJoin": {
-    "description": "Error requesting to join message"
-  },
-  "editFeed": "Edit Feed",
-  "@editFeed": {
-    "description": "Edit Feed label"
-  },
-  "unsubscriber": " @{username} unsubscribed from {feedName}",
-  "@unsubscriber": {
-    "description": "Unsubscriber label"
-  },
-  "privateFeedRequest": "@{username} requested to join {feedName}",
-  "@privateFeedRequest": {
-    "description": "Private feed request label"
-  },
-  "privateFeedRequestAccepted": "@{username} accepted your request to join {feedName}",
-  "@privateFeedRequestAccepted": {
-    "description": "Private feed request accepted label"
-  },
-  "privateFeedRequestRejected": "@{username} rejected your request to join {feedName}",
-  "@privateFeedRequestRejected": {
-    "description": "Private feed request rejected label"
-  },
-  "comingSoon": "Coming soon!",
-  "@comingSoon": {
-    "description": "Coming soon message"
-  },
-  "numberOfSubscriptions": "{count, plural, =0 {No subscriptions} one {1 subscription} other {{count} subscriptions}}",
-    "@numberOfSubscriptions": {
-        "description": "Number of subscriptions label"
-    },
-  "subscriptions": "Subscriptions",
-  "@subscriptions": {
-    "description": "Subscriptions label"
-  },
-  "deleteFeed": "Delete Feed",
-    "@deleteFeed": {
-        "description": "Delete Feed label"
-    },
-  "deleteFeedConfirmation": "Are you sure you want to delete this feed?",
-    "@deleteFeedConfirmation": {
-        "description": "Delete Feed confirmation message"
-    },
-  "explore": "Explore",
-    "@explore": {
-        "description": "Explore label"
-    },
-  "topFeeds": "Top Feeds",
-    "@topFeeds": {
-        "description": "Top Feeds label"
-    }
+	"helloWorld": "Hello World!",
+	"@helloWorld": {
+		"description": "The conventional newborn programmer greeting"
+	},
+	"welcome": "Welcome to Hoot",
+	"@welcome": {
+		"description": "Welcome message"
+	},
+	"welcomeTo": "Welcome to",
+	"@welcomeTo": {
+		"description": "Welcome to label"
+	},
+	"appName": "Hoot",
+	"@appName": {
+		"description": "App name"
+	},
+	"welcomeDescription": "Are you ready to start hooting? With Hoot there's no rate limits, no ads and no tracking. Just you and your friends.",
+	"@welcomeDescription": {
+		"description": "Welcome description"
+	},
+	"getStarted": "Get Started",
+	"@getStarted": {
+		"description": "Get Started button"
+	},
+	"displayName": "Display Name",
+	"@displayName": {
+		"description": "Display Name label"
+	},
+	"displayNameTooShort": "Your name must be at least 3 characters long",
+	"@displayNameTooShort": {
+		"description": "Display name too short message"
+	},
+	"email": "Email",
+	"@email": {
+		"description": "Email label"
+	},
+	"emailInvalid": "Invalid email address",
+	"@emailInvalid": {
+		"description": "Invalid email address message"
+	},
+	"password": "Password",
+	"@password": {
+		"description": "Password label"
+	},
+	"passwordTooShort": "Your password must be at least 6 characters long",
+	"@passwordTooShort": {
+		"description": "Password too short message"
+	},
+	"repeatPassword": "Repeat Password",
+	"@repeatPassword": {
+		"description": "Repeat Password label"
+	},
+	"passwordsDontMatch": "Passwords don't match",
+	"@passwordsDontMatch": {
+		"description": "Passwords don't match message"
+	},
+	"alreadyHaveAnAccount": "Already have an account?",
+	"@alreadyHaveAnAccount": {
+		"description": "Already have an account? label"
+	},
+	"signIn": "Sign In",
+	"@signIn": {
+		"description": "Sign In button"
+	},
+	"signUp": "Sign Up",
+	"@signUp": {
+		"description": "Sign Up button"
+	},
+	"createMyAccount": "Create my account",
+	"@createMyAccount": {
+		"description": "Create my account button"
+	},
+	"signOut": "Sign Out",
+	"@signOut": {
+		"description": "Sign Out button"
+	},
+	"bySigningUpYouAgreeToOur": "By signing up you agree to our",
+	"@bySigningUpYouAgreeToOur": {
+		"description": "By signing up you agree to our label"
+	},
+	"termsOfService": "Terms of Service and Privacy Policy",
+	"forgotPassword": "Forgot Password?",
+	"@forgotPassword": {
+		"description": "Forgot Password link"
+	},
+	"resetPassword": "Reset Password",
+	"@resetPassword": {
+		"description": "Reset Password button"
+	},
+	"signInFailed": "Sign in failed",
+	"@signInFailed": {
+		"description": "Sign in failed message"
+	},
+	"errorInvalidEmail": "Invalid email",
+	"errorEmailAlreadyInUse": "Email already in use",
+	"@errorEmailAlreadyInUse": {
+		"description": "Email already in use message"
+	},
+	"errorWeakPassword": "Weak password",
+	"@errorWeakPassword": {
+		"description": "Weak password message"
+	},
+	"userDisabled": "User disabled",
+	"@userDisabled": {
+		"description": "User disabled message"
+	},
+	"errorWrongPassword": "Wrong password",
+	"@errorWrongPassword": {
+		"description": "Wrong password message"
+	},
+	"errorUserNotFound": "Email or password incorrect",
+	"@errorUserNotFound": {
+		"description": "Email or password incorrect message"
+	},
+	"errorUnknown": "Unknown error occurred",
+	"@errorUnknown": {
+		"description": "Unknown error message"
+	},
+	"whatsYourName": "What's your name?",
+	"@whatsYourName": {
+		"description": "What's your name? label"
+	},
+	"displayNameDescription": "This is the name that will be displayed to other users as your identity.",
+	"@displayNameDescription": {
+		"description": "Display name description"
+	},
+	"letsSpiceItUp": "Let's spice it up!",
+	"@letsSpiceItUp": {
+		"description": "Let's spice it up! label"
+	},
+	"usernameDescription": "A username is a unique identifier that will be used to identify you in the network. It can only contain letters, numbers and underscores.",
+	"@usernameDescription": {
+		"description": "Username description"
+	},
+	"username": "@username",
+	"@username": {
+		"description": "Username label"
+	},
+	"usernameTaken": "Username already taken",
+	"@usernameTaken": {
+		"description": "Username already taken message"
+	},
+	"usernameTooShort": "Your username must be at least 6 characters long",
+	"@usernameTooShort": {
+		"description": "Username too short message"
+	},
+	"pressEnterToContinue": "Press enter to continue",
+	"@pressEnterToContinue": {
+		"description": "Press enter to continue label"
+	},
+	"almostThere": "Almost there!",
+	"@almostThere": {
+		"description": "Almost there! label"
+	},
+	"avatarDescription": "Choose an avatar to represent you as a fancy owl.",
+	"@avatarDescription": {
+		"description": "Avatar description"
+	},
+	"avatarSelectedFunny1": "Oh wow, that's a great choice!",
+	"avatarSelectedFunny2": "Now that's a good looking owl!",
+	"avatarSelectedFunny3": "What a great choice!",
+	"skip": "Skip",
+	"@skip": {
+		"description": "Skip button"
+	},
+	"skipForNow": "Skip for now",
+	"@skipForNow": {
+		"description": "Skip for now button"
+	},
+	"continueButton": "Continue",
+	"@continueButton": {
+		"description": "Continue button"
+	},
+	"feed": "Feed",
+	"@feed": {
+		"description": "Feed label"
+	},
+	"myFeeds": "My Feeds",
+	"@myFeeds": {
+		"description": "My Feeds label"
+	},
+	"search": "Search",
+	"@search": {
+		"description": "Search label"
+	},
+	"notifications": "Notifications",
+	"@notifications": {
+		"description": "Notifications label"
+	},
+	"profile": "Profile",
+	"@profile": {
+		"description": "Profile label"
+	},
+	"follow": "Follow",
+	"@follow": {
+		"description": "Follow button"
+	},
+	"unfollow": "Unfollow",
+	"@unfollow": {
+		"description": "Unfollow button"
+	},
+	"errorFollow": "Error following user",
+	"@errorFollow": {
+		"description": "Error following user message"
+	},
+	"errorUnfollow": "Error unfollowing user",
+	"@errorUnfollow": {
+		"description": "Error unfollowing user message"
+	},
+	"settings": "Settings",
+	"@settings": {
+		"description": "Settings label"
+	},
+	"createPost": "Make a Hoot",
+	"@createPost": {
+		"description": "Create post label"
+	},
+	"postPlaceholder": "What's on your mind?",
+	"publish": "Publish",
+	"@publish": {
+		"description": "Publish button"
+	},
+	"somethingWentWrong": "Something went wrong, please try again later",
+	"@somethingWentWrong": {
+		"description": "Something went wrong message"
+	},
+	"imageTooLarge": "Image too large, please choose a smaller one",
+	"@imageTooLarge": {
+		"description": "Image too large message"
+	},
+	"editProfile": "Edit Profile",
+	"@editProfile": {
+		"description": "Edit Profile label"
+	},
+	"signOutConfirmation": "Are you sure you want to sign out?",
+	"@signOutConfirmation": {
+		"description": "Sign out confirmation message"
+	},
+	"cancel": "Cancel",
+	"@cancel": {
+		"description": "Cancel button"
+	},
+	"bio": "Bio",
+	"@bio": {
+		"description": "Bio label"
+	},
+	"done": "Done",
+	"@done": {
+		"description": "Done button"
+	},
+	"errorEditingProfile": "There was an error editing your profile",
+	"@errorEditingProfile": {
+		"description": "Error editing profile message"
+	},
+	"searchPlaceholder": "Search by @username",
+	"@searchPlaceholder": {
+		"description": "Search for users label"
+	},
+	"followers": "Followers",
+	"@followers": {
+		"description": "Followers label"
+	},
+	"following": "Following",
+	"@following": {
+		"description": "Following label"
+	},
+	"noUsersToShow": "No users to show",
+	"@noUsersToShow": {
+		"description": "No users to show message"
+	},
+	"noNotifications": "You have no notifications yet",
+	"@noNotifications": {
+		"description": "No notifications message"
+	},
+	"newFollower": "@{username} started following you",
+	"@newFollower": {
+		"description": "New follower notification"
+	},
+	"newUnfollower": "@{username} unfollowed you",
+	"@newUnfollower": {
+		"description": "New unfollower notification"
+	},
+	"createFeed": "Create a new Feed",
+	"@createFeed": {
+		"description": "Create Feed label"
+	},
+	"title": "Title",
+	"@title": {
+		"description": "Title label"
+	},
+	"description": "Description",
+	"@description": {
+		"description": "Description label"
+	},
+	"noResults": "No results",
+	"@noResults": {
+		"description": "No results message"
+	},
+	"noFeeds": "{username} has no feeds yet",
+	"@noFeeds": {
+		"description": "No feeds message"
+	},
+	"noFeedsYou": "You have no feeds yet!",
+	"@noFeedsYou": {
+		"description": "No feeds message"
+	},
+	"createFeedMessage": "You can create a new feed by clicking the + button",
+	"@createFeedMessage": {
+		"description": "Create feed message"
+	},
+	"newSubscriber": "@{username} subscribed to {feedName}",
+	"@newSubscriber": {
+		"description": "New subscriber notification"
+	},
+	"unsubscribe": "Unsubscribe",
+	"@unsubscribe": {
+		"description": "Unsubscribe button"
+	},
+	"unsubscribeConfirmation": "Are you sure you want to unsubscribe from this feed?",
+	"@unsubscribeConfirmation": {
+		"description": "Unsubscribe confirmation message"
+	},
+	"errorUnsubscribing": "There was an error unsubscribing from this feed",
+	"@errorUnsubscribing": {
+		"description": "Error unsubscribing message"
+	},
+	"subscribe": "Subscribe",
+	"@subscribe": {
+		"description": "Subscribe button"
+	},
+	"subscribeConfirmation": "Are you sure you want to subscribe to this feed?",
+	"@subscribeConfirmation": {
+		"description": "Subscribe confirmation message"
+	},
+	"errorSubscribing": "There was an error subscribing to this feed",
+	"@errorSubscribing": {
+		"description": "Error subscribing message"
+	},
+	"requestToJoin": "Request to join",
+	"@requestToJoin": {
+		"description": "Request to join button"
+	},
+	"requestToJoinConfirmation": "Are you sure you want to request to join this feed?",
+	"@requestToJoinConfirmation": {
+		"description": "Request to join confirmation message"
+	},
+	"errorRequestingToJoin": "There was an error requesting to join this feed",
+	"@errorRequestingToJoin": {
+		"description": "Error requesting to join message"
+	},
+	"editFeed": "Edit Feed",
+	"@editFeed": {
+		"description": "Edit Feed label"
+	},
+	"unsubscriber": " @{username} unsubscribed from {feedName}",
+	"@unsubscriber": {
+		"description": "Unsubscriber label"
+	},
+	"privateFeedRequest": "@{username} requested to join {feedName}",
+	"@privateFeedRequest": {
+		"description": "Private feed request label"
+	},
+	"privateFeedRequestAccepted": "@{username} accepted your request to join {feedName}",
+	"@privateFeedRequestAccepted": {
+		"description": "Private feed request accepted label"
+	},
+	"privateFeedRequestRejected": "@{username} rejected your request to join {feedName}",
+	"@privateFeedRequestRejected": {
+		"description": "Private feed request rejected label"
+	},
+	"comingSoon": "Coming soon!",
+	"@comingSoon": {
+		"description": "Coming soon message"
+	},
+	"numberOfSubscriptions": "{count, plural, =0 {No subscriptions} one {1 subscription} other {{count} subscriptions}}",
+	"@numberOfSubscriptions": {
+		"description": "Number of subscriptions label"
+	},
+	"subscriptions": "Subscriptions",
+	"@subscriptions": {
+		"description": "Subscriptions label"
+	},
+	"deleteFeed": "Delete Feed",
+	"@deleteFeed": {
+		"description": "Delete Feed label"
+	},
+	"deleteFeedConfirmation": "Are you sure you want to delete this feed?",
+	"@deleteFeedConfirmation": {
+		"description": "Delete Feed confirmation message"
+	},
+	"explore": "Explore",
+	"@explore": {
+		"description": "Explore label"
+	},
+	"topFeeds": "Top Feeds",
+	"@topFeeds": {
+		"description": "Top Feeds label"
+	}
 }
