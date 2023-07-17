@@ -103,7 +103,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("by", style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      Text(AppLocalizations.of(context)!.by, style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
                       )),
                       const SizedBox(width: 5),
@@ -136,7 +136,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                      "${_top10Feeds[index].subscribers?.length ?? "Many"} subscribers",
+                      AppLocalizations.of(context)!.numberOfSubscribers(_top10Feeds[index].subscribers?.length ?? 0),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
                       )
@@ -197,7 +197,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       children: [
                         const SizedBox(height: 50),
                         Text(
-                          "Top 10 most subscribed feeds",
+                          AppLocalizations.of(context)!.top10MostSubscribed,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
@@ -230,12 +230,12 @@ class _ExplorePageState extends State<ExplorePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Up and coming feeds",
+                        AppLocalizations.of(context)!.upAndComing,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "Recent feeds that are gaining popularity",
+                        AppLocalizations.of(context)!.upAndComingDescription,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const SizedBox(height: 20),
@@ -287,7 +287,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                       Row(
                                         children: [
                                           Text(
-                                            "by",
+                                            AppLocalizations.of(context)!.by,
                                             style: Theme.of(context).textTheme.bodySmall,
                                           ),
                                           const SizedBox(width: 5),
@@ -317,15 +317,12 @@ class _ExplorePageState extends State<ExplorePage> {
                         ),
                       ),
                       Text(
-                        "Note to ${_authProvider.user!.name}",
+                        AppLocalizations.of(context)!.noteToUser(_authProvider.user!.name!),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "Hoot is a place to explore one's creativity and identity. We encourage you to be yourself and express your creativity. Be it through feeds, hoots, comments, or anything else.\n\n"
-                            "There's no contest to be the best or the most popular. There's no need to be the most subscribed feed or the most liked hoot. There's no need to be the most followed user or the most commented hoot.\n\n"
-                            "Your experience is what you make of it and most of all, your people are ready to subscribe to you because your content is unique and so are you.\n\n"
-                            "Hoot on!",
+                        AppLocalizations.of(context)!.noteToUserDetails,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const SizedBox(height: 100),

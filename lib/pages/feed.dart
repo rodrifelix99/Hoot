@@ -62,6 +62,19 @@ class _FeedPageState extends State<FeedPage> {
         child: SmartRefresher(
           controller: _refreshController,
           enablePullUp: _feedProvider.mainFeedPosts.isNotEmpty,
+          header: const ClassicHeader(
+            refreshingText: '',
+            idleText: '',
+            completeText: '',
+            releaseText: '',
+          ),
+          footer: const ClassicFooter(
+            failedText: '',
+            idleText: '',
+            loadingText: '',
+            noDataText: '',
+            canLoadingText: '',
+          ),
           onRefresh: () async =>  await _getPosts(DateTime.now(), refresh: true),
           onLoading: () async => await _getPosts(_feedProvider.mainFeedPosts.last.createdAt ?? DateTime.now(), refresh: false),
           child: _feedProvider.mainFeedPosts.isNotEmpty ? ListView.builder(
@@ -70,10 +83,10 @@ class _FeedPageState extends State<FeedPage> {
                 Post post = _feedProvider.mainFeedPosts[index];
                 return PostComponent(post: post);
               }
-          ) : const Center(
+          ) : Center(
             child: NothingToShowComponent(
-              icon: Icon(Icons.newspaper_rounded),
-              text: 'No hoots to show\nSubscribe to some feeds to see hoots here',
+              icon: const Icon(Icons.newspaper_rounded),
+              text: '${AppLocalizations.of(context)!.noHoots}\n${AppLocalizations.of(context)!.subscribeToSeeHoots}}',
             ),
           ),
         ),

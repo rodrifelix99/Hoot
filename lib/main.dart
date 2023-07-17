@@ -61,15 +61,16 @@ Future<void> main() async {
                   title: 'Hoot',
                   theme: AppTheme.lightTheme,
                   darkTheme: AppTheme.darkTheme,
-                  localizationsDelegates: const [
-                    AppLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                  ],
                   supportedLocales: const [
                     Locale('en'),
                     Locale('es'),
                     Locale('pt'),
                     Locale('pt', 'BR'),
+                  ],
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
                   ],
                   home: AnimatedSplashScreen(
                     nextScreen: HomePage(),

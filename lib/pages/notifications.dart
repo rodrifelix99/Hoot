@@ -115,6 +115,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
           onRefresh: () async => await _loadNotifications(refresh: true),
           onLoading: () async => _hasMore ? await _loadNotifications(startAt: _notifications.last.createdAt) : null,
           physics: const BouncingScrollPhysics(),
+          header: const ClassicHeader(
+            refreshingText: '',
+            idleText: '',
+            completeText: '',
+            releaseText: '',
+          ),
+          footer: const ClassicFooter(
+            failedText: '',
+            idleText: '',
+            loadingText: '',
+            noDataText: '',
+            canLoadingText: '',
+          ),
           enablePullUp: _hasMore,
           child: ListView.builder(
             itemCount: _notifications.length,

@@ -221,25 +221,25 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         ] : null,
       ),
       floatingActionButton: _isCurrentUser && _user.feeds!.isNotEmpty ? Padding(
-          padding: const EdgeInsets.only(bottom: 70),
+          padding: const EdgeInsets.only(bottom: 100),
           child: FloatingActionBubble(
             items: <Bubble>[
               Bubble(
-                title: "${_user.feeds![_selectedFeedIndex].subscribers!.length} subscribers",
+                title: AppLocalizations.of(context)!.numberOfSubscribers(_user.feeds![_selectedFeedIndex].subscribers!.length),
                 iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
                 bubbleColor : _user.feeds![_selectedFeedIndex].color!,
                 icon: LineIcons.users,
                 titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
                 onPress: () {
-                  ToastService.showToast(context, "Coming soon!", false);
+                  ToastService.showToast(context, AppLocalizations.of(context)!.comingSoon, false);
                   _animationController.reverse();
                 },
               ),
               Bubble(
-                title: "Edit feed",
+                title: AppLocalizations.of(context)!.editFeed,
                 iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
                 bubbleColor : _user.feeds![_selectedFeedIndex].color!,
-                icon: LineIcons.edit,
+                icon: LineIcons.pencilRuler,
                 titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
                 onPress: () {
                   Navigator.of(context).pushNamed('/edit_feed', arguments: _user.feeds![_selectedFeedIndex]);
@@ -247,7 +247,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                 },
               ),
               Bubble(
-                title: "Hoot",
+                title: AppLocalizations.of(context)!.appName,
                 iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
                 bubbleColor : _user.feeds![_selectedFeedIndex].color!,
                 icon: LineIcons.feather,
@@ -520,17 +520,26 @@ class _FeedPostsState extends State<FeedPosts> {
   @override
   Widget build(BuildContext context) {
     return _isLoading ? const Center(child: CircularProgressIndicator()) : !_hasAccessToFeed() ?
-    NothingToShowComponent(
-        icon: const Icon(Icons.lock_rounded),
-        text: 'This feed is private\n\nOnly people ${widget.user.name ?? 'this user'} accepts\nwill be able to see their posts here!'
+    Center(
+      child: NothingToShowComponent(
+          icon: const Icon(Icons.lock_rounded),
+          text: '${AppLocalizations.of(context)?.thisFeedIsPrivate}\n\n${AppLocalizations.of(context)?.onlyMembersCanSee(widget.user.name ?? widget.user.username ?? 'this user')}',
+      ),
     ) :
     widget.user.feeds?[widget.feedIndex].posts?.isNotEmpty == true ? Column(
       children: [
         for (Post post in widget.user.feeds?[widget.feedIndex].posts ?? []) PostComponent(post: post),
       ],
-    ) : NothingToShowComponent(
-      icon: const Icon(Icons.article_rounded),
-      text: 'This feed is empty\n\nGive ${widget.user.name ?? 'this user'} some love\nto motivate them to hoot more!',
+    ) : widget.user.uid != _authProvider.user?.uid ? Center(
+      child: NothingToShowComponent(
+        icon: const Icon(Icons.article_rounded),
+        text: '${AppLocalizations.of(context)?.emptyFeed}\n\n${AppLocalizations.of(context)?.emptyFeedToOtherUsers(widget.user.name ?? widget.user.username ?? 'this user')}}',
+      ),
+    ) : Center(
+      child: NothingToShowComponent(
+        icon: const Icon(Icons.article_rounded),
+        text: '${AppLocalizations.of(context)?.emptyFeed}\n\n${AppLocalizations.of(context)?.emptyFeedDescription}',
+      ),
     );
   }
 }

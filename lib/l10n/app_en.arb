@@ -377,9 +377,17 @@
 	"@numberOfSubscriptions": {
 		"description": "Number of subscriptions label"
 	},
+	"numberOfSubscribers": "{count, plural, =0 {No subscribers} one {1 subscriber} other {{count} subscribers}}",
+	"@numberOfSubscribers": {
+		"description": "Number of subscribers label"
+	},
 	"subscriptions": "Subscriptions",
 	"@subscriptions": {
 		"description": "Subscriptions label"
+	},
+	"by": "by",
+	"@by": {
+		"description": "By label"
 	},
 	"deleteFeed": "Delete Feed",
 	"@deleteFeed": {
@@ -396,5 +404,54 @@
 	"topFeeds": "Top Feeds",
 	"@topFeeds": {
 		"description": "Top Feeds label"
-	}
+	},
+	"noHoots": "No hoots to show",
+	"@noHoots": {
+		"description": "No hoots to show message"
+	},
+	"subscribeToSeeHoots": "Subscribe to some feeds to see hoots here",
+	"@subscribeToSeeHoots": {
+		"description": "Subscribe to see hoots message"
+	},
+	"top10MostSubscribed": "Top 10 most subscribed feeds",
+	"@top10MostSubscribed": {
+		"description": "Top 10 most subscribed feeds label"
+	},
+	"upAndComing": "Up and coming feeds",
+	"@upAndComing": {
+		"description": "Up and coming feeds label"
+	},
+	"upAndComingDescription": "Recent feeds that are gaining popularity",
+	"@upAndComingDescription": {
+		"description": "Up and coming feeds description"
+	},
+	"noteToUser": "Note to {displayName}",
+	"@noteToUser": {
+		"description": "Note to users label"
+	},
+	"noteToUserDetails": "Hoot is a place to explore one's creativity and identity. We encourage you to be yourself and express your creativity. Be it through feeds, hoots, comments, or anything else.\n\nThere's no contest to be the best or the most popular. There's no need to be the most subscribed feed or the most liked hoot. There's no need to be the most followed user or the most commented hoot.\n\nYour experience is what you make of it and most of all, your people are ready to subscribe to you because your content is unique and so are you.\n\nHoot on!",
+	"emptyFeed": "This feed is empty",
+	"@emptyFeed": {
+		"description": "Empty feed message"
+	},
+	"emptyFeedDescription": "This feed is empty because it has no hoots. You can create a new hoot by clicking the floating button at the bottom right corner of the screen.",
+	"@emptyFeedDescription": {
+		"description": "Empty feed description"
+	},
+	"emptyFeedToOtherUsers": "Give {displayName} some love to motivate them to hoot more!",
+	"@emptyFeedToOtherUsers": {
+		"description": "Empty feed to other users message"
+	},
+	"thisFeedIsPrivate": "This feed is private",
+	"@thisFeedIsPrivate": {
+		"description": "This feed is private message"
+	},
+	"onlyMembersCanSee": "Only people {displayName} accepts will be able to see their posts here!",
+	"@onlyMembersCanSee": {
+		"description": "Only members can see message"
+	},
+	"privateFeed": "Private Feed",
+	"nsfwFeed": "NSFW Feed",
+	"verifiedUser": "This user is verified",
+	"verifiedTester": "This user is a verified tester"
 }
