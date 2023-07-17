@@ -250,7 +250,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     child: Text(
                                       _recentFeeds[index].title![0].toUpperCase(),
                                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                          color: Colors.white
+                                          color: _recentFeeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
                                       ),
                                     ),
                                   ),
