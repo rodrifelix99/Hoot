@@ -4,8 +4,8 @@ import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../models/user.dart';
 
 class FeedRequestsPage extends StatefulWidget {
@@ -19,6 +19,7 @@ class FeedRequestsPage extends StatefulWidget {
 class _FeedRequestsPageState extends State<FeedRequestsPage> {
   late FeedProvider _feedProvider;
   late AuthProvider _authProvider;
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
   List<U> _requests = [];
   bool _loading = true;
 
@@ -34,6 +35,7 @@ class _FeedRequestsPageState extends State<FeedRequestsPage> {
     setState(() => _loading = true);
     List<U> requests = await _feedProvider.getFeedRequests(widget.feedId);
     setState(() {
+      _refreshController.refreshCompleted();
       _requests = requests;
       _loading = false;
     });
@@ -77,10 +79,9 @@ class _FeedRequestsPageState extends State<FeedRequestsPage> {
         appBar: AppBar(
           title: const Text("Subscription requests"),
         ),
-        body: _loading ? const Center(child: CircularProgressIndicator()) : _requests.isNotEmpty ? LiquidPullToRefresh(
+        body: _loading ? const Center(child: CircularProgressIndicator()) : _requests.isNotEmpty ? SmartRefresher(
+          controller: _refreshController,
           onRefresh: _getRequests,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          color: Theme.of(context).colorScheme.onPrimary,
           child: ListView.builder(
             itemCount: _requests.length,
             itemBuilder: (context, index) {

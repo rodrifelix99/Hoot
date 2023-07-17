@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/models/notification.dart' as Notif;
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/error_service.dart';
@@ -19,7 +19,7 @@ class NotificationsPage extends StatefulWidget {
 class _NotificationsPageState extends State<NotificationsPage> {
   late AuthProvider _authProvider;
   List<Notif.Notification> _notifications = [];
-  final ScrollController _scrollController = ScrollController();
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
   bool _isLoading = false;
   bool _loadingMore = false;
   bool _hasMore = true;
@@ -29,11 +29,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
     super.initState();
     _loadNotifications();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        _hasMore ? _loadNotifications(startAt: _notifications.last.createdAt) : null;
-      }
-    });
   }
 
   Future _loadNotifications({DateTime? startAt, bool refresh = false}) async {
@@ -115,30 +110,30 @@ class _NotificationsPageState extends State<NotificationsPage> {
               icon: Icon(Icons.notifications_off_rounded),
               text: AppLocalizations.of(context)!.noNotifications
           )
-      ) : Column(
-        children: [
-          LiquidPullToRefresh(
-            onRefresh: () => _loadNotifications(refresh: true),
-            showChildOpacityTransition: false,
-            color: Theme.of(context).colorScheme.primary,
-            child: Expanded(
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: _notifications.length,
-                itemBuilder: (context, index) => ListTile(
-                  onTap: () => _handleNotificationTap(_notifications[index]),
-                  leading: ProfileAvatar(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
-                  title: Text(_notifications[index].user.name ?? _notifications[index].user.username ?? ''),
-                  subtitle: Text(_getNotificationText(_notifications[index])),
-                  trailing: _notifications[index].read ? Text(timeago.format(_notifications[index].createdAt)) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),
-                ),
+      ) : SmartRefresher(
+        controller: _refreshController,
+        onRefresh: () async {
+          await _loadNotifications(refresh: true);
+          _refreshController.refreshCompleted();
+        },
+        onLoading: () async {
+          if (_hasMore) {
+            await _loadNotifications(startAt: _notifications.last.createdAt);
+          }
+          _refreshController.loadComplete();
+        },
+        child: Expanded(
+            child: ListView.builder(
+              itemCount: _notifications.length,
+              itemBuilder: (context, index) => ListTile(
+                onTap: () => _handleNotificationTap(_notifications[index]),
+                leading: ProfileAvatar(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
+                title: Text(_notifications[index].user.name ?? _notifications[index].user.username ?? ''),
+                subtitle: Text(_getNotificationText(_notifications[index])),
+                trailing: _notifications[index].read ? Text(timeago.format(_notifications[index].createdAt)) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),
               ),
             ),
           ),
-          _loadingMore ? const Center(
-            child: CircularProgressIndicator(),
-          ) : Container()
-        ],
       ),
     );
   }

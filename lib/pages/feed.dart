@@ -4,9 +4,9 @@ import 'package:hoot/components/user_suggestions.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../components/post_component.dart';
 
 class FeedPage extends StatefulWidget {
@@ -18,6 +18,7 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends State<FeedPage> {
   late FeedProvider _feedProvider;
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
   bool _isLoading = false;
 
   Future _getPosts(DateTime startAfter, { bool refresh = false }) async {
@@ -51,9 +52,19 @@ class _FeedPageState extends State<FeedPage> {
           ),
         ],
       ),
-      body: _isLoading ? const Center(child: CircularProgressIndicator()) : LiquidPullToRefresh(
-        onRefresh: () async => await _getPosts(DateTime.now(), refresh: true),
-        springAnimationDurationInMilliseconds: 500,
+      body: _isLoading ? const Center(child: CircularProgressIndicator()) : SmartRefresher(
+        controller: _refreshController,
+        enablePullDown: true,
+        enablePullUp: _feedProvider.mainFeedPosts.isNotEmpty,
+        header: const WaterDropHeader(),
+        onRefresh: () async {
+          await _getPosts(DateTime.now(), refresh: false);
+          _refreshController.refreshCompleted();
+        },
+        onLoading: () async {
+          await _getPosts(_feedProvider.mainFeedPosts.last.createdAt ?? DateTime.now(), refresh: false);
+          _refreshController.loadComplete();
+        },
         child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(

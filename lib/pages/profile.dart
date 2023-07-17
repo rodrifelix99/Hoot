@@ -12,7 +12,6 @@ import 'package:line_icons/line_icons.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -207,273 +206,270 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(_user.name!),
-          actions: _isCurrentUser ? [
-            IconButton(
-              onPressed: _refreshUser,
-              icon: const LineIcon(LineIcons.alternateSync),
-            ),
-            IconButton(
-              onPressed: _signOut,
-              icon: const LineIcon(LineIcons.alternateSignOut),
-            ),
-          ] : null,
-        ),
-        floatingActionButton: _isCurrentUser && _user.feeds!.isNotEmpty ? Padding(
-            padding: const EdgeInsets.only(bottom: 100),
-            child: FloatingActionBubble(
-              items: <Bubble>[
-                Bubble(
-                  title: "${_user.feeds![_selectedFeedIndex].subscribers!.length} subscribers",
-                  iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                  bubbleColor : _user.feeds![_selectedFeedIndex].color!,
-                  icon: LineIcons.users,
-                  titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                  onPress: () {
-                    ToastService.showToast(context, "Coming soon!", false);
-                    _animationController.reverse();
-                  },
-                ),
-                Bubble(
-                  title: "Edit feed",
-                  iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                  bubbleColor : _user.feeds![_selectedFeedIndex].color!,
-                  icon: LineIcons.edit,
-                  titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                  onPress: () {
-                    Navigator.of(context).pushNamed('/edit_feed', arguments: _user.feeds![_selectedFeedIndex]);
-                    _animationController.reverse();
-                  },
-                ),
-                Bubble(
-                  title: "Hoot",
-                  iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                  bubbleColor : _user.feeds![_selectedFeedIndex].color!,
-                  icon: LineIcons.feather,
-                  titleStyle: TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                  onPress: () {
-                    Navigator.of(context).pushNamed('/create_post', arguments: _user.feeds![_selectedFeedIndex].id);
-                    _animationController.reverse();
-                  },
-                ),
-              ],
-              animation: _animation,
-              onPress: () => _animationController.isCompleted
-                  ? _animationController.reverse()
-                  : _animationController.forward(),
-              iconColor: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-              iconData: Icons.menu_rounded,
-              backGroundColor: _user.feeds![_selectedFeedIndex].color!,
-            )
-        ) : null,
-        body: _loadingUser ? Center(
-            child: LoadingAnimationWidget.inkDrop(
-              color: Theme.of(context).colorScheme.onSurface,
-              size: 50,
-            )
-        ) : SingleChildScrollView(
-          child: LiquidPullToRefresh(
-            onRefresh: _getFeeds,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+      appBar: AppBar(
+        title: Text(_user.name!),
+        actions: _isCurrentUser ? [
+          IconButton(
+            onPressed: _refreshUser,
+            icon: const LineIcon(LineIcons.alternateSync),
+          ),
+          IconButton(
+            onPressed: _signOut,
+            icon: const LineIcon(LineIcons.alternateSignOut),
+          ),
+        ] : null,
+      ),
+      floatingActionButton: _isCurrentUser && _user.feeds!.isNotEmpty ? Padding(
+          padding: const EdgeInsets.only(bottom: 100),
+          child: FloatingActionBubble(
+            items: <Bubble>[
+              Bubble(
+                title: "${_user.feeds![_selectedFeedIndex].subscribers!.length} subscribers",
+                iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                bubbleColor : _user.feeds![_selectedFeedIndex].color!,
+                icon: LineIcons.users,
+                titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                onPress: () {
+                  ToastService.showToast(context, "Coming soon!", false);
+                  _animationController.reverse();
+                },
+              ),
+              Bubble(
+                title: "Edit feed",
+                iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                bubbleColor : _user.feeds![_selectedFeedIndex].color!,
+                icon: LineIcons.edit,
+                titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                onPress: () {
+                  Navigator.of(context).pushNamed('/edit_feed', arguments: _user.feeds![_selectedFeedIndex]);
+                  _animationController.reverse();
+                },
+              ),
+              Bubble(
+                title: "Hoot",
+                iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                bubbleColor : _user.feeds![_selectedFeedIndex].color!,
+                icon: LineIcons.feather,
+                titleStyle: TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                onPress: () {
+                  Navigator.of(context).pushNamed('/create_post', arguments: _user.feeds![_selectedFeedIndex].id);
+                  _animationController.reverse();
+                },
+              ),
+            ],
+            animation: _animation,
+            onPress: () => _animationController.isCompleted
+                ? _animationController.reverse()
+                : _animationController.forward(),
+            iconColor: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+            iconData: Icons.menu_rounded,
+            backGroundColor: _user.feeds![_selectedFeedIndex].color!,
+          )
+      ) : null,
+      body: _loadingUser ? Center(
+          child: LoadingAnimationWidget.inkDrop(
+            color: Theme.of(context).colorScheme.onSurface,
+            size: 50,
+          )
+      ) : SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
               children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    ImageComponent(
-                      url: _user.bannerPictureUrl ?? '',
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                    Positioned(
-                      bottom: -75,
-                      left: 10,
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            borderRadius: BorderRadius.all(Radius.circular((_user.radius ?? 100) + 5)),
-                            border: Border.all(
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              width: 5,
-                            ),
-                          ),
-                          child: ProfileAvatar(image: _user.largeProfilePictureUrl ?? '', size: 150, preview: true, radius: _user.radius ?? 100)
-                      ),
-                    )
-                  ],
+                ImageComponent(
+                  url: _user.bannerPictureUrl ?? '',
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      _isCurrentUser ? ElevatedButton(
-                        style: ElevatedButtonTheme.of(context).style?.copyWith(
-                          backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-                          foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onSecondary),
-                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                        ),
-                        onPressed: () => Navigator.of(context).pushNamed('/edit_profile'),
-                        child: Text(AppLocalizations.of(context)!.editProfile),
-                      ) : ElevatedButton(
-                        style: ElevatedButtonTheme.of(context).style?.copyWith(
-                          backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary),
-                          foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onPrimary),
-                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                        ),
-                        onPressed: () => ToastService.showToast(context, AppLocalizations.of(context)!.comingSoon, false),
-                        child: const Row(
-                          children: [
-                            Icon(Icons.star_rounded),
-                            SizedBox(width: 10),
-                            Text("Super sub"),
-                          ],
+                Positioned(
+                  bottom: -75,
+                  left: 10,
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        borderRadius: BorderRadius.all(Radius.circular((_user.radius ?? 100) + 5)),
+                        border: Border.all(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          width: 5,
                         ),
                       ),
-                    ],
+                      child: ProfileAvatar(image: _user.largeProfilePictureUrl ?? '', size: 150, preview: true, radius: _user.radius ?? 100)
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
+                )
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _isCurrentUser ? ElevatedButton(
+                    style: ElevatedButtonTheme.of(context).style?.copyWith(
+                      backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
+                      foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onSecondary),
+                      padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                    ),
+                    onPressed: () => Navigator.of(context).pushNamed('/edit_profile'),
+                    child: Text(AppLocalizations.of(context)!.editProfile),
+                  ) : ElevatedButton(
+                    style: ElevatedButtonTheme.of(context).style?.copyWith(
+                      backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary),
+                      foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onPrimary),
+                      padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                    ),
+                    onPressed: () => ToastService.showToast(context, AppLocalizations.of(context)!.comingSoon, false),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.star_rounded),
+                        SizedBox(width: 10),
+                        Text("Super sub"),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  NameComponent(user: _user, showUsername: true, size: 20),
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      NameComponent(user: _user, showUsername: true, size: 20),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                      _user.bio?.isNotEmpty ?? false ? const SizedBox(height: 10) : const SizedBox(),
+                      _user.bio?.isNotEmpty ?? false ? Text(
+                          _user.bio ?? ''
+                      ) : const SizedBox(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          _user.bio?.isNotEmpty ?? false ? const SizedBox(height: 10) : const SizedBox(),
-                          _user.bio?.isNotEmpty ?? false ? Text(
-                              _user.bio ?? ''
-                          ) : const SizedBox(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pushNamed('/subscriptions', arguments: _user.uid),
-                                child: Text(AppLocalizations.of(context)!.numberOfSubscriptions(_user.subscriptions.length)),
-                              )
-                            ],
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pushNamed('/subscriptions', arguments: _user.uid),
+                            child: Text(AppLocalizations.of(context)!.numberOfSubscriptions(_user.subscriptions.length)),
                           )
                         ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Divider(),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                  children: [
+                    _isCurrentUser ? GestureDetector(
+                      onTap: () => Navigator.of(context).pushNamed('/create_feed'),
+                      child: Chip(
+                        label: LineIcon(LineIcons.plus, color: Theme.of(context).colorScheme.primary, size: 16),
                       ),
+                    ) : const SizedBox(),
+                    const SizedBox(width: 10),
+                    _loadingFeeds ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(),
+                    ) : const SizedBox(),
+                    for (Feed feed in _user.feeds ?? []) Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () => setState(() => _selectedFeedIndex = _user.feeds?.indexOf(feed) ?? 0),
+                          child: _selectedFeedIndex == _user.feeds?.indexOf(feed) ? Chip(
+                            label: Text(feed.title),
+                            avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : feed.private == true ? LineIcon(LineIcons.lock, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : null,
+                            labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                            ),
+                            backgroundColor: feed.color,
+                          ) : Chip(
+                            avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: Theme.of(context).colorScheme.primary) : feed.private == true ? LineIcon(LineIcons.lock, color: Theme.of(context).colorScheme.primary) : null,
+                            label: Text(feed.title),
+                            // avatar: LineIcon(LineIcons.user)
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                      ],
+                    ),
+                  ]
+              ),
+            ),
+            _user.feeds!.isNotEmpty ?
+            Column(
+              children: [
+                const Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Flexible(child: Text(_user.feeds![_selectedFeedIndex].description!, style: Theme.of(context).textTheme.bodyLarge)),
+                      _isCurrentUser ? _user.feeds![_selectedFeedIndex].requests?.isNotEmpty ?? false ? ElevatedButton(
+                        onPressed: () => Navigator.of(context).pushNamed('/feed_requests', arguments: _user.feeds![_selectedFeedIndex].id),
+                        style: ElevatedButtonTheme.of(context).style?.copyWith(
+                          backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
+                          foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                        ),
+                        child: Text("${_user.feeds![_selectedFeedIndex].requests!.length} requests"),
+                      ) : const SizedBox() : Container(
+                        child: _isSubscribedToFeed() ? ElevatedButton(
+                          style: ElevatedButtonTheme.of(context).style?.copyWith(
+                            backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.error),
+                            foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onError),
+                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                          ),
+                          onPressed: _unsubscribeFromFeed,
+                          child: Text(AppLocalizations.of(context)!.unsubscribe),
+                        ) : _user.feeds![_selectedFeedIndex].private == false ? ElevatedButton(
+                          style: ElevatedButtonTheme.of(context).style?.copyWith(
+                            backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
+                            foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                          ),
+                          onPressed: _subscribeToFeed,
+                          child: Text(AppLocalizations.of(context)!.subscribe),
+                        ) : _hasRequestedToJoinFeed() ? ElevatedButton(
+                          style: ElevatedButtonTheme.of(context).style?.copyWith(
+                            backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color?.withOpacity(0.5)),
+                            foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                          ),
+                          onPressed: () {},
+                          child: const Text("Requested"),
+                        ) : ElevatedButton(
+                          style: ElevatedButtonTheme.of(context).style?.copyWith(
+                            backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
+                            foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                          ),
+                          onPressed: _requestToJoinFeed,
+                          child: const Text("Request"),
+                        ),
+                      )
                     ],
                   ),
                 ),
-                const Divider(),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                      children: [
-                        _isCurrentUser ? GestureDetector(
-                          onTap: () => Navigator.of(context).pushNamed('/create_feed'),
-                          child: Chip(
-                            label: LineIcon(LineIcons.plus, color: Theme.of(context).colorScheme.primary, size: 16),
-                          ),
-                        ) : const SizedBox(),
-                        const SizedBox(width: 10),
-                        _loadingFeeds ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(),
-                        ) : const SizedBox(),
-                        for (Feed feed in _user.feeds ?? []) Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () => setState(() => _selectedFeedIndex = _user.feeds?.indexOf(feed) ?? 0),
-                              child: _selectedFeedIndex == _user.feeds?.indexOf(feed) ? Chip(
-                                label: Text(feed.title),
-                                avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : feed.private == true ? LineIcon(LineIcons.lock, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : null,
-                                labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                                ),
-                                backgroundColor: feed.color,
-                              ) : Chip(
-                                avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: Theme.of(context).colorScheme.primary) : feed.private == true ? LineIcon(LineIcons.lock, color: Theme.of(context).colorScheme.primary) : null,
-                                label: Text(feed.title),
-                                // avatar: LineIcon(LineIcons.user)
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                          ],
-                        ),
-                      ]
-                  ),
-                ),
-                _user.feeds!.isNotEmpty ?
-                Column(
-                  children: [
-                    const Divider(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Flexible(child: Text(_user.feeds![_selectedFeedIndex].description!, style: Theme.of(context).textTheme.bodyLarge)),
-                          _isCurrentUser ? _user.feeds![_selectedFeedIndex].requests?.isNotEmpty ?? false ? ElevatedButton(
-                            onPressed: () => Navigator.of(context).pushNamed('/feed_requests', arguments: _user.feeds![_selectedFeedIndex].id),
-                            style: ElevatedButtonTheme.of(context).style?.copyWith(
-                              backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
-                              foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                              padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                            ),
-                            child: Text("${_user.feeds![_selectedFeedIndex].requests!.length} requests"),
-                          ) : const SizedBox() : Container(
-                            child: _isSubscribedToFeed() ? ElevatedButton(
-                              style: ElevatedButtonTheme.of(context).style?.copyWith(
-                                backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.error),
-                                foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onError),
-                                padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                              ),
-                              onPressed: _unsubscribeFromFeed,
-                              child: Text(AppLocalizations.of(context)!.unsubscribe),
-                            ) : _user.feeds![_selectedFeedIndex].private == false ? ElevatedButton(
-                              style: ElevatedButtonTheme.of(context).style?.copyWith(
-                                backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
-                                foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                                padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                              ),
-                              onPressed: _subscribeToFeed,
-                              child: Text(AppLocalizations.of(context)!.subscribe),
-                            ) : _hasRequestedToJoinFeed() ? ElevatedButton(
-                              style: ElevatedButtonTheme.of(context).style?.copyWith(
-                                backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color?.withOpacity(0.5)),
-                                foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                                padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                              ),
-                              onPressed: () {},
-                              child: const Text("Requested"),
-                            ) : ElevatedButton(
-                              style: ElevatedButtonTheme.of(context).style?.copyWith(
-                                backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
-                                foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                                padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                              ),
-                              onPressed: _requestToJoinFeed,
-                              child: const Text("Request"),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    FeedPosts(user: _user, feedIndex: _selectedFeedIndex),
-                  ],
-                )
-                    : NothingToShowComponent(
-                  icon: const LineIcon(LineIcons.newspaperAlt),
-                  text: "${!_isCurrentUser ? AppLocalizations.of(context)!.noFeeds(_user.name ?? _user.username ?? 'This user') : AppLocalizations.of(context)!.noFeedsYou}\n${_isCurrentUser ? AppLocalizations.of(context)!.createFeedMessage : ''}",
-                ),
-                const SizedBox(height: 100),
+                FeedPosts(user: _user, feedIndex: _selectedFeedIndex),
               ],
+            )
+                : NothingToShowComponent(
+              icon: const LineIcon(LineIcons.newspaperAlt),
+              text: "${!_isCurrentUser ? AppLocalizations.of(context)!.noFeeds(_user.name ?? _user.username ?? 'This user') : AppLocalizations.of(context)!.noFeedsYou}\n${_isCurrentUser ? AppLocalizations.of(context)!.createFeedMessage : ''}",
             ),
-          ),
-        )
+            const SizedBox(height: 100),
+          ],
+        ),
+      ),
     );
   }
 }

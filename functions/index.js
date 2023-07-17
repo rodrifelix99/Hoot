@@ -774,7 +774,9 @@ exports.top10MostSubscribedFeeds = functions.region("europe-west1").https.onCall
         break;
       }
       const feed = await getFeed(feedSub.userId, feedSub.feedId, false, true, true);
-      results.push(feed);
+      if (feed != null) {
+        results.push(feed);
+      }
     }
     
     return JSON.stringify(results);
@@ -786,13 +788,16 @@ exports.top10MostSubscribedFeeds = functions.region("europe-west1").https.onCall
 exports.recentlyAddedFeeds = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const feeds = await db.collectionGroup("feeds").get();
-    // order by createdAt and limit to 10
     feeds.docs.sort((a, b) => b.data().createdAt - a.data().createdAt);
     const results = [];
     for (let i = 0; i < 10; i++) {
       const feed = feeds.docs[i];
       const feedObj = await getFeed(feed.ref.parent.parent.id, feed.id, false, false, true);
-      results.push(feedObj);
+      if (feedObj != null) {
+        results.push(feedObj);
+      } else {
+        i--;
+      }
     }
     return JSON.stringify(results);
   } catch (e) {
