@@ -5,13 +5,13 @@ import '../models/user.dart';
 
 class NameComponent extends StatefulWidget {
   final U user;
-  int size;
-  bool bold;
-  Color color;
-  Color? textColor;
-  bool showUsername;
-  String feedName;
-  NameComponent({super.key, required this.user, this.size = 16, this.bold = true, this.color = Colors.blue, this.showUsername = false, this.feedName = '', this.textColor});
+  final int size;
+  final bool bold;
+  final Color color;
+  final Color? textColor;
+  final bool showUsername;
+  final String feedName;
+  const NameComponent({super.key, required this.user, this.size = 16, this.bold = true, this.color = Colors.blue, this.showUsername = false, this.feedName = '', this.textColor});
 
   @override
   State<NameComponent> createState() => _NameComponentState();

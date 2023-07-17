@@ -504,7 +504,7 @@ exports.subscribeToFeed = functions.region("europe-west1").https.onCall(async (d
     });
     await batch.commit();
     await sendDatabaseNotification(uid, userId, 3, userId, feedId);
-    await sendPush(userId, "New subscriber", "Someone subscribed to one of your feeds");
+    await sendPush(userId, "New subscriber", "Someone subscribed to one of your feeds", {"type": "3"});
     return true;
   } catch (e) {
     error(e);

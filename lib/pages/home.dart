@@ -13,7 +13,6 @@ import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
 import '../services/auth_provider.dart';
-import '../services/feed_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,7 +26,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late PageController _pageController;
   late AuthProvider _authProvider;
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  bool _radio = true;
+  bool _radio = false;
 
   Future _setFCMToken() async {
     String? fcmToken = await messaging.getToken();
@@ -137,7 +136,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (i) => setState(() {}),
                 children: [
-                  FeedPage(),
+                  FeedPage(toggleRadio: _openRadio),
                   ExplorePage(),
                   NotificationsPage(),
                   ProfilePage(),

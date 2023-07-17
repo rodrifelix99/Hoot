@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -14,16 +15,21 @@ class _RadioComponentState extends State<RadioComponent> {
   bool _showMedia = false;
   final Map<String, String> _songs = {
     'Va-h6WZPUzQ': 'Rock Classics',
-    '3pFsWqKns4I': 'This is Hoot Radio',
-    'HQtFR3mhzOY': 'Pop Station',
-    'rvX0cxK2OuI': 'This is Hoot Radio',
-    'wXH_SkhhWds': 'Throwback Hits',
     'PKjDbuRuC9w': 'This is Hoot Radio',
+    'HQtFR3mhzOY': 'Pop Station',
+    '3pFsWqKns4I': 'This is Hoot Radio',
+    'wXH_SkhhWds': 'Throwback Hits',
     'lCjVa1c5zKw': 'Mind of Metal',
     'gJoLnvjS8Ro': 'This is Hoot Radio',
+    'EurKD84TFtA': 'Best of Pop Rock',
+    'N6ORdxoJH2Q': '2000\'s Hip Hop Hits',
+    'rvX0cxK2OuI': 'This is Hoot Radio',
   };
   late String _selectedKey;
   late YoutubePlayerController controller;
+
+  String _feedAd = 'qDeVmQbXDkk';
+  String _subscriber = 'osZWkRbk6jA';
 
   @override
   void initState() {
@@ -45,6 +51,20 @@ class _RadioComponentState extends State<RadioComponent> {
     );
     super.initState();
     _play();
+    _listenForNotifications();
+  }
+
+  Future _listenForNotifications() async {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.data['type'] == "3") {
+        _pause();
+        controller.load(_subscriber);
+        _play();
+        Future.delayed(const Duration(seconds: 17), () {
+          controller.load(_selectedKey);
+        });
+      }
+    });
   }
 
   Future _pause() async {
@@ -77,18 +97,44 @@ class _RadioComponentState extends State<RadioComponent> {
     setState(() { });
     if (_songs.values.toList()[index] == 'This is Hoot Radio') {
       setState(() => _showMedia = false);
-      Future.delayed(const Duration(seconds: 10), () {
+      Future.delayed(const Duration(seconds: 12), () {
         _next();
       });
+    }
+  }
+
+  String _imageUrl() {
+    switch (_songs.values.toList()[_songs.keys.toList().indexOf(_selectedKey)]) {
+      case 'Rock Classics':
+        return 'https://rockradio.si/images/og-image.jpg';
+      case 'Pop Station':
+        return 'https://wallpapers.com/images/hd/pop-music-u8uxqgvwhv93s9a9.jpg';
+      case 'Throwback Hits':
+        return 'https://wallpapers.com/images/hd/80s-retro-arcade-music-734j2xcfqfk7espy.jpg';
+      case 'Mind of Metal':
+        return 'https://wallpapercave.com/wp/wp2709491.jpg';
+      case 'Best of Pop Rock':
+        return 'https://wallpapers.com/images/hd/pop-music-dq4x3sozgmiy23kc.jpg';
+      case '2000\'s Hip Hop Hits':
+        return 'https://images.unsplash.com/photo-1513104487127-813ea879b8da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aGlwJTIwaG9wfGVufDB8fDB8fHww&w=1000&q=80';
+      default:
+        return 'https://radiodns.org/wp-content/themes/radiodns/assets/img/optimised/home/swash/x2/radiodns-swash@2x.jpg';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+      // animated gradient
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primaryContainer,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Theme.of(context).colorScheme.primaryContainer.withOpacity(0.95),
+            Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.95),
+          ],
+        ),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         boxShadow: [
           BoxShadow(
@@ -98,6 +144,7 @@ class _RadioComponentState extends State<RadioComponent> {
           ),
         ],
       ),
+      width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -105,7 +152,7 @@ class _RadioComponentState extends State<RadioComponent> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               _paused ? IconButton(
-                icon: const Icon(Icons.stream_rounded),
+                icon: const Icon(Icons.play_arrow_rounded),
                 onPressed: () => _play(),
               ) : IconButton(
                 icon: const Icon(Icons.pause_rounded),
@@ -146,13 +193,14 @@ class _RadioComponentState extends State<RadioComponent> {
                   bottomRight: Radius.circular(10),
                 ),
                 child: OctoImage(
-                  image: NetworkImage('https://cdn.wallpapersafari.com/13/6/tQDNaY.jpg'),
+                  image: NetworkImage(_imageUrl()),
                   placeholderBuilder: OctoPlaceholder.blurHash(
                     'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
                   ),
                   errorBuilder: OctoError.icon(color: Colors.red),
                   fit: BoxFit.cover,
                   height: 50,
+                  width: 75,
                 ),
               )
             ],

@@ -94,7 +94,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       )
                       : const SizedBox(),
                   Text(
-                      _top10Feeds[index].title ?? '',
+                      _top10Feeds[index].title,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
                       )
@@ -267,7 +267,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      _recentFeeds[index].title![0].toUpperCase(),
+                                      _recentFeeds[index].title[0].toUpperCase(),
                                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                           color: _recentFeeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
                                       ),
@@ -280,7 +280,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        _recentFeeds[index].title ?? '',
+                                        _recentFeeds[index].title,
                                         style: Theme.of(context).textTheme.titleMedium,
                                       ),
                                       const SizedBox(height: 5),

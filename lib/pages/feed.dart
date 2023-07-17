@@ -11,7 +11,8 @@ import '../components/post_component.dart';
 import '../models/post.dart';
 
 class FeedPage extends StatefulWidget {
-  const FeedPage({super.key});
+  final VoidCallback toggleRadio;
+  const FeedPage({super.key, required this.toggleRadio});
 
   @override
   State<FeedPage> createState() => _FeedPageState();
@@ -56,7 +57,7 @@ class _FeedPageState extends State<FeedPage> {
             onPressed: () => Navigator.of(context).pushNamed('/search'),
           ),
           IconButton(
-              onPressed: () => { },
+              onPressed: widget.toggleRadio,
               icon: const LineIcon(LineIcons.music)
           )
         ],
