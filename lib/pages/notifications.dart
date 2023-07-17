@@ -21,7 +21,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
   List<Notif.Notification> _notifications = [];
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
   bool _isLoading = false;
-  bool _loadingMore = false;
   bool _hasMore = true;
 
   @override
@@ -34,8 +33,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Future _loadNotifications({DateTime? startAt, bool refresh = false}) async {
     if (startAt == null && !refresh) {
       setState(() => _isLoading = true);
-    } else if (!refresh) {
-      setState(() => _loadingMore = true);
     }
     try {
       List<Notif.Notification> notifications = await _authProvider.getNotifications(startAt ?? DateTime.now());
@@ -48,9 +45,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
       print(e);
       ToastService.showToast(context, e.toString(), true);
     } finally {
+      _refreshController.loadComplete();
+      _refreshController.refreshCompleted();
       setState(() {
         _isLoading = false;
-        _loadingMore = false;
       });
     }
   }
@@ -110,30 +108,25 @@ class _NotificationsPageState extends State<NotificationsPage> {
               icon: Icon(Icons.notifications_off_rounded),
               text: AppLocalizations.of(context)!.noNotifications
           )
-      ) : SmartRefresher(
-        controller: _refreshController,
-        onRefresh: () async {
-          await _loadNotifications(refresh: true);
-          _refreshController.refreshCompleted();
-        },
-        onLoading: () async {
-          if (_hasMore) {
-            await _loadNotifications(startAt: _notifications.last.createdAt);
-          }
-          _refreshController.loadComplete();
-        },
-        child: Expanded(
-            child: ListView.builder(
-              itemCount: _notifications.length,
-              itemBuilder: (context, index) => ListTile(
-                onTap: () => _handleNotificationTap(_notifications[index]),
-                leading: ProfileAvatar(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
-                title: Text(_notifications[index].user.name ?? _notifications[index].user.username ?? ''),
-                subtitle: Text(_getNotificationText(_notifications[index])),
-                trailing: _notifications[index].read ? Text(timeago.format(_notifications[index].createdAt)) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),
-              ),
+      ) : Padding(
+        padding: const EdgeInsets.only(bottom: 100),
+        child: SmartRefresher(
+          controller: _refreshController,
+          onRefresh: () async => await _loadNotifications(refresh: true),
+          onLoading: () async => _hasMore ? await _loadNotifications(startAt: _notifications.last.createdAt) : null,
+          physics: const BouncingScrollPhysics(),
+          enablePullUp: _hasMore,
+          child: ListView.builder(
+            itemCount: _notifications.length,
+            itemBuilder: (context, index) => ListTile(
+              onTap: () => _handleNotificationTap(_notifications[index]),
+              leading: ProfileAvatar(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
+              title: Text(_notifications[index].user.name ?? _notifications[index].user.username ?? ''),
+              subtitle: Text(_getNotificationText(_notifications[index])),
+              trailing: _notifications[index].read ? Text(timeago.format(_notifications[index].createdAt)) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),
             ),
           ),
+        ),
       ),
     );
   }

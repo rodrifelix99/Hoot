@@ -3,8 +3,8 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/name_component.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:octo_image/octo_image.dart';
 import 'package:provider/provider.dart';
 
 import '../models/feed.dart';
@@ -84,10 +84,19 @@ class _ExplorePageState extends State<ExplorePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  _top10Feeds[index].nsfw == true ? Padding(
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: Icon(Icons.warning_rounded, color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                  )
+                      : _top10Feeds[index].private == true ? Padding(
+                        padding: const EdgeInsets.only(bottom: 15),
+                        child: Icon(Icons.lock_rounded, color:_top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                      )
+                      : const SizedBox(),
                   Text(
                       _top10Feeds[index].title ?? '',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.white
+                          color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
                       )
                   ),
                   const SizedBox(height: 5),
@@ -95,10 +104,14 @@ class _ExplorePageState extends State<ExplorePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("by", style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.white
+                          color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
                       )),
                       const SizedBox(width: 5),
-                      NameComponent(user: _top10Feeds[index].user!, color: Colors.white, textColor: Colors.white),
+                      NameComponent(
+                          user: _top10Feeds[index].user!,
+                          color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                          textColor: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
+                      ),
                     ],
                   ),
                   const SizedBox(height: 30),
@@ -106,7 +119,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       _top10Feeds[index].description ?? '',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.white
+                          color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
                       )
                   ),
                 ],
@@ -125,11 +138,11 @@ class _ExplorePageState extends State<ExplorePage> {
                   Text(
                       "${_top10Feeds[index].subscribers?.length ?? "Many"} subscribers",
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.white
+                          color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
                       )
                   ),
                   const SizedBox(width: 10),
-                  const Icon(Icons.people, color: Colors.white, size: 15),
+                  Icon(Icons.people, color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white, size: 15),
                 ],
               ),
             ),
@@ -144,6 +157,12 @@ class _ExplorePageState extends State<ExplorePage> {
     return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.explore),
+          actions: [
+            IconButton(
+              icon: const Icon(LineIcons.search),
+              onPressed: () => Navigator.of(context).pushNamed('/search'),
+            ),
+          ],
         ),
         body: _recentFeeds.isEmpty && _top10Feeds.isEmpty ? Center(
           child: LoadingAnimationWidget.inkDrop(
@@ -272,7 +291,13 @@ class _ExplorePageState extends State<ExplorePage> {
                                             style: Theme.of(context).textTheme.bodySmall,
                                           ),
                                           const SizedBox(width: 5),
-                                          NameComponent(user: _recentFeeds[index].user!, color: _recentFeeds[index].color!, textColor: Theme.of(context).colorScheme.onSurface, bold: false, size: 12),
+                                          NameComponent(
+                                              user: _recentFeeds[index].user!,
+                                              color: Theme.of(context).colorScheme.onSurface,
+                                              textColor: Theme.of(context).colorScheme.onSurface,
+                                              bold: false,
+                                              size: 12
+                                          ),
                                         ],
                                       )
                                     ],

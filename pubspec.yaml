@@ -67,6 +67,7 @@ dependencies:
   blur: ^3.1.0
   floating_action_bubble: ^1.1.4
   pull_to_refresh: ^2.0.0
+  vibration: ^1.8.1
 
 dev_dependencies:
   flutter_test:

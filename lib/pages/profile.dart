@@ -14,6 +14,7 @@ import 'package:hoot/models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:vibration/vibration.dart';
 
 import '../components/post_component.dart';
 import '../models/post.dart';
@@ -220,7 +221,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         ] : null,
       ),
       floatingActionButton: _isCurrentUser && _user.feeds!.isNotEmpty ? Padding(
-          padding: const EdgeInsets.only(bottom: 100),
+          padding: const EdgeInsets.only(bottom: 70),
           child: FloatingActionBubble(
             items: <Bubble>[
               Bubble(
@@ -314,21 +315,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                     ),
                     onPressed: () => Navigator.of(context).pushNamed('/edit_profile'),
                     child: Text(AppLocalizations.of(context)!.editProfile),
-                  ) : ElevatedButton(
-                    style: ElevatedButtonTheme.of(context).style?.copyWith(
-                      backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary),
-                      foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onPrimary),
-                      padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                    ),
-                    onPressed: () => ToastService.showToast(context, AppLocalizations.of(context)!.comingSoon, false),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.star_rounded),
-                        SizedBox(width: 10),
-                        Text("Super sub"),
-                      ],
-                    ),
-                  ),
+                  ) : const SizedBox(height: 50),
                 ],
               ),
             ),
@@ -381,6 +368,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                       children: [
                         GestureDetector(
                           onTap: () => setState(() => _selectedFeedIndex = _user.feeds?.indexOf(feed) ?? 0),
+                          onForcePressStart: (details) => Vibration.vibrate(),
+                          onForcePressPeak: (details) => Navigator.of(context).pushNamed('/feed', arguments: feed),
                           child: _selectedFeedIndex == _user.feeds?.indexOf(feed) ? Chip(
                             label: Text(feed.title),
                             avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : feed.private == true ? LineIcon(LineIcons.lock, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : null,

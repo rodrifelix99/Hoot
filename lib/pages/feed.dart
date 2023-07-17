@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../components/post_component.dart';
+import '../models/post.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -23,12 +24,16 @@ class _FeedPageState extends State<FeedPage> {
 
   Future _getPosts(DateTime startAfter, { bool refresh = false }) async {
     try {
-      !refresh ? setState(() => _isLoading = true) : null;
+      if (_feedProvider.mainFeedPosts.isEmpty && !refresh) {
+        setState(() => _isLoading = true);
+      }
       await _feedProvider.getMainFeed(startAfter, refresh);
     } catch (e) {
       print(e);
       ToastService.showToast(context, e.toString(), true);
     } finally {
+      _refreshController.refreshCompleted();
+      _refreshController.loadComplete();
       setState(() => _isLoading = false);
     }
   }
@@ -52,43 +57,25 @@ class _FeedPageState extends State<FeedPage> {
           ),
         ],
       ),
-      body: _isLoading ? const Center(child: CircularProgressIndicator()) : SmartRefresher(
-        controller: _refreshController,
-        enablePullDown: true,
-        enablePullUp: _feedProvider.mainFeedPosts.isNotEmpty,
-        header: const WaterDropHeader(),
-        onRefresh: () async {
-          await _getPosts(DateTime.now(), refresh: false);
-          _refreshController.refreshCompleted();
-        },
-        onLoading: () async {
-          await _getPosts(_feedProvider.mainFeedPosts.last.createdAt ?? DateTime.now(), refresh: false);
-          _refreshController.loadComplete();
-        },
-        child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              children: [
-                const UserSuggestions(),
-                const Divider(),
-                _feedProvider.mainFeedPosts.isNotEmpty ? Padding(
-                  padding: const EdgeInsets.only(bottom: 100),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _feedProvider.mainFeedPosts.length,
-                    itemBuilder: (context, index) {
-                      return PostComponent(post: _feedProvider.mainFeedPosts[index]);
-                    },
-                  ),
-                ) : const Center(
-                  child: NothingToShowComponent(
-                    icon: Icon(Icons.newspaper_rounded),
-                    text: 'No hoots to show\nSubscribe to some feeds to see hoots here',
-                  ),
-                )
-              ],
-            )
+      body: _isLoading ? const Center(child: CircularProgressIndicator()) : Padding(
+        padding: const EdgeInsets.only(bottom: 100),
+        child: SmartRefresher(
+          controller: _refreshController,
+          enablePullUp: _feedProvider.mainFeedPosts.isNotEmpty,
+          onRefresh: () async =>  await _getPosts(DateTime.now(), refresh: true),
+          onLoading: () async => await _getPosts(_feedProvider.mainFeedPosts.last.createdAt ?? DateTime.now(), refresh: false),
+          child: _feedProvider.mainFeedPosts.isNotEmpty ? ListView.builder(
+              itemCount: _feedProvider.mainFeedPosts.length,
+              itemBuilder: (context, index) {
+                Post post = _feedProvider.mainFeedPosts[index];
+                return PostComponent(post: post);
+              }
+          ) : const Center(
+            child: NothingToShowComponent(
+              icon: Icon(Icons.newspaper_rounded),
+              text: 'No hoots to show\nSubscribe to some feeds to see hoots here',
+            ),
+          ),
         ),
       ),
     );
