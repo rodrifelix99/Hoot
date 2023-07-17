@@ -221,7 +221,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         ] : null,
       ),
       floatingActionButton: _isCurrentUser && _user.feeds!.isNotEmpty ? Padding(
-          padding: const EdgeInsets.only(bottom: 100),
+          padding: const EdgeInsets.only(bottom: 70),
           child: FloatingActionBubble(
             items: <Bubble>[
               Bubble(

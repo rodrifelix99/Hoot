@@ -108,36 +108,33 @@ class _NotificationsPageState extends State<NotificationsPage> {
               icon: Icon(Icons.notifications_off_rounded),
               text: AppLocalizations.of(context)!.noNotifications
           )
-      ) : Padding(
-        padding: const EdgeInsets.only(bottom: 100),
-        child: SmartRefresher(
-          controller: _refreshController,
-          onRefresh: () async => await _loadNotifications(refresh: true),
-          onLoading: () async => _hasMore ? await _loadNotifications(startAt: _notifications.last.createdAt) : null,
-          physics: const BouncingScrollPhysics(),
-          header: const ClassicHeader(
-            refreshingText: '',
-            idleText: '',
-            completeText: '',
-            releaseText: '',
-          ),
-          footer: const ClassicFooter(
-            failedText: '',
-            idleText: '',
-            loadingText: '',
-            noDataText: '',
-            canLoadingText: '',
-          ),
-          enablePullUp: _hasMore,
-          child: ListView.builder(
-            itemCount: _notifications.length,
-            itemBuilder: (context, index) => ListTile(
-              onTap: () => _handleNotificationTap(_notifications[index]),
-              leading: ProfileAvatar(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
-              title: Text(_notifications[index].user.name ?? _notifications[index].user.username ?? ''),
-              subtitle: Text(_getNotificationText(_notifications[index])),
-              trailing: _notifications[index].read ? Text(timeago.format(_notifications[index].createdAt)) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),
-            ),
+      ) : SmartRefresher(
+        controller: _refreshController,
+        onRefresh: () async => await _loadNotifications(refresh: true),
+        onLoading: () async => _hasMore ? await _loadNotifications(startAt: _notifications.last.createdAt) : null,
+        physics: const BouncingScrollPhysics(),
+        header: const ClassicHeader(
+          refreshingText: '',
+          idleText: '',
+          completeText: '',
+          releaseText: '',
+        ),
+        footer: const ClassicFooter(
+          failedText: '',
+          idleText: '',
+          loadingText: '',
+          noDataText: '',
+          canLoadingText: '',
+        ),
+        enablePullUp: _hasMore,
+        child: ListView.builder(
+          itemCount: _notifications.length,
+          itemBuilder: (context, index) => ListTile(
+            onTap: () => _handleNotificationTap(_notifications[index]),
+            leading: ProfileAvatar(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
+            title: Text(_notifications[index].user.name ?? _notifications[index].user.username ?? ''),
+            subtitle: Text(_getNotificationText(_notifications[index])),
+            trailing: _notifications[index].read ? Text(timeago.format(_notifications[index].createdAt)) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),
           ),
         ),
       ),

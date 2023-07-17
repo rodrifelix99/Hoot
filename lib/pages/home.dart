@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/radio_component.dart';
 import 'package:hoot/pages/explore.dart';
 import 'package:hoot/pages/feed.dart';
 import 'package:hoot/pages/notifications.dart';
@@ -26,6 +27,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late PageController _pageController;
   late AuthProvider _authProvider;
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  bool _radio = true;
 
   Future _setFCMToken() async {
     String? fcmToken = await messaging.getToken();
@@ -84,6 +86,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
+  _openRadio() {
+    setState(() {
+      _radio = !_radio;
+    });
+  }
+
+  _closeRadio() {
+    setState(() {
+      _radio = false;
+    });
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
@@ -115,19 +129,40 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             child: child,
           );
         },
-        child: PageView(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          onPageChanged: (i) => setState(() {}),
+        child: Stack(
           children: [
-            FeedPage(),
-            ExplorePage(),
-            NotificationsPage(),
-            ProfilePage(),
+            Positioned.fill(
+              child: PageView(
+                controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                onPageChanged: (i) => setState(() {}),
+                children: [
+                  FeedPage(),
+                  ExplorePage(),
+                  NotificationsPage(),
+                  ProfilePage(),
+                ],
+              ),
+            ),
+            _radio ? Positioned(
+              bottom: 10,
+              left: 20,
+              right: 20,
+              child: GestureDetector(
+                onVerticalDragEnd: (details) {
+                  if (details.primaryVelocity! > 0) {
+                    _closeRadio();
+                  }
+                },
+                  child: RadioComponent()
+              ),
+            ) : const Positioned(
+              bottom: 0,
+                child: SizedBox()
+            ),
           ],
         ),
       ),
-      extendBody: true,
       floatingActionButton: (_pageController.hasClients && _pageController.page!.round() == 0) || !_pageController.hasClients ?
       FloatingActionButton(
         onPressed: () => Navigator.of(context).pushNamed('/create_post', arguments: null),
@@ -175,8 +210,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
               ),
               GButton(
-                leading: Provider.of<AuthProvider>(context).user?.smallProfilePictureUrl != null ?
-                ProfileAvatar(image: Provider.of<AuthProvider>(context).user!.smallProfilePictureUrl ?? '', size: 24) : null,
+                  leading: Provider.of<AuthProvider>(context).user?.smallProfilePictureUrl != null ?
+                  ProfileAvatar(image: Provider.of<AuthProvider>(context).user!.smallProfilePictureUrl ?? '', size: 24) : null,
                   icon: LineIcons.user,
                   text: AppLocalizations.of(context)!.profile,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)

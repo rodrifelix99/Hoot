@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/empty_message.dart';
-import 'package:hoot/components/user_suggestions.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
+import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -52,42 +52,43 @@ class _FeedPageState extends State<FeedPage> {
         title: Text(AppLocalizations.of(context)!.myFeeds),
         actions: [
           IconButton(
-            icon: const Icon(LineIcons.search),
+            icon: const LineIcon(LineIcons.search),
             onPressed: () => Navigator.of(context).pushNamed('/search'),
           ),
+          IconButton(
+              onPressed: () => { },
+              icon: const LineIcon(LineIcons.music)
+          )
         ],
       ),
-      body: _isLoading ? const Center(child: CircularProgressIndicator()) : Padding(
-        padding: const EdgeInsets.only(bottom: 100),
-        child: SmartRefresher(
-          controller: _refreshController,
-          enablePullUp: _feedProvider.mainFeedPosts.isNotEmpty,
-          header: const ClassicHeader(
-            refreshingText: '',
-            idleText: '',
-            completeText: '',
-            releaseText: '',
-          ),
-          footer: const ClassicFooter(
-            failedText: '',
-            idleText: '',
-            loadingText: '',
-            noDataText: '',
-            canLoadingText: '',
-          ),
-          onRefresh: () async =>  await _getPosts(DateTime.now(), refresh: true),
-          onLoading: () async => await _getPosts(_feedProvider.mainFeedPosts.last.createdAt ?? DateTime.now(), refresh: false),
-          child: _feedProvider.mainFeedPosts.isNotEmpty ? ListView.builder(
-              itemCount: _feedProvider.mainFeedPosts.length,
-              itemBuilder: (context, index) {
-                Post post = _feedProvider.mainFeedPosts[index];
-                return PostComponent(post: post);
-              }
-          ) : Center(
-            child: NothingToShowComponent(
-              icon: const Icon(Icons.newspaper_rounded),
-              text: '${AppLocalizations.of(context)!.noHoots}\n${AppLocalizations.of(context)!.subscribeToSeeHoots}}',
-            ),
+      body: _isLoading ? const Center(child: CircularProgressIndicator()) : SmartRefresher(
+        controller: _refreshController,
+        enablePullUp: _feedProvider.mainFeedPosts.isNotEmpty,
+        header: const ClassicHeader(
+          refreshingText: '',
+          idleText: '',
+          completeText: '',
+          releaseText: '',
+        ),
+        footer: const ClassicFooter(
+          failedText: '',
+          idleText: '',
+          loadingText: '',
+          noDataText: '',
+          canLoadingText: '',
+        ),
+        onRefresh: () async =>  await _getPosts(DateTime.now(), refresh: true),
+        onLoading: () async => await _getPosts(_feedProvider.mainFeedPosts.last.createdAt ?? DateTime.now(), refresh: false),
+        child: _feedProvider.mainFeedPosts.isNotEmpty ? ListView.builder(
+            itemCount: _feedProvider.mainFeedPosts.length,
+            itemBuilder: (context, index) {
+              Post post = _feedProvider.mainFeedPosts[index];
+              return PostComponent(post: post);
+            }
+        ) : Center(
+          child: NothingToShowComponent(
+            icon: const Icon(Icons.newspaper_rounded),
+            text: '${AppLocalizations.of(context)!.noHoots}\n${AppLocalizations.of(context)!.subscribeToSeeHoots}}',
           ),
         ),
       ),
