@@ -120,5 +120,8 @@
 	"privateFeed": "Feed privado",
 	"nsfwFeed": "Feed NSFW",
 	"verifiedUser": "Este utilizador é verificado",
-	"verifiedTester": "Este utilizador é um testador verificado"
+	"verifiedTester": "Este utilizador é um testador verificado",
+	"request": "Enviar pedido",
+	"requested": "Pedido enviado",
+	"numberOfRequests": "{count, plural, =0 {Sem pedidos} one {1 pedido} other {{count} pedidos}}"
 }

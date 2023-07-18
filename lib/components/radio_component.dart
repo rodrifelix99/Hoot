@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -14,18 +16,20 @@ class RadioComponent extends StatefulWidget {
 class _RadioComponentState extends State<RadioComponent> {
   bool _showNext = true;
   bool _touched = false;
+  bool _loading = true;
+  bool _goingThroughNext = false;
   final Map<String, String> _songs = {
-    'Va-h6WZPUzQ': 'Rock Classics',
-    'PKjDbuRuC9w': 'This is Hoot Radio',
     'HQtFR3mhzOY': 'Pop Station',
-    '3pFsWqKns4I': 'This is Hoot Radio',
+    'rs9EPxiLz3o': 'Indie vibes',
+    'Va-h6WZPUzQ': 'Rock Classics',
+    'Vo-2noOnBcY': 'Lo-Fi Beats',
     'wXH_SkhhWds': 'Throwback Hits',
-    'lCjVa1c5zKw': 'Mind of Metal',
-    'gJoLnvjS8Ro': 'This is Hoot Radio',
     'EurKD84TFtA': 'Best of Pop Rock',
     'N6ORdxoJH2Q': '2000\'s Hip Hop Hits',
-    'rvX0cxK2OuI': 'This is Hoot Radio',
+    'lCjVa1c5zKw': 'Mind of Metal',
+    'tSlOlKRuudU': 'Classical Hour',
   };
+  final List<String> _voices = ['PKjDbuRuC9w', '3pFsWqKns4I', 'gJoLnvjS8Ro', 'rvX0cxK2OuI', 'PKjDbuRuC9w', '3pFsWqKns4I', 'gJoLnvjS8Ro', 'rvX0cxK2OuI'];
   late String _selectedKey;
   late YoutubePlayerController controller;
 
@@ -38,22 +42,28 @@ class _RadioComponentState extends State<RadioComponent> {
     controller = YoutubePlayerController(
       initialVideoId: _songs.keys.first,
       flags: const YoutubePlayerFlags(
-        startAt: 0,
-        autoPlay: true,
-        mute: false,
-        showLiveFullscreenButton: false,
-        forceHD: false,
-        enableCaption: false,
-        isLive: true,
-        hideControls: true,
-        hideThumbnail: true,
-        controlsVisibleAtStart: false,
-        disableDragSeek: true
+          startAt: 0,
+          autoPlay: false,
+          mute: false,
+          showLiveFullscreenButton: false,
+          forceHD: false,
+          enableCaption: false,
+          isLive: true,
+          hideControls: true,
+          hideThumbnail: true,
+          controlsVisibleAtStart: false,
+          disableDragSeek: true
       ),
     );
     super.initState();
     _listenForNotifications();
     _listenForControllerChanges();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   Future _listenForNotifications() async {
@@ -69,14 +79,27 @@ class _RadioComponentState extends State<RadioComponent> {
 
   Future _listenForControllerChanges() async {
     controller.addListener(() {
-      setState(() {
-        if (!_showNext && controller.value.position.inSeconds == controller.value.metaData.duration.inSeconds) {
-          _next();
-        } else if (controller.value.isReady && !controller.value.isPlaying && !_touched) {
-          controller.play();
-        }
-      });
+      setState(() => _loading = controller.value.playerState == PlayerState.buffering || controller.value.isReady == false);
+      if (!_showNext && controller.value.position.inSeconds == controller.value.metaData.duration.inSeconds && !_loading && !_goingThroughNext) {
+        setState(() { _next(); });
+      } else if (controller.value.isReady && !controller.value.isPlaying && !_touched) {
+        _fadeIn();
+      }
     });
+  }
+
+  Future _fadeIn() async {
+    _touched = true;
+    controller.play();
+    if (!_showNext) return;
+    controller.setVolume(0);
+    int i = 0;
+    while (i < 100) {
+      await Future.delayed(const Duration(milliseconds: 100), () {
+        controller.setVolume(i);
+        i < 25 ? i++ : i += 5;
+      });
+    }
   }
 
   Future _pause() async {
@@ -91,38 +114,49 @@ class _RadioComponentState extends State<RadioComponent> {
 
   Future _next() async {
     _touched = false;
-    setState(() => _showNext = false);
+    _goingThroughNext = true;
+    setState(() => _showNext = !_showNext);
+
     int index = _songs.keys.toList().indexOf(_selectedKey);
-    if (index == _songs.length - 1) {
-      index = 0;
+    if (_showNext) {
+      controller.load(_songs.keys.toList()[index]);
     } else {
-      index++;
+      if (index == _songs.length - 1) {
+        index = 0;
+      } else {
+        index++;
+      }
+      setState(() => _selectedKey = _songs.keys.toList()[index]);
+      controller.load(_voices[Random().nextInt(_voices.length)]);
     }
-    setState(() => _selectedKey = _songs.keys.toList()[index]);
-    controller.load(_songs.keys.toList()[index]);
-    if (_songs.values.toList()[index] == 'This is Hoot Radio') {
-      setState(() => _showNext = false);
-    } else {
-      setState(() => _showNext = true);
-    }
+
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() => _goingThroughNext = false);
+    });
   }
 
   String _imageUrl() {
-    switch (_songs.values.toList()[_songs.keys.toList().indexOf(_selectedKey)]) {
-      case 'Rock Classics':
-        return 'https://rockradio.si/images/og-image.jpg';
-      case 'Pop Station':
-        return 'https://wallpapers.com/images/hd/pop-music-u8uxqgvwhv93s9a9.jpg';
-      case 'Throwback Hits':
-        return 'https://wallpapers.com/images/hd/80s-retro-arcade-music-734j2xcfqfk7espy.jpg';
-      case 'Mind of Metal':
-        return 'https://wallpapercave.com/wp/wp2709491.jpg';
-      case 'Best of Pop Rock':
+    switch (_songs.values.toList()[_songs.keys.toList().indexOf(_selectedKey)].toLowerCase()) {
+      case 'rock classics':
+        return 'https://cdn.vox-cdn.com/thumbor/SpDYKjw5PmtvGmh2fRVG8v0I5Cg=/0x0:2000x1125/1200x675/filters:focal(840x403:1160x723):no_upscale()/cdn.vox-cdn.com/uploads/chorus_image/image/61516359/dazed_and_confused_music_1.0.gif';
+      case 'pop station':
+        return 'https://i.pinimg.com/originals/53/2c/26/532c261dd6bcafb9f3659ef79c676b74.gif';
+      case 'throwback hits':
+        return 'https://64.media.tumblr.com/b60f7d0e4d6efc91a83df36a925b8a03/tumblr_okavaqT6SL1siipepo1_500.gifv';
+      case 'mind of metal':
+        return 'https://images.squarespace-cdn.com/content/v1/542b4e6fe4b0d082dad4801a/1560392539470-LJ40XGTC7U3LG07GEA0U/loopingNoiseRaw.gif?format=1000w';
+      case 'best of pop rock':
         return 'https://wallpapers.com/images/hd/pop-music-dq4x3sozgmiy23kc.jpg';
-      case '2000\'s Hip Hop Hits':
+      case '2000\'s hip hop hits':
         return 'https://images.unsplash.com/photo-1513104487127-813ea879b8da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aGlwJTIwaG9wfGVufDB8fDB8fHww&w=1000&q=80';
+        case 'indie vibes':
+          return 'https://64.media.tumblr.com/1b3e6a6d2d78d41e7cf344ee38b959ef/tumblr_inline_p23lwxxGPS1upaj4g_1280.gif';
+      case 'classical hour':
+        return 'https://static01.nyt.com/images/2019/04/18/arts/music/five-minutes-piano/five-minutes-piano-articleLarge.gif?quality=75&auto=webp&disable=upscale';
+      case 'lo-fi beats':
+        return 'https://i.redd.it/z4m6w0qlr3x91.gif';
       default:
-        return 'https://radiodns.org/wp-content/themes/radiodns/assets/img/optimised/home/swash/x2/radiodns-swash@2x.jpg';
+        return 'https://cdn.myportfolio.com/03fb13c64084a4ecb1180901ecedad0d/091e6eb0-1a91-414c-b4fc-bc37d83daa89_rw_600.gif?h=e953dfb131b11a928d0f1f96d8c4e15d';
     }
   }
 
@@ -155,10 +189,10 @@ class _RadioComponentState extends State<RadioComponent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              !controller.value.isReady ? Padding(
+              _loading ? Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Center(
-                  child: LoadingAnimationWidget.inkDrop(
+                  child: LoadingAnimationWidget.waveDots(
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                     size: 25,
                   ),
@@ -180,13 +214,22 @@ class _RadioComponentState extends State<RadioComponent> {
               )),
               const SizedBox(width: 5),
               ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: Container(
-                  color: Colors.red,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.red,
+                        Colors.red.shade900
+                      ],
+                    ),
+                  ),
                   child: const Padding(
-                    padding: EdgeInsets.all(5),
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                     child: Text('LIVE', style: TextStyle(
-                        color: Colors.white,
+                      color: Colors.white,
                       fontSize: 8,
                     )),
                   ),

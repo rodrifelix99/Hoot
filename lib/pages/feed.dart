@@ -53,13 +53,13 @@ class _FeedPageState extends State<FeedPage> {
         title: Text(AppLocalizations.of(context)!.myFeeds),
         actions: [
           IconButton(
+              onPressed: widget.toggleRadio,
+              icon: const LineIcon(LineIcons.music)
+          ),
+          IconButton(
             icon: const LineIcon(LineIcons.search),
             onPressed: () => Navigator.of(context).pushNamed('/search'),
           ),
-          IconButton(
-              onPressed: widget.toggleRadio,
-              icon: const LineIcon(LineIcons.music)
-          )
         ],
       ),
       body: _isLoading ? const Center(child: CircularProgressIndicator()) : SmartRefresher(

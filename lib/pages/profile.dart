@@ -4,6 +4,7 @@ import 'package:hoot/components/avatar.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
+import 'package:hoot/components/subscribe_component.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
@@ -94,98 +95,6 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
       setState(() => feedToFocus != null ? _selectedFeedIndex = _user.feeds!.indexWhere((feed) => feed.id == feedToFocus) : 0);
     }
     setState(() => _loadingFeeds = false);
-  }
-
-  bool _isSubscribedToFeed() {
-    return _user.feeds![_selectedFeedIndex].subscribers?.contains(_authProvider.user!.uid) ?? false;
-  }
-
-  bool _hasRequestedToJoinFeed() {
-    return _user.feeds![_selectedFeedIndex].requests?.contains(_authProvider.user!.uid) ?? false;
-  }
-
-  Future _subscribeToFeed() async {
-    bool confirm = await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.subscribe),
-          content: Text(AppLocalizations.of(context)!.subscribeConfirmation),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context)!.cancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(AppLocalizations.of(context)!.subscribe),
-            ),
-          ],
-        )
-    );
-    if (confirm) {
-      setState(() =>  _user.feeds![_selectedFeedIndex].subscribers!.add(_authProvider.user!.uid));
-      bool res = await _feedProvider.subscribeToFeed(_user.uid, _user.feeds![_selectedFeedIndex].id);
-      !res ? setState(() {
-        _user.feeds![_selectedFeedIndex].subscribers!.remove(_authProvider.user!.uid);
-        ToastService.showToast(context, AppLocalizations.of(context)!.errorSubscribing, true);
-      }) : null;
-    }
-  }
-
-  Future _unsubscribeFromFeed() async {
-    bool confirm = await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.unsubscribe),
-          content: Text(AppLocalizations.of(context)!.unsubscribeConfirmation),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context)!.cancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(AppLocalizations.of(context)!.unsubscribe),
-            ),
-          ],
-        )
-    );
-    if (confirm) {
-      setState(() =>_user.feeds![_selectedFeedIndex].subscribers!.remove(_authProvider.user!.uid));
-      bool res = await _feedProvider.unsubscribeFromFeed(_user.uid, _user.feeds![_selectedFeedIndex].id);
-      !res ? setState(() {
-        _user.feeds![_selectedFeedIndex].subscribers!.add(_authProvider.user!.uid);
-        ToastService.showToast(context, AppLocalizations.of(context)!.errorUnsubscribing, true);
-      }) : null;
-    }
-  }
-
-  Future _requestToJoinFeed() async {
-    bool confirm = await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.requestToJoin),
-          content: Text(AppLocalizations.of(context)!.requestToJoinConfirmation),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context)!.cancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(AppLocalizations.of(context)!.requestToJoin),
-            ),
-          ],
-        )
-    );
-    if (confirm) {
-      setState(() => _user.feeds![_selectedFeedIndex].requests!.add(_authProvider.user!.uid));
-      bool res = await _feedProvider.requestToJoinFeed(_user.uid, _user.feeds![_selectedFeedIndex].id);
-      !res ? setState(() {
-        _user.feeds![_selectedFeedIndex].requests!.remove(_authProvider.user!.uid);
-        ToastService.showToast(context, AppLocalizations.of(context)!.errorRequestingToJoin, true);
-      }) : null;
-    }
   }
 
   _refreshUser() async {
@@ -402,49 +311,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Flexible(child: Text(_user.feeds![_selectedFeedIndex].description!, style: Theme.of(context).textTheme.bodyLarge)),
-                      _isCurrentUser ? _user.feeds![_selectedFeedIndex].requests?.isNotEmpty ?? false ? ElevatedButton(
-                        onPressed: () => Navigator.of(context).pushNamed('/feed_requests', arguments: _user.feeds![_selectedFeedIndex].id),
-                        style: ElevatedButtonTheme.of(context).style?.copyWith(
-                          backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
-                          foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                        ),
-                        child: Text("${_user.feeds![_selectedFeedIndex].requests!.length} requests"),
-                      ) : const SizedBox() : Container(
-                        child: _isSubscribedToFeed() ? ElevatedButton(
-                          style: ElevatedButtonTheme.of(context).style?.copyWith(
-                            backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.error),
-                            foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onError),
-                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                          ),
-                          onPressed: _unsubscribeFromFeed,
-                          child: Text(AppLocalizations.of(context)!.unsubscribe),
-                        ) : _user.feeds![_selectedFeedIndex].private == false ? ElevatedButton(
-                          style: ElevatedButtonTheme.of(context).style?.copyWith(
-                            backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
-                            foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                          ),
-                          onPressed: _subscribeToFeed,
-                          child: Text(AppLocalizations.of(context)!.subscribe),
-                        ) : _hasRequestedToJoinFeed() ? ElevatedButton(
-                          style: ElevatedButtonTheme.of(context).style?.copyWith(
-                            backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color?.withOpacity(0.5)),
-                            foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                          ),
-                          onPressed: () {},
-                          child: const Text("Requested"),
-                        ) : ElevatedButton(
-                          style: ElevatedButtonTheme.of(context).style?.copyWith(
-                            backgroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color),
-                            foregroundColor: MaterialStateProperty.all(_user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                          ),
-                          onPressed: _requestToJoinFeed,
-                          child: const Text("Request"),
-                        ),
-                      )
+                      const SizedBox(width: 10),
+                      SubscribeComponent(feed: _user.feeds![_selectedFeedIndex], user: _user),
                     ],
                   ),
                 ),

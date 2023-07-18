@@ -3,6 +3,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/name_component.dart';
+import 'package:hoot/components/subscribe_component.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
@@ -302,7 +303,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                       )
                                     ],
                                   ),
-                                )
+                                ),
+                                SubscribeComponent(feed: _recentFeeds[index], user: _recentFeeds[index].user!),
                               ],
                             ),
                           ),
@@ -316,6 +318,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 20),
                       Text(
                         AppLocalizations.of(context)!.noteToUser(_authProvider.user!.name!),
                         style: Theme.of(context).textTheme.titleMedium,

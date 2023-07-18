@@ -163,9 +163,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
       ),
       floatingActionButton: (_pageController.hasClients && _pageController.page!.round() == 0) || !_pageController.hasClients ?
-      FloatingActionButton(
-        onPressed: () => Navigator.of(context).pushNamed('/create_post', arguments: null),
-        child: const LineIcon(LineIcons.alternateFeather),
+      Padding(
+        padding: _radio ? const EdgeInsets.only(bottom: 70) : EdgeInsets.zero,
+        child: FloatingActionButton(
+          onPressed: () => Navigator.of(context).pushNamed('/create_post', arguments: null),
+          child: const LineIcon(LineIcons.alternateFeather),
+        ),
       ) : const SizedBox(),
       bottomNavigationBar: Container(
         color: Theme.of(context).colorScheme.surface,

@@ -5,7 +5,7 @@ import 'package:hoot/models/user.dart';
 
 class Feed {
   final String id;
-  final U? user;
+  U? user;
   String title;
   String? description;
   String? icon;

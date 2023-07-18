@@ -68,9 +68,11 @@ Future<void> main() async {
                     Locale('pt', 'BR'),
                   ],
                   localizationsDelegates: const [
-                    AppLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                    DefaultWidgetsLocalizations.delegate,
+                    AppLocalizations.delegate,
                   ],
                   home: AnimatedSplashScreen(
                     nextScreen: HomePage(),

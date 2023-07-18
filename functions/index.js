@@ -792,7 +792,7 @@ exports.recentlyAddedFeeds = functions.region("europe-west1").https.onCall(async
     const results = [];
     for (let i = 0; i < 10; i++) {
       const feed = feeds.docs[i];
-      const feedObj = await getFeed(feed.ref.parent.parent.id, feed.id, false, false, true);
+      const feedObj = await getFeed(feed.ref.parent.parent.id, feed.id, false, true, true);
       if (feedObj != null) {
         results.push(feedObj);
       } else {

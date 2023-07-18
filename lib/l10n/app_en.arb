@@ -345,6 +345,18 @@
 	"@requestToJoinConfirmation": {
 		"description": "Request to join confirmation message"
 	},
+	"request": "Request",
+	"@request": {
+		"description": "Request button"
+	},
+	"requested": "Requested",
+	"@requested": {
+		"description": "Requested label"
+	},
+	"numberOfRequests": "{numberOfRequests, plural, =0 {No requests} one {# request} other {# requests}}",
+	"@numberOfRequests": {
+		"description": "Number of requests label"
+	},
 	"errorRequestingToJoin": "There was an error requesting to join this feed",
 	"@errorRequestingToJoin": {
 		"description": "Error requesting to join message"
@@ -453,5 +465,9 @@
 	"privateFeed": "Private Feed",
 	"nsfwFeed": "NSFW Feed",
 	"verifiedUser": "This user is verified",
-	"verifiedTester": "This user is a verified tester"
+	"verifiedTester": "This user is a verified tester",
+	"youAreGoingTooFast": "You're going too fast, let's slow down a bit",
+	"@youAreGoingTooFast": {
+		"description": "You're going too fast message"
+	}
 }
