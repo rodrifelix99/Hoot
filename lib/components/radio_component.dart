@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -11,8 +12,8 @@ class RadioComponent extends StatefulWidget {
 }
 
 class _RadioComponentState extends State<RadioComponent> {
-  bool _paused = false;
-  bool _showMedia = false;
+  bool _showNext = true;
+  bool _touched = false;
   final Map<String, String> _songs = {
     'Va-h6WZPUzQ': 'Rock Classics',
     'PKjDbuRuC9w': 'This is Hoot Radio',
@@ -37,6 +38,7 @@ class _RadioComponentState extends State<RadioComponent> {
     controller = YoutubePlayerController(
       initialVideoId: _songs.keys.first,
       flags: const YoutubePlayerFlags(
+        startAt: 0,
         autoPlay: true,
         mute: false,
         showLiveFullscreenButton: false,
@@ -50,16 +52,14 @@ class _RadioComponentState extends State<RadioComponent> {
       ),
     );
     super.initState();
-    _play();
     _listenForNotifications();
+    _listenForControllerChanges();
   }
 
   Future _listenForNotifications() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.data['type'] == "3") {
-        _pause();
         controller.load(_subscriber);
-        _play();
         Future.delayed(const Duration(seconds: 17), () {
           controller.load(_selectedKey);
         });
@@ -67,24 +67,31 @@ class _RadioComponentState extends State<RadioComponent> {
     });
   }
 
-  Future _pause() async {
-    controller.pause();
-    setState(() => {
-      _paused = true,
-      _showMedia = false,
+  Future _listenForControllerChanges() async {
+    controller.addListener(() {
+      setState(() {
+        if (!_showNext && controller.value.position.inSeconds == controller.value.metaData.duration.inSeconds) {
+          _next();
+        } else if (controller.value.isReady && !controller.value.isPlaying && !_touched) {
+          controller.play();
+        }
+      });
     });
+  }
+
+  Future _pause() async {
+    _touched = true;
+    controller.pause();
   }
 
   void _play() {
+    _touched = true;
     controller.play();
-    setState(() => {
-      _paused = false,
-      _showMedia = true,
-    });
   }
 
   Future _next() async {
-    setState(() => _showMedia = false);
+    _touched = false;
+    setState(() => _showNext = false);
     int index = _songs.keys.toList().indexOf(_selectedKey);
     if (index == _songs.length - 1) {
       index = 0;
@@ -93,13 +100,10 @@ class _RadioComponentState extends State<RadioComponent> {
     }
     setState(() => _selectedKey = _songs.keys.toList()[index]);
     controller.load(_songs.keys.toList()[index]);
-    _play();
-    setState(() { });
     if (_songs.values.toList()[index] == 'This is Hoot Radio') {
-      setState(() => _showMedia = false);
-      Future.delayed(const Duration(seconds: 12), () {
-        _next();
-      });
+      setState(() => _showNext = false);
+    } else {
+      setState(() => _showNext = true);
     }
   }
 
@@ -151,14 +155,23 @@ class _RadioComponentState extends State<RadioComponent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _paused ? IconButton(
+              !controller.value.isReady ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Center(
+                  child: LoadingAnimationWidget.inkDrop(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    size: 25,
+                  ),
+                ),
+              ) :
+              !controller.value.isPlaying ? IconButton(
                 icon: const Icon(Icons.play_arrow_rounded),
                 onPressed: () => _play(),
               ) : IconButton(
                 icon: const Icon(Icons.pause_rounded),
                 onPressed: () => _pause(),
               ),
-              _showMedia ? IconButton(
+              _showNext ? IconButton(
                 icon: const Icon(Icons.skip_next_rounded),
                 onPressed: () => _next(),
               ) : const SizedBox(),
