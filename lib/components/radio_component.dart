@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -202,7 +201,7 @@ class _RadioComponentState extends State<RadioComponent> {
                 icon: const Icon(Icons.play_arrow_rounded),
                 onPressed: () => _play(),
               ) : IconButton(
-                icon: const Icon(Icons.pause_rounded),
+                icon: const Icon(Icons.stop_rounded),
                 onPressed: () => _pause(),
               ),
               _showNext ? IconButton(

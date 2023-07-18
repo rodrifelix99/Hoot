@@ -8,8 +8,12 @@ class Post {
   U? user;
   String? feedId;
   Feed? feed;
-  List<dynamic>? likes;
-  List<dynamic>? comments;
+  bool liked;
+  int? likes;
+  bool reFeeded;
+  int? reFeeds;
+  Post? reFeededFrom;
+  int? comments;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -20,7 +24,11 @@ class Post {
     this.user,
     this.feedId,
     this.feed,
+    this.liked = false,
     this.likes,
+    this.reFeeded = false,
+    this.reFeededFrom,
+    this.reFeeds,
     this.comments,
     this.createdAt,
     this.updatedAt,
@@ -34,7 +42,11 @@ class Post {
       feedId: json['feedId'],
       feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
       user: json['user'] != null ? U.fromJson(json['user']) : null,
+      liked: json['liked'] ?? false,
       likes: json['likes'],
+      reFeeded: json['reFeeded'] ?? false,
+      reFeeds: json['reFeeds'],
+      reFeededFrom: json['reFeededFrom'] != null ? Post.fromJson(json['reFeededFrom']) : null,
       comments: json['comments'],
       createdAt: json['createdAt'] != null ? DateTime.fromMillisecondsSinceEpoch(json['createdAt']['_seconds'] * 1000) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.fromMillisecondsSinceEpoch(json['updatedAt']['_seconds'] * 1000) : null,

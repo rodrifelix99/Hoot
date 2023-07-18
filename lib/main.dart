@@ -2,12 +2,14 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/pages/create_feed.dart';
 import 'package:hoot/pages/create_post.dart';
 import 'package:hoot/pages/edit_profile.dart';
 import 'package:hoot/pages/feed_requests.dart';
 import 'package:hoot/pages/home.dart';
+import 'package:hoot/pages/post.dart';
 import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/search.dart';
 import 'package:hoot/pages/sign_in.dart';
@@ -128,6 +130,19 @@ Future<void> main() async {
                         case '/subscriptions':
                           final String userId = settings.arguments as String;
                           return MaterialPageRoute(builder: (context) => SubscriptionsListPage(userId: userId));
+                      case '/post':
+                        if (settings.arguments.runtimeType != Post) {
+                          // get userId, feedId and postId from arguments
+                          final List<dynamic> args = settings.arguments as List<dynamic>;
+                          final String userId = args[0] as String;
+                          final String feedId = args[1] as String;
+                          final String postId = args[2] as String;
+                          return MaterialPageRoute(builder: (context) => PostPage(userId: userId, feedId: feedId, postId: postId));
+                        } else {
+                          final Post post = settings.arguments as Post;
+                          return MaterialPageRoute(
+                              builder: (context) => PostPage(post: post));
+                        }
                       default:
                         return MaterialPageRoute(builder: (context) => HomePage());
                     }

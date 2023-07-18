@@ -85,6 +85,67 @@ async function getFeed(uid, feedId, requests = false, listSubscriberIds = false,
 }
 
 /**
+ * Retrieves a Post object from the database.
+ * @param {string} uid - The auth user ID.
+ * @param {string} userId - The user ID.
+ * @param {string} feedId - The feed ID.
+ * @param {string} postId - The post ID.
+ * @param {boolean} [addUserObj=true] - Indicates whether to include the user object. Default is false.
+ * @param {boolean} [addFeedObj=true] - Indicates whether to include the feed object. Default is false.
+ * @param {boolean} [addComments=true] - Indicates whether to include the comments. Default is false.
+ * @param {boolean} [addLikes=true] - Indicates whether to include the likes. Default is false.
+ * @param {boolean} [addReFeeds=true] - Indicates whether to include the re-feeds. Default is false.
+ * @param {boolean} [addReFeedObj=true] - Indicates whether to include the re-feed object. Default is false.
+ * @return {Promise<object|null>} A promise that resolves with the post object or null if the post doesn't exist.
+ */
+async function getHootObj(uid, userId, feedId, postId, addUserObj = true, addFeedObj = true, addComments = true, addLikes = true, addReFeeds = true, addReFeedObj = true) {
+  try {
+    const doc = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(postId).get();
+    if (doc.exists) {
+      const post = doc.data();
+      post.id = doc.id;
+      post.userId = userId;
+      post.feedId = feedId;
+      if (addUserObj) {
+        post.user = await getUser(userId, true);
+      }
+      if (addFeedObj) {
+        post.feed = await getFeed(userId, feedId, false, false, false);
+      }
+      if (addLikes) {
+        const liked = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(postId).collection("likes").doc(uid).get();
+        post.liked = liked.exists;
+        const likeCount = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(postId).collection("likes").get();
+        post.likes = likeCount.size || 0;
+      }
+      if (addReFeeds) {
+        const reFeeded = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(postId).collection("reFeeds").doc(uid).get();
+        post.reFeeded = reFeeded.exists;
+        const reFeedCount = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(postId).collection("reFeeds").get();
+        post.reFeeds = reFeedCount.size || 0;
+      }
+      if (addComments) {
+        const commentCount = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(postId).collection("comments").get();
+        post.comments = commentCount.size || 0;
+      }
+      if (addReFeedObj && post.reFeededFrom) {
+        const userid = post.reFeededFrom.split("/")[1];
+        const feedid = post.reFeededFrom.split("/")[3];
+        const postid = post.reFeededFrom.split("/")[5];
+        post.reFeededFrom = await getHootObj(userid, userid, feedid, postid, true, false, false, false, false, false);
+        post.reFeedError = post.reFeededFrom ? false : true;
+      }
+      return post;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    error(e);
+    return null;
+  }
+}
+
+/**
  * Sends a push notification to a user.
  * @param {string} uid - The user ID.
  * @param {string} title - The notification title.
@@ -629,10 +690,52 @@ exports.onCreatePost = functions.region("europe-west1").firestore.document("user
   }
 });
 
+exports.onUpdatePost = functions.region("europe-west1").firestore.document("users/{userId}/feeds/{feedId}/posts/{postId}").onUpdate(async (change, context) => {
+  try {
+    const { userId, feedId, postId } = context.params;
+    const feedSubscribers = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("subscribers").get();
+    const batch = db.batch();
+    let writeCount = 0;
+    //update feed 'updatedAt' field
+    const feedRef = db.collection("users").doc(userId).collection("feeds").doc(feedId);
+    batch.update(feedRef, {
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    writeCount++;
+    for (const feedSubscriber of feedSubscribers.docs) {
+      const feedPostRef = db.collection("users").doc(feedSubscriber.id).collection("mainFeed").doc(postId);
+      writeCount++;
+      if (writeCount > 499) {
+        await batch.commit();
+        batch = db.batch();
+        writeCount = 0;
+      }
+      batch.update(feedPostRef, {
+        ...change.after.data(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    }
+    await batch.commit();
+  } catch (e) {
+    error(e);
+  }
+});
+
 exports.deletePost = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const uid = context.auth.uid;
     const { feedId, postId } = data;
+    // get post and check if reFeededFrom has a reference to another document
+    const post = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("posts").doc(postId).get();
+    const reFeededFrom = post.data().reFeededFrom;
+    if (reFeededFrom) {
+      // reFeededFrom is the path string to the original post
+      const userid = reFeededFrom.split("/")[1];
+      const feedid = reFeededFrom.split("/")[3];
+      const postid = reFeededFrom.split("/")[5];
+      await db.collection("users").doc(userid).collection("feeds").doc(feedid).collection("posts").doc(postid).collection("reFeeds").doc(uid).delete();
+    }
+    // delete the post
     await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("posts").doc(postId).delete();
     return true;
   } catch (e) {
@@ -665,13 +768,34 @@ exports.onDeletePost = functions.region("europe-west1").firestore.document("user
 
 exports.getFeedPosts = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
-    let { startAfter, uid, feedId } = data;
+    const uid = context.auth.uid;
+    let { startAfter, uid: userId, feedId } = data;
     const startAfterTimestamp = startAfter ? admin.firestore.Timestamp.fromDate(new Date(startAfter)) : admin.firestore.Timestamp.fromDate(new Date());
-    const feedPosts = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("posts").orderBy("createdAt", "desc").startAfter(startAfterTimestamp).limit(10).get();
+    const feedPosts = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").orderBy("createdAt", "desc").startAfter(startAfterTimestamp).limit(10).get();
     const results = [];
     for (const feedPost of feedPosts.docs) {
       const feedPostObj = feedPost.data();
       feedPostObj.id = feedPost.id;
+      const liked = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(feedPost.id).collection("likes").doc(uid).get();
+      feedPostObj.liked = liked.exists;
+      const likeCount = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(feedPost.id).collection("likes").get();
+      feedPostObj.likes = likeCount.size || 0;
+      const refeeded = await db.collection("users").doc(userId).collection("mainFeed").doc(feedPost.id).collection("refeeds").doc(uid).get();
+      feedPostObj.refeeded = refeeded.exists;
+      const refeedCount = await db.collection("users").doc(userId).collection("mainFeed").doc(feedPost.id).collection("refeeds").get();
+      feedPostObj.refeeds = refeedCount.size || 0;
+      const commentCount = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(feedPost.id).collection("comments").get();
+      feedPostObj.comments = commentCount.size || 0;
+      if (feedPostObj.reFeededFrom) {
+        // reFeededFrom is a path string to the original post
+        //separate the path into userId, feedId and postId
+        const path = feedPostObj.reFeededFrom.split("/");
+        const reFeededFromUserId = path[1];
+        const reFeededFromFeedId = path[3];
+        const reFeededFromPostId = path[5];
+        feedPostObj.reFeededFrom = await getHootObj(uid, reFeededFromUserId, reFeededFromFeedId, reFeededFromPostId, true, false, false, false, false, false) || null;
+        feedPostObj.reFeedError = feedPostObj.reFeededFrom ? false : true;
+      }
       results.push(feedPostObj);
     }
     return JSON.stringify(results);
@@ -711,9 +835,84 @@ exports.getMainFeedPosts = functions.region("europe-west1").https.onCall(async (
         feedPostObj.user = await getUser(feedPostObj.userId);
         cachedUsers.push(feedPostObj.user);
       }
+      const liked = await db.collection("users").doc(feedPostObj.userId).collection("feeds").doc(feedPostObj.feedId).collection("posts").doc(feedPost.id).collection("likes").doc(uid).get();
+      feedPostObj.liked = liked.exists;
+      const likeCount = await db.collection("users").doc(feedPostObj.userId).collection("feeds").doc(feedPostObj.feedId).collection("posts").doc(feedPost.id).collection("likes").get();
+      feedPostObj.likes = likeCount.size || 0;
+      const reFeeded = await db.collection("users").doc(feedPostObj.userId).collection("feeds").doc(feedPostObj.feedId).collection("posts").doc(feedPost.id).collection("reFeeds").doc(uid).get();
+      feedPostObj.reFeeded = reFeeded.exists;
+      const reFeedCount = await db.collection("users").doc(feedPostObj.userId).collection("feeds").doc(feedPostObj.feedId).collection("posts").doc(feedPost.id).collection("reFeeds").get();
+      feedPostObj.reFeeds = reFeedCount.size || 0;
+      const commentCount = await db.collection("users").doc(feedPostObj.userId).collection("feeds").doc(feedPostObj.feedId).collection("posts").doc(feedPost.id).collection("comments").get();
+      feedPostObj.comments = commentCount.size || 0;
+      if (feedPostObj.reFeededFrom) {
+        // reFeededFrom is a path string to the original post
+        //separate the path into userId, feedId and postId
+        const path = feedPostObj.reFeededFrom.split("/");
+        const reFeededFromUserId = path[1];
+        const reFeededFromFeedId = path[3];
+        const reFeededFromPostId = path[5];
+        feedPostObj.reFeededFrom = await getHootObj(uid, reFeededFromUserId, reFeededFromFeedId, reFeededFromPostId, true, false, false, false, false, false) || null;
+        feedPostObj.reFeedError = feedPostObj.reFeededFrom ? false : true;
+      }
       results.push(feedPostObj);
     }
     return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.likePost = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { userId, feedId, postId } = data;
+    const likeRef = db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(postId).collection("likes").doc(uid);
+    const like = await likeRef.get();
+    if (like.exists) {
+      await likeRef.delete();
+    } else {
+      await likeRef.set({ createdAt: admin.firestore.FieldValue.serverTimestamp() });
+    }
+    return true;
+  } catch (e) {
+    error(e);
+    return false;
+  }
+});
+
+exports.refeedPost = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { userId, feedId, postId, chosenFeedId, text, images } = data;
+    const reFeedRef = db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(postId).collection("reFeeds").doc(uid);
+    const reFeed = await reFeedRef.get();
+    if (!reFeed.exists) {
+      const feedPost = db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(postId);
+      const post = await db.collection("users").doc(uid).collection("feeds").doc(chosenFeedId).collection("posts").add({
+        text,
+        images,
+        reFeededFrom: feedPost.path,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      await reFeedRef.set({ 
+        pathToPost: post.path,
+        createdAt: admin.firestore.FieldValue.serverTimestamp() 
+      });
+    }
+    return true;
+  } catch (e) {
+    error(e);
+    return false;
+  }
+});
+
+exports.getPost = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { userId, feedId, postId } = data;
+    const post = await getHootObj(uid, userId, feedId, postId);
+    return JSON.stringify(post);
   } catch (e) {
     error(e);
   }

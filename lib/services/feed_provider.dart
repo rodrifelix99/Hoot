@@ -324,4 +324,42 @@ class FeedProvider extends ChangeNotifier {
       return [];
     }
   }
+
+  Future<bool> likePost(String postId, String feedId, String userId) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('likePost');
+      final res = await callable.call({'postId': postId, 'userId': userId, 'feedId': feedId});
+      return res.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> refeedPost(String userId, String feedId, String postId, String chosenFeedId, String text, List<String> images) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('refeedPost');
+      final res = await callable.call({'userId': userId, 'feedId': feedId, 'postId': postId, 'chosenFeedId': chosenFeedId, 'text': text, 'images': images});
+      return res.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<Post> getPost(String userId, String feedId, String postId) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('getPost');
+      final res = await callable.call({'userId': userId, 'feedId': feedId, 'postId': postId});
+      dynamic responseData = jsonDecode(res.data);
+      Post p = Post.fromJson(responseData);
+      return p;
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
+  }
 }

@@ -9,11 +9,13 @@ import 'package:hoot/services/error_service.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:provider/provider.dart';
 
+import '../models/feed.dart';
 import '../services/feed_provider.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
-  const PostComponent({super.key, required this.post});
+  final bool showActions;
+  const PostComponent({super.key, required this.post, this.showActions = true});
 
   @override
   State<PostComponent> createState() => _PostComponentState();
@@ -32,7 +34,7 @@ class _PostComponentState extends State<PostComponent> {
   }
 
   void _handleProfileTap() {
-    Navigator.of(context).pushNamed('/profile', arguments: widget.post.user);
+    Navigator.of(context).pushNamed('/profile', arguments: [widget.post.user, widget.post.feed?.id]);
   }
 
   Future _deletePost() async {
@@ -87,6 +89,106 @@ class _PostComponentState extends State<PostComponent> {
     );
   }
 
+  Future refeed() async {
+    if(widget.post.reFeeded) return;
+
+    if (_authProvider.user?.feeds == null || _authProvider.user!.feeds!.isEmpty) {
+      ToastService.showToast(context, 'Wait a second', false);
+      List<Feed> feeds = await _feedProvider.getFeeds(_authProvider.user!.uid);
+      setState(() {
+        _authProvider.user!.feeds = feeds;
+      });
+    }
+
+    if (_authProvider.user?.feeds == null || _authProvider.user!.feeds!.isEmpty) {
+      ToastService.showToast(context, 'You need to create a feed first', false);
+      return;
+    }
+
+    //dialog asking for feed with a dropdown
+    String? feedId = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Refeed'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Select a feed to refeed this post to'),
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Feed',
+              ),
+              value: _authProvider.user?.feeds?.first.id,
+              onChanged: (value) => Navigator.of(context).pop(value),
+              items: _authProvider.user?.feeds?.map((feed) => DropdownMenuItem<String>(
+                value: feed.id,
+                child: Text(feed.title),
+              )).toList() ?? [],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop( _authProvider.user?.feeds?.first.id),
+            child: const Text('ReFeed'),
+          ),
+        ],
+      ),
+    );
+    if(feedId == null) return;
+
+    setState(() {
+      widget.post.reFeeded = true;
+      widget.post.reFeeds = (widget.post.reFeeds ?? 0) + 1;
+    });
+    bool res = await _feedProvider.refeedPost(widget.post.user!.uid, widget.post.feed!.id, widget.post.id, feedId, '', []);
+    if (!res) {
+      setState(() {
+        widget.post.reFeeded = false;
+        widget.post.reFeeds = (widget.post.reFeeds ?? 0) - 1 < 0 ? 0 : (widget.post.reFeeds ?? 0) - 1;
+      });
+      ToastService.showToast(context, 'Error refeeding post', true);
+    }
+  }
+
+  Future toggleLike() async {
+    if (widget.post.liked) {
+      // Dislike the post
+      setState(() {
+        widget.post.liked = false;
+        widget.post.likes = (widget.post.likes ?? 0) - 1 < 0 ? 0 : (widget.post.likes ?? 0) - 1;
+      });
+      bool res = await _feedProvider.likePost(widget.post.id, widget.post.feed!.id, widget.post.user!.uid);
+      if (!res) {
+        setState(() {
+          widget.post.liked = true;
+          widget.post.likes = (widget.post.likes ?? 0) + 1;
+        });
+        ToastService.showToast(context, 'Error disliking post', true);
+      }
+    } else {
+      // Like the post
+      setState(() {
+        widget.post.liked = true;
+        widget.post.likes = (widget.post.likes ?? 0) + 1;
+      });
+      bool res = await _feedProvider.likePost(widget.post.id, widget.post.feed!.id, widget.post.user!.uid);
+      if (!res) {
+        setState(() {
+          widget.post.liked = false;
+          widget.post.likes = (widget.post.likes ?? 0) - 1 < 0 ? 0 : (widget.post.likes ?? 0) - 1;
+        });
+        ToastService.showToast(context, 'Error liking post', true);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return _deleted ? const SizedBox() : Column(
@@ -117,7 +219,10 @@ class _PostComponentState extends State<PostComponent> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      NameComponent(user: widget.post.user!, feedName: widget.post.feed!.title, color: widget.post.feed!.color ?? Colors.blue),
+                      GestureDetector(
+                          onTap: _handleProfileTap,
+                          child: NameComponent(user: widget.post.user!, feedName: widget.post.feed!.title, color: widget.post.feed!.color ?? Colors.blue)
+                      ),
                       Text(
                         timeago.format(widget.post.createdAt ?? DateTime.now()),
                         style: Theme.of(context).textTheme.bodySmall,
@@ -131,77 +236,150 @@ class _PostComponentState extends State<PostComponent> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              Text(
-                widget.post.text ?? '',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 10),
-              widget.post.media != null && widget.post.media!.isNotEmpty ?
-                  Container(
-                    height: 300,
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Swiper(
-                      itemCount: widget.post.media!.length,
-                      itemBuilder: (context, index) {
-                        return ImageComponent(url: widget.post.media![index]);
-                      },
-                      loop: widget.post.media!.length >= 5,
-                      pagination: widget.post.media!.length > 1 ? SwiperPagination(
-                        alignment: Alignment.bottomCenter,
-                        builder: DotSwiperPaginationBuilder(
-                          color: Colors.white,
-                          activeColor: widget.post.feed?.color ?? Colors.blue,
-                        ),
-                      ) : null,
-                    ),
-                  )
-                  : const SizedBox(),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
+              widget.post.text != null && widget.post.text!.isNotEmpty ? const SizedBox(height: 20) : const SizedBox(),
+              widget.post.text != null && widget.post.text!.isNotEmpty ? GestureDetector(
+                onTap: () => Navigator.of(context).pushNamed('/post', arguments: widget.post),
                 child: Text(
-                  "Post actions (like, comment, etc) will go here in the future",
-                  style: Theme.of(context).textTheme.bodySmall,
+                  widget.post.text ?? '',
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
-              ),
-              /*Row(
+              ) : const SizedBox(),
+              const SizedBox(height: 10),
+              widget.post.media != null && widget.post.media!.isNotEmpty ? Container(
+                height: 300,
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Swiper(
+                  itemCount: widget.post.media!.length,
+                  itemBuilder: (context, index) {
+                    return ImageComponent(url: widget.post.media![index]);
+                  },
+                  loop: widget.post.media!.length >= 5,
+                  pagination: widget.post.media!.length > 1 ? SwiperPagination(
+                    alignment: Alignment.bottomCenter,
+                    builder: DotSwiperPaginationBuilder(
+                      color: Colors.white,
+                      activeColor: widget.post.feed?.color ?? Colors.blue,
+                    ),
+                  ) : null,
+                ),
+              ) : const SizedBox(),
+              widget.post.reFeededFrom != null ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).pushNamed('/post', arguments: [widget.post.reFeededFrom!.user!.uid, widget.post.reFeededFrom!.feedId, widget.post.reFeededFrom!.id]),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'ReFeeded from',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            ProfileAvatar(image: widget.post.reFeededFrom?.user?.smallProfilePictureUrl ?? '', size: 50, radius: (widget.post.reFeededFrom?.user?.radius ?? 100)/3),
+                            const SizedBox(width: 16),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                    onTap: _handleProfileTap,
+                                    child: NameComponent(user: widget.post.reFeededFrom!.user!)
+                                ),
+                                Text(
+                                  timeago.format(widget.post.reFeededFrom!.createdAt ?? DateTime.now()),
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          widget.post.reFeededFrom!.text ?? '',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: 10),
+                        widget.post.reFeededFrom!.media != null && widget.post.reFeededFrom!.media!.isNotEmpty ?
+                        Container(
+                          height: 300,
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Swiper(
+                              itemCount: widget.post.reFeededFrom!.media!.length,
+                              itemBuilder: (context, index) {
+                                return ImageComponent(url: widget.post.reFeededFrom!.media![index]);
+                              },
+                              loop: widget.post.reFeededFrom!.media!.length >= 5,
+                              pagination: widget.post.reFeededFrom!.media!.length > 1 ? const SwiperPagination(
+                                alignment: Alignment.bottomCenter,
+                                builder: DotSwiperPaginationBuilder(
+                                  color: Colors.white,
+                                  activeColor: Colors.blue,
+                                ),
+                              ) : null
+                          ),
+                        )
+                            : const SizedBox(),
+                      ],
+                    ),
+                  ),
+                ),
+              ) : const SizedBox(),
+              widget.showActions ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.favorite_border),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: toggleLike,
+                        icon: widget.post.liked ? Icon(Icons.favorite_rounded, color: Colors.red,) : Icon(Icons.favorite_border_rounded),
+                      ),
+                      Text(
+                        widget.post.likes?.toString() ?? '0',
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    widget.post.likes?.length.toString() ?? '0',
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: widget.post.feed?.private == true ? null : refeed,
+                          icon: Icon(Icons.sync_rounded, color: widget.post.reFeeded ? widget.post.feed?.color ?? Colors.blue : null)
+                      ),
+                      Text(
+                        widget.post.reFeeds?.toString() ?? '0',
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 20),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.repeat_rounded),
-                  ),
-                  Text(
-                    widget.post.comments?.length.toString() ?? '0',
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.comment),
-                  ),
-                  Text(
-                    widget.post.comments?.length.toString() ?? '0',
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => ToastService.showToast(context, 'Coming soon', false),
+                        icon: const Icon(Icons.comment_rounded),
+                      ),
+                      Text(
+                        widget.post.comments?.toString() ?? '0',
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
-              ),*/
+              ) : const SizedBox(),
             ],
           ),
         ),

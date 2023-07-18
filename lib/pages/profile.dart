@@ -129,52 +129,49 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
           ),
         ] : null,
       ),
-      floatingActionButton: _isCurrentUser && _user.feeds!.isNotEmpty ? Padding(
-          padding: const EdgeInsets.only(bottom: 70),
-          child: FloatingActionBubble(
-            items: <Bubble>[
-              Bubble(
-                title: AppLocalizations.of(context)!.numberOfSubscribers(_user.feeds![_selectedFeedIndex].subscribers!.length),
-                iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                bubbleColor : _user.feeds![_selectedFeedIndex].color!,
-                icon: LineIcons.users,
-                titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                onPress: () {
-                  ToastService.showToast(context, AppLocalizations.of(context)!.comingSoon, false);
-                  _animationController.reverse();
-                },
-              ),
-              Bubble(
-                title: AppLocalizations.of(context)!.editFeed,
-                iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                bubbleColor : _user.feeds![_selectedFeedIndex].color!,
-                icon: LineIcons.pencilRuler,
-                titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                onPress: () {
-                  Navigator.of(context).pushNamed('/edit_feed', arguments: _user.feeds![_selectedFeedIndex]);
-                  _animationController.reverse();
-                },
-              ),
-              Bubble(
-                title: AppLocalizations.of(context)!.appName,
-                iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                bubbleColor : _user.feeds![_selectedFeedIndex].color!,
-                icon: LineIcons.feather,
-                titleStyle: TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                onPress: () {
-                  Navigator.of(context).pushNamed('/create_post', arguments: _user.feeds![_selectedFeedIndex].id);
-                  _animationController.reverse();
-                },
-              ),
-            ],
-            animation: _animation,
-            onPress: () => _animationController.isCompleted
-                ? _animationController.reverse()
-                : _animationController.forward(),
-            iconColor: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-            iconData: Icons.menu_rounded,
-            backGroundColor: _user.feeds![_selectedFeedIndex].color!,
-          )
+      floatingActionButton: _isCurrentUser && _user.feeds!.isNotEmpty ? FloatingActionBubble(
+        items: <Bubble>[
+          Bubble(
+            title: AppLocalizations.of(context)!.numberOfSubscribers(_user.feeds![_selectedFeedIndex].subscribers!.length),
+            iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+            bubbleColor : _user.feeds![_selectedFeedIndex].color!,
+            icon: LineIcons.users,
+            titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+            onPress: () {
+              ToastService.showToast(context, AppLocalizations.of(context)!.comingSoon, false);
+              _animationController.reverse();
+            },
+          ),
+          Bubble(
+            title: AppLocalizations.of(context)!.editFeed,
+            iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+            bubbleColor : _user.feeds![_selectedFeedIndex].color!,
+            icon: LineIcons.pencilRuler,
+            titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+            onPress: () {
+              Navigator.of(context).pushNamed('/edit_feed', arguments: _user.feeds![_selectedFeedIndex]);
+              _animationController.reverse();
+            },
+          ),
+          Bubble(
+            title: AppLocalizations.of(context)!.appName,
+            iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+            bubbleColor : _user.feeds![_selectedFeedIndex].color!,
+            icon: LineIcons.feather,
+            titleStyle: TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+            onPress: () {
+              Navigator.of(context).pushNamed('/create_post', arguments: _user.feeds![_selectedFeedIndex].id);
+              _animationController.reverse();
+            },
+          ),
+        ],
+        animation: _animation,
+        onPress: () => _animationController.isCompleted
+            ? _animationController.reverse()
+            : _animationController.forward(),
+        iconColor: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+        iconData: Icons.menu_rounded,
+        backGroundColor: _user.feeds![_selectedFeedIndex].color!,
       ) : null,
       body: _loadingUser ? Center(
           child: LoadingAnimationWidget.inkDrop(
