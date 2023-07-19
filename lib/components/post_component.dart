@@ -15,7 +15,8 @@ import '../services/feed_provider.dart';
 class PostComponent extends StatefulWidget {
   final Post post;
   final bool showActions;
-  const PostComponent({super.key, required this.post, this.showActions = true});
+  final bool divider;
+  const PostComponent({super.key, required this.post, this.showActions = true, this.divider = true});
 
   @override
   State<PostComponent> createState() => _PostComponentState();
@@ -189,17 +190,29 @@ class _PostComponentState extends State<PostComponent> {
     }
   }
 
+  bool _isEmptyRefeed() => widget.post.reFeededFrom != null && widget.post.text!.isEmpty && widget.post.media!.isEmpty;
+
   @override
   Widget build(BuildContext context) {
     return _deleted ? const SizedBox() : Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: widget.divider ? const EdgeInsets.symmetric(horizontal: 20, vertical: 10) : const EdgeInsets.all(0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              _isEmptyRefeed() ? Row(
+                children: [
+                  const Icon(Icons.repeat, color: Colors.grey),
+                  const SizedBox(width: 5),
+                  Text('Refeeded by ', style: TextStyle(color: Colors.grey)),
+                  GestureDetector(
+                    onTap: _handleProfileTap,
+                      child: Text(widget.post.user!.name!, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ) : Row(
                 children: [
                   GestureDetector(
                       onTap: _handleProfileTap,
@@ -221,7 +234,7 @@ class _PostComponentState extends State<PostComponent> {
                     children: [
                       GestureDetector(
                           onTap: _handleProfileTap,
-                          child: NameComponent(user: widget.post.user!, feedName: widget.post.feed!.title, color: widget.post.feed!.color ?? Colors.blue)
+                          child: NameComponent(user: widget.post.user!, feedName: widget.post.feed?.title ?? '', color: widget.post.feed?.color ?? Colors.blue)
                       ),
                       Text(
                         timeago.format(widget.post.createdAt ?? DateTime.now()),
@@ -264,7 +277,7 @@ class _PostComponentState extends State<PostComponent> {
                   ) : null,
                 ),
               ) : const SizedBox(),
-              widget.post.reFeededFrom != null ? Padding(
+              widget.post.reFeededFrom != null && !_isEmptyRefeed() ? Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: GestureDetector(
                   onTap: () => Navigator.of(context).pushNamed('/post', arguments: [widget.post.reFeededFrom!.user!.uid, widget.post.reFeededFrom!.feedId, widget.post.reFeededFrom!.id]),
@@ -332,7 +345,8 @@ class _PostComponentState extends State<PostComponent> {
                     ),
                   ),
                 ),
-              ) : const SizedBox(),
+              ) : _isEmptyRefeed() ? PostComponent(post: widget.post.reFeededFrom!, showActions: false, divider: false)
+                  : const SizedBox(),
               widget.showActions ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -383,9 +397,9 @@ class _PostComponentState extends State<PostComponent> {
             ],
           ),
         ),
-        const Divider(
+        widget.divider ? const Divider(
           thickness: 1,
-        )
+        ) : const SizedBox(),
       ],
     );
   }
