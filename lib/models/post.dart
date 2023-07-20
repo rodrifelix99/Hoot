@@ -46,7 +46,7 @@ class Post {
       likes: json['likes'],
       reFeeded: json['reFeeded'] ?? false,
       reFeeds: json['reFeeds'],
-      reFeededFrom: json['reFeededFrom'] != null ? Post.fromJson(json['reFeededFrom']) : null,
+      reFeededFrom: json['reFeededFrom'] != null && json['reFeededFrom'].runtimeType != String ? Post.fromJson(json['reFeededFrom']) : null,
       comments: json['comments'],
       createdAt: json['createdAt'] != null ? DateTime.fromMillisecondsSinceEpoch(json['createdAt']['_seconds'] * 1000) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.fromMillisecondsSinceEpoch(json['updatedAt']['_seconds'] * 1000) : null,

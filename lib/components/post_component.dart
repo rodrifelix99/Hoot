@@ -204,7 +204,7 @@ class _PostComponentState extends State<PostComponent> {
             children: [
               _isEmptyRefeed() ? Row(
                 children: [
-                  const Icon(Icons.repeat, color: Colors.grey),
+                  const Icon(Icons.sync_rounded, color: Colors.grey),
                   const SizedBox(width: 5),
                   Text('Refeeded by ', style: TextStyle(color: Colors.grey)),
                   GestureDetector(
@@ -345,9 +345,9 @@ class _PostComponentState extends State<PostComponent> {
                     ),
                   ),
                 ),
-              ) : _isEmptyRefeed() ? PostComponent(post: widget.post.reFeededFrom!, showActions: false, divider: false)
+              ) : _isEmptyRefeed() ? PostComponent(post: widget.post.reFeededFrom!, showActions: _isEmptyRefeed(), divider: false)
                   : const SizedBox(),
-              widget.showActions ? Row(
+              widget.showActions && !_isEmptyRefeed() ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Row(

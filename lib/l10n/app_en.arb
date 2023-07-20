@@ -469,5 +469,33 @@
 	"youAreGoingTooFast": "You're going too fast, let's slow down a bit",
 	"@youAreGoingTooFast": {
 		"description": "You're going too fast message"
+	},
+	"userLikedYourHoot": "@{username} liked your hoot",
+	"@userLikedYourHoot": {
+		"description": "User liked your hoot label"
+	},
+	"userCommentedOnYourHoot": "@{username} commented on your hoot",
+	"@userCommentedOnYourHoot": {
+		"description": "User commented on your hoot label"
+	},
+	"userReFeededYourHoot": "@{username} reFeeded your hoot",
+	"@userReFeededYourHoot": {
+		"description": "User re-hooted your hoot label"
+	},
+	"newLike": "New Like",
+	"@newLike": {
+		"description": "New Like label"
+	},
+	"newComment": "New Comment",
+	"@newComment": {
+		"description": "New Comment label"
+	},
+	"newReHoot": "New ReHoot",
+	"@newReHoot": {
+		"description": "New ReHoot label"
+	},
+	"newMention": "New Mention",
+	"@newMention": {
+		"description": "New Mention label"
 	}
 }

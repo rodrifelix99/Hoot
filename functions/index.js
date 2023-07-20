@@ -793,7 +793,8 @@ exports.getFeedPosts = functions.region("europe-west1").https.onCall(async (data
         const reFeededFromUserId = path[1];
         const reFeededFromFeedId = path[3];
         const reFeededFromPostId = path[5];
-        feedPostObj.reFeededFrom = await getHootObj(uid, reFeededFromUserId, reFeededFromFeedId, reFeededFromPostId, true, false, false, false, false, false) || null;
+        const isEmptyRefeed = feedPostObj.text === "" && feedPostObj.images.length === 0;
+        feedPostObj.reFeededFrom = await getHootObj(uid, reFeededFromUserId, reFeededFromFeedId, reFeededFromPostId, true, isEmptyRefeed, isEmptyRefeed, isEmptyRefeed, isEmptyRefeed, false) || null;
         feedPostObj.reFeedError = feedPostObj.reFeededFrom ? false : true;
       }
       results.push(feedPostObj);
@@ -852,7 +853,8 @@ exports.getMainFeedPosts = functions.region("europe-west1").https.onCall(async (
         const reFeededFromUserId = path[1];
         const reFeededFromFeedId = path[3];
         const reFeededFromPostId = path[5];
-        feedPostObj.reFeededFrom = await getHootObj(uid, reFeededFromUserId, reFeededFromFeedId, reFeededFromPostId, true, false, false, false, false, false) || null;
+        const isEmptyRefeed = feedPostObj.text === "" && feedPostObj.images.length === 0;
+        feedPostObj.reFeededFrom = await getHootObj(uid, reFeededFromUserId, reFeededFromFeedId, reFeededFromPostId, true, isEmptyRefeed, isEmptyRefeed, isEmptyRefeed, isEmptyRefeed, false) || null;
         feedPostObj.reFeedError = feedPostObj.reFeededFrom ? false : true;
       }
       results.push(feedPostObj);
@@ -873,6 +875,13 @@ exports.likePost = functions.region("europe-west1").https.onCall(async (data, co
       await likeRef.delete();
     } else {
       await likeRef.set({ createdAt: admin.firestore.FieldValue.serverTimestamp() });
+      await sendDatabaseNotification(uid, userId, 8, userId, feedId, postId);
+      await sendPush(userId, "New like", "Someone liked your hoot", {
+        type: "8",
+        userId: userId,
+        feedId: feedId,
+        postId: postId,
+      });
     }
     return true;
   } catch (e) {
@@ -898,6 +907,13 @@ exports.refeedPost = functions.region("europe-west1").https.onCall(async (data, 
       await reFeedRef.set({ 
         pathToPost: post.path,
         createdAt: admin.firestore.FieldValue.serverTimestamp() 
+      });
+      await sendDatabaseNotification(uid, userId, 9, uid, chosenFeedId, post.id);
+      await sendPush(userId, "ReFeed", "Someone reFeeded your hoot", {
+        type: "9",
+        userId: uid,
+        feedId: chosenFeedId,
+        postId: post.id,
       });
     }
     return true;

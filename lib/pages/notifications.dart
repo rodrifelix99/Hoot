@@ -71,6 +71,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
         return AppLocalizations.of(context)!.privateFeedRequestAccepted(feedName, username);
       case 7:
         return AppLocalizations.of(context)!.privateFeedRequestRejected(feedName, username);
+      case 8:
+        return AppLocalizations.of(context)!.userLikedYourHoot(username);
+      case 9:
+        return AppLocalizations.of(context)!.userReFeededYourHoot(username);
       default:
         return "";
     }
@@ -91,6 +95,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
       break;
       case 5:
         Navigator.pushNamed(context, '/feed_requests', arguments: notification.feed?.id ?? '');
+        break;
+      case 8:
+        Navigator.pushNamed(context, '/post', arguments: [_authProvider.user?.uid, notification.feed?.id, notification.postId]);
+      case 9:
+        Navigator.pushNamed(context, '/post', arguments: [notification.user.uid, notification.feed?.id, notification.postId]);
         break;
     }
   }
