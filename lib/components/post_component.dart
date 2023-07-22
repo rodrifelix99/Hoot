@@ -6,6 +6,7 @@ import 'package:hoot/components/name_component.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/error_service.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:provider/provider.dart';
 
@@ -14,9 +15,9 @@ import '../services/feed_provider.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
-  final bool showActions;
-  final bool divider;
-  const PostComponent({super.key, required this.post, this.showActions = true, this.divider = true});
+  final bool isSoloRefeed;
+  final VoidFutureCallBack? onRefeed;
+  const PostComponent({super.key, required this.post, this.isSoloRefeed = false, this.onRefeed = null});
 
   @override
   State<PostComponent> createState() => _PostComponentState();
@@ -38,7 +39,7 @@ class _PostComponentState extends State<PostComponent> {
     Navigator.of(context).pushNamed('/profile', arguments: [widget.post.user, widget.post.feed?.id]);
   }
 
-  Future _deletePost() async {
+  Future<void> _deletePost() async {
     if (widget.post.user?.uid != _authProvider.user?.uid) return;
     // confirmation dialog
     await showDialog<bool>(
@@ -91,9 +92,10 @@ class _PostComponentState extends State<PostComponent> {
   }
 
   Future refeed() async {
-    if(widget.post.reFeeded) return;
-
-    if (_authProvider.user?.feeds == null || _authProvider.user!.feeds!.isEmpty) {
+    if(widget.post.reFeeded) {
+       widget.onRefeed != null ? await widget.onRefeed!() : null;
+      return;
+    } else if (_authProvider.user?.feeds == null || _authProvider.user!.feeds!.isEmpty) {
       ToastService.showToast(context, 'Wait a second', false);
       List<Feed> feeds = await _feedProvider.getFeeds(_authProvider.user!.uid);
       setState(() {
@@ -198,7 +200,7 @@ class _PostComponentState extends State<PostComponent> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: widget.divider ? const EdgeInsets.symmetric(horizontal: 20, vertical: 10) : const EdgeInsets.all(0),
+          padding: !widget.isSoloRefeed ? const EdgeInsets.symmetric(horizontal: 20, vertical: 10) : const EdgeInsets.all(0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -206,7 +208,7 @@ class _PostComponentState extends State<PostComponent> {
                 children: [
                   const Icon(Icons.sync_rounded, color: Colors.grey),
                   const SizedBox(width: 5),
-                  Text('Refeeded by ', style: TextStyle(color: Colors.grey)),
+                  const Text('Refeeded by ', style: TextStyle(color: Colors.grey)),
                   GestureDetector(
                     onTap: _handleProfileTap,
                       child: Text(widget.post.user!.name!, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
@@ -265,7 +267,10 @@ class _PostComponentState extends State<PostComponent> {
                 child: Swiper(
                   itemCount: widget.post.media!.length,
                   itemBuilder: (context, index) {
-                    return ImageComponent(url: widget.post.media![index]);
+                    return ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: ImageComponent(url: widget.post.media![index], width: double.infinity, height: 300, fit: BoxFit.cover)
+                    );
                   },
                   loop: widget.post.media!.length >= 5,
                   pagination: widget.post.media!.length > 1 ? SwiperPagination(
@@ -328,7 +333,10 @@ class _PostComponentState extends State<PostComponent> {
                           child: Swiper(
                               itemCount: widget.post.reFeededFrom!.media!.length,
                               itemBuilder: (context, index) {
-                                return ImageComponent(url: widget.post.reFeededFrom!.media![index]);
+                                return ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: ImageComponent(url: widget.post.media![index], width: double.infinity, height: 300, fit: BoxFit.cover)
+                                );
                               },
                               loop: widget.post.reFeededFrom!.media!.length >= 5,
                               pagination: widget.post.reFeededFrom!.media!.length > 1 ? const SwiperPagination(
@@ -345,16 +353,15 @@ class _PostComponentState extends State<PostComponent> {
                     ),
                   ),
                 ),
-              ) : _isEmptyRefeed() ? PostComponent(post: widget.post.reFeededFrom!, showActions: _isEmptyRefeed(), divider: false)
-                  : const SizedBox(),
-              widget.showActions && !_isEmptyRefeed() ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              ) : _isEmptyRefeed() ? PostComponent(post: widget.post.reFeededFrom!, isSoloRefeed: true, onRefeed: _deletePost) : const SizedBox(),
+              !_isEmptyRefeed() ? Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Row(
                     children: [
                       IconButton(
                         onPressed: toggleLike,
-                        icon: widget.post.liked ? Icon(Icons.favorite_rounded, color: Colors.red,) : Icon(Icons.favorite_border_rounded),
+                        icon: widget.post.liked ? const Icon(Icons.favorite_rounded, color: Colors.red,) : const Icon(Icons.favorite_border_rounded),
                       ),
                       Text(
                         widget.post.likes?.toString() ?? '0',
@@ -364,10 +371,11 @@ class _PostComponentState extends State<PostComponent> {
                       ),
                     ],
                   ),
+                  const SizedBox(width: 20),
                   Row(
                     children: [
                       IconButton(
-                          onPressed: widget.post.feed?.private == true ? null : refeed,
+                          onPressed: widget.post.feed?.private != true ? refeed : null,
                           icon: Icon(Icons.sync_rounded, color: widget.post.reFeeded ? widget.post.feed?.color ?? Colors.blue : null)
                       ),
                       Text(
@@ -378,6 +386,7 @@ class _PostComponentState extends State<PostComponent> {
                       ),
                     ],
                   ),
+                  /*const SizedBox(width: 20),
                   Row(
                     children: [
                       IconButton(
@@ -391,13 +400,13 @@ class _PostComponentState extends State<PostComponent> {
                         ),
                       ),
                     ],
-                  ),
+                  ),*/
                 ],
               ) : const SizedBox(),
             ],
           ),
         ),
-        widget.divider ? const Divider(
+        !widget.isSoloRefeed ? const Divider(
           thickness: 1,
         ) : const SizedBox(),
       ],

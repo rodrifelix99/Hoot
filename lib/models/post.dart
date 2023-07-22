@@ -10,8 +10,10 @@ class Post {
   Feed? feed;
   bool liked;
   int? likes;
+  List<U> likers;
   bool reFeeded;
   int? reFeeds;
+  List<U> reFeeders;
   Post? reFeededFrom;
   int? comments;
   DateTime? createdAt;
@@ -26,9 +28,11 @@ class Post {
     this.feed,
     this.liked = false,
     this.likes,
+    this.likers = const [],
     this.reFeeded = false,
     this.reFeededFrom,
     this.reFeeds,
+    this.reFeeders = const [],
     this.comments,
     this.createdAt,
     this.updatedAt,

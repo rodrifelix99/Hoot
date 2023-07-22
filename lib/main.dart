@@ -80,7 +80,7 @@ Future<void> main() async {
                     nextScreen: HomePage(),
                     splash: Image.asset('assets/logo.png'),
                     splashTransition: SplashTransition.fadeTransition,
-                    backgroundColor: Theme.of(context).colorScheme.background,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
                   ),
                   onGenerateRoute: (settings) {
                     switch (settings.name) {

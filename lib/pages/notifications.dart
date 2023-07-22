@@ -3,6 +3,7 @@ import 'package:hoot/components/avatar.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/models/notification.dart' as Notif;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/error_service.dart';
@@ -110,8 +111,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.notifications),
       ),
-      body: _isLoading ? const Center(
-        child: CircularProgressIndicator(),
+      body: _isLoading ? SkeletonListView(
+        itemBuilder: (context, index) => SkeletonListTile(
+          hasSubtitle: true,
+        ),
       ) : _notifications.isEmpty ? Center(
           child: NothingToShowComponent(
               icon: Icon(Icons.notifications_off_rounded),

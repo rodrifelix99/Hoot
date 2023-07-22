@@ -362,4 +362,23 @@ class FeedProvider extends ChangeNotifier {
       rethrow;
     }
   }
+
+  Future<List<U>> getLikes(String userId, String feedId, String postId, DateTime startAfter) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('getLikes');
+      final res = await callable.call({'userId': userId, 'feedId': feedId, 'postId': postId, 'startAfter': startAfter.millisecondsSinceEpoch});
+      List<U> users = [];
+      if (res.data != null) {
+        dynamic responseData = jsonDecode(res.data);
+        for (var user in responseData) {
+          users.add(U.fromJson(user));
+        }
+      }
+      return users;
+    } catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
 }

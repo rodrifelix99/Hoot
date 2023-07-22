@@ -890,6 +890,22 @@ exports.likePost = functions.region("europe-west1").https.onCall(async (data, co
   }
 });
 
+exports.getLikes = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const { userId, feedId, postId, startAfter } = data;
+    const startAfterTimestamp = startAfter ? admin.firestore.Timestamp.fromDate(new Date(startAfter)) : admin.firestore.Timestamp.fromDate(new Date());
+    const likes = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(postId).collection("likes").orderBy("createdAt", "desc").startAfter(startAfterTimestamp).limit(10).get();
+    const results = [];
+    for (const like of likes.docs) {
+      const likeObj = await getUser(like.id, false);
+      results.push(likeObj);
+    }
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
 exports.refeedPost = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const uid = context.auth.uid;
@@ -920,6 +936,22 @@ exports.refeedPost = functions.region("europe-west1").https.onCall(async (data, 
   } catch (e) {
     error(e);
     return false;
+  }
+});
+
+exports.getRefeeds = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const { userId, feedId, postId, startAfter } = data;
+    const startAfterTimestamp = startAfter ? admin.firestore.Timestamp.fromDate(new Date(startAfter)) : admin.firestore.Timestamp.fromDate(new Date());
+    const reFeeds = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(postId).collection("reFeeds").orderBy("createdAt", "desc").startAfter(startAfterTimestamp).limit(10).get();
+    const results = [];
+    for (const reFeed of reFeeds.docs) {
+      const reFeedObj = await getUser(reFeed.id, false);
+      results.push(reFeedObj);
+    }
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
   }
 });
 

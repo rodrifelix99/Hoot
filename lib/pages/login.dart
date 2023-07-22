@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:octo_image/octo_image.dart';
@@ -12,6 +13,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String version = "";
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future _loadVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -24,6 +26,17 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     _loadVersion();
     super.initState();
+    _auth.authStateChanges().listen(_onAuthStateChanged); // Add listener
+  }
+
+  _onAuthStateChanged(User? firebaseUser) async {
+    try {
+      if (firebaseUser != null) {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override

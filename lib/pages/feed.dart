@@ -7,7 +7,9 @@ import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:skeletons/skeletons.dart';
 import '../components/post_component.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import '../models/post.dart';
 
 class FeedPage extends StatefulWidget {
@@ -39,6 +41,13 @@ class _FeedPageState extends State<FeedPage> {
     }
   }
 
+  String _timeUntilLaunch() {
+    // time until Aug 15, 2023 00:00:00
+    DateTime launchDate = DateTime(2023, 8, 15);
+    Duration timeUntilLaunch = launchDate.difference(DateTime.now());
+    return '${timeUntilLaunch.inDays} days and ${timeUntilLaunch.inHours.remainder(24)} hours';
+  }
+
   @override
   void initState() {
     _feedProvider = Provider.of<FeedProvider>(context, listen: false);
@@ -62,7 +71,12 @@ class _FeedPageState extends State<FeedPage> {
           ),
         ],
       ),
-      body: _isLoading ? const Center(child: CircularProgressIndicator()) : SmartRefresher(
+      body: _isLoading ? SkeletonListView(
+        itemBuilder: (context, index) => SkeletonListTile(
+          hasLeading: true,
+          hasSubtitle: true,
+        )
+      ) : SmartRefresher(
         controller: _refreshController,
         enablePullUp: _feedProvider.mainFeedPosts.isNotEmpty,
         header: const ClassicHeader(
@@ -84,7 +98,19 @@ class _FeedPageState extends State<FeedPage> {
             itemCount: _feedProvider.mainFeedPosts.length,
             itemBuilder: (context, index) {
               Post post = _feedProvider.mainFeedPosts[index];
-              return PostComponent(post: post);
+              if (index == 0) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Text(_timeUntilLaunch(), style: Theme.of(context).textTheme.headlineLarge),
+                    Text('Until Hoot is released', style: Theme.of(context).textTheme.headlineSmall),
+                    const SizedBox(height: 10),
+                    PostComponent(post: post),
+                  ],
+                );
+              } else {
+                return PostComponent(post: post);
+              }
             }
         ) : Center(
           child: NothingToShowComponent(
