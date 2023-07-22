@@ -101,10 +101,10 @@ class _FeedPageState extends State<FeedPage> {
               if (index == 0) {
                 return Column(
                   children: [
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     Text(_timeUntilLaunch(), style: Theme.of(context).textTheme.headlineLarge),
                     Text('Until Hoot is released', style: Theme.of(context).textTheme.headlineSmall),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 30),
                     PostComponent(post: post),
                   ],
                 );

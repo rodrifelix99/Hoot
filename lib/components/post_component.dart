@@ -9,6 +9,7 @@ import 'package:hoot/services/error_service.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/feed.dart';
 import '../services/feed_provider.dart';
@@ -92,8 +93,8 @@ class _PostComponentState extends State<PostComponent> {
   }
 
   Future refeed() async {
-    if(widget.post.reFeeded) {
-       widget.onRefeed != null ? await widget.onRefeed!() : null;
+    if(widget.post.reFeeded && widget.onRefeed != null) {
+      await widget.onRefeed!();
       return;
     } else if (_authProvider.user?.feeds == null || _authProvider.user!.feeds!.isEmpty) {
       ToastService.showToast(context, 'Wait a second', false);
@@ -101,10 +102,13 @@ class _PostComponentState extends State<PostComponent> {
       setState(() {
         _authProvider.user!.feeds = feeds;
       });
+    } else if (widget.post.reFeeded) {
+      ToastService.showToast(context, AppLocalizations.of(context)!.deleteOnRefeededPost, false);
+      return;
     }
 
     if (_authProvider.user?.feeds == null || _authProvider.user!.feeds!.isEmpty) {
-      ToastService.showToast(context, 'You need to create a feed first', false);
+      ToastService.showToast(context, AppLocalizations.of(context)!.youNeedToCreateAFeedFirst, false);
       return;
     }
 
@@ -116,7 +120,7 @@ class _PostComponentState extends State<PostComponent> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Select a feed to refeed this post to'),
+            Text(AppLocalizations.of(context)!.selectAFeedToRefeedTo),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
@@ -135,7 +139,7 @@ class _PostComponentState extends State<PostComponent> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop( _authProvider.user?.feeds?.first.id),

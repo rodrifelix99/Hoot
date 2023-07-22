@@ -497,5 +497,8 @@
 	"newMention": "New Mention",
 	"@newMention": {
 		"description": "New Mention label"
-	}
+	},
+	"deleteOnRefeededPost": "To delete, do this on the hoot created when reFeeded",
+	"youNeedToCreateAFeedFirst": "You need to create a feed first",
+	"selectAFeedToRefeedTo": "Select a feed to reFeed to"
 }

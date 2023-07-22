@@ -7,6 +7,7 @@ import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/feed.dart';
 
@@ -22,6 +23,33 @@ class FeedProvider extends ChangeNotifier {
 
   List<Feed> _newFeeds = [];
   List<Feed> get newFeeds => _newFeeds;
+
+  FeedProvider() {
+    _getPrefs();
+    _auth.authStateChanges().listen((User? user) {
+      if (user == null) {
+        _mainFeedPosts = [];
+        _topFeeds = [];
+        _newFeeds = [];
+        notifyListeners();
+      }
+    });
+  }
+
+  Future _setPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('mainFeedPosts', jsonEncode(_mainFeedPosts));
+  }
+
+  Future _getPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? mainFeedPosts = prefs.getString('mainFeedPosts');
+    if (mainFeedPosts != null) {
+      List<dynamic> mainFeedPostsJson = jsonDecode(mainFeedPosts);
+      _mainFeedPosts = mainFeedPostsJson.map((post) => Post.fromJson(post)).toList();
+    }
+    notifyListeners();
+  }
 
   Future<bool> createPost(context, {required String feedId, String? text, List<String>? media}) async {
     try {
@@ -158,6 +186,7 @@ class FeedProvider extends ChangeNotifier {
       }
       refresh ? _mainFeedPosts = posts : _mainFeedPosts.addAll(posts);
       notifyListeners();
+      _setPrefs();
     } catch (e) {
       print(e.toString());
     }
