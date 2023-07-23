@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/subscribe_component.dart';
+import 'package:hoot/components/type_box_component.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-
 import '../models/feed.dart';
+import '../models/feed_types.dart';
 import '../services/auth_provider.dart';
 import '../services/feed_provider.dart';
 
@@ -24,7 +25,7 @@ class _ExplorePageState extends State<ExplorePage> {
   late FeedProvider _feedProvider;
   List<Feed> _top10Feeds = [];
   List<Feed> _recentFeeds = [];
-
+  List<FeedType> _popularTypes = [];
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _ExplorePageState extends State<ExplorePage> {
     _feedProvider = Provider.of<FeedProvider>(context, listen: false);
     super.initState();
     _top10MostSubscribedFeeds();
+    _getPopularTypes();
     _recentlyAddedFeeds();
   }
 
@@ -46,6 +48,14 @@ class _ExplorePageState extends State<ExplorePage> {
     List<Feed> feeds = _feedProvider.newFeeds.isEmpty ? await _feedProvider.recentlyAddedFeeds() : _feedProvider.newFeeds;
     setState(() {
       _recentFeeds = feeds;
+    });
+  }
+
+  Future _getPopularTypes() async {
+    List<FeedType> types = _feedProvider.popularTypes.isEmpty ? await _feedProvider.getPopularTypes() : _feedProvider.popularTypes;
+    setState(() {
+      _popularTypes = types;
+      print(_popularTypes);
     });
   }
 
@@ -90,9 +100,9 @@ class _ExplorePageState extends State<ExplorePage> {
                     child: Icon(Icons.warning_rounded, color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
                   )
                       : _top10Feeds[index].private == true ? Padding(
-                        padding: const EdgeInsets.only(bottom: 15),
-                        child: Icon(Icons.lock_rounded, color:_top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                      )
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: Icon(Icons.lock_rounded, color:_top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                  )
                       : const SizedBox(),
                   Text(
                       _top10Feeds[index].title,
@@ -147,7 +157,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 ],
               ),
             ),
-            ),
+          ),
         ],
       ),
     ),
@@ -194,6 +204,25 @@ class _ExplorePageState extends State<ExplorePage> {
                         ),
                       ),
                     ),
+                    Positioned(
+                      bottom: 50,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: [
+                                Theme.of(context).colorScheme.surface,
+                                Colors.transparent
+                              ],
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter
+                          ),
+                        ),
+                      ),
+                    ),
                     Column(
                       children: [
                         const SizedBox(height: 50),
@@ -222,6 +251,37 @@ class _ExplorePageState extends State<ExplorePage> {
                     size: 50,
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
+                ),
+              ),
+              const SizedBox(height: 50),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(AppLocalizations.of(context)!.popularTypes, style: Theme.of(context).textTheme.titleMedium),
+              ),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(AppLocalizations.of(context)!.popularTypesDescription, style: Theme.of(context).textTheme.bodySmall),
+              ),
+              const SizedBox(height: 20),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (FeedType type in _popularTypes) Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, '/search_by_genre', arguments: type),
+                        child: TypeBoxComponent(type: type),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, '/search_by_genre', arguments: FeedType.general),
+                        child: const TypeBoxComponent(type: FeedType.other, isLast: true)
+                    ),
+                    const SizedBox(width: 20),
+                  ],
                 ),
               ),
               const SizedBox(height: 50),
@@ -320,7 +380,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        AppLocalizations.of(context)!.noteToUser(_authProvider.user!.name!),
+                        AppLocalizations.of(context)!.noteToUser(_authProvider.user!.name!.split(' ')[0]),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 5),

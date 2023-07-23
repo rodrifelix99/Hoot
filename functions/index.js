@@ -369,12 +369,13 @@ exports.markNotificationsRead = functions.region("europe-west1").https.onCall(as
 exports.createFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const uid = context.auth.uid;
-    const { title, description, icon, color, private, nsfw } = data;
+    const { title, description, icon, color, private, nsfw, type } = data;
     const feed = await db.collection("users").doc(uid).collection("feeds").add({
       title,
       description,
       icon,
       color,
+      type,
       private,
       nsfw,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -396,13 +397,14 @@ exports.createFeed = functions.region("europe-west1").https.onCall(async (data, 
 exports.editFeed = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const uid = context.auth.uid;
-    const { feedId, title, description, icon, color, private, nsfw } = data;
+    const { feedId, title, description, icon, color, private, nsfw, type } = data;
     const ref = db.collection("users").doc(uid).collection("feeds").doc(feedId);
     await ref.update({
       title,
       description,
       icon,
       color,
+      type,
       private,
       nsfw
     });
@@ -875,13 +877,15 @@ exports.likePost = functions.region("europe-west1").https.onCall(async (data, co
       await likeRef.delete();
     } else {
       await likeRef.set({ createdAt: admin.firestore.FieldValue.serverTimestamp() });
-      await sendDatabaseNotification(uid, userId, 8, userId, feedId, postId);
-      await sendPush(userId, "New like", "Someone liked your hoot", {
-        type: "8",
-        userId: userId,
-        feedId: feedId,
-        postId: postId,
-      });
+      if (uid != userId) {
+        await sendDatabaseNotification(uid, userId, 8, userId, feedId, postId);
+        await sendPush(userId, "New like", "Someone liked your hoot", {
+          type: "8",
+          userId: userId,
+          feedId: feedId,
+          postId: postId,
+        });
+      }
     }
     return true;
   } catch (e) {
@@ -924,13 +928,15 @@ exports.refeedPost = functions.region("europe-west1").https.onCall(async (data, 
         pathToPost: post.path,
         createdAt: admin.firestore.FieldValue.serverTimestamp() 
       });
-      await sendDatabaseNotification(uid, userId, 9, uid, chosenFeedId, post.id);
-      await sendPush(userId, "ReFeed", "Someone reFeeded your hoot", {
-        type: "9",
-        userId: uid,
-        feedId: chosenFeedId,
-        postId: post.id,
-      });
+      if (uid != userId) {
+        await sendDatabaseNotification(uid, userId, 9, uid, chosenFeedId, post.id);
+        await sendPush(userId, "ReFeed", "Someone reFeeded your hoot", {
+          type: "9",
+          userId: uid,
+          feedId: chosenFeedId,
+          postId: post.id,
+        });
+      }
     }
     return true;
   } catch (e) {
@@ -1044,6 +1050,59 @@ exports.recentlyAddedFeeds = functions.region("europe-west1").https.onCall(async
         results.push(feedObj);
       } else {
         i--;
+      }
+    }
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.top5MostPopularTypes = functions.region("europe-west1").https.onCall(async () => {
+  try {
+    const feeds = await db.collectionGroup("feeds").get();
+    const feedTypes = {};
+    for (const feed of feeds.docs) {
+      const feedType = feed.data().type;
+      if (feedTypes[feedType]) {
+        feedTypes[feedType].count++;
+      } else {
+        feedTypes[feedType] = { count: 1 };
+      }
+    }
+    const feedTypesArr = [];
+    for (const feedType in feedTypes) {
+      feedTypesArr.push({ feedType, ...feedTypes[feedType] });
+    }
+    feedTypesArr.sort((a, b) => b.count - a.count);
+    const results = [];
+    for (let i = 0; i < 5; i++) {
+      const feedType = feedTypesArr[i];
+      if (!feedType) {
+        break;
+      }
+      results.push(feedType.feedType);
+    }
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.searchFeedsByType = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const { type, startAtId } = data;
+    let feeds;
+    if(startAtId == 'first') {
+      feeds = await db.collectionGroup("feeds").where("type", "==", type).orderBy("createdAt", "desc").limit(10).get();
+    } else {
+      feeds = await db.collectionGroup("feeds").where("type", "==", type).orderBy("createdAt", "desc").startAt(startAtId).limit(10).get();
+    }
+    const results = [];
+    for (const feed of feeds.docs) {
+      const feedObj = await getFeed(feed.ref.parent.parent.id, feed.id, false, true, true);
+      if (feedObj != null) {
+        results.push(feedObj);
       }
     }
     return JSON.stringify(results);

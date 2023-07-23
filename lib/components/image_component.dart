@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
+import 'package:line_icons/line_icon.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:octo_image/octo_image.dart';
 
@@ -25,21 +27,26 @@ class _ImageComponentState extends State<ImageComponent> {
         child: Hero(
           tag: widget.url + widget.width.toString() + widget.height.toString() + DateTime.now().toString(),
           child: OctoImage(
-            image: NetworkImage(widget.url),
-            width: widget.width,
-            height: widget.height,
-            fit: widget.fit,
-            alignment: widget.alignment,
-            repeat: widget.repeat,
-            placeholderBuilder: (context) => LoadingAnimationWidget.beat(
-              color: Theme.of(context).colorScheme.onSurface,
-              size: 25,
-            ),
-            errorBuilder: OctoError.blurHash(
-              'LPOe[M{tZjj;KnPTowa#4=xtyBbJ',
-              icon: null,
-              iconColor: Colors.grey.shade800,
-            )
+              image: NetworkImage(widget.url),
+              width: widget.width,
+              height: widget.height,
+              fit: widget.fit,
+              alignment: widget.alignment,
+              repeat: widget.repeat,
+              placeholderBuilder: (context) => Container(
+                color: Theme.of(context).colorScheme.secondaryContainer,
+                child: Center(
+                  child: LoadingAnimationWidget.inkDrop(
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    size: 50,
+                  )
+                ),
+              ),
+              errorBuilder: OctoError.placeholderWithErrorIcon((context) => Container(
+                color: Colors.grey.shade800,
+              ),
+              iconSize: 0
+              )
           ),
         ),
       ),

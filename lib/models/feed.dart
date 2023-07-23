@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:hoot/models/feed_types.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 
@@ -12,6 +13,7 @@ class Feed {
   Color? color;
   bool? private;
   bool? nsfw;
+  FeedType? type;
   final List<String>? subscribers;
   final List<String>? requests;
   List<Post>? posts;
@@ -25,6 +27,7 @@ class Feed {
     this.color,
     this.private,
     this.nsfw,
+    this.type,
     this.subscribers,
     this.requests,
     this.posts
@@ -38,6 +41,7 @@ class Feed {
       description: json['description'],
       icon: json['icon'],
       color: Color(int.parse(json['color'])),
+      type: json['type'] != null ? FeedType.values.firstWhere((e) => e.toString().split('.').last == json['type']) : null,
       private: json['private'],
       nsfw: json['nsfw'],
       subscribers: json['subscribers'] != null ? List<String>.from(json['subscribers']) : null,
@@ -51,6 +55,7 @@ class Feed {
     'description': description,
     'icon': icon,
     'color': color!.hashCode.toString(),
+    'type': type.toString().split('.').last,
     'private': private,
     'nsfw': nsfw,
   };

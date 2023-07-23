@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hoot/models/feed_types.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/services/auth_provider.dart';
@@ -20,6 +21,9 @@ class FeedProvider extends ChangeNotifier {
 
   List<Feed> _topFeeds = [];
   List<Feed> get topFeeds => _topFeeds;
+
+  List<FeedType> _popularTypes = [];
+  List<FeedType> get popularTypes => _popularTypes;
 
   List<Feed> _newFeeds = [];
   List<Feed> get newFeeds => _newFeeds;
@@ -96,6 +100,7 @@ class FeedProvider extends ChangeNotifier {
       required String description,
       required String icon,
       required Color color,
+      required FeedType type,
       required bool private,
       required bool nsfw }) async {
     try {
@@ -106,10 +111,11 @@ class FeedProvider extends ChangeNotifier {
         'description': description,
         'icon': icon,
         'color': color.value.toString(),
+        'type': type.toString().split('.').last,
         'private': private,
         'nsfw': nsfw
       });
-      Feed feed = Feed(id: res.data, title: title, description: description, icon: icon, color: color, private: private, nsfw: nsfw);
+      Feed feed = Feed(id: res.data, title: title, description: description, icon: icon, color: color, private: private, nsfw: nsfw, type: type);
       Provider.of<AuthProvider>(context, listen: false).addFeedToUser(feed);
       return res.data;
     } catch (e) {
@@ -128,10 +134,11 @@ class FeedProvider extends ChangeNotifier {
         'description': feed.description,
         'icon': feed.icon,
         'color': feed.color?.value.toString(),
+        'type': feed.type.toString().split('.').last,
         'private': feed.private,
         'nsfw': feed.nsfw
       });
-      Provider.of<AuthProvider>(context, listen: false).user?.feeds?.removeWhere((f) => f.id == feed.id);
+      Provider.of<AuthProvider>(context, listen: false).removeFeedFromUser(feed.id);
       Provider.of<AuthProvider>(context, listen: false).addFeedToUser(feed);
       return res.data;
     } catch (e) {
@@ -145,7 +152,7 @@ class FeedProvider extends ChangeNotifier {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('deleteFeed');
       final res = await callable.call({'feedId': feedId});
-      Provider.of<AuthProvider>(context, listen: false).user?.feeds?.removeWhere((f) => f.id == feedId);
+      Provider.of<AuthProvider>(context, listen: false).removeFeedFromUser(feedId);
       return res.data;
     } catch (e) {
       print(e.toString());
@@ -333,6 +340,28 @@ class FeedProvider extends ChangeNotifier {
     }
   }
 
+  Future<List<FeedType>> getPopularTypes() async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('top5MostPopularTypes');
+      final res = await callable.call();
+      print(res.data);
+      List<FeedType> types = [];
+      if (res.data != null) {
+        dynamic responseData = jsonDecode(res.data);
+        for (var type in responseData) {
+          types.add(FeedTypeExtension.fromString(type));
+        }
+      }
+      _popularTypes = types;
+      notifyListeners();
+      return types;
+    } catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
   Future<List<Feed>> recentlyAddedFeeds() async {
     try {
       await _auth.currentUser!.getIdToken(true);
@@ -347,6 +376,25 @@ class FeedProvider extends ChangeNotifier {
       }
       _newFeeds = feeds;
       notifyListeners();
+      return feeds;
+    } catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<Feed>> searchFeedsByType(FeedType type, String startAtId) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('searchFeedsByType');
+      final res = await callable.call({'type': type.toString().split('.').last, 'startAtId': startAtId});
+      List<Feed> feeds = [];
+      if (res.data != null) {
+        dynamic responseData = jsonDecode(res.data);
+        for (var feed in responseData) {
+          feeds.add(Feed.fromJson(feed));
+        }
+      }
       return feeds;
     } catch (e) {
       print(e.toString());

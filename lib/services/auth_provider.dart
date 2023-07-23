@@ -328,4 +328,9 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeFeedFromUser(String feedId) {
+    _user!.feeds?.removeWhere((feed) => feed.id == feedId);
+    notifyListeners();
+  }
+
 }

@@ -12,6 +12,7 @@ import 'package:hoot/pages/home.dart';
 import 'package:hoot/pages/post.dart';
 import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/search.dart';
+import 'package:hoot/pages/search_by_genre.dart';
 import 'package:hoot/pages/sign_in.dart';
 import 'package:hoot/pages/sign_up.dart';
 import 'package:hoot/pages/subscriptions_list.dart';
@@ -27,6 +28,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'models/feed.dart';
+import 'models/feed_types.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -119,6 +121,9 @@ Future<void> main() async {
                         return MaterialPageRoute(builder: (context) => EditProfilePage());
                       case '/search':
                         return MaterialPageRoute(builder: (context) => SearchPage());
+                        case '/search_by_genre':
+                          final FeedType type = settings.arguments as FeedType;
+                          return MaterialPageRoute(builder: (context) => SearchByGenrePage(type: type));
                       case '/create_feed':
                         return MaterialPageRoute(builder: (context) => CreateFeedPage());
                       case '/edit_feed':

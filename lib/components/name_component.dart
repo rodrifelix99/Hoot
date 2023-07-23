@@ -33,12 +33,15 @@ class _NameComponentState extends State<NameComponent> {
       children: [
         Row(
           children: [
-            Text(
-              widget.user.name ?? widget.user.username ?? 'User',
-              style: TextStyle(
-                color: widget.textColor ?? Theme.of(context).textTheme.bodyLarge!.color,
-                fontSize: widget.size.toDouble(),
-                fontWeight: widget.bold ? FontWeight.bold : FontWeight.normal,
+            Expanded(
+              flex: 0,
+              child: Text(
+                widget.user.name ?? widget.user.username ?? 'User',
+                style: TextStyle(
+                  color: widget.textColor ?? Theme.of(context).textTheme.bodyLarge!.color,
+                  fontSize: widget.size.toDouble(),
+                  fontWeight: widget.bold ? FontWeight.bold : FontWeight.normal,
+                ),
               ),
             ),
             if (widget.user.verified == true)

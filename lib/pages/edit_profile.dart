@@ -264,18 +264,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           labelText: AppLocalizations.of(context)!.bio,
                           alignLabelWithHint: true,
                         ),
-                      ),
-                      const SizedBox(height: 50),
-                      Text(
-                        'Please note that this options are just for testing purposes.\n'
-                            'Hoot profiles will be completely customizable in the future. Here are some examples of what you will be able to do:\n'
-                            '- Choose a background image for your profile\n'
-                            '- Choose a color for your profile\n'
-                            '- Choose your anthem song from Spotify\n'
-                            '- Add a frame to your profile picture\n'
-                            '- Etc...',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
+                      )
                     ],
                   ),
                 ),
