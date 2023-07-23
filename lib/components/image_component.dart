@@ -21,24 +21,26 @@ class _ImageComponentState extends State<ImageComponent> {
   Widget build(BuildContext context) {
     return FullScreenWidget(
       backgroundColor: Colors.black,
-      child: Hero(
-        tag: widget.url + widget.width.toString() + widget.height.toString() + DateTime.now().toString(),
-        child: OctoImage(
-          image: NetworkImage(widget.url),
-          width: widget.width,
-          height: widget.height,
-          fit: widget.fit,
-          alignment: widget.alignment,
-          repeat: widget.repeat,
-          placeholderBuilder: (context) => LoadingAnimationWidget.staggeredDotsWave(
-            color: Theme.of(context).colorScheme.onSurface,
-            size: 50,
+      child: Center(
+        child: Hero(
+          tag: widget.url + widget.width.toString() + widget.height.toString() + DateTime.now().toString(),
+          child: OctoImage(
+            image: NetworkImage(widget.url),
+            width: widget.width,
+            height: widget.height,
+            fit: widget.fit,
+            alignment: widget.alignment,
+            repeat: widget.repeat,
+            placeholderBuilder: (context) => LoadingAnimationWidget.beat(
+              color: Theme.of(context).colorScheme.onSurface,
+              size: 25,
+            ),
+            errorBuilder: OctoError.blurHash(
+              'LPOe[M{tZjj;KnPTowa#4=xtyBbJ',
+              icon: null,
+              iconColor: Colors.grey.shade800,
+            )
           ),
-          errorBuilder: OctoError.blurHash(
-            'LPOe[M{tZjj;KnPTowa#4=xtyBbJ',
-            icon: null,
-            iconColor: Colors.grey.shade800,
-          )
         ),
       ),
     );

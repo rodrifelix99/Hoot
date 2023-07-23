@@ -28,7 +28,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
   late FeedProvider _feedProvider;
   late AuthProvider _authProvider;
   final TextEditingController _textEditingController = TextEditingController();
-  List<File> _images = [];
+  final List<File> _images = [];
   bool _isLoading = false;
   String _selectedFeedId = '';
   

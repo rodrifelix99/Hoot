@@ -32,8 +32,8 @@ class _RadioComponentState extends State<RadioComponent> {
   late String _selectedKey;
   late YoutubePlayerController controller;
 
-  String _feedAd = 'qDeVmQbXDkk';
-  String _subscriber = 'osZWkRbk6jA';
+  final String _feedAd = 'qDeVmQbXDkk';
+  final String _subscriber = 'osZWkRbk6jA';
 
   @override
   void initState() {

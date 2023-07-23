@@ -131,7 +131,7 @@ class _PostPageState extends State<PostPage> {
                         radius: (widget.post!.likers[index].radius ?? 100)/3
                       ),
                     title: Text(widget.post!.likers[index].name ?? ''),
-                    subtitle: Text("@${widget.post!.likers[index].username}" ?? ''),
+                    subtitle: Text("@${widget.post!.likers[index].username}"),
                   );
                 },
               )

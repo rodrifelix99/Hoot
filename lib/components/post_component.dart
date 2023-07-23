@@ -18,7 +18,7 @@ class PostComponent extends StatefulWidget {
   final Post post;
   final bool isSoloRefeed;
   final VoidFutureCallBack? onRefeed;
-  const PostComponent({super.key, required this.post, this.isSoloRefeed = false, this.onRefeed = null});
+  const PostComponent({super.key, required this.post, this.isSoloRefeed = false, this.onRefeed});
 
   @override
   State<PostComponent> createState() => _PostComponentState();

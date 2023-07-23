@@ -9,7 +9,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeletons/skeletons.dart';
 import '../components/post_component.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import '../models/post.dart';
 
 class FeedPage extends StatefulWidget {

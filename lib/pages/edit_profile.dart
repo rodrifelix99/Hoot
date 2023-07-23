@@ -47,7 +47,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future _pickBannerPicture() async {
-    File? image = await _pickImage(CropAspectRatioPreset.original, 16, 9);
+    File? image = await _pickImage(CropAspectRatioPreset.original, 1, 1);
     setState(() => _bannerPicture = image);
   }
 

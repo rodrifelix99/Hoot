@@ -77,10 +77,14 @@ class _NameComponentState extends State<NameComponent> {
         ),
         widget.showUsername ? Text(
           '@${widget.user.username}',
-          style: Theme.of(context).textTheme.bodySmall
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: widget.textColor ?? Theme.of(context).textTheme.bodySmall!.color,
+          )
         ) : widget.feedName.isNotEmpty ? Text(
           widget.feedName,
-          style: Theme.of(context).textTheme.bodySmall
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: widget.textColor ?? Theme.of(context).textTheme.bodySmall!.color,
+          )
         ) : const SizedBox(),
       ],
     );

@@ -23,7 +23,7 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
         backgroundColor: Colors.black,
         child: Center(
           child: Hero(
-            tag: widget.image + widget.url + widget.size.toString() + DateTime.now().toString(),
+            tag: widget.image,
             child: Avatar(image: widget.image, size: widget.size, radius: widget.radius),
           ),
         ),

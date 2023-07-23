@@ -32,7 +32,7 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
   }
 
   bool _isAuthor() {
-    return widget.user?.uid == _authProvider.user?.uid;
+    return widget.user.uid == _authProvider.user?.uid;
   }
 
   bool _isSubscribed() {

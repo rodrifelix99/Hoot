@@ -116,19 +116,6 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_user.name!),
-        actions: _isCurrentUser ? [
-          IconButton(
-            onPressed: _refreshUser,
-            icon: const LineIcon(LineIcons.alternateSync),
-          ),
-          IconButton(
-            onPressed: _signOut,
-            icon: const LineIcon(LineIcons.alternateSignOut),
-          ),
-        ] : null,
-      ),
       floatingActionButton: _isCurrentUser && _user.feeds!.isNotEmpty ? FloatingActionBubble(
         items: <Bubble>[
           Bubble(
@@ -185,11 +172,78 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             Stack(
               clipBehavior: Clip.none,
               children: [
-                ImageComponent(
-                  url: _user.bannerPictureUrl ?? '',
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+                ClipRRect(
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                  child: ImageComponent(
+                    url: _user.bannerPictureUrl ?? '',
+                    height: MediaQuery.of(context).size.height / 2,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  left: 0,
+                  child: Container(
+                    height: 100,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(1),
+                          Colors.black.withOpacity(0.5),
+                          Colors.black.withOpacity(0),
+                        ],
+                      ),
+                    ),
+                    child: SafeArea(
+                      minimum: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // if can go back
+                          Navigator.canPop(context) ? IconButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            icon: LineIcon(LineIcons.arrowLeft, color: Colors.white, size: 30),
+                          ) : const SizedBox(),
+                          _isCurrentUser ? IconButton(
+                            onPressed: () => _signOut(),
+                            icon: LineIcon(LineIcons.alternateSignOut, color: Colors.white, size: 30),
+                          ) : const SizedBox(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                    child: Container(
+                      height: 100,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withOpacity(0),
+                            Colors.black.withOpacity(0.5),
+                            Colors.black.withOpacity(1),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 10,
+                  right: 0,
+                  left: 15 + 150 + 15,
+                  child: NameComponent(user: _user, showUsername: true, size: 20, textColor: Colors.white),
                 ),
                 Positioned(
                   bottom: -75,
@@ -230,25 +284,19 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  NameComponent(user: _user, showUsername: true, size: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                  _user.bio?.isNotEmpty ?? false ? const SizedBox(height: 10) : const SizedBox(),
+                  _user.bio?.isNotEmpty ?? false ? Text(
+                      _user.bio ?? ''
+                  ) : const SizedBox(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      _user.bio?.isNotEmpty ?? false ? const SizedBox(height: 10) : const SizedBox(),
-                      _user.bio?.isNotEmpty ?? false ? Text(
-                          _user.bio ?? ''
-                      ) : const SizedBox(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pushNamed('/subscriptions', arguments: _user.uid),
-                            child: Text(AppLocalizations.of(context)!.numberOfSubscriptions(_user.subscriptions.length)),
-                          )
-                        ],
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pushNamed('/subscriptions', arguments: _user.uid),
+                        child: Text(AppLocalizations.of(context)!.numberOfSubscriptions(_user.subscriptions.length)),
                       )
                     ],
-                  ),
+                  )
                 ],
               ),
             ),
@@ -387,8 +435,8 @@ class _FeedPostsState extends State<FeedPosts> {
     return _isLoading ? const Center(child: CircularProgressIndicator()) : !_hasAccessToFeed() ?
     Center(
       child: NothingToShowComponent(
-          icon: const Icon(Icons.lock_rounded),
-          text: '${AppLocalizations.of(context)?.thisFeedIsPrivate}\n\n${AppLocalizations.of(context)?.onlyMembersCanSee(widget.user.name ?? widget.user.username ?? 'this user')}',
+        icon: const Icon(Icons.lock_rounded),
+        text: '${AppLocalizations.of(context)?.thisFeedIsPrivate}\n\n${AppLocalizations.of(context)?.onlyMembersCanSee(widget.user.name ?? widget.user.username ?? 'this user')}',
       ),
     ) :
     widget.user.feeds?[widget.feedIndex].posts?.isNotEmpty == true ? Column(
