@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/models/feed_types.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skeletons/skeletons.dart';
 
 class TypeBoxComponent extends StatefulWidget {
   final FeedType type;
   final bool isLast;
-  const TypeBoxComponent({super.key, required this.type, this.isLast = false});
+  final bool isSkeleton;
+  const TypeBoxComponent({super.key, required this.type, this.isLast = false, this.isSkeleton = false});
 
   @override
   State<TypeBoxComponent> createState() => _TypeBoxComponentState();
@@ -23,7 +25,25 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
-      child: Container(
+      child: widget.isSkeleton ? Skeleton(
+          isLoading: widget.isSkeleton,
+          skeleton: Container(
+            width: 200,
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  color.withOpacity(0.6),
+                  color.withOpacity(0.9),
+                ],
+              ),
+            ),
+          ),
+          child: Container(),
+      ) : Container(
         width: 200,
         height: 100,
         decoration: BoxDecoration(

@@ -567,5 +567,6 @@
 	"popularTypesDescription": "Take a look at the most popular feed genres",
 	"searchForGenreFeeds": "{genre} feeds",
 	"discoverMoreFeeds": "Discover more feeds",
-	"popular": "Popular"
+	"popular": "Popular",
+	"betterKnownForFeed": "Better known for creating {feedName}"
 }

@@ -15,6 +15,7 @@ import 'package:hoot/models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:vibration/vibration.dart';
 
 import '../components/post_component.dart';
@@ -32,6 +33,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStateMixin {
   late AuthProvider _authProvider;
   late FeedProvider _feedProvider;
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
   late U _user;
   late bool _isCurrentUser;
   int _selectedFeedIndex = 0;
@@ -105,11 +107,12 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   }
 
   Feed? _mostSubscribedFeed() {
+    if ((_user.feeds?.length ?? 0) <= 1) return null;
     Feed mostSubscribed = _user.feeds!.first;
     _user.feeds!.forEach((feed) {
       if (feed.subscribers!.length > mostSubscribed.subscribers!.length) mostSubscribed = feed;
     });
-    if (mostSubscribed.subscribers!.isEmpty) return null;
+    if (mostSubscribed.subscribers!.isEmpty || mostSubscribed.subscribers!.length == 1) return null;
     return mostSubscribed;
   }
 
@@ -148,6 +151,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             minimum: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // if can go back
                 Navigator.canPop(context) ? IconButton(
@@ -229,13 +233,13 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
           onPressed: () => Navigator.of(context).pushNamed('/edit_profile'),
           child: Text(AppLocalizations.of(context)!.editProfile),
         ) : IconButton(
-          icon: Icon(Icons.more_horiz_rounded),
+          icon: const Icon(Icons.more_vert_rounded),
           style: ElevatedButtonTheme.of(context).style?.copyWith(
             backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary.withOpacity(0.15)),
             foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
             padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
           ),
-          onPressed: () => Navigator.of(context).pushNamed('/edit_profile'),
+          onPressed: () => ToastService.showToast(context, AppLocalizations.of(context)!.comingSoon, false),
         ),
       ],
     ),
@@ -248,7 +252,14 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         _user.bio?.isNotEmpty ?? false ? const SizedBox(height: 10) : const SizedBox(),
         _user.bio?.isNotEmpty ?? false ? Text(
             _user.bio ?? ''
-        ) : const SizedBox()
+        ) : const SizedBox(),
+        _mostSubscribedFeed() != null ? const SizedBox(height: 10) : const SizedBox(),
+        _mostSubscribedFeed() != null ? Text(
+          AppLocalizations.of(context)!.betterKnownForFeed(_mostSubscribedFeed()?.title ?? ''),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ) : const SizedBox(),
       ],
     ),
   );
@@ -305,82 +316,91 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             color: Theme.of(context).colorScheme.onSurface,
             size: 50,
           )
-      ) : SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _profileIntro(),
-            _profileActions(),
-            _profileInfo(),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                  children: [
-                    _isCurrentUser ? GestureDetector(
-                      onTap: () => Navigator.of(context).pushNamed('/create_feed'),
-                      child: Chip(
-                        label: LineIcon(LineIcons.plus, color: Theme.of(context).colorScheme.primary, size: 16),
-                      ),
-                    ) : const SizedBox(),
-                    const SizedBox(width: 10),
-                    _loadingFeeds ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(),
-                    ) : const SizedBox(),
-                    for (Feed feed in _user.feeds ?? []) Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () => setState(() => _selectedFeedIndex = _user.feeds?.indexOf(feed) ?? 0),
-                          onForcePressStart: (details) => Vibration.vibrate(),
-                          onForcePressPeak: (details) => Navigator.of(context).pushNamed('/feed', arguments: feed),
-                          child: _selectedFeedIndex == _user.feeds?.indexOf(feed) ? Chip(
-                            label: Text(feed.title),
-                            avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : feed.private == true ? LineIcon(LineIcons.lock, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : null,
-                            labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                            ),
-                            backgroundColor: feed.color,
-                          ) : Chip(
-                            avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: Theme.of(context).colorScheme.primary) : feed.private == true ? LineIcon(LineIcons.lock, color: Theme.of(context).colorScheme.primary) : null,
-                            label: Text(feed.title),
-                            // avatar: LineIcon(LineIcons.user)
-                          ),
+      ) : SmartRefresher(
+        header: MaterialClassicHeader(
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        controller: _refreshController,
+        onRefresh: () => _refreshUser(),
+        physics: const BouncingScrollPhysics(),
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _profileIntro(),
+              _profileActions(),
+              _profileInfo(),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                    children: [
+                      _isCurrentUser ? GestureDetector(
+                        onTap: () => Navigator.of(context).pushNamed('/create_feed'),
+                        child: Chip(
+                          label: LineIcon(LineIcons.plus, color: Theme.of(context).colorScheme.primary, size: 16),
                         ),
+                      ) : const SizedBox(),
+                      const SizedBox(width: 10),
+                      _loadingFeeds ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(),
+                      ) : const SizedBox(),
+                      for (Feed feed in _user.feeds ?? []) Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () => setState(() => _selectedFeedIndex = _user.feeds?.indexOf(feed) ?? 0),
+                            onForcePressStart: (details) => Vibration.vibrate(),
+                            onForcePressPeak: (details) => Navigator.of(context).pushNamed('/feed', arguments: feed),
+                            child: _selectedFeedIndex == _user.feeds?.indexOf(feed) ? Chip(
+                              label: Text(feed.title),
+                              avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : feed.private == true ? LineIcon(LineIcons.lock, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : null,
+                              labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                              ),
+                              backgroundColor: feed.color,
+                            ) : Chip(
+                              avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: Theme.of(context).colorScheme.primary) : feed.private == true ? LineIcon(LineIcons.lock, color: Theme.of(context).colorScheme.primary) : null,
+                              label: Text(feed.title),
+                              // avatar: LineIcon(LineIcons.user)
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                        ],
+                      ),
+                    ]
+                ),
+              ),
+              _user.feeds!.isNotEmpty ?
+              Column(
+                children: [
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Flexible(child: Text(_user.feeds![_selectedFeedIndex].description!, style: Theme.of(context).textTheme.bodyLarge)),
                         const SizedBox(width: 10),
+                        SubscribeComponent(feed: _user.feeds![_selectedFeedIndex], user: _user),
                       ],
                     ),
-                  ]
-              ),
-            ),
-            _user.feeds!.isNotEmpty ?
-            Column(
-              children: [
-                const Divider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Flexible(child: Text(_user.feeds![_selectedFeedIndex].description!, style: Theme.of(context).textTheme.bodyLarge)),
-                      const SizedBox(width: 10),
-                      SubscribeComponent(feed: _user.feeds![_selectedFeedIndex], user: _user),
-                    ],
                   ),
-                ),
-                FeedPosts(user: _user, feedIndex: _selectedFeedIndex),
-              ],
-            )
-                : NothingToShowComponent(
-              icon: const LineIcon(LineIcons.newspaperAlt),
-              text: "${!_isCurrentUser ? AppLocalizations.of(context)!.noFeeds(_user.name ?? _user.username ?? 'This user') : AppLocalizations.of(context)!.noFeedsYou}\n${_isCurrentUser ? AppLocalizations.of(context)!.createFeedMessage : ''}",
-            ),
-            const SizedBox(height: 100),
-          ],
+                  FeedPosts(user: _user, feedIndex: _selectedFeedIndex),
+                ],
+              )
+                  : NothingToShowComponent(
+                icon: const LineIcon(LineIcons.newspaperAlt),
+                text: "${!_isCurrentUser ? AppLocalizations.of(context)!.noFeeds(_user.name ?? _user.username ?? 'This user') : AppLocalizations.of(context)!.noFeedsYou}\n${_isCurrentUser ? AppLocalizations.of(context)!.createFeedMessage : ''}",
+              ),
+              const SizedBox(height: 100),
+            ],
+          ),
         ),
       ),
     );

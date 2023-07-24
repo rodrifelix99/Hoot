@@ -72,6 +72,7 @@ dependencies:
   material_segmented_control: ^5.0.0
   skeletons: ^0.0.3
   shared_preferences: ^2.2.0
+  flutter_animated_icons: ^1.0.1
 
 dev_dependencies:
   flutter_test:

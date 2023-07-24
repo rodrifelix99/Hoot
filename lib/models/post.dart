@@ -57,6 +57,25 @@ class Post {
     );
   }
 
+  static Post empty() {
+    return Post(
+      id: '0',
+      text: 'ABC',
+      media: [],
+      feedId: '0',
+      feed: null,
+      user: null,
+      liked: false,
+      likes: 0,
+      reFeeded: false,
+      reFeeds: 0,
+      reFeededFrom: null,
+      comments: 0,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'text': text,

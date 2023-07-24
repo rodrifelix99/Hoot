@@ -71,10 +71,9 @@ class _FeedPageState extends State<FeedPage> {
         ],
       ),
       body: _isLoading ? SkeletonListView(
-        itemBuilder: (context, index) => SkeletonListTile(
-          hasLeading: true,
-          hasSubtitle: true,
-        )
+        padding: const EdgeInsets.symmetric(vertical: 10),
+          itemCount: 10,
+          itemBuilder: (context, index) => PostComponent(post: Post.empty(), isSkeleton: true)
       ) : SmartRefresher(
         controller: _refreshController,
         enablePullUp: _feedProvider.mainFeedPosts.isNotEmpty,

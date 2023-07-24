@@ -8,6 +8,7 @@ import 'package:hoot/components/type_box_component.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletons/skeletons.dart';
 import '../models/feed.dart';
 import '../models/feed_types.dart';
 import '../services/auth_provider.dart';
@@ -175,13 +176,7 @@ class _ExplorePageState extends State<ExplorePage> {
             ),
           ],
         ),
-        body: _recentFeeds.isEmpty && _top10Feeds.isEmpty ? Center(
-          child: LoadingAnimationWidget.inkDrop(
-            size: 50,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        )
-            : SingleChildScrollView(
+        body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -267,7 +262,7 @@ class _ExplorePageState extends State<ExplorePage> {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: [
+                  children: _popularTypes.isNotEmpty ?  [
                     for (FeedType type in _popularTypes) Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: GestureDetector(
@@ -280,6 +275,12 @@ class _ExplorePageState extends State<ExplorePage> {
                         onTap: () => Navigator.pushNamed(context, '/search_by_genre', arguments: FeedType.general),
                         child: const TypeBoxComponent(type: FeedType.other, isLast: true)
                     ),
+                    const SizedBox(width: 20),
+                  ] : [
+                    const SizedBox(width: 20),
+                    const TypeBoxComponent(type: FeedType.general, isSkeleton: true),
+                    const SizedBox(width: 10),
+                    const TypeBoxComponent(type: FeedType.general, isSkeleton: true),
                     const SizedBox(width: 20),
                   ],
                 ),
@@ -369,14 +370,34 @@ class _ExplorePageState extends State<ExplorePage> {
                             ),
                           ),
                         ),
-                      ) : Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 50),
-                          child: LoadingAnimationWidget.inkDrop(
-                            size: 50,
-                            color: Theme.of(context).colorScheme.onSurface,
+                      ) : Column(
+                        children: [
+                          SkeletonListTile(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              hasSubtitle: true,
+                              hasLeading: true,
+                            ),
+                          SkeletonListTile(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            hasSubtitle: true,
+                            hasLeading: true,
                           ),
-                        ),
+                          SkeletonListTile(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            hasSubtitle: true,
+                            hasLeading: true,
+                          ),
+                          SkeletonListTile(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            hasSubtitle: true,
+                            hasLeading: true,
+                          ),
+                          SkeletonListTile(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            hasSubtitle: true,
+                            hasLeading: true,
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 20),
                       Text(
