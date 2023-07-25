@@ -568,5 +568,7 @@
 	"searchForGenreFeeds": "{genre} feeds",
 	"discoverMoreFeeds": "Discover more feeds",
 	"popular": "Popular",
-	"betterKnownForFeed": "Better known for creating {feedName}"
+	"betterKnownForFeed": "Better known for creating {feedName}",
+	"reportUsername": "Report @{username}",
+	"delete": "Delete"
 }

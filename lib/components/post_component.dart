@@ -1,7 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_icons/icons8.dart';
-import 'package:lottie/lottie.dart';
+import 'package:line_icons/line_icon.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:hoot/components/avatar.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
@@ -31,23 +31,13 @@ class PostComponent extends StatefulWidget {
 class _PostComponentState extends State<PostComponent> with TickerProviderStateMixin {
   late AuthProvider _authProvider;
   late FeedProvider _feedProvider;
-  late AnimationController _favoriteController;
   bool _deleted = false;
 
   @override
   void initState() {
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
     _feedProvider = Provider.of<FeedProvider>(context, listen: false);
-    _favoriteController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    widget.post.liked ? _favoriteController.animateTo(0.6) : _favoriteController.reverse();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _favoriteController.dispose();
-    super.dispose();
   }
 
   void _handleProfileTap() {
@@ -91,7 +81,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         return widget.post.user?.uid == _authProvider.user?.uid ? ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           leading: const Icon(Icons.delete),
-          title: const Text('Delete'),
+          title: Text(AppLocalizations.of(context)!.delete),
           onTap: () {
             Navigator.of(context).pop();
             _deletePost();
@@ -99,7 +89,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         ) : ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           leading: const Icon(Icons.report),
-          title: const Text('Report'),
+          title: Text(AppLocalizations.of(context)!.reportUsername(widget.post.user?.username ?? '')),
           onTap: () => ToastService.showToast(context, 'Coming soon', false),
         );
       },
@@ -180,15 +170,12 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
 
   Future toggleLike() async {
     if (widget.post.liked) {
-      _favoriteController.reverse();
       setState(() {
         widget.post.liked = false;
         widget.post.likes = (widget.post.likes ?? 0) - 1 < 0 ? 0 : (widget.post.likes ?? 0) - 1;
       });
       bool res = await _feedProvider.likePost(widget.post.id, widget.post.feed!.id, widget.post.user!.uid);
       if (!res) {
-        _favoriteController.reset();
-        _favoriteController.animateTo(0.6);
         setState(() {
           widget.post.liked = true;
           widget.post.likes = (widget.post.likes ?? 0) + 1;
@@ -201,8 +188,6 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         widget.post.liked = true;
         widget.post.likes = (widget.post.likes ?? 0) + 1;
       });
-      _favoriteController.reset();
-      _favoriteController.animateTo(0.6);
       bool res = await _feedProvider.likePost(widget.post.id, widget.post.feed!.id, widget.post.user!.uid);
       if (!res) {
         setState(() {
@@ -267,7 +252,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
             children: [
               _isEmptyRefeed() ? Row(
                 children: [
-                  const Icon(Icons.sync_rounded, color: Colors.grey),
+                  const LineIcon(LineIcons.syncIcon, color: Colors.grey),
                   const SizedBox(width: 5),
                   const Text('Refeeded by ', style: TextStyle(color: Colors.grey)),
                   GestureDetector(
@@ -419,15 +404,11 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Row(
-
                     children: [
                       IconButton(
                         onPressed: toggleLike,
-                        icon: Lottie.asset(
-                            widget.post.liked ? Icons8.heart_color : Icons8.heart,
-                            width: 25,
-                            controller: _favoriteController,
-                        ),
+                        color: widget.post.liked ? widget.post.feed?.color ?? Colors.red : null,
+                        icon: widget.post.liked ? LineIcon(LineIcons.heartAlt) : LineIcon(LineIcons.heart)
                       ),
                       Text(
                         widget.post.likes?.toString() ?? '0',
@@ -442,7 +423,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
                     children: [
                       IconButton(
                           onPressed: widget.post.feed?.private != true ? refeed : null,
-                          icon: Icon(Icons.sync_rounded, color: widget.post.reFeeded ? widget.post.feed?.color ?? Colors.blue : null, size: 25),
+                          icon: LineIcon(LineIcons.syncIcon, color: widget.post.reFeeded ? widget.post.feed?.color ?? Colors.blue : null, size: 25),
                       ),
                       Text(
                         widget.post.reFeeds?.toString() ?? '0',

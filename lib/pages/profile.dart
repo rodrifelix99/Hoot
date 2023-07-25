@@ -160,6 +160,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                 ) : const SizedBox(),
                 const Spacer(),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(_user.subscriptions.length.toString(), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
                     IconButton(
