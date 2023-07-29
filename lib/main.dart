@@ -11,6 +11,7 @@ import 'package:hoot/pages/feed_requests.dart';
 import 'package:hoot/pages/home.dart';
 import 'package:hoot/pages/post.dart';
 import 'package:hoot/pages/profile.dart';
+import 'package:hoot/pages/report.dart';
 import 'package:hoot/pages/search.dart';
 import 'package:hoot/pages/search_by_genre.dart';
 import 'package:hoot/pages/sign_in.dart';
@@ -148,6 +149,12 @@ Future<void> main() async {
                           return MaterialPageRoute(
                               builder: (context) => PostPage(post: post));
                         }
+                      case '/report':
+                        final List<dynamic> args = settings.arguments as List<dynamic>;
+                        final U user = args[0] as U;
+                        final String postId = args[1] as String ?? '';
+                        final String feedId = args[2] as String ?? '';
+                        return MaterialPageRoute(builder: (context) => ReportPage(user: user, postId: postId, feedId: feedId));
                       default:
                         return MaterialPageRoute(builder: (context) => HomePage());
                     }

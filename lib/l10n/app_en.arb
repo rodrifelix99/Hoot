@@ -176,7 +176,7 @@
 	"@feed": {
 		"description": "Feed label"
 	},
-	"myFeeds": "My Feeds",
+	"myFeeds": "Feeds",
 	"@myFeeds": {
 		"description": "My Feeds label"
 	},

@@ -33,10 +33,13 @@ class _NameComponentState extends State<NameComponent> {
       children: [
         Row(
           children: [
-            Expanded(
-              flex: 0,
+            Container(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.4,
+              ),
               child: Text(
                 widget.user.name ?? widget.user.username ?? 'User',
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: widget.textColor ?? Theme.of(context).textTheme.bodyLarge!.color,
                   fontSize: widget.size.toDouble(),

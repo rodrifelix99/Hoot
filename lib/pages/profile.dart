@@ -159,15 +159,19 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                   icon: const LineIcon(LineIcons.arrowLeft, color: Colors.white, size: 30),
                 ) : const SizedBox(),
                 const Spacer(),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(_user.subscriptions.length.toString(), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
-                    IconButton(
-                        onPressed: () => Navigator.pushNamed(context, '/subscriptions', arguments: _user.uid),
-                        icon: const LineIcon(LineIcons.users, color: Colors.white, size: 30)
+                TextButton(
+                    onPressed: () => Navigator.pushNamed(context, '/subscriptions', arguments: _user.uid),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.white.withOpacity(0.1),
                     ),
-                  ],
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(_user.subscriptions.length.toString(), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
+                        const SizedBox(width: 5),
+                        const LineIcon(LineIcons.users, color: Colors.white, size: 30)
+                      ],
+                    )
                 ),
                 _isCurrentUser ? const SizedBox(width: 10) : const SizedBox(),
                 _isCurrentUser ? IconButton(

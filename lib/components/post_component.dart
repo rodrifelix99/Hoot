@@ -90,7 +90,10 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           leading: const Icon(Icons.report),
           title: Text(AppLocalizations.of(context)!.reportUsername(widget.post.user?.username ?? '')),
-          onTap: () => ToastService.showToast(context, 'Coming soon', false),
+          onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pushNamed('/report', arguments: [widget.post.user, widget.post.id, widget.post.feed?.id]);
+          }
         );
       },
     );
@@ -422,7 +425,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
                   Row(
                     children: [
                       IconButton(
-                          onPressed: widget.post.feed?.private != true ? refeed : null,
+                          onPressed: widget.onRefeed ?? (widget.post.feed?.private != true ? refeed : null),
                           icon: LineIcon(LineIcons.syncIcon, color: widget.post.reFeeded ? widget.post.feed?.color ?? Colors.blue : null, size: 25),
                       ),
                       Text(
