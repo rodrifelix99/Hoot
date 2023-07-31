@@ -217,6 +217,7 @@ exports.createUserDocument = functions.region("europe-west1").auth.user().onCrea
       username: null,
       bigAvatar: user.photoURL || null,
       smallAvatar: user.photoURL || null,
+      tester: true,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
     info("User created with uid " + user.uid);
