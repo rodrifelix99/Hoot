@@ -47,12 +47,16 @@ class FeedProvider extends ChangeNotifier {
 
   Future _getPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? mainFeedPosts = prefs.getString('mainFeedPosts');
-    if (mainFeedPosts != null) {
-      List<dynamic> mainFeedPostsJson = jsonDecode(mainFeedPosts);
-      _mainFeedPosts = mainFeedPostsJson.map((post) => Post.fromJson(post)).toList();
+    try {
+      String? mainFeedPosts = prefs.getString('mainFeedPosts');
+      if (mainFeedPosts != null) {
+        List<dynamic> mainFeedPostsJson = jsonDecode(mainFeedPosts);
+        _mainFeedPosts = mainFeedPostsJson.map((post) => Post.fromJson(post)).toList();
+      }
+      notifyListeners();
+    } catch (e) {
+      print(e.toString());
     }
-    notifyListeners();
   }
 
   Future<bool> createPost(context, {required String feedId, String? text, List<String>? media}) async {

@@ -57,30 +57,13 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
     super.initState();
     widget.feedId.isNotEmpty ? _getFeeds(feedToFocus: widget.feedId) : _getFeeds();
+    _setSubscribers();
   }
 
-  Future _signOut() async {
-    // show confirmation dialog
-    bool? result = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.signOut),
-        content: Text(AppLocalizations.of(context)!.signOutConfirmation),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(AppLocalizations.of(context)!.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(AppLocalizations.of(context)!.signOut),
-          ),
-        ],
-      ),
-    );
-    if (result == true) {
-      await _authProvider.signOut();
-      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+  Future _setSubscribers() async {
+    if (_user.subscriptions.isEmpty) {
+      int subscriptions = await _authProvider.getSubscriptionsCount(_user.uid);
+      setState(() => _user.subscriptions = List<String>.filled(subscriptions, ''));
     }
   }
 
@@ -173,10 +156,15 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                       ],
                     )
                 ),
-                _isCurrentUser ? const SizedBox(width: 10) : const SizedBox(),
-                _isCurrentUser ? IconButton(
-                  onPressed: () => _signOut(),
-                  icon: const LineIcon(LineIcons.alternateSignOut, color: Colors.white, size: 30),
+                _isCurrentUser ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 10),
+                    IconButton(
+                      onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/settings', (route) => false),
+                      icon: const LineIcon(LineIcons.cog, color: Colors.white, size: 30),
+                    ),
+                  ],
                 ) : const SizedBox(),
               ],
             ),
@@ -272,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: _isCurrentUser && _user.feeds!.isNotEmpty ? FloatingActionBubble(
+      floatingActionButton: _isCurrentUser && _user.feeds != null && _user.feeds!.isNotEmpty ? FloatingActionBubble(
         items: <Bubble>[
           Bubble(
             title: AppLocalizations.of(context)!.numberOfSubscribers(_user.feeds![_selectedFeedIndex].subscribers?.length ?? 0),
@@ -379,7 +367,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                     ]
                 ),
               ),
-              _user.feeds!.isNotEmpty ?
+              _user.feeds != null && _user.feeds!.isNotEmpty ?
               Column(
                 children: [
                   const Divider(),
@@ -401,7 +389,9 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               )
                   : NothingToShowComponent(
                 icon: const LineIcon(LineIcons.newspaperAlt),
-                text: "${!_isCurrentUser ? AppLocalizations.of(context)!.noFeeds(_user.name ?? _user.username ?? 'This user') : AppLocalizations.of(context)!.noFeedsYou}\n${_isCurrentUser ? AppLocalizations.of(context)!.createFeedMessage : ''}",
+                text: !_isCurrentUser ? AppLocalizations.of(context)!.noFeeds(_user.name ?? _user.username ?? 'This user') : AppLocalizations.of(context)!.noFeedsYou,
+                buttonText: _isCurrentUser ? AppLocalizations.of(context)!.createFeed : null,
+                buttonAction: () => Navigator.of(context).pushNamed('/create_feed'),
               ),
               const SizedBox(height: 100),
             ],

@@ -31,6 +31,15 @@
 	"@displayNameTooShort": {
 		"description": "Display name too short message"
 	},
+	"phoneNumber": "Phone Number",
+	"@phoneNumber": {
+		"description": "Phone Number label"
+	},
+	"phoneNumberInvalid": "Invalid phone number",
+	"@phoneNumberInvalid": {
+		"description": "Invalid phone number message"
+	},
+	"invalidVerificationCode": "Invalid verification code",
 	"email": "Email",
 	"@email": {
 		"description": "Email label"
@@ -75,9 +84,9 @@
 	"@signOut": {
 		"description": "Sign Out button"
 	},
-	"bySigningUpYouAgreeToOur": "By signing up you agree to our",
+	"bySigningUpYouAgreeToOur": "By signing in you agree to our",
 	"@bySigningUpYouAgreeToOur": {
-		"description": "By signing up you agree to our label"
+		"description": "By signing in you agree to our label"
 	},
 	"termsOfService": "Terms of Service and Privacy Policy",
 	"forgotPassword": "Forgot Password?",
@@ -145,6 +154,7 @@
 	"@usernameTooShort": {
 		"description": "Username too short message"
 	},
+	"usernameInvalid": "Your username can only contain letters, numbers and underscores",
 	"pressEnterToContinue": "Press enter to continue",
 	"@pressEnterToContinue": {
 		"description": "Press enter to continue label"
@@ -570,5 +580,14 @@
 	"popular": "Popular",
 	"betterKnownForFeed": "Better known for creating {feedName}",
 	"reportUsername": "Report @{username}",
-	"delete": "Delete"
+	"delete": "Delete",
+	"aboutUs": "About Us",
+	"darkMode": "Dark Mode",
+	"syncedWithSystem": "Synced with system",
+	"version": "Version",
+	"deleteAccount": "Delete Account",
+	"deleteAccountDescription": "This will delete your account and all your data. This action is irreversible.",
+	"deleteAccountConfirmation": "Are you sure you want to delete your account?",
+	"deleteAccountFailed": "Failed to delete account",
+	"deleteAccountSuccess": "Account deleted successfully"
 }

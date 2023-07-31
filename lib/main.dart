@@ -14,10 +14,12 @@ import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/report.dart';
 import 'package:hoot/pages/search.dart';
 import 'package:hoot/pages/search_by_genre.dart';
+import 'package:hoot/pages/settings.dart';
 import 'package:hoot/pages/sign_in.dart';
 import 'package:hoot/pages/sign_up.dart';
 import 'package:hoot/pages/subscriptions_list.dart';
 import 'package:hoot/pages/terms.dart';
+import 'package:hoot/pages/verify.dart';
 import 'package:hoot/pages/welcome.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/feed_provider.dart';
@@ -95,6 +97,8 @@ Future<void> main() async {
                         return MaterialPageRoute(builder: (context) => SignUpPage());
                       case '/signin':
                         return MaterialPageRoute(builder: (context) => SignInPage());
+                      case '/verify':
+                        return MaterialPageRoute(builder: (context) => VerifyPage());
                       case '/terms_of_service':
                         return MaterialPageRoute(builder: (context) => TermsOfService());
                       case '/welcome':
@@ -103,6 +107,8 @@ Future<void> main() async {
                         final String? feedId = settings.arguments as String?;
                         return MaterialPageRoute(
                             builder: (context) => CreatePostPage(feedId: feedId));
+                      case '/settings':
+                        return MaterialPageRoute(builder: (context) => SettingsPage());
                       case '/profile':
                         if (settings.arguments == null) {
                           return MaterialPageRoute(builder: (context) => ProfilePage());

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animations/animations.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +27,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late PageController _pageController;
   late AuthProvider _authProvider;
+  late StreamSubscription<RemoteMessage> _messageStreamSubscription;
+  late VoidCallback _authProviderListener = () {};
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   bool _radio = false;
+  bool _loading = true;
 
   Future _setFCMToken() async {
     String? fcmToken = await messaging.getToken();
@@ -38,17 +43,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
-  Future _listenForNotifications() async {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
-      }
-      _countUnreadNotifications();
-    });
-  }
-
   Future isNewUser() async {
     U? user = _authProvider.user;
     if (user != null) {
@@ -56,7 +50,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         await Navigator.of(context).pushNamed('/welcome');
       } else {
         await _countUnreadNotifications();
-        _listenForNotifications();
       }
       await _setFCMToken();
     } else {
@@ -73,14 +66,30 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
     _pageController = PageController();
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
+
+    _messageStreamSubscription = FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+      _countUnreadNotifications();
+    });
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bool isSignedIn = _authProvider.isSignedIn;
       if (!isSignedIn) {
         Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
       } else {
         isNewUser();
+        _loading = false;
+        _authProviderListener = () async {
+          if (!_authProvider.isSignedIn) {
+            await Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+          }
+        };
+        _authProvider.addListener(_authProviderListener);
       }
     });
   }
@@ -107,12 +116,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void dispose() {
     _pageController.dispose();
+    _authProvider.removeListener(_authProviderListener);
+    if (_messageStreamSubscription != null) {
+      _messageStreamSubscription.cancel();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _loading ? Container() : Scaffold(
       body: PageTransitionSwitcher(
         duration: const Duration(milliseconds: 300),
         reverse: false,

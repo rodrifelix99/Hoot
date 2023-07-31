@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoot/pages/about_your_data.dart';
 
 class TermsOfService extends StatelessWidget {
   const TermsOfService({super.key});
@@ -6,7 +7,17 @@ class TermsOfService extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Terms of Service & Privacy Policy')),
+      appBar: AppBar(
+          title: const Text('Terms of Service & Privacy Policy'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shield_rounded),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AboutYourDataPage()));
+            },
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: const [

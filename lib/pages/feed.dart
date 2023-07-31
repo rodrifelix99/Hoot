@@ -113,7 +113,7 @@ class _FeedPageState extends State<FeedPage> {
         ) : Center(
           child: NothingToShowComponent(
             icon: const Icon(Icons.newspaper_rounded),
-            text: '${AppLocalizations.of(context)!.noHoots}\n${AppLocalizations.of(context)!.subscribeToSeeHoots}}',
+            text: '${AppLocalizations.of(context)!.noHoots}\n${AppLocalizations.of(context)!.subscribeToSeeHoots}',
           ),
         ),
       ),

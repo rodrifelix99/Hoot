@@ -58,7 +58,7 @@ async function getUser(uid, addSubscribed = true, built = null) {
  * @param {boolean} [addUserObj=false] - Indicates whether to include the user object. Default is false.
  * @return {Promise<object|null>} A promise that resolves with the feed object or null if the feed doesn't exist.
  */
-async function getFeed(uid, feedId, requests = false, listSubscriberIds = false, addUserObj = false) {
+async function getFeedObject(uid, feedId, requests = false, listSubscriberIds = false, addUserObj = false) {
   try {
     const doc = await db.collection("users").doc(uid).collection("feeds").doc(feedId).get();
     if (doc.exists) {
@@ -74,6 +74,9 @@ async function getFeed(uid, feedId, requests = false, listSubscriberIds = false,
       }
       if (addUserObj) {
         feed.user = await getUser(uid, true);
+        if (feed.user === null) {
+          return null;
+        }
       }
       return feed;
     } else {
@@ -108,9 +111,12 @@ async function getHootObj(uid, userId, feedId, postId, addUserObj = true, addFee
       post.feedId = feedId;
       if (addUserObj) {
         post.user = await getUser(userId, true);
+        if (post.user === null) {
+          return null;
+        }
       }
       if (addFeedObj) {
-        post.feed = await getFeed(userId, feedId, false, false, false);
+        post.feed = await getFeedObject(userId, feedId, false, false, false);
       }
       if (addLikes) {
         const liked = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").doc(postId).collection("likes").doc(uid).get();
@@ -158,6 +164,9 @@ async function sendPush(uid, title, body, data = {}, token = null) {
   try {
     if (!token) {
       const user = await getUser(uid, false);
+      if (!user) {
+        return;
+      }
       token = user.fcmToken;
     }
     if (token) {
@@ -216,11 +225,90 @@ exports.createUserDocument = functions.region("europe-west1").auth.user().onCrea
   }
 });
 
-exports.deleteUserDocument = functions.region("europe-west1").auth.user().onDelete(async (user) => {
+exports.deleteUserDocument = functions.region("europe-west1").auth.user().onDelete(async (u) => {
   try {
-    // Delete the document for the deleted user in Firestore
-    await db.collection("users").doc(user.uid).delete();
-    info("User deleted with uid " + user.uid);
+    const uid = u.uid;
+    let writeCount = 0;
+    const user = await db.collection("users").doc(uid).get();
+    if (user.exists) {
+      const batch = db.batch();
+      const feeds = await db.collection("users").doc(uid).collection("feeds").get();
+      for (const feed of feeds.docs) {
+        const subscribers = await db.collection("users").doc(uid).collection("feeds").doc(feed.id).collection("subscribers").get();
+        for (const subscriber of subscribers.docs) {
+          const ref = db.collection("users").doc(subscriber.id).collection("subscriptions").doc(feed.id);
+          if (writeCount < 500) {
+            batch.delete(ref);
+            writeCount++;
+          } else {
+            await batch.commit();
+            batch = db.batch();
+            batch.delete(ref);
+            writeCount = 1;
+          }
+        }
+        const posts = await db.collection("users").doc(uid).collection("feeds").doc(feed.id).collection("posts").get();
+        for (const post of posts.docs) {
+          const ref = db.collection("users").doc(uid).collection("feeds").doc(feed.id).collection("posts").doc(post.id);
+          if (writeCount < 500) {
+            batch.delete(ref);
+            writeCount++;
+          } else {
+            await batch.commit();
+            batch = db.batch();
+            batch.delete(ref);
+            writeCount = 1;
+          }
+        }
+        const feedRef = db.collection("users").doc(uid).collection("feeds").doc(feed.id);
+        if (writeCount < 500) {
+          batch.delete(feedRef);
+          writeCount++;
+        } else {
+          await batch.commit();
+          batch = db.batch();
+          batch.delete(feedRef);
+          writeCount = 1;
+        }
+      }
+      const subscriptions = await db.collection("users").doc(uid).collection("subscriptions").get();
+      for (const subscription of subscriptions.docs) {
+        const ref = db.collection("users").doc(uid).collection("subscriptions").doc(subscription.id);
+        if (writeCount < 500) {
+          batch.delete(ref);
+          writeCount++;
+        } else {
+          await batch.commit();
+          batch = db.batch();
+          batch.delete(ref);
+          writeCount = 1;
+        }
+      }
+      const notifications = await db.collection("users").doc(uid).collection("notifications").get();
+      for (const notification of notifications.docs) {
+        const ref = db.collection("users").doc(uid).collection("notifications").doc(notification.id);
+        if (writeCount < 500) {
+          batch.delete(ref);
+          writeCount++;
+        } else {
+          await batch.commit();
+          batch = db.batch();
+          batch.delete(ref);
+          writeCount = 1;
+        }
+      }
+      const userRef = db.collection("users").doc(uid);
+      if (writeCount < 500) {
+        batch.delete(userRef);
+        writeCount++;
+      } else {
+        await batch.commit();
+        batch = db.batch();
+        batch.delete(userRef);
+        writeCount = 1;
+      }
+      await batch.commit();
+    }
   } catch (e) {
     error(e);
   }
@@ -245,6 +333,16 @@ exports.updateUser = functions.region("europe-west1").https.onCall(async (data, 
       displayName: data.displayName,
       photoURL: data.bigAvatar,
     });
+    return true;
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.deleteAccount = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    await admin.auth().deleteUser(uid);
     return true;
   } catch (e) {
     error(e);
@@ -323,7 +421,10 @@ exports.getNotifications = functions.region("europe-west1").https.onCall(async (
       results = await Promise.all(
         notifications.docs.map(async (doc) => {
           const senderUser = await getUser(doc.data().sender, true);
-          const feed = doc.data().feedId && doc.data().feedAuthor ? await getFeed(doc.data().feedAuthor, doc.data().feedId) : null;
+          if (!senderUser) {
+            return null;
+          }
+          const feed = doc.data().feedId && doc.data().feedAuthor ? await getFeedObject(doc.data().feedAuthor, doc.data().feedId) : null;
           return {
             id: doc.id,
             user: senderUser,
@@ -473,7 +574,7 @@ exports.getFeeds = functions.region("europe-west1").https.onCall(async (data, co
     const feeds = await db.collection("users").doc(uid).collection("feeds").orderBy("updatedAt", "desc").get();
     const results = [];
     for (const feed of feeds.docs) {
-      const feedObj = await getFeed(uid, feed.id, true, true);
+      const feedObj = await getFeedObject(uid, feed.id, true, true);
       results.push(feedObj);
     }
     info(results);
@@ -506,6 +607,9 @@ exports.getFeedRequests = functions.region("europe-west1").https.onCall(async (d
     const results = [];
     for (const request of requests.docs) {
       const requestObj = await getUser(request.id, false);
+      if (!requestObj) {
+        continue;
+      }
       results.push(requestObj);
     }
     return JSON.stringify(results);
@@ -836,6 +940,9 @@ exports.getMainFeedPosts = functions.region("europe-west1").https.onCall(async (
         feedPostObj.user = cachedUsers.find((user) => user.uid === feedPostObj.userId);
       } else {
         feedPostObj.user = await getUser(feedPostObj.userId);
+        if (!feedPostObj.user) {
+          continue;
+        }
         cachedUsers.push(feedPostObj.user);
       }
       const liked = await db.collection("users").doc(feedPostObj.userId).collection("feeds").doc(feedPostObj.feedId).collection("posts").doc(feedPost.id).collection("likes").doc(uid).get();
@@ -902,6 +1009,9 @@ exports.getLikes = functions.region("europe-west1").https.onCall(async (data, co
     const results = [];
     for (const like of likes.docs) {
       const likeObj = await getUser(like.id, false);
+      if (!likeObj) {
+        continue;
+      }
       results.push(likeObj);
     }
     return JSON.stringify(results);
@@ -953,6 +1063,9 @@ exports.getRefeeds = functions.region("europe-west1").https.onCall(async (data, 
     const results = [];
     for (const reFeed of reFeeds.docs) {
       const reFeedObj = await getUser(reFeed.id, false);
+      if (!reFeedObj) {
+        continue;
+      }
       results.push(reFeedObj);
     }
     return JSON.stringify(results);
@@ -982,10 +1095,23 @@ exports.getSubscriptions = functions.region("europe-west1").https.onCall(async (
       if (!userId) {
         continue;
       }
-      const feed = await getFeed(userId, subscription.id, false, false, true);
+      const feed = await getFeedObject(userId, subscription.id, false, false, true);
+      if (!feed) {
+        continue;
+      }
       results.push(feed);
     }
     return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.getSubscriptionsCount = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const { uid } = data;
+    const subscriptions = await db.collection("users").doc(uid).collection("subscriptions").get();
+    return subscriptions.size;
   } catch (e) {
     error(e);
   }
@@ -1026,7 +1152,7 @@ exports.top10MostSubscribedFeeds = functions.region("europe-west1").https.onCall
       if (!feedSub) {
         break;
       }
-      const feed = await getFeed(feedSub.userId, feedSub.feedId, false, true, true);
+      const feed = await getFeedObject(feedSub.userId, feedSub.feedId, false, true, true);
       if (feed != null) {
         results.push(feed);
       }
@@ -1045,7 +1171,7 @@ exports.recentlyAddedFeeds = functions.region("europe-west1").https.onCall(async
     const results = [];
     for (let i = 0; i < 10; i++) {
       const feed = feeds.docs[i];
-      const feedObj = await getFeed(feed.ref.parent.parent.id, feed.id, false, true, true);
+      const feedObj = await getFeedObject(feed.ref.parent.parent.id, feed.id, false, true, true);
       if (feedObj != null) {
         results.push(feedObj);
       } else {
@@ -1100,9 +1226,29 @@ exports.searchFeedsByType = functions.region("europe-west1").https.onCall(async 
     }
     const results = [];
     for (const feed of feeds.docs) {
-      const feedObj = await getFeed(feed.ref.parent.parent.id, feed.id, false, true, true);
+      const feedObj = await getFeedObject(feed.ref.parent.parent.id, feed.id, false, true, true);
       if (feedObj != null) {
         results.push(feedObj);
+      }
+    }
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.findContacts = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const { uid, contacts } = data;
+    const results = [];
+    for (const contact of contacts) {
+      const user = await admin.auth().getUserByPhoneNumber(contact.phoneNumber);
+      if (user.uid != uid && !results.find((result) => result.uid === user.uid)) {
+        const userObj = await getUser(user.uid, false);
+        if (!userObj) {
+          continue;
+        }
+        results.push(userObj);
       }
     }
     return JSON.stringify(results);

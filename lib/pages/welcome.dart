@@ -265,7 +265,10 @@ class _ThirdScreenState extends State<ThirdScreen> {
   bool _loading = false;
 
   bool _isValid() {
-    return _usernameController.text.isNotEmpty && _usernameController.text.length >= 6 && _usernameController.text.length <= 15 && !_usernameController.text.contains("@");
+    return _usernameController.text.isNotEmpty
+        && _usernameController.text.length >= 6
+        && _usernameController.text.length <= 15
+        && RegExp(r'^[a-zA-Z0-9_.]+$').hasMatch(_usernameController.text);
   }
 
   Future _onSubmit() async {
@@ -374,7 +377,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
             fontSize: 12,
           ),
         ) : Text(
-          AppLocalizations.of(context)!.displayNameTooShort,
+          AppLocalizations.of(context)!.usernameInvalid,
           style: Theme.of(context).textTheme.bodySmall!.copyWith(
             color: Colors.red,
           ),

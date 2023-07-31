@@ -1,8 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hoot/services/auth_provider.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
+
+import '../services/error_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -13,29 +17,45 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String version = "";
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  late AuthProvider _authProvider;
+  late VoidCallback _authProviderListener;
 
   Future _loadVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     setState(() {
-      version = "${packageInfo.version} (${packageInfo.buildNumber})";
+      version = "${packageInfo.packageName}\n${packageInfo.version} (${packageInfo.buildNumber})";
     });
+    print(version);
   }
 
   @override
   void initState() {
     _loadVersion();
+    _authProvider = Provider.of<AuthProvider>(context, listen: false);
     super.initState();
-    _auth.authStateChanges().listen(_onAuthStateChanged); // Add listener
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _authProviderListener = () async  {
+        if (_authProvider.isSignedIn) {
+          await Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+        }
+      };
+      _authProvider.addListener(_authProviderListener);
+      _authProvider.phoneNumber = PhoneNumber(isoCode: WidgetsBinding.instance.window.locale.countryCode ?? 'US');
+    });
   }
 
-  _onAuthStateChanged(User? firebaseUser) async {
-    try {
-      if (firebaseUser != null) {
-        Navigator.pushReplacementNamed(context, '/home');
-      }
-    } catch (e) {
-      print(e.toString());
+  @override
+  void dispose() {
+    _authProvider.removeListener(_authProviderListener);
+    super.dispose();
+  }
+
+  void _next() {
+    if (_authProvider.phoneNumber.phoneNumber != null) {
+      _authProvider.removeListener(_authProviderListener);
+      Navigator.pushNamed(context, '/verify');
+    } else {
+      ToastService.showToast(context, AppLocalizations.of(context)!.phoneNumberInvalid, true);
     }
   }
 
@@ -54,37 +74,18 @@ class _LoginPageState extends State<LoginPage> {
               ),
           Positioned.fill(
             child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(AppLocalizations.of(context)!.appName,
-                    style: const TextStyle(
-                      shadows: [
-                        Shadow(
-                          blurRadius: 10.0,
-                          color: Colors.black12,
-                          offset: Offset(5.0, 5.0),
-                        ),
-                      ],
-                      fontSize: 100,
-                      color: Colors.white,
+              child: Text(AppLocalizations.of(context)!.appName,
+                style: const TextStyle(
+                  shadows: [
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Colors.black12,
+                      offset: Offset(5.0, 5.0),
                     ),
-                  ),
-                  Text("Beta - $version",
-                    style: const TextStyle(
-                      shadows: [
-                        Shadow(
-                          blurRadius: 10.0,
-                          color: Colors.black,
-                          offset: Offset(1.0, 1.0),
-                        ),
-                      ],
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+                  ],
+                  fontSize: 100,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -93,7 +94,11 @@ class _LoginPageState extends State<LoginPage> {
             left: 0,
             right: 0,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 50,
+              ),
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -104,38 +109,67 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  ElevatedButton(
-                      onPressed: () => Navigator.pushNamed(context, '/signup'),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      ),
-                      child: Text(
-                          AppLocalizations.of(context)!.createMyAccount,
-                          style: const TextStyle(color: Colors.black)
-                      )
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                          AppLocalizations.of(context)!.alreadyHaveAnAccount,
-                          style: const TextStyle(color: Colors.white)
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pushNamed(context, '/signin'),
-                        child: Text(
-                            AppLocalizations.of(context)!.signIn,
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, decoration: TextDecoration.underline, decorationColor: Colors.white)
+              child: SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    InternationalPhoneNumberInput(
+                        onInputChanged: (PhoneNumber number) {
+                          _authProvider.phoneNumber = number;
+                        },
+                        selectorConfig: const SelectorConfig(
+                          selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                          useEmoji: true,
+                          setSelectorButtonAsPrefixIcon: true,
+                          leadingPadding: 16,
                         ),
-                      )
-                    ],
-                  )
-                ],
+                        selectorTextStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                        ignoreBlank: false,
+                        autoValidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (String? value) {
+                          if (value!.isEmpty || value.length < 6) {
+                            return AppLocalizations.of(context)!.phoneNumberInvalid;
+                          }
+                          return null;
+                        },
+                        autofillHints: const [AutofillHints.telephoneNumber],
+                        initialValue: _authProvider.phoneNumber,
+                        errorMessage: AppLocalizations.of(context)!.phoneNumberInvalid,
+                        inputDecoration: InputDecoration(
+                          hintText: AppLocalizations.of(context)!.phoneNumber,
+                          hintStyle: const TextStyle(color: Colors.black26),
+                          errorStyle: const TextStyle(color: Colors.redAccent),
+                        ),
+                        hintText: AppLocalizations.of(context)!.phoneNumber,
+                        formatInput: false,
+                        keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                        onSubmit: () => _next(),
+                    ),
+                    const SizedBox(height: 30),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                            AppLocalizations.of(context)!.bySigningUpYouAgreeToOur,
+                            style: const TextStyle(color: Colors.white)
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pushNamed(context, '/terms_of_service'),
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+                            overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                          ),
+                          child: Text(
+                              AppLocalizations.of(context)!.termsOfService,
+                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
+                          )
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           )

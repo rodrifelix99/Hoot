@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/services/error_service.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:hoot/models/notification.dart' as n;
 
@@ -15,6 +17,16 @@ class AuthProvider extends ChangeNotifier {
 
   U? _user;
   U? get user => _user;
+
+  PhoneNumber _phoneNumber = PhoneNumber(isoCode: 'US');
+  PhoneNumber get phoneNumber => _phoneNumber;
+  set phoneNumber(PhoneNumber phoneNumber) {
+    _phoneNumber = phoneNumber;
+    notifyListeners();
+  }
+
+  String? _verificationId;
+  String? get verificationId => _verificationId;
 
   int _notificationsCount = 0;
   int get notificationsCount => _notificationsCount;
@@ -28,7 +40,7 @@ class AuthProvider extends ChangeNotifier {
       if (firebaseUser == null) {
         _user = null;
       } else if (_user == null || (_user!.uid != firebaseUser.uid && _user!.uid != 'HOOT-IS-AWESOME')) {
-        _user = await getUserInfo();
+        _user = await getUserInfo() ?? U(uid: firebaseUser.uid);
       } else {
         _user = U(uid: firebaseUser.uid);
       }
@@ -53,6 +65,56 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       print(e.toString());
       return null;
+    }
+  }
+
+  Future verifyPhoneNumber() async {
+    try {
+      _auth.verifyPhoneNumber(
+          phoneNumber: _phoneNumber.phoneNumber!,
+          timeout: const Duration(seconds: 60),
+          verificationCompleted: (PhoneAuthCredential credential) async { },
+          verificationFailed: (FirebaseAuthException e) {
+            print(e.toString());
+          },
+          codeSent: (String verificationId, int? resendToken) {
+            _verificationId = verificationId;
+            notifyListeners();
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            _verificationId = verificationId;
+            notifyListeners();
+          },
+      );
+    } catch (e) {
+      print(e.toString());
+      FirebaseAuthException exception = e as FirebaseAuthException;
+      throw exception.code;
+    }
+  }
+
+  Future<String> signInWithPhoneCredential(String smsCode) async {
+    try {
+      final PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId!,
+        smsCode: smsCode,
+      );
+      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      if (userCredential.user == null) {
+        return "unknown-error";
+      } else if (userCredential.additionalUserInfo!.isNewUser) {
+        _user = U(uid: 'HOOT-IS-AWESOME');
+        notifyListeners();
+        return "new-user";
+      } else {
+        _user = await getUserInfo();
+        notifyListeners();
+        return "success";
+      }
+    } catch (e) {
+      print(e.toString());
+      FirebaseAuthException error = e as FirebaseAuthException;
+      return error.code;
     }
   }
 
@@ -315,6 +377,36 @@ class AuthProvider extends ChangeNotifier {
       _notificationsCount = 0;
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  Future<int> getSubscriptionsCount(String userId) async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('getSubscriptionsCount');
+      final response = await callable.call({
+        'uid': userId,
+      });
+      final data = response.data;
+
+      if (data != null && data is int) {
+        return data;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      print(e.toString());
+      return 0;
+    }
+  }
+
+  Future<bool> deleteAccount() async {
+    try {
+      HttpsCallable callable = _functions.httpsCallable('deleteAccount');
+      final response = await callable.call();
+      return response.data;
+    } catch (e) {
+      print(e.toString());
+      return false;
     }
   }
 

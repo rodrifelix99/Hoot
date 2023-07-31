@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/sign_in_with_apple.dart';
 import 'package:hoot/services/auth_provider.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
 
 import '../services/error_service.dart';
@@ -15,17 +16,26 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  String _countryCode = 'US';
+  final TextEditingController _phoneNumberController = TextEditingController();
   bool _isLoading = false;
 
   bool _isValid() {
-    return _emailController.text.isNotEmpty && _emailController.text.contains('@') && _passwordController.text.isNotEmpty && _passwordController.text.length >= 6;
+    // _phoneNumberController.text.isNotEmpty && _phoneNumberController.text.length >= 6 && _phoneNumberController.text.length <= 15 && is only numbers
+    return _phoneNumberController.text.isNotEmpty && _phoneNumberController.text.length >= 6 && _phoneNumberController.text.length <= 15 && RegExp(r'^[0-9]+$').hasMatch(_phoneNumberController.text);
+  }
+
+  @override
+  void initState() {
+    // get country code for phone number
+    final String isoCode = Localizations.localeOf(context).countryCode ?? 'US';
+    _countryCode = isoCode;
+    super.initState();
   }
 
   Future _signInWithEmailAndPassword() async {
     setState(() => _isLoading = true);
-    String code = await Provider.of<AuthProvider>(context, listen: false).signInWithEmailAndPassword(_emailController.text, _passwordController.text);
+    String code = ''; //await Provider.of<AuthProvider>(context, listen: false).signInWithEmailAndPassword(_emailController.text, _passwordController.text);
 
     if (code != "success" && code != "new-user") {
       setState(() => _isLoading = false);
@@ -71,48 +81,39 @@ class _SignInPageState extends State<SignInPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      TextField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        autofillHints: const [AutofillHints.email],
-                        onChanged: (value) => setState(() {}),
-                        onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.email,
+                      InternationalPhoneNumberInput(
+                        selectorConfig: const SelectorConfig(
+                          selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                          useEmoji: true,
+                          setSelectorButtonAsPrefixIcon: true,
+                          leadingPadding: 16,
                         ),
-                      ),
-                      _emailController.text.isNotEmpty && !_emailController.text.contains('@')
-                          ? Text(
-                          AppLocalizations.of(context)!.emailInvalid,
-                          textAlign: TextAlign.start,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.error
-                          )
-                      )
-                          : const SizedBox(),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        keyboardType: TextInputType.visiblePassword,
-                        textInputAction: TextInputAction.next,
-                        autofillHints: const [AutofillHints.password],
-                        onChanged: (value) => setState(() {}),
-                        onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.password,
+                        onInputChanged: (PhoneNumber number) {
+                          print(_phoneNumberController.text);
+                        },
+                        selectorTextStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                        ignoreBlank: false,
+                        autoValidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (String? value) {
+                          if (value!.isEmpty || value.length < 6) {
+                            return AppLocalizations.of(context)!.phoneNumberInvalid;
+                          }
+                          return null;
+                        },
+                        autofillHints: const [AutofillHints.telephoneNumber],
+                        initialValue: PhoneNumber(isoCode: _countryCode),
+                        errorMessage: AppLocalizations.of(context)!.phoneNumberInvalid,
+                        textFieldController: _phoneNumberController,
+
+                        inputDecoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.phoneNumber,
                         ),
+                        formatInput: false,
+                        keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                        onSaved: (PhoneNumber number) {
+                          print('On Saved: $number');
+                        },
                       ),
-                      _passwordController.text.isNotEmpty && _passwordController.text.length < 6
-                          ? Text(
-                          AppLocalizations.of(context)!.passwordTooShort,
-                          textAlign: TextAlign.start,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.error
-                          )
-                      )
-                          : const SizedBox(),
                       const SizedBox(height: 50),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30),
