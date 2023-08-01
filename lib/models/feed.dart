@@ -13,6 +13,7 @@ class Feed {
   Color? color;
   bool? private;
   bool? nsfw;
+  bool? verified;
   FeedType? type;
   final List<String>? subscribers;
   final List<String>? requests;
@@ -27,6 +28,7 @@ class Feed {
     this.color,
     this.private,
     this.nsfw,
+    this.verified,
     this.type,
     this.subscribers,
     this.requests,
@@ -44,6 +46,7 @@ class Feed {
       type: json['type'] != null ? FeedType.values.firstWhere((e) => e.toString().split('.').last == json['type']) : null,
       private: json['private'],
       nsfw: json['nsfw'],
+      verified: json['verified'],
       subscribers: json['subscribers'] != null ? List<String>.from(json['subscribers']) : null,
       requests: json['requests'] != null ? List<String>.from(json['requests']) : null,
       posts: json['posts'] != null ? (json['posts'] as List).map((i) => Post.fromJson(i)).toList() : null,

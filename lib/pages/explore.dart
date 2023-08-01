@@ -409,7 +409,7 @@ class _ExplorePageState extends State<ExplorePage> {
                         AppLocalizations.of(context)!.noteToUserDetails,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
-                      const SizedBox(height: 100),
+                      const SizedBox(height: 20),
                     ],
                   )
               ),

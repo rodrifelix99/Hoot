@@ -1172,6 +1172,9 @@ exports.recentlyAddedFeeds = functions.region("europe-west1").https.onCall(async
     const results = [];
     for (let i = 0; i < 10; i++) {
       const feed = feeds.docs[i];
+      if (!feed || !feed.data().createdAt) {
+        continue;
+      }
       const feedObj = await getFeedObject(feed.ref.parent.parent.id, feed.id, false, true, true);
       if (feedObj != null) {
         results.push(feedObj);
@@ -1251,6 +1254,54 @@ exports.findContacts = functions.region("europe-west1").https.onCall(async (data
         }
         results.push(userObj);
       }
+    }
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.blockUser = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { blockedUserId } = data;
+    const blockedRef = db.collection("users").doc(uid).collection("blocked").doc(blockedUserId);
+    const blocked = await blockedRef.get();
+    if (blocked.exists) {
+      await blockedRef.delete();
+    } else {
+      // unsubscribe from all feeds of blocked user
+      const subscriptions = await db.collection("users").doc(blockedUserId).collection("subscriptions").get();
+      const batch = db.batch();
+      for (const subscription of subscriptions.docs) {
+        const subscribedRef = db.collection("users").doc(blockedUserId).collection("feeds").doc(subscription.id).collection("subscribers").doc(uid);
+        batch.delete(subscribedRef);
+        const userSubscribedRef = db.collection("users").doc(uid).collection("subscriptions").doc(subscription.id);
+        batch.delete(userSubscribedRef);
+      }
+      await batch.commit();
+      await blockedRef.set({ createdAt: admin.firestore.FieldValue.serverTimestamp() });
+    }
+    return true;
+  } catch (e) {
+    error(e);
+    return false;
+  }
+});
+
+exports.listBlockedUsers = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const uid = context.auth.uid;
+    const { startAfter } = data;
+    const startAfterTimestamp = startAfter ? admin.firestore.Timestamp.fromDate(new Date(startAfter)) : admin.firestore.Timestamp.fromDate(new Date());
+    const blocked = await db.collection("users").doc(uid).collection("blocked").orderBy("createdAt", "desc").startAfter(startAfterTimestamp).limit(10).get();
+    const results = [];
+    for (const block of blocked.docs) {
+      const user = await getUser(block.id, false);
+      if (!user) {
+        continue;
+      }
+      results.push(user);
     }
     return JSON.stringify(results);
   } catch (e) {

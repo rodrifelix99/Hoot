@@ -92,11 +92,47 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   Feed? _mostSubscribedFeed() {
     if ((_user.feeds?.length ?? 0) <= 1) return null;
     Feed mostSubscribed = _user.feeds!.first;
-    _user.feeds!.forEach((feed) {
-      if (feed.subscribers!.length > mostSubscribed.subscribers!.length) mostSubscribed = feed;
-    });
-    if (mostSubscribed.subscribers!.isEmpty || mostSubscribed.subscribers!.length == 1) return null;
+    for (var feed in _user.feeds ?? []) {
+      if ((feed.subscribers ?? []).length > (mostSubscribed.subscribers ?? []).length) mostSubscribed = feed;
+    }
+    if ((mostSubscribed.subscribers ?? []).isEmpty || (mostSubscribed.subscribers ?? []).length == 1) return null;
     return mostSubscribed;
+  }
+
+  void _showContextMenu() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 10),
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              leading: const LineIcon(LineIcons.userShield),
+              title: Text(AppLocalizations.of(context)!.reportUsername(_user.username ?? '')),
+              onTap: () =>
+              {
+                Navigator.of(context).pop(),
+                Navigator.of(context).pushNamed('/report', arguments: [_user])
+              },
+            ),
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              leading: const LineIcon(LineIcons.removeUser),
+              title: Text(AppLocalizations.of(context)!.blockUser(_user.username ?? '')),
+              onTap: () => {
+                Navigator.of(context).pop(),
+                ToastService.showToast(
+                    context, AppLocalizations.of(context)!.comingSoon, false)
+              },
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _profileIntro() => Stack(
@@ -232,7 +268,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
             padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
           ),
-          onPressed: () => ToastService.showToast(context, AppLocalizations.of(context)!.comingSoon, false),
+          onPressed: _showContextMenu,
         ),
       ],
     ),
@@ -349,14 +385,14 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                             onForcePressPeak: (details) => Navigator.of(context).pushNamed('/feed', arguments: feed),
                             child: _selectedFeedIndex == _user.feeds?.indexOf(feed) ? Chip(
                               label: Text(feed.title),
-                              avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : feed.private == true ? LineIcon(LineIcons.lock, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : null,
+                              avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : feed.private == true ? LineIcon(LineIcons.lock, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : feed.verified == true ? Icon(Icons.verified_rounded, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : null,
                               labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
                               ),
                               backgroundColor: feed.color,
                             ) : Chip(
-                              avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: Theme.of(context).colorScheme.primary) : feed.private == true ? LineIcon(LineIcons.lock, color: Theme.of(context).colorScheme.primary) : null,
+                              avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: Theme.of(context).colorScheme.primary) : feed.private == true ? LineIcon(LineIcons.lock, color: Theme.of(context).colorScheme.primary) : feed.verified == true ? Icon(Icons.verified_rounded, color: Theme.of(context).colorScheme.primary) : null,
                               label: Text(feed.title),
                               // avatar: LineIcon(LineIcons.user)
                             ),

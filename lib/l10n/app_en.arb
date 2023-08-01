@@ -589,5 +589,19 @@
 	"deleteAccountDescription": "This will delete your account and all your data. This action is irreversible.",
 	"deleteAccountConfirmation": "Are you sure you want to delete your account?",
 	"deleteAccountFailed": "Failed to delete account",
-	"deleteAccountSuccess": "Account deleted successfully"
+	"deleteAccountSuccess": "Account deleted successfully",
+	"blockUser": "Block @{username}",
+	"unblockUser": "Unblock @{username}",
+	"blockUserDescription": "This will block @{username} and they won't be able to see your posts or interact with you.",
+	"aboutYourData": "About Your Data",
+	"aboutYourDataTitle1": "Your phone number is a must",
+	"aboutYourDataDescription1": "We need your phone number to verify your identity and to keep your account secure.",
+	"aboutYourDataTitle2": "But, is it safe?",
+	"aboutYourDataDescription2": "We use the latest security technology to keep your authentication data safe.",
+	"aboutYourDataTitle3": "We encrypt your phone number",
+	"aboutYourDataDescription3": "We encrypt your phone number and store it securely.",
+	"aboutYourDataTitle4": "No one can see your phone number",
+	"aboutYourDataDescription4": "No one can see your phone number, not even us, it's all encrypted.",
+	"aboutYourDataTitle5": "Your data is private",
+	"aboutYourDataDescription5": "We don't share your data with anyone unless you tell us to."
 }

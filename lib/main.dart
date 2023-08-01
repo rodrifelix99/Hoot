@@ -158,8 +158,8 @@ Future<void> main() async {
                       case '/report':
                         final List<dynamic> args = settings.arguments as List<dynamic>;
                         final U user = args[0] as U;
-                        final String postId = args[1] as String ?? '';
-                        final String feedId = args[2] as String ?? '';
+                        final String postId = args.length >= 2 ? args[1] as String : '';
+                        final String feedId = args.length >= 3 ? args[2] as String : '';
                         return MaterialPageRoute(builder: (context) => ReportPage(user: user, postId: postId, feedId: feedId));
                       default:
                         return MaterialPageRoute(builder: (context) => HomePage());

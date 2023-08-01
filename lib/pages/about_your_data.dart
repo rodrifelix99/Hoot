@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:octo_image/octo_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AboutYourDataPage extends StatelessWidget {
   const AboutYourDataPage({super.key});
 
   List<Widget> _pages(BuildContext context) {
     return [
-      buildPage(context, 'Your phone number is a must', 'We need your phone number to verify your identity and to keep your account secure.', null, 'https://i.redd.it/7sszbzxboor21.gif'),
-      buildPage(context, 'But, is it safe?', 'We use the latest security technology to keep your authentication data safe.', null, 'https://i.pinimg.com/originals/ee/29/98/ee2998cdb1cf6a6bf66bf65fe0076fd2.gif'),
-      buildPage(context, 'We encrypt your phone number', 'We encrypt your phone number and store it securely.', null, 'https://images.squarespace-cdn.com/content/v1/5941161b2e69cf3442450095/1595083939599-22FFDGXOH6L7BOWWUP27/loop-threads.gif'),
-      buildPage(context, 'No one can see your phone number', 'No one can see your phone number, not even us, it\'s all encrypted.', null, 'https://cdn.dribbble.com/users/1518775/screenshots/6697986/fangers_loop_dribbble.gif'),
-      buildPage(context, 'Your data is private', 'We don\'t share your data with anyone unless you tell us to.', null, null),
+      buildPage(context, AppLocalizations.of(context)!.aboutYourDataTitle1, AppLocalizations.of(context)!.aboutYourDataDescription1, null, 'https://i.redd.it/7sszbzxboor21.gif'),
+      buildPage(context, AppLocalizations.of(context)!.aboutYourDataTitle2, AppLocalizations.of(context)!.aboutYourDataDescription2, null, 'https://i.pinimg.com/originals/ee/29/98/ee2998cdb1cf6a6bf66bf65fe0076fd2.gif'),
+      buildPage(context, AppLocalizations.of(context)!.aboutYourDataTitle3, AppLocalizations.of(context)!.aboutYourDataDescription3, null, 'https://images.squarespace-cdn.com/content/v1/5941161b2e69cf3442450095/1595083939599-22FFDGXOH6L7BOWWUP27/loop-threads.gif'),
+      buildPage(context, AppLocalizations.of(context)!.aboutYourDataTitle4, AppLocalizations.of(context)!.aboutYourDataDescription4, null, 'https://cdn.dribbble.com/users/1518775/screenshots/6697986/fangers_loop_dribbble.gif'),
+      buildPage(context, AppLocalizations.of(context)!.aboutYourDataTitle5, AppLocalizations.of(context)!.aboutYourDataDescription5, null, null),
     ];
   }
 
@@ -97,7 +98,7 @@ class AboutYourDataPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: Text('About your data'),
+        title: Text(AppLocalizations.of(context)!.aboutYourData),
       ),
       body: PageView(
         children: _pages(context),
