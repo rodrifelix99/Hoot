@@ -182,60 +182,22 @@ class _ExplorePageState extends State<ExplorePage> {
             children: [
               _top10Feeds.isNotEmpty ? SizedBox(
                 width: MediaQuery.of(context).size.width,
-                child: Stack(
+                child: Column(
                   children: [
-                    Positioned(
-                      top: 0,
-                      bottom: 50,
-                      left: 0,
-                      right: 0,
-                      child: Blur(
-                        blur: 20,
-                        blurColor: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-                        child: Image.network(
-                          _authProvider.user!.largeProfilePictureUrl ?? '',
-                          width: MediaQuery.of(context).size.width,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                    const SizedBox(height: 50),
+                    Text(
+                      AppLocalizations.of(context)!.top10MostSubscribed,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    Positioned(
-                      bottom: 50,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [
-                                Theme.of(context).colorScheme.surface,
-                                Colors.transparent
-                              ],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter
-                          ),
-                        ),
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        const SizedBox(height: 50),
-                        Text(
-                          AppLocalizations.of(context)!.top10MostSubscribed,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 30),
-                        Swiper(
-                          itemCount: _top10Feeds.length,
-                          itemWidth: MediaQuery.of(context).size.width * 0.8,
-                          itemHeight: MediaQuery.of(context).size.width * 0.9,
-                          layout: SwiperLayout.STACK,
-                          onTap: (index) => Navigator.pushNamed(context, '/profile', arguments: [_top10Feeds[index].user, _top10Feeds[index].id]),
-                          itemBuilder: (context, index) => _card(context, index),
-                        )
-                      ],
+                    const SizedBox(height: 30),
+                    Swiper(
+                      itemCount: _top10Feeds.length,
+                      itemWidth: MediaQuery.of(context).size.width * 0.8,
+                      itemHeight: MediaQuery.of(context).size.width * 0.9,
+                      layout: SwiperLayout.STACK,
+                      onTap: (index) => Navigator.pushNamed(context, '/profile', arguments: [_top10Feeds[index].user, _top10Feeds[index].id]),
+                      itemBuilder: (context, index) => _card(context, index),
                     )
                   ],
                 ),
@@ -373,10 +335,10 @@ class _ExplorePageState extends State<ExplorePage> {
                       ) : Column(
                         children: [
                           SkeletonListTile(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              hasSubtitle: true,
-                              hasLeading: true,
-                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            hasSubtitle: true,
+                            hasLeading: true,
+                          ),
                           SkeletonListTile(
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             hasSubtitle: true,
