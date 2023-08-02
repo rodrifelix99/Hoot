@@ -133,7 +133,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     leading: const Icon(Icons.verified_rounded),
                     title: Text(AppLocalizations.of(context)!.aboutUs),
                     trailing: const Icon(Icons.arrow_forward_ios),
-                    onTap: () {},
+                    onTap: () => Navigator.pushNamed(context, '/about_us'),
                   ),
                   ListTile(
                     leading: const Icon(Icons.delete_rounded),

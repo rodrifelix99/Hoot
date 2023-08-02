@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/pages/about_us.dart';
 import 'package:hoot/pages/create_feed.dart';
 import 'package:hoot/pages/create_post.dart';
 import 'package:hoot/pages/edit_profile.dart';
@@ -161,6 +162,8 @@ Future<void> main() async {
                         final String postId = args.length >= 2 ? args[1] as String : '';
                         final String feedId = args.length >= 3 ? args[2] as String : '';
                         return MaterialPageRoute(builder: (context) => ReportPage(user: user, postId: postId, feedId: feedId));
+                      case '/about_us':
+                        return MaterialPageRoute(builder: (context) => AboutUsPage());
                       default:
                         return MaterialPageRoute(builder: (context) => HomePage());
                     }
