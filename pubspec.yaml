@@ -75,6 +75,10 @@ dependencies:
   flutter_animated_icons: ^1.0.1
   intl_phone_number_input: ^0.7.3+1
   webview_flutter: ^4.2.2
+  flutter_tenor_gif_picker: ^0.0.1
+  uri_content: ^1.0.0
+  ogp_data_extract: ^0.1.4
+  url_launcher: ^6.1.12
 
 dev_dependencies:
   flutter_test:

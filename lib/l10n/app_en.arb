@@ -603,5 +603,13 @@
 	"aboutYourDataTitle4": "No one can see your phone number",
 	"aboutYourDataDescription4": "No one can see your phone number, not even us, it's all encrypted.",
 	"aboutYourDataTitle5": "Your data is private",
-	"aboutYourDataDescription5": "We don't share your data with anyone unless you tell us to."
+	"aboutYourDataDescription5": "We don't share your data with anyone unless you tell us to.",
+	"selectFeed": "Select a feed to hoot to",
+	"addImage": "Add Image",
+	"addVideo": "Add Video",
+	"addSound": "Add Sound",
+	"addMusic": "Add Music",
+	"addGif": "Add GIF",
+	"onlyOneUrl": "We suggest you to add only one URL per hoot",
+	"clickToViewThisWebsite": "Click to view this website"
 }

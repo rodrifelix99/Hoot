@@ -1,5 +1,6 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:hoot/components/url_preview_component.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:hoot/components/avatar.dart';
@@ -42,6 +43,20 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
 
   void _handleProfileTap() {
     Navigator.of(context).pushNamed('/profile', arguments: [widget.post.user, widget.post.feed?.id]);
+  }
+
+  String? _getUrl() {
+    RegExp exp = RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
+    Iterable<RegExpMatch> matches = exp.allMatches(widget.post.text ?? '');
+    if (matches.isNotEmpty) {
+      String url = matches.first.group(0)!; // Extract the matched URL
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        return 'http://$url'; // Add http:// prefix if not present
+      }
+      return url;
+    } else {
+      return null;
+    }
   }
 
   Future<void> _deletePost() async {
@@ -331,6 +346,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
                   ) : null,
                 ),
               ) : const SizedBox(),
+              _getUrl() != null ? UrlPreviewComponent(url: _getUrl()!) : const SizedBox(),
               widget.post.reFeededFrom != null && !_isEmptyRefeed() ? Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: GestureDetector(
@@ -348,56 +364,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
                           'ReFeeded from',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            ProfileAvatar(image: widget.post.reFeededFrom?.user?.smallProfilePictureUrl ?? '', size: 50, radius: (widget.post.reFeededFrom?.user?.radius ?? 100)/3),
-                            const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                GestureDetector(
-                                    onTap: _handleProfileTap,
-                                    child: NameComponent(user: widget.post.reFeededFrom!.user!)
-                                ),
-                                Text(
-                                  timeago.format(widget.post.reFeededFrom!.createdAt ?? DateTime.now()),
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          widget.post.reFeededFrom!.text ?? '',
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        const SizedBox(height: 10),
-                        widget.post.reFeededFrom!.media != null && widget.post.reFeededFrom!.media!.isNotEmpty ?
-                        Container(
-                          height: 300,
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Swiper(
-                              itemCount: widget.post.reFeededFrom!.media!.length,
-                              itemBuilder: (context, index) {
-                                return ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: ImageComponent(url: widget.post.media![index], width: double.infinity, height: 300, fit: BoxFit.cover)
-                                );
-                              },
-                              loop: widget.post.reFeededFrom!.media!.length >= 5,
-                              pagination: widget.post.reFeededFrom!.media!.length > 1 ? const SwiperPagination(
-                                alignment: Alignment.bottomCenter,
-                                builder: DotSwiperPaginationBuilder(
-                                  color: Colors.white,
-                                  activeColor: Colors.blue,
-                                ),
-                              ) : null
-                          ),
-                        )
-                            : const SizedBox(),
+                        PostComponent(post: widget.post.reFeededFrom!, isSoloRefeed: false, onRefeed: _deletePost)
                       ],
                     ),
                   ),

@@ -365,7 +365,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                     children: [
-                      _isCurrentUser ? GestureDetector(
+                      _isCurrentUser && (_authProvider.user?.feeds?.length ?? 0) < 25 ? GestureDetector(
                         onTap: () => Navigator.of(context).pushNamed('/create_feed'),
                         child: Chip(
                           label: LineIcon(LineIcons.plus, color: Theme.of(context).colorScheme.primary, size: 16),

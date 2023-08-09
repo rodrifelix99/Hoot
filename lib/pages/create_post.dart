@@ -1,6 +1,10 @@
 import 'dart:io';
-
+import 'dart:convert';
+import 'package:hoot/components/url_preview_component.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,6 +16,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:provider/provider.dart';
+import 'package:uri_content/uri_content.dart';
 
 import '../models/feed.dart';
 import '../services/auth_provider.dart';
@@ -29,6 +34,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
   late AuthProvider _authProvider;
   final TextEditingController _textEditingController = TextEditingController();
   final List<File> _images = [];
+  final List<String> _gifs = [];
   bool _isLoading = false;
   String _selectedFeedId = '';
   
@@ -36,6 +42,12 @@ class _CreatePostPageState extends State<CreatePostPage> {
   void initState() {
     _feedProvider = Provider.of<FeedProvider>(context, listen: false);
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    TenorGifPicker.init(
+        apiKey: 'AIzaSyCnfxvwEYAkFGxYmoKd03VPyXoATuMCXZw',
+        locale: 'pt_PT',
+        clientKey: 'test_app',
+        country: 'PT',
+    );
     super.initState();
     _getFeeds();
   }
@@ -101,6 +113,9 @@ class _CreatePostPageState extends State<CreatePostPage> {
           );
           media.add(url);
         }
+        for (String gif in _gifs) {
+          media.add(gif);
+        }
         bool code = await _feedProvider.createPost(
           context,
           feedId: _selectedFeedId,
@@ -124,11 +139,50 @@ class _CreatePostPageState extends State<CreatePostPage> {
     }
   }
 
+  Future _pickGif() async {
+    dynamic data = await TenorGifPickerPage.showAsBottomSheet(context,
+        customCategories: _authProvider.user!.feeds!.map((feed) => feed.title).toList() + ['Trending'] + ['Featured'] + ['Reactions'],
+        preLoadText: _textEditingController.text.isNotEmpty ? _textEditingController.text : 'Hoot',
+    );
+    if (data != null) {
+      setState(() {
+        _gifs.add(data?.mediaFormats['gif'].url);
+      });
+    }
+  }
+
+  int countUrls() {
+    RegExp exp = RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
+    Iterable<RegExpMatch> matches = exp.allMatches(_textEditingController.text);
+    return matches.length;
+  }
+
+  String? _getUrl() {
+    RegExp exp = RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
+    Iterable<RegExpMatch> matches = exp.allMatches(_textEditingController.text);
+    if (matches.isNotEmpty) {
+      String url = matches.first.group(0)!; // Extract the matched URL
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        return 'http://$url'; // Add http:// prefix if not present
+      }
+      return url;
+    } else {
+      return null;
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.createPost),
+        actions: [
+          IconButton(
+            onPressed: _isValid() ? _createPost : null,
+            icon: const LineIcon(LineIcons.paperPlane),
+          ),
+        ],
       ),
       body: _isLoading ? Center(child: LoadingAnimationWidget.inkDrop(
           color: Theme.of(context).colorScheme.onSurface,
@@ -138,28 +192,53 @@ class _CreatePostPageState extends State<CreatePostPage> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            _authProvider.user!.feeds!.isNotEmpty ? DropdownButton(
-              value: _selectedFeedId,
-              onChanged: (value) => setState(() => _selectedFeedId = value.toString()),
-              borderRadius: BorderRadius.circular(10),
-              items: _authProvider.user!.feeds!.map((feed) => DropdownMenuItem(
-                value: feed.id,
-                child: Row(
-                  children: [
-                    Text(feed.title),
-                    const SizedBox(width: 10),
-                    feed.private == true ? const LineIcon(LineIcons.lock) : const SizedBox(),
-                    feed.nsfw == true ? const LineIcon(LineIcons.exclamationTriangle) : const SizedBox(),
-                  ],
-                ),
-              )).toList(),
+            _authProvider.user!.feeds!.isNotEmpty ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      AppLocalizations.of(context)!.selectFeed,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  DropdownButton(
+                    value: _selectedFeedId,
+                    onChanged: (value) => setState(() => _selectedFeedId = value.toString()),
+                    borderRadius: BorderRadius.circular(10),
+                    isExpanded: true,
+                    items: _authProvider.user!.feeds!.map((feed) => DropdownMenuItem(
+                      value: feed.id,
+                      child: Row(
+                        children: [
+                          Text(feed.title),
+                          const SizedBox(width: 10),
+                          feed.private == true ? const LineIcon(LineIcons.lock) : const SizedBox(),
+                          feed.nsfw == true ? const LineIcon(LineIcons.exclamationTriangle) : const SizedBox(),
+                        ],
+                      ),
+                    )).toList(),
+                  ),
+                ],
+              ),
             ) : const Center(child: CircularProgressIndicator()),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: TextField(
                 controller: _textEditingController,
                 onChanged: (value) => setState(() {}),
+                contentInsertionConfiguration: ContentInsertionConfiguration(
+                  onContentInserted : (value) async {
+                    FocusScope.of(context).unfocus();
+                    final uriContent = UriContent();
+                    final uri = Uri.parse(value.uri);
+                    final Uint8List data = await uriContent.from(uri);
+                    setState(() {
+                      _images.add(File.fromRawPath(data));
+                    });
+                  },
+                  allowedMimeTypes: ["image/png", "image/jpeg", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/vnd.microsoft.icon"],
+                ),
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.postPlaceholder,
                   contentPadding: const EdgeInsets.all(20),
@@ -167,58 +246,122 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 maxLines: 5,
               ),
             ),
-            _images.length < 10 ? GestureDetector(
-              onTap: _pickImage,
-              child: Chip(
-                avatar: LineIcon(LineIcons.plus),
-                label: Text('Add image'),
+            countUrls() > 1 ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  AppLocalizations.of(context)!.onlyOneUrl,
+                  textAlign: TextAlign.left,
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.red),
+                ),
               ),
+            ) : const SizedBox(),
+            _getUrl() != null ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: UrlPreviewComponent(url: _getUrl()!, isClickable: false),
+            ) : const SizedBox(),
+            _images.length + _gifs.length < 10 ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: _pickImage,
+                  child: Chip(
+                    avatar: const LineIcon(LineIcons.plus),
+                    label: Text(AppLocalizations.of(context)!.addImage),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: _pickGif,
+                  child: Chip(
+                    avatar: const LineIcon(LineIcons.plus),
+                    label: Text(AppLocalizations.of(context)!.addGif),
+                  ),
+                ),
+              ],
             ) : const SizedBox(),
             const SizedBox(height: 10),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: Row(
-                children: _images.map((image) => Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: OctoImage(
-                        image: FileImage(image),
-                        width: 150,
-                        height: 150,
-                        fit: BoxFit.cover,
-                        placeholderBuilder: OctoPlaceholder.blurHash(
-                          'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+              child: Column(
+                children: [
+                  Row(
+                    children: _images.map((image) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: OctoImage(
+                            image: FileImage(image),
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                            placeholderBuilder: OctoPlaceholder.blurHash(
+                              'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                            ),
+                            errorBuilder: OctoError.icon(color: Colors.red),
                         ),
-                        errorBuilder: OctoError.icon(color: Colors.red),
-                    ),
-                      ),
-                    Positioned(
-                      top: 5,
-                      right: 5,
-                      child: GestureDetector(
-                        onTap: () => setState(() => _images.remove(image)),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(50),
                           ),
-                          child: const Icon(Icons.close, color: Colors.white),
+                        Positioned(
+                          top: 5,
+                          right: 5,
+                          child: GestureDetector(
+                            onTap: () => setState(() => _images.remove(image)),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: const Icon(Icons.close, color: Colors.white),
+                            ),
+                          ),
                         ),
+                        ],
                       ),
-                    ),
-                    ],
+                    )).toList(),
                   ),
-                )).toList(),
+                  Row(
+                    children: _gifs.map((image) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: OctoImage(
+                              image: NetworkImage(image),
+                              width: 150,
+                              height: 150,
+                              fit: BoxFit.cover,
+                              placeholderBuilder: OctoPlaceholder.blurHash(
+                                'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                              ),
+                              errorBuilder: OctoError.icon(color: Colors.red),
+                            ),
+                          ),
+                          Positioned(
+                            top: 5,
+                            right: 5,
+                            child: GestureDetector(
+                              onTap: () => setState(() => _gifs.remove(image)),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: const Icon(Icons.close, color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )).toList(),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _isValid() ? _createPost : null,
-              child: Text(AppLocalizations.of(context)!.publish),
-            )
           ],
         ),
       ),
