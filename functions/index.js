@@ -319,6 +319,9 @@ exports.deleteUserDocument = functions.region("europe-west1").auth.user().onDele
 exports.getUserInfo = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const user = await getUser(context.auth.uid, true);
+    await db.collection("users").doc(context.auth.uid).update({
+      lastOnline: admin.firestore.FieldValue.serverTimestamp(),
+    });
     return user;
   } catch (e) {
     error(e);
