@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -36,8 +37,62 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading ? const Center(
-        child: CircularProgressIndicator()
+    return _isLoading ? GestureDetector(
+      onTap: widget.isClickable ? _visitUrl : null,
+      child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Theme.of(context).colorScheme.secondary.withOpacity(0.5)),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SkeletonAvatar(
+                  style: SkeletonAvatarStyle(
+                    width: 100,
+                    height: 100,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SkeletonParagraph(
+                          style: const SkeletonParagraphStyle(
+                            lines: 1,
+                            spacing: 10,
+                            lineStyle: SkeletonLineStyle(
+                              height: 10,
+                              width: double.infinity,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SkeletonParagraph(
+                          style: const SkeletonParagraphStyle(
+                            lines: 2,
+                            spacing: 10,
+                            lineStyle: SkeletonLineStyle(
+                              height: 10,
+                              width: double.infinity,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
     ) : GestureDetector(
       onTap: widget.isClickable ? _visitUrl : null,
       child: Container(

@@ -325,15 +325,14 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
               ) : const SizedBox(),
               const SizedBox(height: 10),
               widget.post.media != null && widget.post.media!.isNotEmpty ? Container(
-                height: 300,
-                width: double.infinity,
+                constraints: const BoxConstraints(maxHeight: 400, minHeight: 100, maxWidth: double.infinity, minWidth: 100),
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Swiper(
                   itemCount: widget.post.media!.length,
                   itemBuilder: (context, index) {
                     return ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: ImageComponent(url: widget.post.media![index], width: double.infinity, height: 300, fit: BoxFit.cover)
+                        child: ImageComponent(url: widget.post.media![index], width: double.infinity)
                     );
                   },
                   loop: widget.post.media!.length >= 5,
