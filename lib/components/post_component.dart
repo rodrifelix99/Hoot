@@ -316,12 +316,9 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
                 ],
               ),
               widget.post.text != null && widget.post.text!.isNotEmpty ? const SizedBox(height: 20) : const SizedBox(),
-              widget.post.text != null && widget.post.text!.isNotEmpty ? GestureDetector(
-                onTap: () => Navigator.of(context).pushNamed('/post', arguments: widget.post),
-                child: Text(
-                  widget.post.text ?? '',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
+              widget.post.text != null && widget.post.text!.isNotEmpty ? Text(
+                widget.post.text ?? '',
+                style: Theme.of(context).textTheme.titleSmall,
               ) : const SizedBox(),
               const SizedBox(height: 10),
               widget.post.media != null && widget.post.media!.isNotEmpty ? Container(

@@ -1,5 +1,7 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/empty_message.dart';
+import 'package:hoot/pages/post.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:line_icons/line_icon.dart';
@@ -103,11 +105,17 @@ class _FeedPageState extends State<FeedPage> {
                     Text(_timeUntilLaunch(), style: Theme.of(context).textTheme.headlineLarge),
                     Text('Until Hoot is released', style: Theme.of(context).textTheme.headlineSmall),
                     const SizedBox(height: 30),
-                    PostComponent(post: post),
+                    OpenContainer(
+                      closedBuilder: (context, action) => PostComponent(post: post),
+                      openBuilder: (context, action) => PostPage(post: post)
+                    )
                   ],
                 );
               } else {
-                return PostComponent(post: post);
+                return OpenContainer(
+                    closedBuilder: (context, action) => PostComponent(post: post),
+                    openBuilder: (context, action) => PostPage(post: post)
+                );
               }
             }
         ) : Center(

@@ -96,6 +96,7 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
     ) : GestureDetector(
       onTap: widget.isClickable ? _visitUrl : null,
       child: Container(
+        constraints: const BoxConstraints(minHeight: 100),
         decoration: BoxDecoration(
           border: Border.all(color: Theme.of(context).colorScheme.secondary.withOpacity(0.5)),
           borderRadius: BorderRadius.circular(10),
@@ -103,10 +104,10 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: ClipRRect(
+            Expanded(
+              child: Container(
+                width: 100,
+                child: ClipRRect(
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10),
                     bottomLeft: Radius.circular(10),
@@ -116,20 +117,37 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
                     placeholderBuilder: OctoPlaceholder.blurHash(
                       r'LSJ?=;V[Osax0;NGs:WC~RM|$%ae',
                     ),
+                    width: 100,
                     fit: BoxFit.cover,
                   ),
                 ),
+              ),
             ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text(_ogp.title ?? AppLocalizations.of(context)!.clickToViewThisWebsite, style: Theme.of(context).textTheme.bodyLarge),
-                    Text(_ogp.description ?? "", style: Theme.of(context).textTheme.bodyMedium),
-                    Text(_ogp.url ?? widget.url, style: Theme.of(context).textTheme.bodySmall),
+                    Text(
+                      _ogp.title ?? AppLocalizations.of(context)!.clickToViewThisWebsite,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    Text(
+                      _ogp.description ?? "",
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    Text(
+                      _ogp.url ?? widget.url,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ],
                 ),
               ),

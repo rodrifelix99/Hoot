@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -146,7 +147,9 @@ class FeedProvider extends ChangeNotifier {
       Provider.of<AuthProvider>(context, listen: false).addFeedToUser(feed);
       return res.data;
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       return false;
     }
   }
@@ -159,7 +162,9 @@ class FeedProvider extends ChangeNotifier {
       Provider.of<AuthProvider>(context, listen: false).removeFeedFromUser(feedId);
       return res.data;
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       return false;
     }
   }
@@ -178,7 +183,9 @@ class FeedProvider extends ChangeNotifier {
       }
       return feeds;
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       return [];
     }
   }
@@ -199,7 +206,9 @@ class FeedProvider extends ChangeNotifier {
       notifyListeners();
       _setPrefs();
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
   }
 
@@ -220,7 +229,9 @@ class FeedProvider extends ChangeNotifier {
       }
       return posts;
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       return [];
     }
   }
@@ -232,7 +243,9 @@ class FeedProvider extends ChangeNotifier {
       final res = await callable.call({'userId': userId, 'feedId': feedId});
       return res.data;
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       return false;
     }
   }
@@ -244,7 +257,9 @@ class FeedProvider extends ChangeNotifier {
       final res = await callable.call({'userId': userId, 'feedId': feedId});
       return res.data;
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       return false;
     }
   }
@@ -256,7 +271,9 @@ class FeedProvider extends ChangeNotifier {
       final res = await callable.call({'userId': userId, 'feedId': feedId});
       return res.data;
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       return false;
     }
   }
@@ -275,7 +292,9 @@ class FeedProvider extends ChangeNotifier {
       }
       return users;
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       return [];
     }
   }
@@ -287,7 +306,9 @@ class FeedProvider extends ChangeNotifier {
       final res = await callable.call({'userId': userId, 'feedId': feedId});
       return res.data;
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       return false;
     }
   }
@@ -299,7 +320,9 @@ class FeedProvider extends ChangeNotifier {
       final res = await callable.call({'userId': userId, 'feedId': feedId});
       return res.data;
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       return false;
     }
   }

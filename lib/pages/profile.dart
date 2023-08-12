@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar.dart';
@@ -6,6 +7,7 @@ import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/subscribe_component.dart';
 import 'package:hoot/models/feed.dart';
+import 'package:hoot/pages/post.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:line_icons/line_icon.dart';
@@ -504,7 +506,10 @@ class _FeedPostsState extends State<FeedPosts> {
     ) :
     widget.user.feeds?[widget.feedIndex].posts?.isNotEmpty == true ? Column(
       children: [
-        for (Post post in widget.user.feeds?[widget.feedIndex].posts ?? []) PostComponent(post: post),
+        for (Post post in widget.user.feeds?[widget.feedIndex].posts ?? []) OpenContainer(
+            closedBuilder: (context, action) => PostComponent(post: post),
+            openBuilder: (context, action) => PostPage(post: post)
+        ),
       ],
     ) : widget.user.uid != _authProvider.user?.uid ? Center(
       child: NothingToShowComponent(

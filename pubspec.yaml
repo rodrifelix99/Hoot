@@ -79,6 +79,7 @@ dependencies:
   uri_content: ^1.0.0
   ogp_data_extract: ^0.1.4
   url_launcher: ^6.1.12
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:
