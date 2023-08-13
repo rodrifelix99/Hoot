@@ -507,6 +507,7 @@ class _FeedPostsState extends State<FeedPosts> {
     widget.user.feeds?[widget.feedIndex].posts?.isNotEmpty == true ? Column(
       children: [
         for (Post post in widget.user.feeds?[widget.feedIndex].posts ?? []) OpenContainer(
+            closedColor: Theme.of(context).colorScheme.surface,
             closedBuilder: (context, action) => PostComponent(post: post),
             openBuilder: (context, action) => PostPage(post: post)
         ),

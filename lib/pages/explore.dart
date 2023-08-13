@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:blur/blur.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/subscribe_component.dart';
 import 'package:hoot/components/type_box_component.dart';
+import 'package:hoot/pages/search_by_genre.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
@@ -227,9 +229,10 @@ class _ExplorePageState extends State<ExplorePage> {
                   children: _popularTypes.isNotEmpty ?  [
                     for (FeedType type in _popularTypes) Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, '/search_by_genre', arguments: type),
-                        child: TypeBoxComponent(type: type),
+                      child: OpenContainer(
+                          closedColor: Colors.transparent,
+                          closedBuilder: (context, open) => TypeBoxComponent(type: type),
+                          openBuilder: (context, close) => SearchByGenrePage(type: type)
                       ),
                     ),
                     const SizedBox(width: 10),

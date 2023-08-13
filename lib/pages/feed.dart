@@ -106,6 +106,7 @@ class _FeedPageState extends State<FeedPage> {
                     Text('Until Hoot is released', style: Theme.of(context).textTheme.headlineSmall),
                     const SizedBox(height: 30),
                     OpenContainer(
+                      closedColor: Theme.of(context).colorScheme.surface,
                       closedBuilder: (context, action) => PostComponent(post: post),
                       openBuilder: (context, action) => PostPage(post: post)
                     )
@@ -113,6 +114,7 @@ class _FeedPageState extends State<FeedPage> {
                 );
               } else {
                 return OpenContainer(
+                    closedColor: Theme.of(context).colorScheme.surface,
                     closedBuilder: (context, action) => PostComponent(post: post),
                     openBuilder: (context, action) => PostPage(post: post)
                 );
