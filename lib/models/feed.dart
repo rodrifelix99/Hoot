@@ -62,4 +62,18 @@ class Feed {
     'private': private,
     'nsfw': nsfw,
   };
+
+  Map<String, dynamic> toCache() => {
+    'id': id,
+    'title': title,
+    'description': description,
+    'icon': icon,
+    'color': color!.hashCode.toString(),
+    'type': type.toString().split('.').last,
+    'private': private,
+    'nsfw': nsfw,
+    'verified': verified,
+    'subscribers': subscribers,
+    'requests': requests
+  };
 }

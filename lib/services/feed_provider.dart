@@ -43,7 +43,7 @@ class FeedProvider extends ChangeNotifier {
 
   Future _setPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('mainFeedPosts', jsonEncode(_mainFeedPosts));
+    await prefs.setString('mainFeedPosts', jsonEncode(_mainFeedPosts.map((post) => post.toCache()).toList()));
   }
 
   Future _getPrefs() async {

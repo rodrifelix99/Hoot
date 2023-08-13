@@ -40,14 +40,14 @@ class _CreatePostPageState extends State<CreatePostPage> {
   void initState() {
     _feedProvider = Provider.of<FeedProvider>(context, listen: false);
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    TenorGifPicker.init(
-        apiKey: 'AIzaSyCnfxvwEYAkFGxYmoKd03VPyXoATuMCXZw',
-        locale: 'pt_PT',
-        clientKey: 'test_app',
-        country: 'PT',
-    );
     super.initState();
-    _getFeeds();
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      TenorGifPicker.init(
+        apiKey: 'AIzaSyCnfxvwEYAkFGxYmoKd03VPyXoATuMCXZw',
+        locale: AppLocalizations.of(context)!.localeName,
+      );
+      await _getFeeds();
+    });
   }
 
   Future _getFeeds() async {

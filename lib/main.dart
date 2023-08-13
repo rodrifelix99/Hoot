@@ -1,4 +1,5 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -25,6 +26,7 @@ import 'package:hoot/pages/welcome.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:hoot/theme/theme.dart';
+import 'package:shake/shake.dart';
 import 'firebase_options.dart';
 import 'package:hoot/pages/login.dart';
 import 'package:provider/provider.dart';
@@ -92,9 +94,17 @@ Future<void> main() async {
                   ],
                   home: AnimatedSplashScreen(
                     nextScreen: HomePage(),
-                    splash: Image.asset('assets/logo.png'),
+                    splash: Image.asset(
+                      'assets/splash.gif',
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      fit: BoxFit.cover,
+                    ),
+                    splashIconSize: MediaQuery.of(context).size.height,
                     splashTransition: SplashTransition.fadeTransition,
-                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    pageTransitionType: PageTransitionType.fade,
+                    backgroundColor: Colors.black,
+                    duration: 8000,
                   ),
                   onGenerateRoute: (settings) {
                     switch (settings.name) {

@@ -83,4 +83,23 @@ class Post {
       'feedId': feedId,
     };
   }
+
+  Map<String, dynamic> toCache() {
+    return {
+      'id': id,
+      'text': text,
+      'images': media,
+      'feedId': feedId,
+      'feed': feed?.toCache(),
+      'user': user?.toCache(),
+      'liked': liked,
+      'likes': likes,
+      'reFeeded': reFeeded,
+      'reFeeds': reFeeds,
+      'reFeededFrom': reFeededFrom?.toCache(),
+      'comments': comments,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+    };
+  }
 }

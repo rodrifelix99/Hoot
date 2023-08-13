@@ -16,9 +16,12 @@ import 'package:hoot/services/radio_controller.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:shake/shake.dart';
 import '../models/user.dart';
 import '../services/auth_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'create_post.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -65,12 +68,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     setState(() {});
   }
 
+  void onShake() {
+    print("Shakezão");
+  }
+
   @override
   void initState() {
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
     _pageController = PageController();
     super.initState();
-
+    ShakeDetector.autoStart(
+        onPhoneShake: onShake,
+    );
     _messageStreamSubscription = FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
@@ -170,13 +179,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
       ),
       floatingActionButton: (_pageController.hasClients && _pageController.page!.round() == 0) || !_pageController.hasClients ?
-      Obx(() => Padding(
-        padding: _radioController.closeRadio.isFalse ? const EdgeInsets.only(bottom: 70) : EdgeInsets.zero,
-        child: FloatingActionButton(
-          onPressed: () => Navigator.of(context).pushNamed('/create_post', arguments: null),
-          child: const LineIcon(LineIcons.alternateFeather),
-        ),
-      )) : const SizedBox(),
+      OpenContainer(
+        closedColor: Colors.transparent,
+          closedElevation: 10,
+          closedShape: const CircleBorder(),
+          closedBuilder: (context, open) => Obx(() => Padding(
+            padding: _radioController.closeRadio.isFalse ? const EdgeInsets.only(bottom: 70) : EdgeInsets.zero,
+            child: FloatingActionButton(
+              onPressed: null,
+              child: const LineIcon(LineIcons.alternateFeather),
+            ),
+          )),
+          openBuilder: (context, close) => CreatePostPage(),
+      ) : const SizedBox(),
       bottomNavigationBar: Container(
         color: Theme.of(context).colorScheme.surface,
         child: SafeArea(

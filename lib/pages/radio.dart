@@ -55,8 +55,8 @@ class _RadioPageState extends State<RadioPage> {
                     width: 300,
                     height: 300,
                     child: Material(
-                      elevation: 10,
-                      // border radius 15
+                      elevation: radioController.loading.isFalse ? 10 : 0,
+                      shadowColor: Colors.black.withOpacity(0.5),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),

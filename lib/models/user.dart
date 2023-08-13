@@ -82,4 +82,24 @@ class U {
     });
     return json;
   }
+
+  Map<String, dynamic> toCache() => {
+    'uid': uid,
+    'displayName': name,
+    'username': username,
+    'smallAvatar': smallProfilePictureUrl,
+    'bigAvatar': largeProfilePictureUrl,
+    'banner': bannerPictureUrl,
+    'radius': radius,
+    'color': color,
+    'music': musicUrl,
+    'bio': bio,
+    'location': location,
+    'website': website,
+    'birthday': birthday,
+    'verified': verified,
+    'tester': tester,
+    'subscriptions': subscriptions,
+    'feeds': feeds?.map((e) => e.toCache()).toList(),
+  };
 }

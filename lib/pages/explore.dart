@@ -231,6 +231,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: OpenContainer(
                           closedColor: Colors.transparent,
+                          closedElevation: 0,
                           closedBuilder: (context, open) => TypeBoxComponent(type: type),
                           openBuilder: (context, close) => SearchByGenrePage(type: type)
                       ),

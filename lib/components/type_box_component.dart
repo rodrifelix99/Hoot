@@ -18,7 +18,7 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
 
   @override
   void initState() {
-    color = Colors.primaries[widget.type.index % Colors.primaries.length];
+    color = Colors.primaries[widget.type.index % Colors.primaries.length % 18];
     super.initState();
   }
   @override
