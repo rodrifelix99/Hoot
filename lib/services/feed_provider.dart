@@ -52,7 +52,7 @@ class FeedProvider extends ChangeNotifier {
       String? mainFeedPosts = prefs.getString('mainFeedPosts');
       if (mainFeedPosts != null) {
         List<dynamic> mainFeedPostsJson = jsonDecode(mainFeedPosts);
-        _mainFeedPosts = mainFeedPostsJson.map((post) => Post.fromJson(post)).toList();
+        _mainFeedPosts = mainFeedPostsJson.map((post) => Post.fromCache(post)).toList();
       }
       notifyListeners();
     } catch (e) {

@@ -81,8 +81,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         onPhoneShake: onShake,
     );
     _messageStreamSubscription = FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
       if (message.notification != null) {
         print('Message also contained a notification: ${message.notification}');
       }
@@ -181,7 +179,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       floatingActionButton: (_pageController.hasClients && _pageController.page!.round() == 0) || !_pageController.hasClients ?
       OpenContainer(
         closedColor: Colors.transparent,
-          closedElevation: 10,
+          closedElevation: 5,
           closedShape: const CircleBorder(),
           closedBuilder: (context, open) => Obx(() => Padding(
             padding: _radioController.closeRadio.isFalse ? const EdgeInsets.only(bottom: 70) : EdgeInsets.zero,

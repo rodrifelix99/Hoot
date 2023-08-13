@@ -38,7 +38,7 @@ class Post {
     this.updatedAt,
   });
 
-  static Post fromJson(Map<String, dynamic> json) {
+  factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       id: json['id'],
       text: json['text'],
@@ -88,7 +88,7 @@ class Post {
     return {
       'id': id,
       'text': text,
-      'images': media,
+      'media': media,
       'feedId': feedId,
       'feed': feed?.toCache(),
       'user': user?.toCache(),
@@ -98,8 +98,27 @@ class Post {
       'reFeeds': reFeeds,
       'reFeededFrom': reFeededFrom?.toCache(),
       'comments': comments,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
+      'createdAt': createdAt?.millisecondsSinceEpoch.toString(),
+      'updatedAt': updatedAt?.millisecondsSinceEpoch.toString(),
     };
+  }
+
+  factory Post.fromCache(Map<String, dynamic> json) {
+    return Post(
+      id: json['id'],
+      text: json['text'],
+      media: json['media'] != null ? List<String>.from(json['media']) : null,
+      feedId: json['feedId'],
+      feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
+      user: json['user'] != null ? U.fromJson(json['user']) : null,
+      liked: json['liked'] ?? false,
+      likes: json['likes'],
+      reFeeded: json['reFeeded'] ?? false,
+      reFeeds: json['reFeeds'],
+      reFeededFrom: json['reFeededFrom'] != null && json['reFeededFrom'].runtimeType != String ? Post.fromCache(json['reFeededFrom']) : null,
+      comments: json['comments'],
+      createdAt: json['createdAt'] != null ? DateTime.fromMillisecondsSinceEpoch(int.parse(json['createdAt'])) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.fromMillisecondsSinceEpoch(int.parse(json['updatedAt'])) : null,
+    );
   }
 }

@@ -168,45 +168,6 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               ],
             ),
           ),
-          child: SafeArea(
-            minimum: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // if can go back
-                Navigator.canPop(context) ? IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const LineIcon(LineIcons.arrowLeft, color: Colors.white, size: 30),
-                ) : const SizedBox(),
-                const Spacer(),
-                TextButton(
-                    onPressed: () => Navigator.pushNamed(context, '/subscriptions', arguments: _user.uid),
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.white.withOpacity(0.1),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(_user.subscriptions.length.toString(), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
-                        const SizedBox(width: 5),
-                        const LineIcon(LineIcons.users, color: Colors.white, size: 30)
-                      ],
-                    )
-                ),
-                _isCurrentUser ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(width: 10),
-                    IconButton(
-                      onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/settings', (route) => false),
-                      icon: const LineIcon(LineIcons.cog, color: Colors.white, size: 30),
-                    ),
-                  ],
-                ) : const SizedBox(),
-              ],
-            ),
-          ),
         ),
       ),
       Positioned(
@@ -298,6 +259,31 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/subscriptions', arguments: _user.uid),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.white.withOpacity(0.1),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(_user.subscriptions.length.toString(), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
+                  const SizedBox(width: 5),
+                  const LineIcon(LineIcons.users, color: Colors.white, size: 30)
+                ],
+              )
+          ),
+          _isCurrentUser ? IconButton(
+          onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/settings', (route) => false),
+          icon: const LineIcon(LineIcons.cog, color: Colors.white, size: 30),
+          ) : const SizedBox(width: 10),
+        ],
+      ),
+      extendBodyBehindAppBar: true,
       floatingActionButton: _isCurrentUser && _user.feeds != null && _user.feeds!.isNotEmpty ? FloatingActionBubble(
         items: <Bubble>[
           Bubble(
