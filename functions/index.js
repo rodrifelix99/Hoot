@@ -438,7 +438,7 @@ exports.getNotifications = functions.region("europe-west1").https.onCall(async (
         })
       );
     }
-
+    results = results.filter((x) => x !== null);
     return JSON.stringify(results);
   } catch (e) {
     error(e);
