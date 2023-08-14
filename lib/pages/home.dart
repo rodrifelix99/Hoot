@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:animations/animations.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -39,6 +40,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   bool _loading = true;
 
+  //ask tracking permission
+
+
   Future _setFCMToken() async {
     String? fcmToken = await messaging.getToken();
     if (fcmToken != null) {
@@ -47,6 +51,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
       await _authProvider.setFCMToken(fcmToken);
     });
+  }
+
+  Future _checkTrackingStatus() async {
+    if (await AppTrackingTransparency.trackingAuthorizationStatus ==
+        TrackingStatus.notDetermined) {
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    }
   }
 
   Future isNewUser() async {
@@ -58,6 +69,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         await _countUnreadNotifications();
       }
       await _setFCMToken();
+      await _checkTrackingStatus();
     } else {
       Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
     }

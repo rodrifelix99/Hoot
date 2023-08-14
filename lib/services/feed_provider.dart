@@ -57,6 +57,7 @@ class FeedProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print(e.toString());
+      await getMainFeed(DateTime.now(), true);
     }
   }
 

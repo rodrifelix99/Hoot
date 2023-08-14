@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/empty_message.dart';
+import 'package:hoot/components/native_ad_component.dart';
 import 'package:hoot/pages/post.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
@@ -73,7 +74,7 @@ class _FeedPageState extends State<FeedPage> {
         ],
       ),
       body: _isLoading ? SkeletonListView(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           itemCount: 10,
           itemBuilder: (context, index) => PostComponent(post: Post.empty(), isSkeleton: true)
       ) : SmartRefresher(
@@ -95,31 +96,45 @@ class _FeedPageState extends State<FeedPage> {
         onRefresh: () async =>  await _getPosts(DateTime.now(), refresh: true),
         onLoading: () async => await _getPosts(_feedProvider.mainFeedPosts.last.createdAt ?? DateTime.now(), refresh: false),
         child: _feedProvider.mainFeedPosts.isNotEmpty ? ListView.builder(
-            itemCount: _feedProvider.mainFeedPosts.length,
-            itemBuilder: (context, index) {
-              Post post = _feedProvider.mainFeedPosts[index];
-              if (index == 0) {
-                return Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    Text(_timeUntilLaunch(), style: Theme.of(context).textTheme.headlineLarge),
-                    Text('Until Hoot is released', style: Theme.of(context).textTheme.headlineSmall),
-                    const SizedBox(height: 30),
-                    OpenContainer(
-                      closedColor: Theme.of(context).colorScheme.surface,
-                      closedBuilder: (context, action) => PostComponent(post: post),
-                      openBuilder: (context, action) => PostPage(post: post)
-                    )
-                  ],
-                );
-              } else {
-                return OpenContainer(
+          itemCount: _feedProvider.mainFeedPosts.length,
+          itemBuilder: (context, index) {
+            Post post = _feedProvider.mainFeedPosts[index];
+            if (index == 0) {
+              return Column(
+                children: [
+                  const SizedBox(height: 20),
+                  Text(_timeUntilLaunch(), style: Theme.of(context).textTheme.headlineLarge),
+                  Text('Until Hoot is released', style: Theme.of(context).textTheme.headlineSmall),
+                  const SizedBox(height: 30),
+                  OpenContainer(
                     closedColor: Theme.of(context).colorScheme.surface,
                     closedBuilder: (context, action) => PostComponent(post: post),
-                    openBuilder: (context, action) => PostPage(post: post)
-                );
-              }
+                    openBuilder: (context, action) => PostPage(post: post),
+                  ),
+                ],
+              );
+            } else if (index % 3 == 0) {
+              return Column(
+                children: [
+                  OpenContainer(
+                    closedColor: Theme.of(context).colorScheme.surface,
+                    closedBuilder: (context, action) => PostComponent(post: post),
+                    openBuilder: (context, action) => PostPage(post: post),
+                  ),
+                  const NativeAdComponent(),
+                  const Divider(
+                    thickness: 1,
+                  ),
+                ],
+              );
+            } else {
+              return OpenContainer(
+                closedColor: Theme.of(context).colorScheme.surface,
+                closedBuilder: (context, action) => PostComponent(post: post),
+                openBuilder: (context, action) => PostPage(post: post),
+              );
             }
+          },
         ) : Center(
           child: NothingToShowComponent(
             icon: const Icon(Icons.newspaper_rounded),

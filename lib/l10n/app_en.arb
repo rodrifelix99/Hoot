@@ -611,5 +611,8 @@
 	"addMusic": "Add Music",
 	"addGif": "Add GIF",
 	"onlyOneUrl": "We suggest you to add only one URL per hoot",
-	"clickToViewThisWebsite": "Click to view this website"
+	"clickToViewThisWebsite": "Click to view this website",
+	"sponsored": "Sponsored",
+	"ethicalAdDescription": "Ethical ads like this one help us keep Hoot free for everyone.",
+	"thankYouForSupporting": "Thank you for supporting Hoot!"
 }
