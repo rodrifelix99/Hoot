@@ -138,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                         errorMessage: AppLocalizations.of(context)!.phoneNumberInvalid,
                         inputDecoration: InputDecoration(
                           hintText: AppLocalizations.of(context)!.phoneNumber,
-                          hintStyle: const TextStyle(color: Colors.black26),
+                          hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.5)),
                           errorStyle: const TextStyle(color: Colors.redAccent),
                         ),
                         hintText: AppLocalizations.of(context)!.phoneNumber,
