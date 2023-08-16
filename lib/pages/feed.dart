@@ -44,8 +44,7 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   String _timeUntilLaunch() {
-    // time until Aug 15, 2023 00:00:00
-    DateTime launchDate = DateTime(2023, 9, 1);
+    DateTime launchDate = DateTime(2023, 9, 15);
     Duration timeUntilLaunch = launchDate.difference(DateTime.now());
     return '${timeUntilLaunch.inDays} days and ${timeUntilLaunch.inHours.remainder(24)} hours';
   }

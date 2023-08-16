@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/pages/last_welcome.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/upload_service.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -11,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 import '../services/auth_provider.dart';
 
@@ -37,8 +39,7 @@ class _WelcomePageState extends State<WelcomePage> {
     screens = [
       FirstScreen(controller: controller),
       SecondScreen(controller: controller),
-      ThirdScreen(controller: controller),
-      FourthScreen(controller: controller)
+      ThirdScreen(controller: controller)
     ];
     super.initState();
   }
@@ -46,52 +47,141 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Swiper(
-          controller: controller,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return Stack(
-              children: [
-                Positioned.fill(
-                    child: OctoImage(
-                      image: NetworkImage(images[index]),
-                      fit: BoxFit.cover,
-                      placeholderBuilder: OctoPlaceholder.blurHash(
-                        'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                      ),
-                    )
-                ),
-                Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(16, 100, 16, 80),
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: <Color>[
-                            Colors.transparent,
-                            Colors.black,
-                          ],
-                        ),
-                      ),
-                      child: screens[index],
-                    )
-                ),
-              ],
-            );
-          },
-          itemCount: screens.length,
-          pagination: SwiperPagination(
-            margin: const EdgeInsets.only(bottom: 50),
-            builder: DotSwiperPaginationBuilder(
-              color: Colors.white,
-              activeColor: Theme.of(context).colorScheme.primary,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              "assets/images/welcome_bg.png",
+              fit: BoxFit.cover,
             ),
           ),
-        )
+          Positioned.fill(
+            child: SafeArea(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Image.asset(
+                        "assets/images/image_1.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_2.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_3.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_4.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_17.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_18.png",
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      const SizedBox(height: 50),
+                      Image.asset(
+                        "assets/images/image_5.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_6.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_7.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_8.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_15.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_16.png",
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Image.asset(
+                        "assets/images/image_9.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_10.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_11.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_12.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_13.png",
+                      ),
+                      const SizedBox(height: 10),
+                      Image.asset(
+                        "assets/images/image_14.png",
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.6,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.background,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.15),
+                    spreadRadius: 2,
+                    blurRadius: 20,
+                    offset: const Offset(0, -5), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: SafeArea(
+                child: Swiper(
+                  controller: controller,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return screens[index];
+                  },
+                  itemCount: screens.length,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -105,54 +195,6 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          AppLocalizations.of(context)!.welcomeTo,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          AppLocalizations.of(context)!.appName,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 48,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          AppLocalizations.of(context)!.welcomeDescription,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-          ),
-        ),
-        const SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: () => widget.controller.next(),
-          child: Text(AppLocalizations.of(context)!.getStarted),
-        ),
-      ],
-    );
-  }
-}
-
-class SecondScreen extends StatefulWidget {
-  final SwiperController controller;
-  const SecondScreen({super.key, required this.controller});
-
-  @override
-  State<SecondScreen> createState() => _SecondScreenState();
-}
-
-class _SecondScreenState extends State<SecondScreen> {
   final TextEditingController _nameController = TextEditingController();
 
   bool _isNameValid() {
@@ -185,66 +227,50 @@ class _SecondScreenState extends State<SecondScreen> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.whatsYourName,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+          AppLocalizations.of(context)!.waitANewFriend,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w900,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
         const SizedBox(height: 8),
         Text(
           AppLocalizations.of(context)!.displayNameDescription,
-          style: const TextStyle(
-              color: Colors.white
-          ),
         ),
-        const SizedBox(height: 16),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _nameController,
-                autocorrect: true,
-                keyboardType: TextInputType.name,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                maxLength: 30,
-                onChanged: (value) => setState(() {}),
-                onSubmitted: (value) => _onSubmit(),
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.displayName,
-                  counter: const SizedBox(),
-                ),
-              ),
-            ),
-            const SizedBox(width: 20),
-            IconButton(
-              onPressed: _isNameValid() ? () => _onSubmit() : null,
-              icon: Icon(Icons.arrow_right_rounded, color: Theme.of(context).colorScheme.onPrimary),
-              style: ElevatedButton.styleFrom(
-                shape: const CircleBorder(),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                padding: const EdgeInsets.all(16),
-              ),
-            ),
-          ],
+        const SizedBox(height: 25),
+        TextField(
+          controller: _nameController,
+          autocorrect: true,
+          keyboardType: TextInputType.name,
+          textCapitalization: TextCapitalization.words,
+          textInputAction: TextInputAction.next,
+          maxLength: 30,
+          onChanged: (value) => setState(() {}),
+          onSubmitted: (value) => _onSubmit(),
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context)!.displayName,
+            counter: const SizedBox(),
+          ),
         ),
         const SizedBox(height: 5),
         _isNameValid() || _nameController.text.isEmpty ? Text(
-          AppLocalizations.of(context)!.pressEnterToContinue,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-          ),
+          AppLocalizations.of(context)!.displayNameExample,
+          style: Theme.of(context).textTheme.bodySmall,
         ) : Text(
           AppLocalizations.of(context)!.displayNameTooShort,
           style: Theme.of(context).textTheme.bodySmall!.copyWith(
             color: Colors.red,
+          ),
+        ),
+        const Spacer(),
+        ElevatedButton(
+          onPressed: _isNameValid() ? _onSubmit : null,
+          child: Text(
+            AppLocalizations.of(context)!.next,
           ),
         ),
       ],
@@ -252,15 +278,15 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 }
 
-class ThirdScreen extends StatefulWidget {
+class SecondScreen extends StatefulWidget {
   final SwiperController controller;
-  const ThirdScreen({super.key, required this.controller});
+  const SecondScreen({super.key, required this.controller});
 
   @override
-  State<ThirdScreen> createState() => _ThirdScreenState();
+  State<SecondScreen> createState() => _SecondScreenState();
 }
 
-class _ThirdScreenState extends State<ThirdScreen> {
+class _SecondScreenState extends State<SecondScreen> {
   final TextEditingController _usernameController = TextEditingController();
   bool _loading = false;
 
@@ -311,69 +337,47 @@ class _ThirdScreenState extends State<ThirdScreen> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text(
-          AppLocalizations.of(context)!.letsSpiceItUp,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          AppLocalizations.of(context)!.usernameDescription,
-          style: const TextStyle(
-              color: Colors.white
-          ),
-        ),
-        const SizedBox(height: 16),
-        _loading ? const Center(
-          child: CircularProgressIndicator(),
-        ) : Row(
+        Row(
           children: [
             IconButton(
-              onPressed: widget.controller.previous,
-              icon: Icon(Icons.arrow_left_rounded, color: Theme.of(context).colorScheme.onPrimary),
-              style: ElevatedButton.styleFrom(
-                shape: const CircleBorder(),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                padding: const EdgeInsets.all(16),
-              ),
+              onPressed: () => widget.controller.previous(),
+              icon: const Icon(SolarIconsOutline.arrowLeft),
             ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: TextField(
-                controller: _usernameController,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                maxLength: 15,
-                onChanged: (value) => setState(() => _usernameController.text.contains("@") ? _usernameController.text = _usernameController.text.replaceAll("@", "") : null),
-                onSubmitted: (value) => _onSubmit(),
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.username,
-                  counter: const SizedBox(),
-                ),
-              ),
-            ),
-            const SizedBox(width: 20),
-            IconButton(
-              onPressed: _isValid() ? () => _onSubmit() : null,
-              icon: Icon(Icons.arrow_right_rounded, color: Theme.of(context).colorScheme.onPrimary),
-              style: ElevatedButton.styleFrom(
-                shape: const CircleBorder(),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                padding: const EdgeInsets.all(16),
+            Text(
+              AppLocalizations.of(context)!.letsSpiceItUp,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w900,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ],
         ),
+        const SizedBox(height: 8),
+        Text(
+          AppLocalizations.of(context)!.usernameDescription,
+        ),
+        const SizedBox(height: 25),
+        _loading ? const Center(
+          child: CircularProgressIndicator(),
+        ) : TextField(
+          controller: _usernameController,
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.done,
+          maxLength: 15,
+          onChanged: (value) => setState(() => _usernameController.text.contains("@") ? _usernameController.text = _usernameController.text.replaceAll("@", "") : null),
+          onSubmitted: (value) => _onSubmit(),
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context)!.username,
+            counter: const SizedBox(),
+          ),
+        ),
         const SizedBox(height: 5),
         _isValid() || _usernameController.text.isEmpty ? Text(
-          AppLocalizations.of(context)!.pressEnterToContinue,
+          AppLocalizations.of(context)!.usernameExample,
           style: const TextStyle(
-            color: Colors.white,
             fontSize: 12,
           ),
         ) : Text(
@@ -382,20 +386,27 @@ class _ThirdScreenState extends State<ThirdScreen> {
             color: Colors.red,
           ),
         ),
+        const Spacer(),
+        ElevatedButton(
+          onPressed: _isValid() ? _onSubmit : null,
+          child: Text(
+            AppLocalizations.of(context)!.next,
+          ),
+        ),
       ],
     );
   }
 }
 
-class FourthScreen extends StatefulWidget {
+class ThirdScreen extends StatefulWidget {
   final SwiperController controller;
-  const FourthScreen({super.key, required this.controller});
+  const ThirdScreen({super.key, required this.controller});
 
   @override
-  State<FourthScreen> createState() => _FourthScreenState();
+  State<ThirdScreen> createState() => _ThirdScreenState();
 }
 
-class _FourthScreenState extends State<FourthScreen> {
+class _ThirdScreenState extends State<ThirdScreen> {
   bool _loading = false;
   File? _selectedImage;
 
@@ -448,7 +459,7 @@ class _FourthScreenState extends State<FourthScreen> {
           user.largeProfilePictureUrl = bigAvatarUrl;
           bool response = await Provider.of<AuthProvider>(context, listen: false).updateUser(user);
           if (response) {
-            Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+            _goHome();
           } else {
             setState(() {
               ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
@@ -485,70 +496,62 @@ class _FourthScreenState extends State<FourthScreen> {
   }
 
   void _goHome() {
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => const LastWelcomeScreen()
+      ),
+      (Route<dynamic> route) => false,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
           AppLocalizations.of(context)!.almostThere,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.w900,
           ),
         ),
         const SizedBox(height: 8),
         Text(
-          _selectedImage == null ? AppLocalizations.of(context)!.avatarDescription : _getRandomSuccessPhrase(),
-          style: const TextStyle(
-              color: Colors.white
-          ),
+          _selectedImage == null ? AppLocalizations.of(context)!.profilePictureDescription : _getRandomSuccessPhrase(),
         ),
-        const SizedBox(height: 20),
+        const Spacer(),
         _loading ? const Center(
           child: CircularProgressIndicator(),
         ) : Center(
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: _pickImage,
-                child: OctoImage.fromSet(
-                    image: _selectedImage != null ? FileImage(_selectedImage!) : const NetworkImage("https://i.pinimg.com/originals/bc/55/32/bc553212027810220a07fb992c47fbc3.jpg") as ImageProvider,
-                    fit: BoxFit.cover,
-                    width: 100,
-                    height: 100,
-                    octoSet: OctoSet.circleAvatar(
-                      backgroundColor: Colors.grey.shade300,
-                      text: Icon(
-                        Icons.camera_alt_rounded,
-                        color: Colors.grey.shade800
-                      )
-                    ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              _selectedImage == null ? TextButton(
-                  onPressed: _goHome,
-                  child: Text(
-                    AppLocalizations.of(context)!.skipForNow,
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                  )
-              ) : ElevatedButton(
-                  onPressed: _uploadImage,
-                  child: Text(
-                    AppLocalizations.of(context)!.continueButton,
+          child: GestureDetector(
+            onTap: _pickImage,
+            child: OctoImage.fromSet(
+              image: _selectedImage != null ? FileImage(_selectedImage!) : const NetworkImage('') as ImageProvider,
+              fit: BoxFit.cover,
+              width: 125,
+              height: 125,
+              octoSet: OctoSet.circleAvatar(
+                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  text: Icon(
+                      SolarIconsBold.galleryAdd,
+                      size: 50,
+                      color: Theme.of(context).colorScheme.primary
                   )
               ),
-            ],
+            ),
           ),
         ),
-        const SizedBox(height: 20),
+        const Spacer(),
+        ElevatedButton(
+            onPressed: _selectedImage == null ? _goHome : _uploadImage,
+            child: _selectedImage == null ? Text(
+              AppLocalizations.of(context)!.skipForNow,
+            ) : Text(
+              AppLocalizations.of(context)!.continueButton,
+            )
+        )
       ],
     );
   }

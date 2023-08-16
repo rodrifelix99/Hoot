@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -76,28 +77,34 @@ class _VerifyPageState extends State<VerifyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Verify your phone number'),
-      ),
+      appBar: const AppBarComponent(),
       body: _authProvider.verificationId == null || _loading ? const Center(
         child: CircularProgressIndicator(),
       ) : SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
               Text(
-                'We sent a code to ${_authProvider.phoneNumber.phoneNumber}',
-                style: Theme.of(context).textTheme.headlineSmall,
-                textAlign: TextAlign.center,
+                AppLocalizations.of(context)!.verificationCode,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
-              const SizedBox(height: 26),
+              const SizedBox(height: 16),
+              Text(
+                AppLocalizations.of(context)!.codeSent(_authProvider.phoneNumber.phoneNumber.toString()),
+              ),
+              const SizedBox(height: 50),
               AutofillGroup(
                 child: TextField(
                     controller: _codeController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter code',
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.enterCode,
                     ),
                     autofocus: true,
                     autofillHints: const [AutofillHints.oneTimeCode],
@@ -111,7 +118,16 @@ class _VerifyPageState extends State<VerifyPage> {
                         _onSubmit(),
                       }
                     }),
-              )
+              ),
+              const Spacer(),
+              ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.25),
+                    foregroundColor: Theme.of(context).colorScheme.secondary,
+                  ),
+                  child: Text(AppLocalizations.of(context)!.changeNumber),
+              ),
             ],
           ),
         ),

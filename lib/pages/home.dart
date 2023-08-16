@@ -5,8 +5,6 @@ import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:hoot/components/avatar.dart';
 import 'package:hoot/components/radio_component.dart';
 import 'package:hoot/pages/explore.dart';
 import 'package:hoot/pages/feed.dart';
@@ -14,10 +12,9 @@ import 'package:hoot/pages/notifications.dart';
 import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/radio.dart';
 import 'package:hoot/services/radio_controller.dart';
-import 'package:line_icons/line_icon.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:shake/shake.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../models/user.dart';
 import '../services/auth_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -188,70 +185,81 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           ],
         ),
       ),
-      floatingActionButton: (_pageController.hasClients && _pageController.page!.round() == 0) || !_pageController.hasClients ?
-      OpenContainer(
-        closedColor: Colors.transparent,
-          closedElevation: 5,
-          closedShape: const CircleBorder(),
-          closedBuilder: (context, open) => Obx(() => Padding(
-            padding: _radioController.closeRadio.isFalse ? const EdgeInsets.only(bottom: 70) : EdgeInsets.zero,
-            child: FloatingActionButton(
-              onPressed: null,
-              child: const LineIcon(LineIcons.alternateFeather),
-            ),
-          )),
-          openBuilder: (context, close) => CreatePostPage(),
-      ) : const SizedBox(),
       bottomNavigationBar: Container(
         color: Theme.of(context).colorScheme.surface,
-        child: SafeArea(
-          bottom: true,
-          child: GNav(
-            onTabChange: (i) => setState(() {
-              _pageController.jumpToPage(i);
-            }),
-            selectedIndex: _pageController.hasClients ? _pageController.page!.round() : 0,
-            haptic: true,
-            gap: 8,
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            tabBackgroundColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-            activeColor: Theme.of(context).colorScheme.onSurface,
-            tabMargin: const EdgeInsets.all(10),
-            tabs: [
-              GButton(
-                  icon: LineIcons.feather,
-                  text: AppLocalizations.of(context)!.myFeeds,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+        child: BottomNavigationBar(
+          currentIndex: _pageController.hasClients ? _pageController.page!.round() : 0,
+          onTap: (i) => setState(() {
+            _pageController.jumpToPage(i);
+          }),
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+          unselectedItemColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+          items: [
+            BottomNavigationBarItem(
+              icon: _pageController.hasClients && _pageController.page!.round() == 0 ?
+                const Icon(SolarIconsBold.feed) : const Icon(SolarIconsOutline.feed),
+              label: AppLocalizations.of(context)!.myFeeds,
+            ),
+            BottomNavigationBarItem(
+              icon: _pageController.hasClients && _pageController.page!.round() == 1 ?
+                const Icon(SolarIconsBold.compass) : const Icon(SolarIconsOutline.compass),
+              label: AppLocalizations.of(context)!.explore,
+            ),
+            BottomNavigationBarItem(
+              icon: OpenContainer(
+                closedElevation: 0,
+                closedColor: Colors.transparent,
+                transitionType: ContainerTransitionType.fadeThrough,
+                openColor: Colors.transparent,
+                openElevation: 0,
+                closedBuilder: (context, open) => Icon(
+                    SolarIconsBold.addSquare,
+                  size: 50,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                openBuilder: (context, close) => CreatePostPage(),
               ),
-              GButton(
-                  icon: LineIcons.compass,
-                  text: AppLocalizations.of(context)!.explore,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Stack(
+                children: [
+                  _pageController.hasClients && _pageController.page!.round() == 2 ?
+                    const Icon(SolarIconsBold.bell) : const Icon(SolarIconsOutline.bell),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: _authProvider.notificationsCount > 0 ? Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondary,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      child: Text(
+                        _authProvider.notificationsCount.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ) : const SizedBox()),
+                ],
               ),
-              GButton(
-                  icon: LineIcons.bell,
-                  text: AppLocalizations.of(context)!.notifications,
-                  leading: _authProvider.notificationsCount > 0 ? Badge(
-                    label: Text( _authProvider.notificationsCount > 30 ? '30+' :  _authProvider.notificationsCount.toString()),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    textColor: Theme.of(context).colorScheme.onPrimary,
-                    child: const Icon(
-                      LineIcons.bell,
-                    ),
-                  ) : const Icon(
-                    LineIcons.bell,
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
-              ),
-              GButton(
-                  leading: Provider.of<AuthProvider>(context).user?.smallProfilePictureUrl != null ?
-                  ProfileAvatar(image: Provider.of<AuthProvider>(context).user!.smallProfilePictureUrl ?? '', size: 24) : null,
-                  icon: LineIcons.user,
-                  text: AppLocalizations.of(context)!.profile,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
-              ),
-            ],
-          ),
+              label: AppLocalizations.of(context)!.notifications,
+            ),
+            BottomNavigationBarItem(
+              icon: _pageController.hasClients && _pageController.page!.round() == 3 ?
+                const Icon(SolarIconsBold.userCircle) : const Icon(SolarIconsOutline.userCircle),
+              label: AppLocalizations.of(context)!.profile,
+            ),
+          ],
         ),
       ),
     );

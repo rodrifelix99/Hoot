@@ -19,6 +19,8 @@
 	"@welcomeDescription": {
 		"description": "Welcome description"
 	},
+	"displayNameExample": "This is your display name, eg.: Captain Felix",
+	"waitANewFriend": "Wait! A new friend?!",
 	"getStarted": "Get Started",
 	"@getStarted": {
 		"description": "Get Started button"
@@ -130,7 +132,7 @@
 	"@whatsYourName": {
 		"description": "What's your name? label"
 	},
-	"displayNameDescription": "This is the name that will be displayed to other users as your identity.",
+	"displayNameDescription": "Welcome to Hoot, the world of Feeds awaits you! But first, what should we call you?",
 	"@displayNameDescription": {
 		"description": "Display name description"
 	},
@@ -138,11 +140,9 @@
 	"@letsSpiceItUp": {
 		"description": "Let's spice it up! label"
 	},
-	"usernameDescription": "A username is a unique identifier that will be used to identify you in the network. It can only contain letters, numbers and underscores.",
-	"@usernameDescription": {
-		"description": "Username description"
-	},
+	"usernameDescription": "Tell us what username you’d like to use. Remember: usernames can only have letters, numbers and underscores.",
 	"username": "@username",
+	"usernameExample": "This is your username, eg.: @captainFelix_8167",
 	"@username": {
 		"description": "Username label"
 	},
@@ -163,10 +163,7 @@
 	"@almostThere": {
 		"description": "Almost there! label"
 	},
-	"avatarDescription": "Choose an avatar to represent you as a fancy owl.",
-	"@avatarDescription": {
-		"description": "Avatar description"
-	},
+	"profilePictureDescription": "You can select an avatar for your profile. Anything is welcome: your beautiful face, your dog, that sunset pic you took yesterday, etc.",
 	"avatarSelectedFunny1": "Oh wow, that's a great choice!",
 	"avatarSelectedFunny2": "Now that's a good looking owl!",
 	"avatarSelectedFunny3": "What a great choice!",
@@ -247,6 +244,7 @@
 	"@signOutConfirmation": {
 		"description": "Sign out confirmation message"
 	},
+	"next": "Next",
 	"cancel": "Cancel",
 	"@cancel": {
 		"description": "Cancel button"
@@ -614,5 +612,10 @@
 	"clickToViewThisWebsite": "Click to view this website",
 	"sponsored": "Sponsored",
 	"ethicalAdDescription": "Ethical ads like this one help us keep Hoot free for everyone.",
-	"thankYouForSupporting": "Thank you for supporting Hoot!"
+	"thankYouForSupporting": "Thank you for supporting Hoot!",
+	"verificationCode": "Verification Code",
+	"codeSent": "We just sent you a 6 digit code for the number you provided: {phoneNumber}",
+	"enterCode": "Enter Code",
+	"changeNumber": "Change Number",
+	"thatsIt": "That's it!"
 }

@@ -66,15 +66,21 @@ class AppTheme {
       textStyle: MaterialStateProperty.all(
         const TextStyle(
           fontSize: 16,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.bold
         ),
       ),
       elevation: MaterialStateProperty.all(0),
       shape: MaterialStateProperty.all(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(20),
           side: BorderSide.none,
         ),
+      ),
+      backgroundColor: MaterialStateProperty.all(
+        primaryColor,
+      ),
+      foregroundColor: MaterialStateProperty.all(
+        Colors.white,
       ),
       padding: MaterialStateProperty.all(
         const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
@@ -84,11 +90,11 @@ class AppTheme {
 
   static InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
     border: const OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
+      borderRadius: BorderRadius.all(Radius.circular(15)),
       borderSide: BorderSide.none,
     ),
     focusedBorder: const OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
+      borderRadius: BorderRadius.all(Radius.circular(15)),
       borderSide: BorderSide(color: Colors.blue, width: 2),
     ),
     filled: true,

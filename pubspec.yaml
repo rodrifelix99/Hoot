@@ -57,7 +57,6 @@ dependencies:
   full_screen_image_null_safe: ^2.0.0
   cloud_firestore: ^4.8.2
   animations: ^2.0.7
-  google_nav_bar: ^5.0.6
   line_icons: ^2.0.3
   package_info_plus: ^4.0.2
   image_cropper: ^5.0.0
@@ -83,6 +82,7 @@ dependencies:
   shake: ^2.2.0
   google_mobile_ads: ^3.0.0
   app_tracking_transparency: ^2.0.4
+  solar_icons: ^0.0.5
 
 dev_dependencies:
   flutter_test:
