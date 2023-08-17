@@ -11,6 +11,7 @@ import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeletons/skeletons.dart';
+import 'package:solar_icons/solar_icons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -20,10 +21,11 @@ import '../services/feed_provider.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
-  final bool isSoloRefeed;
+  final bool showToolbar;
+  final bool showTitleBar;
   final VoidFutureCallBack? onRefeed;
   final bool isSkeleton;
-  const PostComponent({super.key, required this.post, this.isSoloRefeed = false, this.onRefeed, this.isSkeleton = false});
+  const PostComponent({super.key, required this.post, this.showToolbar = true, this.showTitleBar = true, this.onRefeed, this.isSkeleton = false});
 
   @override
   State<PostComponent> createState() => _PostComponentState();
@@ -228,7 +230,13 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         children: [
           Row(
             children: [
-              const SkeletonAvatar(),
+              const SkeletonAvatar(
+                style: SkeletonAvatarStyle(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  width: 40,
+                  height: 40,
+                ),
+              ),
               const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,175 +268,163 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         ],
       ),
     ) :
-    Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: !widget.isSoloRefeed ? const EdgeInsets.symmetric(horizontal: 20, vertical: 10) : const EdgeInsets.all(0),
-          child: Column(
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          widget.showTitleBar ? TitleBar(
+              post: widget.post,
+              onProfileTap: _handleProfileTap,
+          ) : const SizedBox(),
+          Text(
+            widget.post.text ?? '',
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontSize: 20,
+            ),
+          ),
+          if (_getUrl() != null) ...[
+            const SizedBox(height: 10),
+              UrlPreviewComponent(
+                url: _getUrl()!,
+            ),
+          ],
+          if (widget.showToolbar) ...[
+            const SizedBox(height: 10),
+            ToolBar(
+                post: widget.post,
+                onMenuTap: _handleMenuTap,
+                onLikeTap: toggleLike,
+                onRefeedTap: refeed,
+            ),
+          ]
+        ],
+      ),
+    );
+  }
+}
+
+class TitleBar extends StatelessWidget {
+  final Post post;
+  final Function onProfileTap;
+  const TitleBar({super.key, required this.post, required this.onProfileTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.of(context).pushNamed('/profile', arguments: post.user!.uid),
+            child: ProfileAvatarComponent(
+              image: post.user!.smallProfilePictureUrl ?? '',
+              size: 50,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _isEmptyRefeed() ? Row(
-                children: [
-                  const LineIcon(LineIcons.syncIcon, color: Colors.grey),
-                  const SizedBox(width: 5),
-                  const Text('Refeeded by ', style: TextStyle(color: Colors.grey)),
-                  GestureDetector(
-                    onTap: _handleProfileTap,
-                    child: Text(widget.post.user!.name!, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+              GestureDetector(
+                onTap: () => onProfileTap,
+                child: Text(
+                  post.user!.name ?? post.user!.username!,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ) : Row(
-                children: [
-                  GestureDetector(
-                      onTap: _handleProfileTap,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular((widget.post.user?.radius ?? 100)/3),
-                          border: Border.all(
-                            color: widget.post.feed?.color ?? Colors.transparent,
-                            width: 3,
-                            strokeAlign: BorderSide.strokeAlignOutside,
-                          ),
-                        ),
-                        child: ProfileAvatarComponent(image: widget.post.user?.smallProfilePictureUrl ?? '', size: 50),
-                      )
-                  ),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                          onTap: _handleProfileTap,
-                          child: NameComponent(user: widget.post.user!, feedName: widget.post.feed?.title ?? '', color: widget.post.feed?.color ?? Colors.blue)
-                      ),
-                      Text(
-                        timeago.format(widget.post.createdAt ?? DateTime.now()),
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: _handleMenuTap,
-                    icon: const Icon(Icons.more_vert),
-                  ),
-                ],
+                ),
               ),
-              widget.post.text != null && widget.post.text!.isNotEmpty ? const SizedBox(height: 20) : const SizedBox(),
-              widget.post.text != null && widget.post.text!.isNotEmpty ? Text(
-                widget.post.text ?? '',
-                style: Theme.of(context).textTheme.titleSmall,
-              ) : const SizedBox(),
-              const SizedBox(height: 10),
-              widget.post.media != null && widget.post.media!.isNotEmpty ? Container(
-                width: double.infinity,
-                constraints: const BoxConstraints(
-                  maxHeight: 300,
+              Text(
+                post.feed!.title,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
                 ),
-                child: Swiper(
-                  itemCount: widget.post.media!.length,
-                  itemBuilder: (context, index) {
-                    return ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: ImageComponent(
-                            url: widget.post.media![index],
-                            width: double.infinity,
-                            fit: BoxFit.contain
-                        )
-                    );
-                  },
-                  loop: widget.post.media!.length >= 5,
-                  pagination: widget.post.media!.length > 1 ? SwiperPagination(
-                    alignment: Alignment.bottomCenter,
-                    builder: DotSwiperPaginationBuilder(
-                      color: Colors.white,
-                      activeColor: widget.post.feed?.color ?? Colors.blue,
-                    ),
-                  ) : null,
-                ),
-              ) : const SizedBox(),
-              _getUrl() != null ? UrlPreviewComponent(url: _getUrl()!) : const SizedBox(),
-              widget.post.reFeededFrom != null && !_isEmptyRefeed() ? Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pushNamed('/post', arguments: [widget.post.reFeededFrom!.user!.uid, widget.post.reFeededFrom!.feedId, widget.post.reFeededFrom!.id]),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'ReFeeded from',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        PostComponent(post: widget.post.reFeededFrom!, isSoloRefeed: false, onRefeed: _deletePost)
-                      ],
-                    ),
-                  ),
-                ),
-              ) : _isEmptyRefeed() ? PostComponent(post: widget.post.reFeededFrom!, isSoloRefeed: true, onRefeed: _deletePost) : const SizedBox(),
-              !_isEmptyRefeed() ? Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                          onPressed: toggleLike,
-                          color: widget.post.liked ? widget.post.feed?.color ?? Colors.red : null,
-                          icon: widget.post.liked ? LineIcon(LineIcons.heartAlt) : LineIcon(LineIcons.heart)
-                      ),
-                      Text(
-                        widget.post.likes?.toString() ?? '0',
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(width: 20),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: widget.onRefeed ?? (widget.post.feed?.private != true ? refeed : null),
-                        icon: LineIcon(LineIcons.syncIcon, color: widget.post.reFeeded ? widget.post.feed?.color ?? Colors.blue : null, size: 25),
-                      ),
-                      Text(
-                        widget.post.reFeeds?.toString() ?? '0',
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  /*const SizedBox(width: 20),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () => ToastService.showToast(context, 'Coming soon', false),
-                        icon: const Icon(Icons.comment_rounded),
-                      ),
-                      Text(
-                        widget.post.comments?.toString() ?? '0',
-                        style: const TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),*/
-                ],
-              ) : const SizedBox(),
+              ),
             ],
           ),
+          const Spacer(),
+          Text(
+            timeago.format(post.createdAt!),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontSize: 12,
+              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ToolBar extends StatelessWidget {
+  final Post post;
+  final Function onMenuTap;
+  final Function onLikeTap;
+  final Function onRefeedTap;
+  const ToolBar({super.key, required this.post, required this.onMenuTap, required this.onLikeTap, required this.onRefeedTap});
+
+  @override
+  Widget build(BuildContext context) {
+    Color color = post.feed?.color ?? Theme.of(context).colorScheme.primary;
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () => onLikeTap,
+                  icon: Icon(
+                    post.liked ? SolarIconsBold.heart : SolarIconsOutline.heart,
+                    color: post.liked ? color : Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                  ),
+                ),
+                Text(
+                  '${post.likes ?? 0}',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () => onRefeedTap,
+                  icon: Icon(
+                    post.reFeeded ? SolarIconsBold.refreshSquare : SolarIconsOutline.refreshSquare,
+                    color: post.reFeeded ? color : Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                  ),
+                ),
+                Text(
+                  '${post.reFeeds ?? 0}',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                  ),
+                ),
+              ],
+            ),
+            IconButton(
+                onPressed: () => onMenuTap,
+                icon: Icon(
+                    SolarIconsOutline.menuDots,
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                ),
+            ),
+          ],
         ),
-        !widget.isSoloRefeed ? const Divider(
+        Divider(
+          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
           thickness: 1,
-        ) : const SizedBox(),
+        ),
+        const SizedBox(height: 20),
       ],
     );
   }
 }
+
+

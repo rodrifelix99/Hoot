@@ -16,7 +16,7 @@ class UserSuggestions extends StatefulWidget {
 
 class _UserSuggestionsState extends State<UserSuggestions> {
   late AuthProvider _authProvider;
-  bool _isLoading = true;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -31,17 +31,11 @@ class _UserSuggestionsState extends State<UserSuggestions> {
       List<U> users = await Provider.of<AuthProvider>(context, listen: false).getSuggestions();
       if (users.isNotEmpty) {
         _authProvider.userSuggestions = users;
-        setState(() {
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _isLoading = false;
-          ToastService.showToast(context, 'No users found', true);
-        });
       }
     } catch (e) {
       print(e);
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -50,7 +44,7 @@ class _UserSuggestionsState extends State<UserSuggestions> {
     return _authProvider.userSuggestions.isEmpty && !_isLoading
         ? const SizedBox()
         : SizedBox(
-      height: 110,
+      height: 120,
       width: double.infinity,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -77,7 +71,16 @@ class _UserSuggestionsState extends State<UserSuggestions> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                Text("@${_authProvider.userSuggestions[index].username!}", style: Theme.of(context).textTheme.bodySmall),
+                Text(
+                    "@${_authProvider.userSuggestions[index].username!}",
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)
+                    )
+                ),
+                Divider(
+                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
+                  thickness: 1,
+                ),
               ],
             ),
           );

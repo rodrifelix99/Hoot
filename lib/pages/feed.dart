@@ -46,12 +46,6 @@ class _FeedPageState extends State<FeedPage> {
     }
   }
 
-  String _timeUntilLaunch() {
-    DateTime launchDate = DateTime(2023, 9, 15);
-    Duration timeUntilLaunch = launchDate.difference(DateTime.now());
-    return '${timeUntilLaunch.inDays} days and ${timeUntilLaunch.inHours.remainder(24)} hours';
-  }
-
   @override
   void initState() {
     _feedProvider = Provider.of<FeedProvider>(context, listen: false);
@@ -108,6 +102,7 @@ class _FeedPageState extends State<FeedPage> {
                 children: [
                   const UserSuggestions(),
                   OpenContainer(
+                    closedElevation: 0,
                     closedColor: Theme.of(context).colorScheme.surface,
                     closedBuilder: (context, action) => PostComponent(post: post),
                     openBuilder: (context, action) => PostPage(post: post),
