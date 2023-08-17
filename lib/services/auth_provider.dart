@@ -30,6 +30,13 @@ class AuthProvider extends ChangeNotifier {
   int _notificationsCount = 0;
   int get notificationsCount => _notificationsCount;
 
+  List<U> _userSuggestions = [];
+  List<U> get userSuggestions => _userSuggestions;
+  set userSuggestions(List<U> userSuggestions) {
+    _userSuggestions = userSuggestions;
+    notifyListeners();
+  }
+
   AuthProvider() {
     _auth.authStateChanges().listen(_onAuthStateChanged); // Add listener
   }

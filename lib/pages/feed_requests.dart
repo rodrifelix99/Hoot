@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/error_service.dart';
@@ -86,7 +86,7 @@ class _FeedRequestsPageState extends State<FeedRequestsPage> {
             itemCount: _requests.length,
             itemBuilder: (context, index) {
               return ListTile(
-                leading: ProfileAvatar(image: _requests[index].smallProfilePictureUrl ?? '', size: 40),
+                leading: ProfileAvatarComponent(image: _requests[index].smallProfilePictureUrl ?? '', size: 40),
                 title: Text(_requests[index].name ?? ''),
                 subtitle: Text("@${_requests[index].username ?? ''}"),
                 trailing: Row(

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletons/skeletons.dart';
 
 import '../models/user.dart';
 
@@ -14,12 +15,13 @@ class UserSuggestions extends StatefulWidget {
 }
 
 class _UserSuggestionsState extends State<UserSuggestions> {
-  List<U> _users = [];
+  late AuthProvider _authProvider;
   bool _isLoading = true;
 
   @override
   void initState() {
-    _loadUsers();
+    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _authProvider.userSuggestions.isEmpty ? _loadUsers() : null;
     super.initState();
   }
 
@@ -28,9 +30,9 @@ class _UserSuggestionsState extends State<UserSuggestions> {
       setState(() => _isLoading = true);
       List<U> users = await Provider.of<AuthProvider>(context, listen: false).getSuggestions();
       if (users.isNotEmpty) {
+        _authProvider.userSuggestions = users;
         setState(() {
           _isLoading = false;
-          _users = users;
         });
       } else {
         setState(() {
@@ -45,32 +47,37 @@ class _UserSuggestionsState extends State<UserSuggestions> {
 
   @override
   Widget build(BuildContext context) {
-    return _users.isEmpty && !_isLoading
+    return _authProvider.userSuggestions.isEmpty && !_isLoading
         ? const SizedBox()
         : SizedBox(
       height: 110,
       width: double.infinity,
-      child: _isLoading ? const Center(child: CircularProgressIndicator()) : ListView.builder(
+      child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         scrollDirection: Axis.horizontal,
-        itemCount: _users.length,
+        itemCount: _isLoading ? 7 : _authProvider.userSuggestions.length,
         itemBuilder: (BuildContext context, int index) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
+            child: _isLoading ? SkeletonAvatar(
+              style: SkeletonAvatarStyle(
+                width: 60,
+                height: 60,
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ) : Column(
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/profile', arguments: _users[index]);
+                    Navigator.of(context).pushNamed('/profile', arguments: _authProvider.userSuggestions[index]);
                   },
-                  child: ProfileAvatar(
-                    image: _users[index].smallProfilePictureUrl ?? '',
-                    size: 60,
-                    radius: (_users[index].radius ?? 100)/3,
+                  child: ProfileAvatarComponent(
+                      image: _authProvider.userSuggestions[index].smallProfilePictureUrl ?? '',
+                      size: 60
                   ),
                 ),
                 const SizedBox(height: 5),
-                Text("@${_users[index].username!}", style: Theme.of(context).textTheme.bodySmall),
+                Text("@${_authProvider.userSuggestions[index].username!}", style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/models/notification.dart' as Notif;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -143,7 +143,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           itemCount: _notifications.length,
           itemBuilder: (context, index) => ListTile(
             onTap: () => _handleNotificationTap(_notifications[index]),
-            leading: ProfileAvatar(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
+            leading: ProfileAvatarComponent(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
             title: Text(_notifications[index].user.name ?? _notifications[index].user.username ?? ''),
             subtitle: Text(_getNotificationText(_notifications[index])),
             trailing: _notifications[index].read ? Text(timeago.format(_notifications[index].createdAt)) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),

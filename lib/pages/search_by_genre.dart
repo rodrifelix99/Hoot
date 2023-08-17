@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/subscribe_component.dart';
 import 'package:hoot/models/feed.dart';
@@ -94,10 +94,9 @@ class _SearchByGenrePageState extends State<SearchByGenrePage> {
                       onTap: () => Navigator.pushNamed(context, '/profile', arguments: [_results[index].user, _results[index].id]),
                       title: Text(_results[index].title),
                       subtitle: Text(_results[index].description!),
-                      leading: ProfileAvatar(
+                      leading: ProfileAvatarComponent(
                         image: _results[index].user!.smallProfilePictureUrl ?? '',
-                        size: 40,
-                        radius: (_results[index].user!.radius ?? 100) /3,
+                        size: 40
                       ),
                       trailing: SubscribeComponent(feed: _results[index], user: _results[index].user!),
                     );

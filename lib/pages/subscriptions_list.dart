@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/error_service.dart';
@@ -92,7 +92,7 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
             onTap: () => Navigator.pushNamed(context, '/profile', arguments: _subscriptions[index].user),
-            leading: ProfileAvatar(
+            leading: ProfileAvatarComponent(
               image: _subscriptions[index].user?.smallProfilePictureUrl ?? '',
               size: 40,
             ),

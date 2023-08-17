@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
-import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
@@ -206,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                 width: 5,
               ),
             ),
-            child: ProfileAvatar(image: _user.largeProfilePictureUrl ?? '', size: 150, preview: true, radius: _user.radius ?? 100)
+            child: ProfileAvatarComponent(image: _user.largeProfilePictureUrl ?? '', size: 150, preview: true)
         ),
       )
     ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/services/feed_provider.dart';
@@ -125,10 +125,9 @@ class _PostPageState extends State<PostPage> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     onTap: () => Navigator.pushNamed(context, '/profile', arguments: widget.post!.likers[index]),
-                    leading: ProfileAvatar(
+                    leading: ProfileAvatarComponent(
                         image: widget.post!.likers[index].smallProfilePictureUrl ?? '',
-                        size: 50,
-                        radius: (widget.post!.likers[index].radius ?? 100)/3
+                        size: 50
                       ),
                     title: Text(widget.post!.likers[index].name ?? ''),
                     subtitle: Text("@${widget.post!.likers[index].username}"),

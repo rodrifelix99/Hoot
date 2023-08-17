@@ -37,9 +37,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   bool _loading = true;
 
-  //ask tracking permission
-
-
   Future _setFCMToken() async {
     String? fcmToken = await messaging.getToken();
     if (fcmToken != null) {
@@ -165,6 +162,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 children: [
                   FeedPage(toggleRadio: _openRadio),
                   ExplorePage(),
+                  CreatePostPage(),
                   NotificationsPage(),
                   ProfilePage(),
                 ],
@@ -189,13 +187,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         color: Theme.of(context).colorScheme.surface,
         child: BottomNavigationBar(
           currentIndex: _pageController.hasClients ? _pageController.page!.round() : 0,
-          onTap: (i) => setState(() {
+          onTap: (i) => i != 2 ? setState(() {
             _pageController.jumpToPage(i);
-          }),
+          }) : null,
           type: BottomNavigationBarType.fixed,
           backgroundColor: Theme.of(context).colorScheme.surface,
           selectedItemColor: Theme.of(context).colorScheme.primary,
           unselectedItemColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+          iconSize: 28,
+          elevation: 5,
           items: [
             BottomNavigationBarItem(
               icon: _pageController.hasClients && _pageController.page!.round() == 0 ?
@@ -226,7 +226,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             BottomNavigationBarItem(
               icon: Stack(
                 children: [
-                  _pageController.hasClients && _pageController.page!.round() == 2 ?
+                  _pageController.hasClients && _pageController.page!.round() == 3 ?
                     const Icon(SolarIconsBold.bell) : const Icon(SolarIconsOutline.bell),
                   Positioned(
                     top: 0,
@@ -255,7 +255,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               label: AppLocalizations.of(context)!.notifications,
             ),
             BottomNavigationBarItem(
-              icon: _pageController.hasClients && _pageController.page!.round() == 3 ?
+              icon: _pageController.hasClients && _pageController.page!.round() == 4 ?
                 const Icon(SolarIconsBold.userCircle) : const Icon(SolarIconsOutline.userCircle),
               label: AppLocalizations.of(context)!.profile,
             ),

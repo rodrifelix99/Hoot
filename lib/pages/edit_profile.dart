@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter/material.dart';
-import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/upload_service.dart';
@@ -194,7 +194,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   child: Stack(
                     children: [
                       _profilePicture == null ?
-                      ProfileAvatar(image: user.largeProfilePictureUrl ?? '', size: 150, radius: user.radius ?? 100)
+                      ProfileAvatarComponent(image: user.largeProfilePictureUrl ?? '', size: 150)
                           : CircleAvatar(
                         radius: 50,
                         backgroundImage: FileImage(_profilePicture!),

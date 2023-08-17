@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/models/user.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_provider.dart';
@@ -66,7 +66,7 @@ class _SearchPageState extends State<SearchPage> {
                 itemCount: _users.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    leading: ProfileAvatar(
+                    leading: ProfileAvatarComponent(
                       image: _users[index].smallProfilePictureUrl ?? '',
                       size: 40,
                     ),

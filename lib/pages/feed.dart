@@ -1,7 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/native_ad_component.dart';
+import 'package:hoot/components/user_suggestions.dart';
 import 'package:hoot/pages/post.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/feed_provider.dart';
@@ -11,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeletons/skeletons.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../components/post_component.dart';
 import '../models/post.dart';
 
@@ -53,21 +56,23 @@ class _FeedPageState extends State<FeedPage> {
   void initState() {
     _feedProvider = Provider.of<FeedProvider>(context, listen: false);
     super.initState();
-    _feedProvider.mainFeedPosts.isEmpty ? _getPosts(DateTime.now()) : null;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _feedProvider.mainFeedPosts.isEmpty ? _getPosts(DateTime.now()) : _refreshController.requestRefresh();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.myFeeds),
+      appBar: AppBarComponent(
+        title: AppLocalizations.of(context)!.myFeeds,
         actions: [
           IconButton(
               onPressed: widget.toggleRadio,
-              icon: const LineIcon(LineIcons.music)
+              icon: const Icon(SolarIconsOutline.radioMinimalistic),
           ),
           IconButton(
-            icon: const LineIcon(LineIcons.search),
+            icon: const Icon(SolarIconsOutline.magnifier),
             onPressed: () => Navigator.of(context).pushNamed('/search'),
           ),
         ],
@@ -101,10 +106,7 @@ class _FeedPageState extends State<FeedPage> {
             if (index == 0) {
               return Column(
                 children: [
-                  const SizedBox(height: 20),
-                  Text(_timeUntilLaunch(), style: Theme.of(context).textTheme.headlineLarge),
-                  Text('Until Hoot is released', style: Theme.of(context).textTheme.headlineSmall),
-                  const SizedBox(height: 30),
+                  const UserSuggestions(),
                   OpenContainer(
                     closedColor: Theme.of(context).colorScheme.surface,
                     closedBuilder: (context, action) => PostComponent(post: post),

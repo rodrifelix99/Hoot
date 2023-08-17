@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:octo_image/octo_image.dart';
 
-class ProfileAvatar extends StatefulWidget {
+class ProfileAvatarComponent extends StatefulWidget {
   final String image;
   final int size;
-  final double radius;
   final bool preview;
   final String url;
-  const ProfileAvatar({super.key, required this.image, required this.size, this.radius = 100, this.preview = false, this.url = ''});
+  const ProfileAvatarComponent({super.key, required this.image, required this.size, this.preview = false, this.url = ''});
 
   @override
-  State<ProfileAvatar> createState() => _ProfileAvatarState();
+  State<ProfileAvatarComponent> createState() => _ProfileAvatarComponentState();
 }
 
-class _ProfileAvatarState extends State<ProfileAvatar> {
+class _ProfileAvatarComponentState extends State<ProfileAvatarComponent> {
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +23,12 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
         child: Center(
           child: Hero(
             tag: widget.image,
-            child: Avatar(image: widget.image, size: widget.size, radius: widget.radius),
+            child: Avatar(image: widget.image, size: widget.size),
           ),
         ),
       );
     } else {
-      return Avatar(image: widget.image, size: widget.size, radius: widget.radius);
+      return Avatar(image: widget.image, size: widget.size);
     }
   }
 }
@@ -37,8 +36,7 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
 class Avatar extends StatefulWidget {
   final String image;
   final int size;
-  final double radius;
-  const Avatar({super.key, required this.image, required this.size, required this.radius});
+  const Avatar({super.key, required this.image, required this.size});
 
   @override
   State<Avatar> createState() => _AvatarState();
@@ -49,19 +47,19 @@ class _AvatarState extends State<Avatar> {
   @override
   Widget build(BuildContext context) {
     if (widget.image.isEmpty) {
-      return SizedBox(
+      return Container(
         height: widget.size.toDouble(),
         width: widget.size.toDouble(),
-        child: CircleAvatar(
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          radius: widget.radius.toDouble(),
-          child: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: widget.size.toDouble() / 2),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          borderRadius: BorderRadius.all(Radius.circular(widget.size / 3)),
         ),
+        child: Center(child: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: widget.size / 2)),
       );
     }
 
     return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(widget.radius.toDouble())),
+      borderRadius: BorderRadius.all(Radius.circular(widget.size / 3)),
       child: OctoImage(
         image: NetworkImage(widget.image),
         placeholderBuilder: OctoPlaceholder.blurHash(

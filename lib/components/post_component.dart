@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hoot/components/url_preview_component.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:hoot/components/avatar.dart';
+import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/models/post.dart';
@@ -291,7 +291,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
                             strokeAlign: BorderSide.strokeAlignOutside,
                           ),
                         ),
-                        child: ProfileAvatar(image: widget.post.user?.smallProfilePictureUrl ?? '', size: 50, radius: (widget.post.user?.radius ?? 100)/3),
+                        child: ProfileAvatarComponent(image: widget.post.user?.smallProfilePictureUrl ?? '', size: 50),
                       )
                   ),
                   const SizedBox(width: 16),

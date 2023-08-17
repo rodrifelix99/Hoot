@@ -9,7 +9,13 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.light,
     colorSchemeSeed: primaryColor,
-    textTheme: GoogleFonts.interTextTheme(),
+    fontFamily: 'Inter',
+    textTheme: TextTheme(
+      titleLarge: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w900,
+      ),
+    ),
     snackBarTheme: snackBarTheme,
     elevatedButtonTheme: elevatedButtonTheme,
     inputDecorationTheme: inputDecorationTheme,
@@ -20,11 +26,7 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     colorSchemeSeed: primaryColor,
-    textTheme: GoogleFonts.interTextTheme().apply(
-      decorationColor: Colors.white, // Set the decoration color to white
-      displayColor: Colors.white, // Set the display color to white
-      bodyColor: Colors.white, // Set the text color to white
-    ),
+    fontFamily: 'Inter',
     snackBarTheme: snackBarTheme,
     elevatedButtonTheme: elevatedButtonTheme,
     inputDecorationTheme: inputDecorationTheme.copyWith(
