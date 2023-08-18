@@ -1,11 +1,8 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/url_preview_component.dart';
-import 'package:line_icons/line_icon.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
-import 'package:hoot/components/name_component.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/error_service.dart';
@@ -25,7 +22,8 @@ class PostComponent extends StatefulWidget {
   final bool showTitleBar;
   final VoidFutureCallBack? onRefeed;
   final bool isSkeleton;
-  const PostComponent({super.key, required this.post, this.showToolbar = true, this.showTitleBar = true, this.onRefeed, this.isSkeleton = false});
+  final Function? onDeleted;
+  const PostComponent({super.key, required this.post, this.showToolbar = true, this.showTitleBar = true, this.onRefeed, this.isSkeleton = false, this.onDeleted});
 
   @override
   State<PostComponent> createState() => _PostComponentState();
@@ -67,7 +65,6 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
 
   Future<void> _deletePost() async {
     if (widget.post.user?.uid != _authProvider.user?.uid) return;
-    // confirmation dialog
     await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -83,9 +80,10 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
               Navigator.of(context).pop(true);
               setState(() => _deleted = true);
               bool res = await _feedProvider.deletePost(context, widget.post.id, widget.post.feed!.id);
-
               if (!res) {
                 ToastService.showToast(context, 'Error deleting post', true);
+              } else if (widget.onDeleted != null) {
+                widget.onDeleted!();
               }
             },
             child: const Text('Delete'),
@@ -225,6 +223,8 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
 
   bool _isEmptyRefeed() => widget.post.reFeededFrom != null && widget.post.text!.isEmpty && widget.post.media!.isEmpty;
 
+  bool _canRefeed() => widget.post.user!.uid != _authProvider.user!.uid && widget.post.reFeededFrom == null;
+
   @override
   Widget build(BuildContext context) {
     return _deleted ? const SizedBox() : widget.isSkeleton ? Container(
@@ -281,12 +281,14 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
             post: widget.post,
             onProfileTap: _handleProfileTap,
           ) : const SizedBox(),
-          Text(
-            _getText(),
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-              fontSize: 20,
+          if (widget.post.text?.isNotEmpty ?? false) ...[
+            Text(
+              _getText(),
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                fontSize: 20,
+              ),
             ),
-          ),
+          ],
           if (_getUrl() != null) ...[
             const SizedBox(height: 10),
             UrlPreviewComponent(
@@ -299,6 +301,30 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
               post: widget.post,
             ),
           ],
+          if (widget.post.reFeededFrom != null) ...[
+            const SizedBox(height: 10),
+            GestureDetector(
+              onTap: () => Navigator.of(context).pushNamed(
+                '/post',
+                arguments: widget.post.reFeededFrom,
+              ),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    PostComponent(
+                        post: widget.post.reFeededFrom!,
+                        showToolbar: false,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
           if (widget.showToolbar) ...[
             const SizedBox(height: 10),
             ToolBar(
@@ -306,6 +332,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
               onMenuTap: _handleMenuTap,
               onLikeTap: toggleLike,
               onRefeedTap: refeed,
+              canRefeed: _canRefeed(),
             ),
           ]
         ],
@@ -396,11 +423,14 @@ class MediaSection extends StatelessWidget {
         containerWidth: MediaQuery.of(context).size.width - 40,
         itemCount: post.media!.length,
         itemBuilder: (context, index) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: ImageComponent(
-              url: post.media![index],
-              radius: 20,
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: ImageComponent(
+                url: post.media![index],
+                radius: 10,
+              ),
             ),
           );
         },
@@ -422,7 +452,8 @@ class ToolBar extends StatelessWidget {
   final Function onMenuTap;
   final Function onLikeTap;
   final Function onRefeedTap;
-  const ToolBar({super.key, required this.post, required this.onMenuTap, required this.onLikeTap, required this.onRefeedTap});
+  final bool canRefeed;
+  const ToolBar({super.key, required this.post, required this.onMenuTap, required this.onLikeTap, required this.onRefeedTap, required this.canRefeed});
 
   @override
   Widget build(BuildContext context) {
@@ -435,7 +466,7 @@ class ToolBar extends StatelessWidget {
             Row(
               children: [
                 IconButton(
-                  onPressed: () => onLikeTap,
+                  onPressed: () => onLikeTap(),
                   icon: Icon(
                     post.liked ? SolarIconsBold.heart : SolarIconsOutline.heart,
                     color: post.liked ? color : Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
@@ -449,10 +480,10 @@ class ToolBar extends StatelessWidget {
                 ),
               ],
             ),
-            Row(
+            canRefeed ? Row(
               children: [
                 IconButton(
-                  onPressed: () => onRefeedTap,
+                  onPressed: canRefeed ? () => onRefeedTap() : null,
                   icon: Icon(
                     post.reFeeded ? SolarIconsBold.refreshSquare : SolarIconsOutline.refreshSquare,
                     color: post.reFeeded ? color : Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
@@ -465,9 +496,9 @@ class ToolBar extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
+            ) : const SizedBox.shrink(),
             IconButton(
-              onPressed: () => onMenuTap,
+              onPressed: () => onMenuTap(),
               icon: Icon(
                 SolarIconsOutline.menuDots,
                 color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),

@@ -7,6 +7,7 @@ import 'package:hoot/services/feed_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 import '../models/post.dart';
 import '../models/user.dart';
@@ -67,10 +68,14 @@ class _PostPageState extends State<PostPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 20),
               _loading ? PostComponent(
                 post: Post.empty(),
                 isSkeleton: true,
-              ) : PostComponent(post: widget.post!),
+              ) : PostComponent(
+                  post: widget.post!,
+                  onDeleted: () => Navigator.pop(context),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -127,7 +132,7 @@ class _PostPageState extends State<PostPage> {
                 ),
               ) : widget.post!.likers.isEmpty ? const Center(
                 child: NothingToShowComponent(
-                  icon: Icon(Icons.heart_broken_rounded),
+                  icon: Icon(SolarIconsBold.heartAngle),
                   text: 'No likes yet',
                 )
               ) : ListView.builder(
