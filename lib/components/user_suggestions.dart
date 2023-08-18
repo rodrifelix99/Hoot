@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/services/auth_provider.dart';
-import 'package:hoot/services/error_service.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 
@@ -53,11 +52,13 @@ class _UserSuggestionsState extends State<UserSuggestions> {
         itemBuilder: (BuildContext context, int index) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: _isLoading ? SkeletonAvatar(
-              style: SkeletonAvatarStyle(
-                width: 60,
-                height: 60,
-                borderRadius: BorderRadius.circular(15),
+            child: _isLoading ? SizedBox(
+              width: 60,
+              height: 60,
+              child: SkeletonAvatar(
+                style: SkeletonAvatarStyle(
+                  borderRadius: BorderRadius.circular(15),
+                ),
               ),
             ) : Column(
               children: [

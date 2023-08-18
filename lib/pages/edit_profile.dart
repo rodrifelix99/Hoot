@@ -189,7 +189,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 30),
                 Center(
                   child: Stack(
                     children: [
@@ -222,19 +222,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Slider(
-                    value: user.radius ?? 100,
-                    min: 10,
-                    max: 100,
-                    onChanged: (value) => setState(() => user.radius = value),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30),
                   child: Column(
                     children: [
                       TextField(
@@ -245,7 +235,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           counter: const SizedBox(),
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       TextField(
                         controller: _usernameController,
                         maxLength: 15,
@@ -255,7 +245,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           enabled: false,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       TextField(
                         controller: _bioController,
                         maxLines: 3,

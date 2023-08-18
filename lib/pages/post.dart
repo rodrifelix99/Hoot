@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/services/feed_provider.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 
@@ -59,24 +60,35 @@ class _PostPageState extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: widget.post?.user != null ? Text('Hoot by @${widget.post?.user?.username}') : Text('Hoot'),
+      appBar: AppBarComponent(
+        title: AppLocalizations.of(context)!.appName,
       ),
-      body:_loading ? Center(
-        child: LoadingAnimationWidget.inkDrop(
-          size: 50,
-          color: Theme.of(context).primaryColor,
-        ),
-
-      ) : SingleChildScrollView(
+      body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              PostComponent(post: widget.post!),
-              const SizedBox(height: 10),
+              _loading ? PostComponent(
+                post: Post.empty(),
+                isSkeleton: true,
+              ) : PostComponent(post: widget.post!),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                child: Text('Likes', style: Theme.of(context).textTheme.titleLarge),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        AppLocalizations.of(context)!.likes,
+                        style: Theme.of(context).textTheme.titleLarge
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      AppLocalizations.of(context)!.likes10RecentLabel,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                      ),
+                    )
+                  ],
+                ),
               ),
               const SizedBox(height: 10),
               _loadingLikes ? Padding(

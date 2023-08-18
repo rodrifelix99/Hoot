@@ -113,18 +113,22 @@ class _FeedPageState extends State<FeedPage> {
               return Column(
                 children: [
                   OpenContainer(
+                    closedElevation: 0,
                     closedColor: Theme.of(context).colorScheme.surface,
                     closedBuilder: (context, action) => PostComponent(post: post),
                     openBuilder: (context, action) => PostPage(post: post),
                   ),
                   const NativeAdComponent(),
-                  const Divider(
+                  Divider(
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
                     thickness: 1,
+                    height: 40,
                   ),
                 ],
               );
             } else {
               return OpenContainer(
+                closedElevation: 0,
                 closedColor: Theme.of(context).colorScheme.surface,
                 closedBuilder: (context, action) => PostComponent(post: post),
                 openBuilder: (context, action) => PostPage(post: post),

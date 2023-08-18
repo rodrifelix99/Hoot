@@ -61,6 +61,10 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
     }
   }
 
+  String _getText() {
+    return widget.post.text?.replaceAll(_getUrl() ?? '', '').trim() ?? '';
+  }
+
   Future<void> _deletePost() async {
     if (widget.post.user?.uid != _authProvider.user?.uid) return;
     // confirmation dialog
@@ -274,28 +278,34 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           widget.showTitleBar ? TitleBar(
-              post: widget.post,
-              onProfileTap: _handleProfileTap,
+            post: widget.post,
+            onProfileTap: _handleProfileTap,
           ) : const SizedBox(),
           Text(
-            widget.post.text ?? '',
+            _getText(),
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
               fontSize: 20,
             ),
           ),
           if (_getUrl() != null) ...[
             const SizedBox(height: 10),
-              UrlPreviewComponent(
-                url: _getUrl()!,
+            UrlPreviewComponent(
+              url: _getUrl()!,
+            ),
+          ],
+          if (widget.post.media?.isNotEmpty ?? false) ...[
+            const SizedBox(height: 10),
+            MediaSection(
+              post: widget.post,
             ),
           ],
           if (widget.showToolbar) ...[
             const SizedBox(height: 10),
             ToolBar(
-                post: widget.post,
-                onMenuTap: _handleMenuTap,
-                onLikeTap: toggleLike,
-                onRefeedTap: refeed,
+              post: widget.post,
+              onMenuTap: _handleMenuTap,
+              onLikeTap: toggleLike,
+              onRefeedTap: refeed,
             ),
           ]
         ],
@@ -317,12 +327,25 @@ class TitleBar extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () => Navigator.of(context).pushNamed('/profile', arguments: post.user!.uid),
-            child: ProfileAvatarComponent(
-              image: post.user!.smallProfilePictureUrl ?? '',
-              size: 50,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: post.feed!.color!.withOpacity(0.25),
+                    blurRadius: 10,
+                    spreadRadius: 0,
+                    offset: const Offset(-4, 2),
+                  ),
+                ]
+              ),
+              child: ProfileAvatarComponent(
+                image: post.user!.smallProfilePictureUrl ?? '',
+                size: 50,
+              ),
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -356,6 +379,41 @@ class TitleBar extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class MediaSection extends StatelessWidget {
+  final Post post;
+  const MediaSection({super.key, required this.post});
+
+  @override
+  Widget build(BuildContext context) {
+    return (post.media?.isNotEmpty ?? false) ? SizedBox(
+      height: 300,
+      width: MediaQuery.of(context).size.width - 40,
+      child: Swiper(
+        containerHeight: 300,
+        containerWidth: MediaQuery.of(context).size.width - 40,
+        itemCount: post.media!.length,
+        itemBuilder: (context, index) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: ImageComponent(
+              url: post.media![index],
+              radius: 20,
+            ),
+          );
+        },
+        pagination: post.media!.length <= 1 ? null : SwiperPagination(
+          builder: DotSwiperPaginationBuilder(
+            space: 5,
+            activeSize: 10,
+            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+            activeColor: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
+      ),
+    ) : const SizedBox.shrink();
   }
 }
 
@@ -409,11 +467,11 @@ class ToolBar extends StatelessWidget {
               ],
             ),
             IconButton(
-                onPressed: () => onMenuTap,
-                icon: Icon(
-                    SolarIconsOutline.menuDots,
-                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
-                ),
+              onPressed: () => onMenuTap,
+              icon: Icon(
+                SolarIconsOutline.menuDots,
+                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+              ),
             ),
           ],
         ),

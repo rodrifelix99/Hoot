@@ -10,7 +10,8 @@ class ImageComponent extends StatefulWidget {
   final BoxFit? fit;
   final Alignment? alignment;
   final ImageRepeat? repeat;
-  const ImageComponent({super.key, required this.url, this.width, this.height, this.fit, this.alignment, this.repeat});
+  final double radius;
+  const ImageComponent({super.key, required this.url, this.width, this.height, this.fit, this.alignment, this.repeat, this.radius = 0});
 
   @override
   State<ImageComponent> createState() => _ImageComponentState();
@@ -24,27 +25,30 @@ class _ImageComponentState extends State<ImageComponent> {
       child: Center(
         child: Hero(
           tag: widget.url + widget.width.toString() + widget.height.toString() + DateTime.now().toString(),
-          child: OctoImage(
-              image: NetworkImage(widget.url),
-              width: widget.width,
-              height: widget.height,
-              fit: widget.fit,
-              alignment: widget.alignment,
-              repeat: widget.repeat,
-              placeholderBuilder: (context) => Container(
-                color: Theme.of(context).colorScheme.secondaryContainer,
-                child: Center(
-                  child: LoadingAnimationWidget.inkDrop(
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                    size: 50,
-                  )
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(widget.radius),
+            child: OctoImage(
+                image: NetworkImage(widget.url),
+                width: widget.width,
+                height: widget.height,
+                fit: widget.fit,
+                alignment: widget.alignment,
+                repeat: widget.repeat,
+                placeholderBuilder: (context) => Container(
+                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  child: Center(
+                    child: LoadingAnimationWidget.inkDrop(
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                      size: 50,
+                    )
+                  ),
                 ),
-              ),
-              errorBuilder: OctoError.placeholderWithErrorIcon((context) => Container(
-                color: Colors.grey.shade800,
-              ),
-              iconSize: 0
-              )
+                errorBuilder: OctoError.placeholderWithErrorIcon((context) => Container(
+                  color: Colors.grey.shade800,
+                ),
+                iconSize: 0
+                )
+            ),
           ),
         ),
       ),

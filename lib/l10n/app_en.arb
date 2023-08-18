@@ -617,5 +617,7 @@
 	"codeSent": "We just sent you a 6 digit code for the number you provided: {phoneNumber}",
 	"enterCode": "Enter Code",
 	"changeNumber": "Change Number",
-	"thatsIt": "That's it!"
+	"thatsIt": "That's it!",
+	"likes": "Likes",
+	"likes10RecentLabel": "We only show the 10 most recent likes"
 }
