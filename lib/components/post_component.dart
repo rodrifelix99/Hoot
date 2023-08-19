@@ -353,7 +353,7 @@ class TitleBar extends StatelessWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => Navigator.of(context).pushNamed('/profile', arguments: post.user!.uid),
+            onTap: () => onProfileTap(),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
@@ -377,7 +377,7 @@ class TitleBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: () => onProfileTap,
+                onTap: () => onProfileTap(),
                 child: Text(
                   post.user!.name ?? post.user!.username!,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
