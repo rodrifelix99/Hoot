@@ -10,7 +10,7 @@ class AppTheme {
     brightness: Brightness.light,
     colorSchemeSeed: primaryColor,
     fontFamily: 'Inter',
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       titleLarge: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.w900,
@@ -27,6 +27,12 @@ class AppTheme {
     brightness: Brightness.dark,
     colorSchemeSeed: primaryColor,
     fontFamily: 'Inter',
+    textTheme:  const TextTheme(
+      titleLarge: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w900,
+      ),
+    ),
     snackBarTheme: snackBarTheme,
     elevatedButtonTheme: elevatedButtonTheme,
     inputDecorationTheme: inputDecorationTheme.copyWith(

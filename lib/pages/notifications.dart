@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
+import 'package:hoot/components/list_item_component.dart';
 import 'package:hoot/models/notification.dart' as Notif;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeletons/skeletons.dart';
@@ -108,8 +110,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.notifications),
+      appBar: AppBarComponent(
+        title: AppLocalizations.of(context)!.notifications,
       ),
       body: _isLoading ? SkeletonListView(
         itemBuilder: (context, index) => SkeletonListTile(
@@ -141,12 +143,25 @@ class _NotificationsPageState extends State<NotificationsPage> {
         enablePullUp: _hasMore,
         child: ListView.builder(
           itemCount: _notifications.length,
-          itemBuilder: (context, index) => ListTile(
+          itemBuilder: (context, index) => GestureDetector(
             onTap: () => _handleNotificationTap(_notifications[index]),
-            leading: ProfileAvatarComponent(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
-            title: Text(_notifications[index].user.name ?? _notifications[index].user.username ?? ''),
-            subtitle: Text(_getNotificationText(_notifications[index])),
-            trailing: _notifications[index].read ? Text(timeago.format(_notifications[index].createdAt)) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),
+            child: ListItemComponent(
+              leading: ProfileAvatarComponent(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 50, radius: 15),
+              title: _notifications[index].user.name ?? _notifications[index].user.username ?? '',
+              small: true,
+              subtitle: _getNotificationText(_notifications[index]),
+              trailing: _notifications[index].read ? Text(
+                  timeago.format(_notifications[index].createdAt),
+                  style: Theme.of(context).textTheme.bodySmall
+              ) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),
+            ),
+            /* ListTile(
+              onTap: () => _handleNotificationTap(_notifications[index]),
+              leading: ProfileAvatarComponent(image: _notifications[index].user.smallProfilePictureUrl ?? '', size: 40),
+              title: Text(_notifications[index].user.name ?? _notifications[index].user.username ?? ''),
+              subtitle: Text(_getNotificationText(_notifications[index])),
+              trailing: _notifications[index].read ? Text(timeago.format(_notifications[index].createdAt)) : Icon(Icons.circle, color: Theme.of(context).colorScheme.primary),
+            ) */
           ),
         ),
       ),

@@ -3,13 +3,16 @@ import 'package:hoot/models/feed.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 import '../models/user.dart';
 import '../services/error_service.dart';
 import '../services/feed_provider.dart';
-
+/// A component that allows the user to subscribe to a feed and manage requests
 class SubscribeComponent extends StatefulWidget {
+  /// The feed to subscribe to
   final Feed feed;
+  /// The user that owns the feed
   final U user;
   const SubscribeComponent({super.key, required this.feed, required this.user});
 
@@ -155,6 +158,7 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       return ElevatedButton(
           onPressed: () => Navigator.of(context).pushNamed('/feed_requests', arguments: widget.feed.id),
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+              elevation: MaterialStateProperty.all<double>(0),
               textStyle: MaterialStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
               padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
               backgroundColor: MaterialStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
@@ -165,31 +169,34 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
     } else if (_isAuthor()) {
       return const SizedBox.shrink();
     } else if (_isSubscribed()) {
-      return ElevatedButton(
+      return IconButton(
           onPressed: _unsubscribeFromFeed,
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+              elevation: MaterialStateProperty.all<double>(0),
               textStyle: MaterialStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
               padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
               backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.errorContainer),
               foregroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onErrorContainer)
           ),
-          child: Text(AppLocalizations.of(context)!.unsubscribe)
+          icon: const Icon(SolarIconsBold.homeAngle)
       );
     } else if (_isPrivate() && !_isRequested()) {
-      return ElevatedButton(
+      return IconButton(
           onPressed: _requestToJoinFeed,
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+              elevation: MaterialStateProperty.all<double>(0),
               textStyle: MaterialStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
               padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
               backgroundColor: MaterialStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
               foregroundColor: MaterialStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
           ),
-          child: Text(AppLocalizations.of(context)!.request)
+          icon: const Icon(SolarIconsOutline.lockKeyholeMinimalistic)
       );
     } else if (_isPrivate() && _isRequested()) {
       return ElevatedButton(
           onPressed: null,
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+              elevation: MaterialStateProperty.all<double>(0),
               textStyle: MaterialStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
               padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
               backgroundColor: MaterialStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
@@ -198,15 +205,16 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
           child: Text(AppLocalizations.of(context)!.requested)
       );
     } else {
-      return ElevatedButton(
+      return IconButton(
           onPressed: _subscribeToFeed,
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+              elevation: MaterialStateProperty.all<double>(0),
               textStyle: MaterialStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
               padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
               backgroundColor: MaterialStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
               foregroundColor: MaterialStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
           ),
-          child: Text(AppLocalizations.of(context)!.subscribe)
+          icon: const Icon(SolarIconsOutline.homeAddAngle)
       );
     }
   }

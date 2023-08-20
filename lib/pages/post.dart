@@ -64,7 +64,12 @@ class _PostPageState extends State<PostPage> {
       appBar: AppBarComponent(
         title: AppLocalizations.of(context)!.appName,
       ),
-      body: SingleChildScrollView(
+      body: widget.post == null && !_loading ? Center(
+          child: NothingToShowComponent(
+              icon: const Icon(SolarIconsBold.eraserSquare),
+              text: AppLocalizations.of(context)!.hootDeletedOrDoesntExist
+          )
+      ) : SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -73,8 +78,8 @@ class _PostPageState extends State<PostPage> {
                 post: Post.empty(),
                 isSkeleton: true,
               ) : PostComponent(
-                  post: widget.post!,
-                  onDeleted: () => Navigator.pop(context),
+                post: widget.post!,
+                onDeleted: () => Navigator.pop(context),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -130,11 +135,11 @@ class _PostPageState extends State<PostPage> {
                     ),
                   ],
                 ),
-              ) : widget.post!.likers.isEmpty ? const Center(
-                child: NothingToShowComponent(
-                  icon: Icon(SolarIconsBold.heartAngle),
-                  text: 'No likes yet',
-                )
+              ) : (widget.post?.likers.isEmpty ?? true) ? const Center(
+                  child: NothingToShowComponent(
+                    icon: Icon(SolarIconsBold.heartAngle),
+                    text: 'No likes yet',
+                  )
               ) : ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -145,7 +150,7 @@ class _PostPageState extends State<PostPage> {
                     leading: ProfileAvatarComponent(
                         image: widget.post!.likers[index].smallProfilePictureUrl ?? '',
                         size: 50
-                      ),
+                    ),
                     title: Text(widget.post!.likers[index].name ?? ''),
                     subtitle: Text("@${widget.post!.likers[index].username}"),
                   );

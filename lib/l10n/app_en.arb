@@ -619,5 +619,6 @@
 	"changeNumber": "Change Number",
 	"thatsIt": "That's it!",
 	"likes": "Likes",
-	"likes10RecentLabel": "We only show the 10 most recent likes"
+	"likes10RecentLabel": "We only show the 10 most recent likes",
+	"hootDeletedOrDoesntExist": "This hoot was deleted or doesn't exist"
 }

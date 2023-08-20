@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
+import 'package:hoot/components/list_item_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/subscribe_component.dart';
 import 'package:hoot/components/type_box_component.dart';
+import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/search_by_genre.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
@@ -92,9 +94,13 @@ class _ExplorePageState extends State<ExplorePage> {
                           for (int i = 0; i < _top10Feeds.length; i++)
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: GestureDetector(
-                                onTap: () => Navigator.pushNamed(context, '/profile', arguments: [_top10Feeds[i].user, _top10Feeds[i].id]),
-                                child: Container(
+                              child: OpenContainer(
+                                closedElevation: 0,
+                                closedShape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                                ),
+                                transitionType: ContainerTransitionType.fadeThrough,
+                                closedBuilder: (context, open) => Container(
                                   constraints: BoxConstraints(
                                     maxWidth: MediaQuery.of(context).size.width * 0.6,
                                     minWidth: MediaQuery.of(context).size.width * 0.4,
@@ -181,6 +187,10 @@ class _ExplorePageState extends State<ExplorePage> {
                                     ],
                                   ),
                                 ),
+                                openBuilder: (context, close) => ProfilePage(
+                                  feedId: _top10Feeds[i].id,
+                                  user: _top10Feeds[i].user,
+                                ),
                               ),
                             ),
                         ],
@@ -263,93 +273,55 @@ class _ExplorePageState extends State<ExplorePage> {
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: GestureDetector(
-                            onTap: () => Navigator.pushNamed(context, '/profile', arguments: [_recentFeeds[index].user, _recentFeeds[index].id]),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: _recentFeeds[index].color,
-                                    gradient: LinearGradient(
-                                        colors: [
-                                          _recentFeeds[index].color!,
-                                          _recentFeeds[index].color!.withOpacity(0.5)
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
+                              onTap: () => Navigator.pushNamed(context, '/profile', arguments: [_recentFeeds[index].user, _recentFeeds[index].id]),
+                              child: OpenContainer(
+                                closedElevation: 0,
+                                transitionType: ContainerTransitionType.fadeThrough,
+                                closedShape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                                ),
+                                closedBuilder: (context, open) => ListItemComponent(
+                                  title: _recentFeeds[index].title,
+                                  subtitle: _recentFeeds[index].description ?? '',
+                                  backgroundColor: _recentFeeds[index].color?.withOpacity(.15) ?? Theme.of(context).colorScheme.surface,
+                                  // if feed color too bright, use surface color
+                                  foregroundColor: _recentFeeds[index].color!.computeLuminance() > 0.5 ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onBackground,
+                                  leading: ProfileAvatarComponent(
+                                    image: _recentFeeds[index].user?.largeProfilePictureUrl ?? '',
+                                    size: 100,
+                                    radius: 25,
                                   ),
-                                  child: Center(
-                                    child: Text(
-                                      _recentFeeds[index].title[0].toUpperCase(),
-                                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                          color: _recentFeeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
-                                      ),
-                                    ),
+                                  trailing: SubscribeComponent(
+                                    feed: _recentFeeds[index],
+                                    user: _recentFeeds[index].user!,
                                   ),
                                 ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _recentFeeds[index].title,
-                                        style: Theme.of(context).textTheme.titleMedium,
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            AppLocalizations.of(context)!.by,
-                                            style: Theme.of(context).textTheme.bodySmall,
-                                          ),
-                                          const SizedBox(width: 5),
-                                          NameComponent(
-                                              user: _recentFeeds[index].user!,
-                                              color: Theme.of(context).colorScheme.onSurface,
-                                              textColor: Theme.of(context).colorScheme.onSurface,
-                                              bold: false,
-                                              size: 12
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
+                                openBuilder: (context, close) => ProfilePage(
+                                  feedId: _recentFeeds[index].id,
+                                  user: _recentFeeds[index].user,
                                 ),
-                                SubscribeComponent(feed: _recentFeeds[index], user: _recentFeeds[index].user!),
-                              ],
-                            ),
+                              )
                           ),
                         ),
-                      ) : Column(
+                      ) : const Column(
                         children: [
-                          SkeletonListTile(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            hasSubtitle: true,
-                            hasLeading: true,
+                          ListItemComponent(
+                            title: '',
+                            subtitle: '',
+                            leading: SizedBox.shrink(),
+                            isLoading: true,
                           ),
-                          SkeletonListTile(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            hasSubtitle: true,
-                            hasLeading: true,
+                          ListItemComponent(
+                            title: '',
+                            subtitle: '',
+                            leading: SizedBox.shrink(),
+                            isLoading: true,
                           ),
-                          SkeletonListTile(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            hasSubtitle: true,
-                            hasLeading: true,
-                          ),
-                          SkeletonListTile(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            hasSubtitle: true,
-                            hasLeading: true,
-                          ),
-                          SkeletonListTile(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            hasSubtitle: true,
-                            hasLeading: true,
+                          ListItemComponent(
+                            title: '',
+                            subtitle: '',
+                            leading: SizedBox.shrink(),
+                            isLoading: true,
                           ),
                         ],
                       ),
