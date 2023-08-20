@@ -489,7 +489,7 @@ class _FeedPostsState extends State<FeedPosts> {
     ) : widget.user.uid != _authProvider.user?.uid ? Center(
       child: NothingToShowComponent(
         icon: const Icon(Icons.article_rounded),
-        text: '${AppLocalizations.of(context)?.emptyFeed}\n\n${AppLocalizations.of(context)?.emptyFeedToOtherUsers(widget.user.name ?? widget.user.username ?? 'this user')}}',
+        text: '${AppLocalizations.of(context)?.emptyFeed}\n\n${AppLocalizations.of(context)?.emptyFeedToOtherUsers(widget.user.name ?? widget.user.username ?? 'this user')}',
       ),
     ) : Center(
       child: NothingToShowComponent(

@@ -164,7 +164,7 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
               backgroundColor: MaterialStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
               foregroundColor: MaterialStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
           ),
-          child: Text(AppLocalizations.of(context)!.numberOfRequests(widget.feed.requests?.length ?? 0, widget.feed.requests?.length ?? 0))
+          child: Text(AppLocalizations.of(context)!.numberOfRequests(widget.feed.requests?.length ?? 0))
       );
     } else if (_isAuthor()) {
       return const SizedBox.shrink();
