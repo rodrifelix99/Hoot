@@ -1,18 +1,16 @@
 import 'package:animations/animations.dart';
-import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/list_item_component.dart';
-import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/subscribe_component.dart';
 import 'package:hoot/components/type_box_component.dart';
 import 'package:hoot/pages/profile.dart';
+import 'package:hoot/pages/search.dart';
 import 'package:hoot/pages/search_by_genre.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletons/skeletons.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../models/feed.dart';
 import '../models/feed_types.dart';
@@ -70,22 +68,35 @@ class _ExplorePageState extends State<ExplorePage> {
     return Scaffold(
         appBar: AppBarComponent(
           title: AppLocalizations.of(context)!.explore,
-          actions: [
-            IconButton(
-              icon: const Icon(SolarIconsOutline.magnifier),
-              onPressed: () => Navigator.of(context).pushNamed('/search'),
-            ),
-          ],
         ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: OpenContainer(
+                  openElevation: 0,
+                  closedElevation: 0,
+                  closedColor: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                  closedShape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                  closedBuilder: (context, open) => Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      AppLocalizations.of(context)!.searchPlaceholder,
+                    ),
+                  ),
+                  openBuilder: (context, open) => const SearchPage(),
+                ),
+              ),
               _top10Feeds.isNotEmpty ? SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: [
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 10),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -96,6 +107,7 @@ class _ExplorePageState extends State<ExplorePage> {
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: OpenContainer(
                                 closedElevation: 0,
+                                closedColor: Colors.transparent,
                                 closedShape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.all(Radius.circular(20)),
                                 ),
@@ -272,35 +284,33 @@ class _ExplorePageState extends State<ExplorePage> {
                         itemCount: _recentFeeds.length,
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: GestureDetector(
-                              onTap: () => Navigator.pushNamed(context, '/profile', arguments: [_recentFeeds[index].user, _recentFeeds[index].id]),
-                              child: OpenContainer(
-                                closedElevation: 0,
-                                transitionType: ContainerTransitionType.fadeThrough,
-                                closedShape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                                ),
-                                closedBuilder: (context, open) => ListItemComponent(
-                                  title: _recentFeeds[index].title,
-                                  subtitle: _recentFeeds[index].description ?? '',
-                                  backgroundColor: _recentFeeds[index].color?.withOpacity(.15) ?? Theme.of(context).colorScheme.surface,
-                                  // if feed color too bright, use surface color
-                                  foregroundColor: _recentFeeds[index].color!.computeLuminance() > 0.5 ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onBackground,
-                                  leading: ProfileAvatarComponent(
-                                    image: _recentFeeds[index].user?.largeProfilePictureUrl ?? '',
-                                    size: 100,
-                                    radius: 25,
-                                  ),
-                                  trailing: SubscribeComponent(
-                                    feed: _recentFeeds[index],
-                                    user: _recentFeeds[index].user!,
-                                  ),
-                                ),
-                                openBuilder: (context, close) => ProfilePage(
-                                  feedId: _recentFeeds[index].id,
-                                  user: _recentFeeds[index].user,
-                                ),
-                              )
+                          child: OpenContainer(
+                            closedElevation: 0,
+                            closedColor: Colors.transparent,
+                            transitionType: ContainerTransitionType.fadeThrough,
+                            closedShape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                            ),
+                            closedBuilder: (context, open) => ListItemComponent(
+                              title: _recentFeeds[index].title,
+                              subtitle: _recentFeeds[index].description ?? '',
+                              backgroundColor: _recentFeeds[index].color?.withOpacity(.15) ?? Theme.of(context).colorScheme.surface,
+                              // if feed color too bright, use surface color
+                              foregroundColor: _recentFeeds[index].color!.computeLuminance() > 0.5 ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onBackground,
+                              leading: ProfileAvatarComponent(
+                                image: _recentFeeds[index].user?.largeProfilePictureUrl ?? '',
+                                size: 100,
+                                radius: 25,
+                              ),
+                              trailing: SubscribeComponent(
+                                feed: _recentFeeds[index],
+                                user: _recentFeeds[index].user!,
+                              ),
+                            ),
+                            openBuilder: (context, close) => ProfilePage(
+                              feedId: _recentFeeds[index].id,
+                              user: _recentFeeds[index].user,
+                            ),
                           ),
                         ),
                       ) : const Column(

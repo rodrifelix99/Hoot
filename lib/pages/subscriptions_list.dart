@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/services/auth_provider.dart';
@@ -74,15 +75,15 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.subscriptions),
+      appBar: AppBarComponent(
+        title: AppLocalizations.of(context)!.subscriptions,
       ),
       body: _loading ? Center(
         child: LoadingAnimationWidget.inkDrop(
             color: Theme.of(context).colorScheme.onSurface,
             size: 50,
         ),
-      ) : _subscriptions.isEmpty ? Center(
+      ) : _subscriptions.isEmpty ? const Center(
         child: NothingToShowComponent(
           icon: Icon(Icons.article_rounded),
           text: "No subscriptions found",

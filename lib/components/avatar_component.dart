@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:octo_image/octo_image.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 class ProfileAvatarComponent extends StatefulWidget {
   final String image;
@@ -56,7 +57,13 @@ class _AvatarState extends State<Avatar> {
           color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius: widget.radius == -1 ? BorderRadius.all(Radius.circular(widget.size / 3)) : BorderRadius.all(Radius.circular(widget.radius)),
         ),
-        child: Center(child: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: widget.size / 2)),
+        child: Center(
+            child: Icon(
+                SolarIconsBold.linkRoundAngle,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                size: widget.size / 2
+            ),
+        ),
       );
     }
 
@@ -67,11 +74,7 @@ class _AvatarState extends State<Avatar> {
         placeholderBuilder: OctoPlaceholder.blurHash(
           'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
         ),
-        errorBuilder: OctoError.blurHash(
-          'LPOe[M{tZjj;KnPTowa#4=xtyBbJ',
-          icon: null,
-          iconColor: Colors.grey.shade800,
-        ),
+        errorBuilder: OctoError.icon(color: Theme.of(context).colorScheme.error),
         fit: BoxFit.cover,
         height: widget.size.toDouble(),
         width: widget.size.toDouble(),

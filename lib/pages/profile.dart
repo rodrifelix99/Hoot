@@ -19,6 +19,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:solar_icons/solar_icons.dart';
 import 'package:vibration/vibration.dart';
 
 import '../components/post_component.dart';
@@ -259,13 +260,13 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                 children: [
                   Text(_user.subscriptions.length.toString(), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
                   const SizedBox(width: 5),
-                  const LineIcon(LineIcons.users, color: Colors.white, size: 30)
+                  const Icon(SolarIconsBold.usersGroupRounded, color: Colors.white, size: 25)
                 ],
               )
           ),
           _isCurrentUser ? IconButton(
             onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/settings', (route) => false),
-            icon: const LineIcon(LineIcons.cog, color: Colors.white, size: 30),
+            icon: const Icon(SolarIconsBold.settings, color: Colors.white, size: 30),
           ) : const SizedBox(width: 10),
         ],
       ),
@@ -276,7 +277,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             title: AppLocalizations.of(context)!.numberOfSubscribers(_user.feeds![_selectedFeedIndex].subscribers?.length ?? 0),
             iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
             bubbleColor : _user.feeds![_selectedFeedIndex].color!,
-            icon: LineIcons.users,
+            icon: SolarIconsOutline.usersGroupRounded,
             titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
             onPress: () {
               ToastService.showToast(context, AppLocalizations.of(context)!.comingSoon, false);
@@ -287,7 +288,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             title: AppLocalizations.of(context)!.editFeed,
             iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
             bubbleColor : _user.feeds![_selectedFeedIndex].color!,
-            icon: LineIcons.pencilRuler,
+            icon: SolarIconsOutline.pen,
             titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
             onPress: () {
               Navigator.of(context).pushNamed('/edit_feed', arguments: _user.feeds![_selectedFeedIndex]);
@@ -298,7 +299,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             title: AppLocalizations.of(context)!.appName,
             iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
             bubbleColor : _user.feeds![_selectedFeedIndex].color!,
-            icon: LineIcons.feather,
+            icon: SolarIconsOutline.addSquare,
             titleStyle: TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
             onPress: () {
               Navigator.of(context).pushNamed('/create_post', arguments: _user.feeds![_selectedFeedIndex].id);
@@ -311,7 +312,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             ? _animationController.reverse()
             : _animationController.forward(),
         iconColor: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-        iconData: Icons.menu_rounded,
+        iconData: SolarIconsOutline.hamburgerMenu,
         backGroundColor: _user.feeds![_selectedFeedIndex].color!,
       ) : null,
       body: _loadingUser ? Center(

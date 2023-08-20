@@ -4,6 +4,7 @@ import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -109,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Column(
                 children: [
                   ListTile(
-                    leading: const Icon(Icons.brightness_4_rounded),
+                    leading: const Icon(SolarIconsBold.moonFog),
                     title: Text(AppLocalizations.of(context)!.darkMode),
                     subtitle: Text(AppLocalizations.of(context)!.syncedWithSystem),
                     trailing: Switch(
@@ -118,25 +119,25 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                   ListTile(
-                    leading: const Icon(Icons.edit_rounded),
+                    leading: const Icon(SolarIconsBold.userRounded),
                     title: Text(AppLocalizations.of(context)!.editProfile),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () => Navigator.pushNamed(context, '/edit_profile'),
                   ),
                   ListTile(
-                    leading: const Icon(Icons.privacy_tip_rounded),
+                    leading: const Icon(SolarIconsBold.shieldCheck),
                     title: Text(AppLocalizations.of(context)!.termsOfService),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () => Navigator.pushNamed(context, '/terms_of_service'),
                   ),
                   ListTile(
-                    leading: const Icon(Icons.verified_rounded),
+                    leading: const Icon(SolarIconsBold.verifiedCheck),
                     title: Text(AppLocalizations.of(context)!.aboutUs),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () => Navigator.pushNamed(context, '/about_us'),
                   ),
                   ListTile(
-                    leading: const Icon(Icons.delete_rounded),
+                    leading: const Icon(SolarIconsBold.trashBinMinimalistic),
                     title: Text(AppLocalizations.of(context)!.deleteAccount),
                     onTap: _deleteAccount,
                   ),

@@ -10,6 +10,7 @@ import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../services/auth_provider.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -179,8 +180,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          child: LineIcon(
-                            LineIcons.image,
+                          child: Icon(
+                            SolarIconsOutline.galleryAdd,
                             color: Theme.of(context).colorScheme.onSurface,
                             size: 16,
                           ),
@@ -211,8 +212,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            child: LineIcon(
-                              LineIcons.camera,
+                            child: Icon(
+                              SolarIconsOutline.galleryAdd,
                               color: Theme.of(context).colorScheme.onSurface,
                               size: 16,
                             ),

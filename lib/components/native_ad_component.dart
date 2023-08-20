@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skeletons/skeletons.dart';
 
 class NativeAdComponent extends StatefulWidget {
   const NativeAdComponent({super.key});
@@ -85,7 +86,7 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   AppLocalizations.of(context)!.sponsored,
@@ -112,19 +113,23 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
               maxWidth: 400,
               maxHeight: 400,
             ),
-            child: _nativeAdIsLoaded ? AdWidget(ad: _nativeAd!) : Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary.withOpacity(0.25),
-                borderRadius: BorderRadius.circular(10),
+            child: Skeleton(
+              isLoading: _nativeAdIsLoaded == false,
+              skeleton: Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
-            )
+              child: AdWidget(ad: _nativeAd!),
+            ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               AppLocalizations.of(context)!.thankYouForSupporting,

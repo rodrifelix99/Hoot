@@ -19,6 +19,9 @@ class AppTheme {
     snackBarTheme: snackBarTheme,
     elevatedButtonTheme: elevatedButtonTheme,
     inputDecorationTheme: inputDecorationTheme,
+    dropdownMenuTheme: DropdownMenuThemeData(
+        inputDecorationTheme: inputDecorationTheme,
+    ),
     chipTheme: chipTheme,
   );
 
@@ -38,6 +41,9 @@ class AppTheme {
     inputDecorationTheme: inputDecorationTheme.copyWith(
       labelStyle: const TextStyle(color: Colors.white),
       fillColor: Colors.grey.shade800,
+    ),
+    dropdownMenuTheme: DropdownMenuThemeData(
+      inputDecorationTheme: inputDecorationTheme
     ),
     chipTheme: chipTheme.copyWith(
       backgroundColor: darkColorScheme.onPrimary,

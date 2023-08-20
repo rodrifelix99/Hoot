@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
+import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/models/user.dart';
 import 'package:provider/provider.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../services/auth_provider.dart';
 import '../services/error_service.dart';
 
@@ -39,7 +42,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.search)),
+      appBar: AppBarComponent(title: AppLocalizations.of(context)!.search),
       body:
         Column(
           children: [
@@ -52,7 +55,7 @@ class _SearchPageState extends State<SearchPage> {
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.searchPlaceholder,
                   suffixIcon: IconButton(
-                    icon: const Icon(Icons.search),
+                    icon: const Icon(SolarIconsOutline.magnifier),
                     onPressed: () => _search(),
                   ),
                 ),
@@ -61,7 +64,7 @@ class _SearchPageState extends State<SearchPage> {
             _isLoading ? const Center(child: Padding(
               padding: EdgeInsets.symmetric(vertical: 20.0),
               child: CircularProgressIndicator(),
-            )) : Expanded(
+            )) : _users.isNotEmpty ? Expanded(
               child: ListView.builder(
                 itemCount: _users.length,
                 itemBuilder: (context, index) {
@@ -76,7 +79,12 @@ class _SearchPageState extends State<SearchPage> {
                   );
                 },
               ),
-            ),
+            ) : Center(
+              child: NothingToShowComponent(
+                icon: const Icon(SolarIconsBold.magnifierZoomOut),
+                text: AppLocalizations.of(context)!.noUsersToShow,
+              )
+            )
           ],
       ),
     );

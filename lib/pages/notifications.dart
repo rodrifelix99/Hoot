@@ -94,8 +94,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
         break;
       case 6:
       case 7:
-      Navigator.pushNamed(context, '/profile', arguments: [notification.user, notification.feed?.id]);
-      break;
+        Navigator.pushNamed(context, '/profile', arguments: [notification.user, notification.feed?.id]);
+        break;
       case 5:
         Navigator.pushNamed(context, '/feed_requests', arguments: notification.feed?.id ?? '');
         break;
@@ -113,10 +113,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
       appBar: AppBarComponent(
         title: AppLocalizations.of(context)!.notifications,
       ),
-      body: _isLoading ? SkeletonListView(
-        itemBuilder: (context, index) => SkeletonListTile(
-          hasSubtitle: true,
-        ),
+      body: _isLoading ? ListView.builder(
+          itemCount: 10,
+          itemBuilder: (context, index) => const ListItemComponent(
+            leading: SkeletonAvatar(),
+            title: '',
+            subtitle: '',
+            isLoading: true,
+            small: true,
+          )
       ) : _notifications.isEmpty ? Center(
           child: NothingToShowComponent(
               icon: Icon(Icons.notifications_off_rounded),

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:floating_action_bubble/floating_action_bubble.dart';
+import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/url_preview_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,11 +11,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/upload_service.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:line_icons/line_icon.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:provider/provider.dart';
+import 'package:solar_icons/solar_icons.dart';
 import 'package:uri_content/uri_content.dart';
 
 import '../models/feed.dart';
@@ -27,7 +28,7 @@ class CreatePostPage extends StatefulWidget {
   State<CreatePostPage> createState() => _CreatePostPageState();
 }
 
-class _CreatePostPageState extends State<CreatePostPage> {
+class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProviderStateMixin {
   late FeedProvider _feedProvider;
   late AuthProvider _authProvider;
   final TextEditingController _textEditingController = TextEditingController();
@@ -35,11 +36,21 @@ class _CreatePostPageState extends State<CreatePostPage> {
   final List<String> _gifs = [];
   bool _isLoading = false;
   String _selectedFeedId = '';
+  final TextEditingController _dropdownController = TextEditingController();
+
+  late Animation<double> _animation;
+  late AnimationController _animationController;
   
   @override
   void initState() {
     _feedProvider = Provider.of<FeedProvider>(context, listen: false);
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 260),
+      vsync: this,
+    );
+    final curvedAnimation = CurvedAnimation(curve: Curves.decelerate, parent: _animationController);
+    _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       TenorGifPicker.init(
@@ -58,13 +69,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
       } else {
         setState(() {
           _authProvider.user!.feeds = feeds;
-          widget.feedId == null ? _selectedFeedId = feeds[0].id : _selectedFeedId = widget.feedId!;
         });
       }
-    } else {
-      setState(() {
-        widget.feedId == null ? _selectedFeedId = _authProvider.user!.feeds![0].id : _selectedFeedId = widget.feedId!;
-      });
     }
   }
 
@@ -173,12 +179,12 @@ class _CreatePostPageState extends State<CreatePostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.createPost),
+      appBar: AppBarComponent(
+        title: AppLocalizations.of(context)!.createPost,
         actions: [
           IconButton(
             onPressed: _isValid() ? _createPost : null,
-            icon: const LineIcon(LineIcons.paperPlane),
+            icon: const Icon(SolarIconsOutline.plain),
           ),
         ],
       ),
@@ -188,35 +194,24 @@ class _CreatePostPageState extends State<CreatePostPage> {
       )) :
       SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 20),
             _authProvider.user!.feeds!.isNotEmpty ? Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                      AppLocalizations.of(context)!.selectFeed,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  DropdownButton(
-                    value: _selectedFeedId,
-                    onChanged: (value) => setState(() => _selectedFeedId = value.toString()),
-                    borderRadius: BorderRadius.circular(10),
-                    isExpanded: true,
-                    items: _authProvider.user!.feeds!.map((feed) => DropdownMenuItem(
+              child: DropdownMenu(
+                controller: _dropdownController,
+                label: Text(AppLocalizations.of(context)!.selectFeed),
+                width: MediaQuery.of(context).size.width - 40,
+                onSelected: (value) => _selectedFeedId = value ?? '',
+                dropdownMenuEntries: [
+                  for (Feed feed in _authProvider.user!.feeds!)
+                    DropdownMenuEntry(
                       value: feed.id,
-                      child: Row(
-                        children: [
-                          Text(feed.title),
-                          const SizedBox(width: 10),
-                          feed.private == true ? const LineIcon(LineIcons.lock) : const SizedBox(),
-                          feed.nsfw == true ? const LineIcon(LineIcons.exclamationTriangle) : const SizedBox(),
-                        ],
-                      ),
-                    )).toList(),
-                  ),
-                ],
+                      label: feed.title,
+                      trailingIcon: feed.private! ? const Icon(SolarIconsOutline.lock) : feed.nsfw! ? const Icon(SolarIconsOutline.xxx) : null,
+                    ),
+                ]
               ),
             ) : const Center(child: CircularProgressIndicator()),
             const SizedBox(height: 10),
@@ -259,35 +254,15 @@ class _CreatePostPageState extends State<CreatePostPage> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: UrlPreviewComponent(url: _getUrl()!, isClickable: false),
             ) : const SizedBox(),
-            _images.length + _gifs.length < 10 ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: _pickImage,
-                  child: Chip(
-                    avatar: const LineIcon(LineIcons.plus),
-                    label: Text(AppLocalizations.of(context)!.addImage),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                GestureDetector(
-                  onTap: _pickGif,
-                  child: Chip(
-                    avatar: const LineIcon(LineIcons.plus),
-                    label: Text(AppLocalizations.of(context)!.addGif),
-                  ),
-                ),
-              ],
-            ) : const SizedBox(),
             const SizedBox(height: 10),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: Column(
-                children: [
-                  Row(
-                    children: _images.map((image) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Stack(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Row(
+                      children: _images.map((image) => Stack(
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
@@ -317,52 +292,79 @@ class _CreatePostPageState extends State<CreatePostPage> {
                           ),
                         ),
                         ],
-                      ),
-                    )).toList(),
-                  ),
-                  Row(
-                    children: _gifs.map((image) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: OctoImage(
-                              image: NetworkImage(image),
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover,
-                              placeholderBuilder: OctoPlaceholder.blurHash(
-                                'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                              ),
-                              errorBuilder: OctoError.icon(color: Colors.red),
-                            ),
-                          ),
-                          Positioned(
-                            top: 5,
-                            right: 5,
-                            child: GestureDetector(
-                              onTap: () => setState(() => _gifs.remove(image)),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(50),
+                      )).toList(),
+                    ),
+                    Row(
+                      children: _gifs.map((image) => Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: OctoImage(
+                                image: NetworkImage(image),
+                                width: 150,
+                                height: 150,
+                                fit: BoxFit.cover,
+                                placeholderBuilder: OctoPlaceholder.blurHash(
+                                  'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
                                 ),
-                                child: const Icon(Icons.close, color: Colors.white),
+                                errorBuilder: OctoError.icon(color: Colors.red),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )).toList(),
-                  ),
-                ],
+                            Positioned(
+                              top: 5,
+                              right: 5,
+                              child: GestureDetector(
+                                onTap: () => setState(() => _gifs.remove(image)),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: const Icon(Icons.close, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )).toList(),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 20),
           ],
         ),
       ),
+      floatingActionButton: !_isLoading && (_images.length + _gifs.length) < 10  ? FloatingActionBubble(
+        items: <Bubble>[
+          Bubble(
+            title: AppLocalizations.of(context)!.addImage,
+            iconColor: Theme.of(context).colorScheme.onPrimaryContainer,
+            bubbleColor : Theme.of(context).colorScheme.primaryContainer,
+            icon: SolarIconsBold.cameraAdd,
+            titleStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer),
+            onPress: _pickImage,
+          ),
+          Bubble(
+            title: AppLocalizations.of(context)!.addGif,
+            iconColor: Theme.of(context).colorScheme.onPrimaryContainer,
+            bubbleColor : Theme.of(context).colorScheme.primaryContainer,
+            icon: SolarIconsBold.galleryAdd,
+            titleStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer),
+            onPress: _pickGif,
+          ),
+        ],
+        animation: _animation,
+        onPress: () => _animationController.isCompleted
+            ? _animationController.reverse()
+            : _animationController.forward(),
+        iconColor: Theme.of(context).colorScheme.onPrimaryContainer,
+        iconData: SolarIconsOutline.widgetAdd,
+        backGroundColor: Theme.of(context).colorScheme.primaryContainer,
+      ) : null,
     );
   }
 }

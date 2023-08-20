@@ -310,8 +310,18 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
               ),
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  color: Theme.of(context).colorScheme.background,
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
                   children: [
@@ -398,7 +408,7 @@ class TitleBar extends StatelessWidget {
           ),
           const Spacer(),
           Text(
-            timeago.format(post.createdAt!),
+            timeago.format(post.createdAt ?? DateTime.now()),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               fontSize: 12,
               color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
