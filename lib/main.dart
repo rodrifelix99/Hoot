@@ -27,7 +27,6 @@ import 'package:hoot/pages/welcome.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/feed_provider.dart';
 import 'package:hoot/theme/theme.dart';
-import 'package:shake/shake.dart';
 import 'firebase_options.dart';
 import 'package:hoot/pages/login.dart';
 import 'package:provider/provider.dart';
@@ -96,17 +95,10 @@ Future<void> main() async {
                   ],
                   home: AnimatedSplashScreen(
                     nextScreen: HomePage(),
-                    splash: Image.asset(
-                      'assets/splash.gif',
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      fit: BoxFit.cover,
-                    ),
-                    splashIconSize: MediaQuery.of(context).size.height,
-                    splashTransition: SplashTransition.fadeTransition,
-                    pageTransitionType: PageTransitionType.fade,
-                    backgroundColor: Colors.black,
-                    duration: 8000,
+                    splash: 'assets/logo_white.png',
+                    backgroundColor: Theme.of(context).primaryColor,
+                    splashTransition: SplashTransition.slideTransition,
+                    pageTransitionType: PageTransitionType.rightToLeft,
                   ),
                   onGenerateRoute: (settings) {
                     switch (settings.name) {

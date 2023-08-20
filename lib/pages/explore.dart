@@ -1,16 +1,17 @@
 import 'package:animations/animations.dart';
 import 'package:blur/blur.dart';
-import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hoot/components/appbar_component.dart';
+import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/subscribe_component.dart';
 import 'package:hoot/components/type_box_component.dart';
 import 'package:hoot/pages/search_by_genre.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../models/feed.dart';
 import '../models/feed_types.dart';
 import '../services/auth_provider.dart';
@@ -62,118 +63,14 @@ class _ExplorePageState extends State<ExplorePage> {
     });
   }
 
-  Widget _card(BuildContext context, int index) => ClipRRect(
-    borderRadius: BorderRadius.circular(15),
-    child: Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      width: MediaQuery.of(context).size.width * 0.8,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Blur(
-                blur: 25,
-                blurColor: _top10Feeds[index].color!.withOpacity(0.5),
-                child: Image.network(
-                    _top10Feeds[index].user!.largeProfilePictureUrl ?? '',
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: double.infinity,
-                    fit: BoxFit.cover
-                )
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            padding: const EdgeInsets.all(10),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _top10Feeds[index].nsfw == true ? Padding(
-                    padding: const EdgeInsets.only(bottom: 15),
-                    child: Icon(Icons.warning_rounded, color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                  )
-                      : _top10Feeds[index].private == true ? Padding(
-                    padding: const EdgeInsets.only(bottom: 15),
-                    child: Icon(Icons.lock_rounded, color:_top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-                  )
-                      : const SizedBox(),
-                  Text(
-                      _top10Feeds[index].title,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
-                      )
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(AppLocalizations.of(context)!.by, style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
-                      )),
-                      const SizedBox(width: 5),
-                      NameComponent(
-                          user: _top10Feeds[index].user!,
-                          color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                          textColor: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  Text(
-                      _top10Feeds[index].description ?? '',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
-                      )
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            left: 0,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                      AppLocalizations.of(context)!.numberOfSubscribers(_top10Feeds[index].subscribers?.length ?? 0),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white
-                      )
-                  ),
-                  const SizedBox(width: 10),
-                  Icon(Icons.people, color: _top10Feeds[index].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white, size: 15),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.explore),
+        appBar: AppBarComponent(
+          title: AppLocalizations.of(context)!.explore,
           actions: [
             IconButton(
-              icon: const Icon(LineIcons.search),
+              icon: const Icon(SolarIconsOutline.magnifier),
               onPressed: () => Navigator.of(context).pushNamed('/search'),
             ),
           ],
@@ -186,21 +83,109 @@ class _ExplorePageState extends State<ExplorePage> {
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: [
-                    const SizedBox(height: 50),
-                    Text(
-                      AppLocalizations.of(context)!.top10MostSubscribed,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
                     const SizedBox(height: 30),
-                    Swiper(
-                      itemCount: _top10Feeds.length,
-                      itemWidth: MediaQuery.of(context).size.width * 0.8,
-                      itemHeight: MediaQuery.of(context).size.width * 0.9,
-                      layout: SwiperLayout.STACK,
-                      onTap: (index) => Navigator.pushNamed(context, '/profile', arguments: [_top10Feeds[index].user, _top10Feeds[index].id]),
-                      itemBuilder: (context, index) => _card(context, index),
-                    )
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 10),
+                          for (int i = 0; i < _top10Feeds.length; i++)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: GestureDetector(
+                                onTap: () => Navigator.pushNamed(context, '/profile', arguments: [_top10Feeds[i].user, _top10Feeds[i].id]),
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                    maxWidth: MediaQuery.of(context).size.width * 0.6,
+                                    minWidth: MediaQuery.of(context).size.width * 0.4,
+                                  ),
+                                  height: 240,
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        left: 0,
+                                        right: 0,
+                                        top: 50,
+                                        child: Container(
+                                          width: 232,
+                                          height: 179,
+                                          decoration: ShapeDecoration(
+                                            color: _top10Feeds[i].color?.withOpacity(0.1),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        right: 10,
+                                        left: 10,
+                                        top: 195,
+                                        child: SizedBox(
+                                          width: 164,
+                                          child: Text(
+                                            '${AppLocalizations.of(context)!.by} ${_top10Feeds[i].user!.name}',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                                              fontSize: 14,
+                                              height: 1.57,
+                                              letterSpacing: -0.41,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        //center
+                                        left: MediaQuery.of(context).size.width * 0.6 / 2 - 75,
+                                        right: MediaQuery.of(context).size.width * 0.6 / 2 - 75,
+                                        top: 0,
+                                        child: Container(
+                                          width: 150,
+                                          height: 150,
+                                          decoration: ShapeDecoration(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(40),
+                                            ),
+                                            shadows: const [
+                                              BoxShadow(
+                                                color: Color(0x26000000),
+                                                blurRadius: 10,
+                                                offset: Offset(0, 4),
+                                                spreadRadius: 0,
+                                              )
+                                            ],
+                                          ),
+                                          child: ProfileAvatarComponent(
+                                            image: _top10Feeds[i].user?.largeProfilePictureUrl ?? '',
+                                            size: 150,
+                                            radius: 40,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 10,
+                                        right: 10,
+                                        top: 169,
+                                        child: Text(
+                                          _top10Feeds[i].title,
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w700,
+                                            height: 1.10,
+                                            letterSpacing: -0.41,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ) : Center(
@@ -215,7 +200,10 @@ class _ExplorePageState extends State<ExplorePage> {
               const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(AppLocalizations.of(context)!.popularTypes, style: Theme.of(context).textTheme.titleMedium),
+                child: Text(
+                  AppLocalizations.of(context)!.popularTypes,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
               const SizedBox(height: 5),
               Padding(
@@ -259,7 +247,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     children: [
                       Text(
                         AppLocalizations.of(context)!.upAndComing,
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 5),
                       Text(

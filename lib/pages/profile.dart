@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
+import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/image_component.dart';
@@ -151,26 +152,6 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         color: Colors.black,
       ),
       Positioned(
-        top: 0,
-        right: 0,
-        left: 0,
-        child: Container(
-          height: 100,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black.withOpacity(1),
-                Colors.black.withOpacity(0.5),
-                Colors.black.withOpacity(0),
-              ],
-            ),
-          ),
-        ),
-      ),
-      Positioned(
         bottom: 0,
         child: Container(
           height: 100,
@@ -199,18 +180,22 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         left: 10,
         child: Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: BorderRadius.all(Radius.circular((_user.radius ?? 100) + 5)),
-              border: Border.all(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                width: 5,
-              ),
+              borderRadius: const BorderRadius.all(Radius.circular(55)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  spreadRadius: 0,
+                  blurRadius: 25,
+                  offset: const Offset(0, 0),
+                ),
+              ],
             ),
             child: ProfileAvatarComponent(image: _user.largeProfilePictureUrl ?? '', size: 150, preview: true)
         ),
       )
     ],
   );
+
   Widget _profileActions() => Padding(
     padding: const EdgeInsets.all(8.0),
     child: Row(
@@ -236,6 +221,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
       ],
     ),
   );
+
   Widget _profileInfo() => Padding(
     padding: const EdgeInsets.all(20.0),
     child: Column(
@@ -259,8 +245,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
+      appBar: AppBarComponent(
+        backgroundColor: Colors.black.withOpacity(0.25),
         foregroundColor: Colors.white,
         actions: [
           TextButton(
@@ -278,8 +264,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               )
           ),
           _isCurrentUser ? IconButton(
-          onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/settings', (route) => false),
-          icon: const LineIcon(LineIcons.cog, color: Colors.white, size: 30),
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/settings', (route) => false),
+            icon: const LineIcon(LineIcons.cog, color: Colors.white, size: 30),
           ) : const SizedBox(width: 10),
         ],
       ),
@@ -493,6 +479,7 @@ class _FeedPostsState extends State<FeedPosts> {
     widget.user.feeds?[widget.feedIndex].posts?.isNotEmpty == true ? Column(
       children: [
         for (Post post in widget.user.feeds?[widget.feedIndex].posts ?? []) OpenContainer(
+            closedElevation: 0,
             closedColor: Theme.of(context).colorScheme.surface,
             closedBuilder: (context, action) => PostComponent(post: post),
             openBuilder: (context, action) => PostPage(post: post)

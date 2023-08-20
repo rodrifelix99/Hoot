@@ -24,14 +24,14 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(15),
       child: widget.isSkeleton ? Skeleton(
           isLoading: widget.isSkeleton,
           skeleton: Container(
             width: 200,
             height: 100,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(20),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -70,16 +70,15 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
             Positioned(
               bottom: 10,
               right: 15,
+              left: 15,
               child: SizedBox(
-                width: 150,
                 child: Text(
                   widget.isLast ? AppLocalizations.of(context)!.discoverMoreFeeds : FeedTypeExtension.toTranslatedString(context, widget.type),
                   textAlign: TextAlign.right,
-                  style: TextStyle(
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: Colors.white.withOpacity(0.9),
-                    // make fontSize adaptive to screen size
                     fontSize: MediaQuery.of(context).size.width * 0.06,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),

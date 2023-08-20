@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 enum FeedType {
   general,
@@ -204,127 +205,127 @@ extension FeedTypeExtension on FeedType {
   static IconData toIcon(FeedType type) {
     switch (type) {
       case FeedType.activism:
-        return Icons.public_rounded;
+        return SolarIconsBold.handHeart;
       case FeedType.activities:
-        return Icons.local_activity_rounded;
+        return SolarIconsBold.volleyball;
       case FeedType.adultContent:
-        return Icons.local_fire_department_rounded;
+        return SolarIconsBold.flame;
       case FeedType.art:
-        return Icons.palette_rounded;
+        return SolarIconsBold.palette2;
       case FeedType.beauty:
-        return Icons.face_rounded;
+        return SolarIconsBold.cosmetic;
       case FeedType.celebrities:
-        return Icons.star_rounded;
+        return SolarIconsBold.star;
       case FeedType.comedy:
-        return Icons.emoji_emotions_rounded;
+        return SolarIconsBold.masks;
       case FeedType.design:
-        return Icons.design_services_rounded;
+        return SolarIconsBold.palette;
       case FeedType.environment:
-        return Icons.eco_rounded;
+        return SolarIconsBold.leaf;
       case FeedType.family:
-        return Icons.family_restroom_rounded;
+        return SolarIconsBold.heart;
       case FeedType.fitness:
-        return Icons.fitness_center_rounded;
+        return SolarIconsBold.dumbbell;
       case FeedType.general:
-        return Icons.public_rounded;
+        return SolarIconsBold.earth;
       case FeedType.gaming:
-        return Icons.sports_esports_rounded;
+        return SolarIconsBold.gamepad;
       case FeedType.history:
-        return Icons.history_rounded;
+        return SolarIconsBold.history;
       case FeedType.inspiration:
-        return Icons.lightbulb_rounded;
+        return SolarIconsBold.lightbulb;
       case FeedType.jobs:
-        return Icons.work_rounded;
+        return SolarIconsBold.laptop2;
       case FeedType.lgbtQ:
-        return Icons.interests_rounded;
+        return SolarIconsBold.starRainbow;
       case FeedType.marketing:
-        return Icons.mark_email_read_rounded;
+        return SolarIconsBold.presentationGraph;
       case FeedType.movies:
-        return Icons.movie_rounded;
+        return SolarIconsBold.clapperboardOpen;
       case FeedType.music:
-        return Icons.music_note_rounded;
+        return SolarIconsBold.musicNote;
       case FeedType.nature:
-        return Icons.nature_rounded;
+        return SolarIconsBold.leaf;
       case FeedType.news:
-        return Icons.article_rounded;
+        return SolarIconsBold.notebook;
       case FeedType.onlineCourses:
-        return Icons.school_rounded;
+        return SolarIconsBold.diplomaVerified;
       case FeedType.outdoors:
-        return Icons.outdoor_grill_rounded;
+        return SolarIconsBold.sun;
       case FeedType.parenting:
-        return Icons.child_care_rounded;
+        return SolarIconsBold.userHandUp;
       case FeedType.pets:
-        return Icons.pets_rounded;
+        return SolarIconsBold.paw;
       case FeedType.photography:
-        return Icons.photo_camera_rounded;
+        return SolarIconsBold.camera;
       case FeedType.quotes:
-        return Icons.format_quote_rounded;
+        return SolarIconsBold.pen;
       case FeedType.relationships:
-        return Icons.favorite_rounded;
+        return SolarIconsBold.heartPulse;
       case FeedType.recipes:
-        return Icons.restaurant_rounded;
+        return SolarIconsBold.chefHat;
       case FeedType.religion:
-        return Icons.handshake_rounded;
+        return SolarIconsBold.handStars;
       case FeedType.school:
-        return Icons.school_rounded;
+        return SolarIconsBold.squareAcademicCap;
       case FeedType.science:
-        return Icons.science_rounded;
+        return SolarIconsBold.testTube;
       case FeedType.selfImprovement:
-        return Icons.self_improvement_rounded;
+        return SolarIconsBold.heartUnlock;
       case FeedType.series:
-        return Icons.tv_rounded;
+        return SolarIconsBold.tv;
       case FeedType.sports:
-        return Icons.sports_rounded;
+        return SolarIconsBold.basketball;
       case FeedType.technology:
-        return Icons.computer_rounded;
+        return SolarIconsBold.laptop3;
       case FeedType.travel:
-        return Icons.airplanemode_active_rounded;
+        return SolarIconsBold.suitcase;
       case FeedType.tv:
-        return Icons.tv_rounded;
+        return SolarIconsBold.tv;
       case FeedType.university:
-        return Icons.school_rounded;
+        return SolarIconsBold.squareAcademicCap2;
       case FeedType.vegetarian:
-        return Icons.eco_rounded;
+        return SolarIconsBold.leaf;
       case FeedType.wellness:
-        return Icons.self_improvement_rounded;
+        return SolarIconsBold.heartAngle;
       case FeedType.writing:
-        return Icons.edit_rounded;
+        return SolarIconsBold.pen;
       case FeedType.yoga:
-        return Icons.self_improvement_rounded;
+        return SolarIconsBold.heartShine;
       case FeedType.business:
-        return Icons.business_rounded;
+        return SolarIconsBold.roundGraph;
       case FeedType.cooking:
-        return Icons.restaurant_rounded;
+        return SolarIconsBold.chefHat;
       case FeedType.diY:
-        return Icons.build_rounded;
+        return SolarIconsBold.paletteRound;
       case FeedType.economics:
-        return Icons.monetization_on_rounded;
+        return SolarIconsBold.moneyBag;
       case FeedType.education:
-        return Icons.school_rounded;
+        return SolarIconsBold.squareAcademicCap;
       case FeedType.entertainment:
-        return Icons.movie_rounded;
+        return SolarIconsBold.clapperboardPlay;
       case FeedType.entrepreneurship:
-        return Icons.business_rounded;
+        return SolarIconsBold.pieChart2;
       case FeedType.gardening:
-        return Icons.eco_rounded;
+        return SolarIconsBold.leaf;
       case FeedType.health:
-        return Icons.self_improvement_rounded;
+        return SolarIconsBold.health;
       case FeedType.investing:
-        return Icons.monetization_on_rounded;
+        return SolarIconsBold.chart_2;
       case FeedType.journalism:
-        return Icons.article_rounded;
+        return SolarIconsBold.notebook;
       case FeedType.kids:
-        return Icons.child_care_rounded;
+        return SolarIconsBold.userHandUp;
       case FeedType.literature:
-        return Icons.book_rounded;
+        return SolarIconsBold.book;
       case FeedType.urbanExploration:
-        return Icons.outdoor_grill_rounded;
+        return SolarIconsBold.routing3;
       case FeedType.virtualReality:
-        return Icons.vrpano_rounded;
+        return SolarIconsBold.smartphoneRotateAngle;
       case FeedType.zoology:
-        return Icons.eco_rounded;
+        return SolarIconsBold.leaf;
       default:
-        return Icons.miscellaneous_services_rounded;
+        return SolarIconsBold.planet;
     }
   }
 

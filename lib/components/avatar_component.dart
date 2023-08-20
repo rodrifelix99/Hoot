@@ -7,7 +7,8 @@ class ProfileAvatarComponent extends StatefulWidget {
   final int size;
   final bool preview;
   final String url;
-  const ProfileAvatarComponent({super.key, required this.image, required this.size, this.preview = false, this.url = ''});
+  final double radius;
+  const ProfileAvatarComponent({super.key, required this.image, required this.size, this.preview = false, this.url = '', this.radius = -1});
 
   @override
   State<ProfileAvatarComponent> createState() => _ProfileAvatarComponentState();
@@ -23,12 +24,12 @@ class _ProfileAvatarComponentState extends State<ProfileAvatarComponent> {
         child: Center(
           child: Hero(
             tag: widget.image,
-            child: Avatar(image: widget.image, size: widget.size),
+            child: Avatar(image: widget.image, size: widget.size, radius: widget.radius),
           ),
         ),
       );
     } else {
-      return Avatar(image: widget.image, size: widget.size);
+      return Avatar(image: widget.image, size: widget.size, radius: widget.radius);
     }
   }
 }
@@ -36,7 +37,8 @@ class _ProfileAvatarComponentState extends State<ProfileAvatarComponent> {
 class Avatar extends StatefulWidget {
   final String image;
   final int size;
-  const Avatar({super.key, required this.image, required this.size});
+  final double radius;
+  const Avatar({super.key, required this.image, required this.size, required this.radius});
 
   @override
   State<Avatar> createState() => _AvatarState();
@@ -52,14 +54,14 @@ class _AvatarState extends State<Avatar> {
         width: widget.size.toDouble(),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primaryContainer,
-          borderRadius: BorderRadius.all(Radius.circular(widget.size / 3)),
+          borderRadius: widget.radius == -1 ? BorderRadius.all(Radius.circular(widget.size / 3)) : BorderRadius.all(Radius.circular(widget.radius)),
         ),
         child: Center(child: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.primary, size: widget.size / 2)),
       );
     }
 
     return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(widget.size / 3)),
+      borderRadius: widget.radius == -1 ? BorderRadius.all(Radius.circular(widget.size / 3)) : BorderRadius.all(Radius.circular(widget.radius)),
       child: OctoImage(
         image: NetworkImage(widget.image),
         placeholderBuilder: OctoPlaceholder.blurHash(

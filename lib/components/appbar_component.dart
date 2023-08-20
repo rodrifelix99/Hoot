@@ -5,6 +5,7 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final Color? backgroundColor;
   final Color? foregroundColor;
+  final double? elevationDuringScroll;
 
   const AppBarComponent({
     Key? key,
@@ -12,6 +13,7 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.backgroundColor,
     this.foregroundColor,
+    this.elevationDuringScroll,
 }) : super(key: key);
 
   @override
@@ -21,6 +23,8 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: false,
       backgroundColor: backgroundColor,
       foregroundColor: foregroundColor,
+      scrolledUnderElevation: elevationDuringScroll,
+      shadowColor: Theme.of(context).colorScheme.background.withOpacity(.25),
       title: title != null ? PreferredSize(
         preferredSize: preferredSize,
         child: Text(

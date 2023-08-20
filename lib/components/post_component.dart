@@ -320,10 +320,11 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
                         post: widget.post.reFeededFrom!,
                         showToolbar: false,
                     ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
-            )
+            ),
           ],
           if (widget.showToolbar) ...[
             const SizedBox(height: 10),
