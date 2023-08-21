@@ -15,6 +15,7 @@ class NativeAdComponent extends StatefulWidget {
 class _NativeAdComponentState extends State<NativeAdComponent> {
   NativeAd? _nativeAd;
   bool _nativeAdIsLoaded = false;
+  bool _hideAd = false;
 
   final String _adUnitId = Platform.isAndroid
       ? 'ca-app-pub-2440287554514413/2948060210'
@@ -63,7 +64,12 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      loadAd();
+      // if platform is android or ios
+      if (Platform.isAndroid || Platform.isIOS) {
+        loadAd();
+      } else {
+        _hideAd = true;
+      }
     });
   }
 
@@ -75,7 +81,7 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return _hideAd ? const SizedBox.shrink() : Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

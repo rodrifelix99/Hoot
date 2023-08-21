@@ -4,6 +4,7 @@ import 'package:animations/animations.dart';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/radio_component.dart';
 import 'package:hoot/pages/explore.dart';
@@ -84,7 +85,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _pageController = PageController();
     super.initState();
     ShakeDetector.autoStart(
-        onPhoneShake: onShake,
+      onPhoneShake: onShake,
     );
     _messageStreamSubscription = FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.notification != null) {
@@ -137,51 +138,84 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return _loading ? Container() : Scaffold(
-      body: PageTransitionSwitcher(
-        duration: const Duration(milliseconds: 300),
-        reverse: false,
-        transitionBuilder: (
-            Widget child,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            ) {
-          return SharedAxisTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            transitionType: SharedAxisTransitionType.horizontal,
-            child: child,
-          );
-        },
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (i) => setState(() {}),
-                children: [
-                  FeedPage(toggleRadio: _openRadio),
-                  ExplorePage(),
-                  CreatePostPage(),
-                  NotificationsPage(),
-                  ProfilePage(),
-                ],
+      backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            margin:
+            MediaQuery.of(context).size.width > 700
+                ? const EdgeInsets.symmetric(vertical: 20)
+                : null,
+            constraints: MediaQuery.of(context).size.width > 700
+                ? const BoxConstraints(maxWidth: 700)
+                : BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+            decoration: MediaQuery.of(context).size.width > 700
+                ? BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            )
+                : null,
+            child: ClipRRect(
+              borderRadius: MediaQuery.of(context).size.width > 700
+                  ? const BorderRadius.all(Radius.circular(15))
+                  : null,
+              child: PageTransitionSwitcher(
+                duration: const Duration(milliseconds: 300),
+                reverse: false,
+                transitionBuilder: (
+                    Widget child,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                    ) {
+                  return SharedAxisTransition(
+                    animation: animation,
+                    secondaryAnimation: secondaryAnimation,
+                    transitionType: SharedAxisTransitionType.horizontal,
+                    child: child,
+                  );
+                },
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: PageView(
+                        controller: _pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        onPageChanged: (i) => setState(() {}),
+                        children: [
+                          FeedPage(toggleRadio: _openRadio),
+                          ExplorePage(),
+                          CreatePostPage(),
+                          NotificationsPage(),
+                          ProfilePage(),
+                        ],
+                      ),
+                    ),
+                    Obx(() => _radioController.closeRadio.isFalse ? Positioned(
+                      bottom: 10,
+                      left: 20,
+                      right: 20,
+                      child: OpenContainer(
+                        closedElevation: 10,
+                        closedColor: Colors.transparent,
+                        transitionType: ContainerTransitionType.fadeThrough,
+                        closedBuilder: (context, open) => RadioComponent(),
+                        openBuilder: (context, close) => RadioPage(closeRadio: _closeRadio),
+                      ),
+                    ) : const Positioned(bottom: 0, child: SizedBox.shrink())),
+                  ],
+                ),
               ),
             ),
-            Obx(() => _radioController.closeRadio.isFalse ? Positioned(
-              bottom: 10,
-              left: 20,
-              right: 20,
-              child: OpenContainer(
-                  closedElevation: 10,
-                  closedColor: Colors.transparent,
-                  transitionType: ContainerTransitionType.fadeThrough,
-                  closedBuilder: (context, open) => RadioComponent(),
-                  openBuilder: (context, close) => RadioPage(closeRadio: _closeRadio),
-                ),
-            ) : const Positioned(bottom: 0, child: SizedBox.shrink())),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: Container(
         color: Theme.of(context).colorScheme.surface,
@@ -199,12 +233,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           items: [
             BottomNavigationBarItem(
               icon: _pageController.hasClients && _pageController.page!.round() == 0 ?
-                const Icon(SolarIconsBold.feed) : const Icon(SolarIconsOutline.feed),
+              const Icon(SolarIconsBold.feed) : const Icon(SolarIconsOutline.feed),
               label: AppLocalizations.of(context)!.myFeeds,
             ),
             BottomNavigationBarItem(
               icon: _pageController.hasClients && _pageController.page!.round() == 1 ?
-                const Icon(SolarIconsBold.compass) : const Icon(SolarIconsOutline.compass),
+              const Icon(SolarIconsBold.compass) : const Icon(SolarIconsOutline.compass),
               label: AppLocalizations.of(context)!.explore,
             ),
             BottomNavigationBarItem(
@@ -215,7 +249,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 openColor: Colors.transparent,
                 openElevation: 0,
                 closedBuilder: (context, open) => Icon(
-                    SolarIconsBold.addSquare,
+                  SolarIconsBold.addSquare,
                   size: 50,
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -227,36 +261,36 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               icon: Stack(
                 children: [
                   _pageController.hasClients && _pageController.page!.round() == 3 ?
-                    const Icon(SolarIconsBold.bell) : const Icon(SolarIconsOutline.bell),
+                  const Icon(SolarIconsBold.bell) : const Icon(SolarIconsOutline.bell),
                   Positioned(
-                    top: 0,
-                    right: 0,
-                    child: _authProvider.notificationsCount > 0 ? Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondary,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 16,
-                        minHeight: 16,
-                      ),
-                      child: Text(
-                        _authProvider.notificationsCount.toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
+                      top: 0,
+                      right: 0,
+                      child: _authProvider.notificationsCount > 0 ? Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.secondary,
+                          shape: BoxShape.circle,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ) : const SizedBox()),
+                        constraints: const BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Text(
+                          _authProvider.notificationsCount.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ) : const SizedBox()),
                 ],
               ),
               label: AppLocalizations.of(context)!.notifications,
             ),
             BottomNavigationBarItem(
               icon: _pageController.hasClients && _pageController.page!.round() == 4 ?
-                const Icon(SolarIconsBold.userCircle) : const Icon(SolarIconsOutline.userCircle),
+              const Icon(SolarIconsBold.userCircle) : const Icon(SolarIconsOutline.userCircle),
               label: AppLocalizations.of(context)!.profile,
             ),
           ],
