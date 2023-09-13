@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             child: ClipRRect(
               borderRadius: MediaQuery.of(context).size.width > 700
                   ? const BorderRadius.all(Radius.circular(15))
-                  : null,
+                  : BorderRadius.zero,
               child: PageTransitionSwitcher(
                 duration: const Duration(milliseconds: 300),
                 reverse: false,

@@ -221,8 +221,6 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
     }
   }
 
-  bool _isEmptyRefeed() => widget.post.reFeededFrom != null && widget.post.text!.isEmpty && widget.post.media!.isEmpty;
-
   bool _canRefeed() => widget.post.user!.uid != _authProvider.user!.uid && widget.post.reFeededFrom == null;
 
   @override
@@ -370,7 +368,7 @@ class TitleBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: post.feed!.color!.withOpacity(0.25),
+                    color: post.feed?.color?.withOpacity(0.25) ?? Theme.of(context).colorScheme.secondary.withOpacity(0.25),
                     blurRadius: 10,
                     spreadRadius: 0,
                     offset: const Offset(-4, 2),
@@ -398,7 +396,7 @@ class TitleBar extends StatelessWidget {
                 ),
               ),
               Text(
-                post.feed!.title,
+                post.feed?.title ?? '',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   fontSize: 12,
                   color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
