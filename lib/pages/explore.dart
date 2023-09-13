@@ -11,7 +11,6 @@ import 'package:hoot/pages/search.dart';
 import 'package:hoot/pages/search_by_genre.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:solar_icons/solar_icons.dart';
 import '../models/feed.dart';
 import '../models/feed_types.dart';
 import '../services/auth_provider.dart';

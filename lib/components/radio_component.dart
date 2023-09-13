@@ -17,7 +17,6 @@ class _RadioComponentState extends State<RadioComponent> {
   late YoutubePlayerController controller;
   final RadioController radioController = Get.put(RadioController());
 
-  final String _feedAd = 'qDeVmQbXDkk';
   final String _subscriber = 'osZWkRbk6jA';
 
   @override

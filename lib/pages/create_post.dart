@@ -52,7 +52,7 @@ class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProvid
     final curvedAnimation = CurvedAnimation(curve: Curves.decelerate, parent: _animationController);
     _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       TenorGifPicker.init(
         apiKey: 'AIzaSyCnfxvwEYAkFGxYmoKd03VPyXoATuMCXZw',
         locale: AppLocalizations.of(context)!.localeName,
