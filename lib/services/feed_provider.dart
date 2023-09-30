@@ -347,6 +347,25 @@ class FeedProvider extends ChangeNotifier {
     }
   }
 
+  Future<List<U>> getSubscribers(String feedId) async {
+    try {
+      await _auth.currentUser!.getIdToken(true);
+      HttpsCallable callable = _functions.httpsCallable('getFeedSubscribers');
+      final res = await callable.call({'feedId': feedId});
+      List<U> users = [];
+      if (res.data != null) {
+        dynamic responseData = jsonDecode(res.data);
+        for (var user in responseData) {
+          users.add(U.fromJson(user));
+        }
+      }
+      return users;
+    } catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
   Future<List<Feed>> top10MostSubscribedFeeds() async {
     try {
       await _auth.currentUser!.getIdToken(true);

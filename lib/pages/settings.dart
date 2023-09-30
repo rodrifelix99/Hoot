@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:hoot/services/error_service.dart';
+import 'package:octo_image/octo_image.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -108,6 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
                     leading: const Icon(SolarIconsBold.moonFog),
@@ -130,12 +132,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () => Navigator.pushNamed(context, '/terms_of_service'),
                   ),
-                  ListTile(
+                  /*ListTile(
                     leading: const Icon(SolarIconsBold.verifiedCheck),
                     title: Text(AppLocalizations.of(context)!.aboutUs),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () => Navigator.pushNamed(context, '/about_us'),
-                  ),
+                  ),*/
                   ListTile(
                     leading: const Icon(SolarIconsBold.trashBinMinimalistic),
                     title: Text(AppLocalizations.of(context)!.deleteAccount),
@@ -145,6 +147,41 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(AppLocalizations.of(context)!.version),
                     subtitle: Text(_version),
                   ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                        AppLocalizations.of(context)!.messageFromCreator,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold
+                        )
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(AppLocalizations.of(context)!.hootMightBeBuggy),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                        '- Felix',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold
+                        )
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: OctoImage(
+                            image: const AssetImage('assets/images/felix.jpg'),
+                            width: MediaQuery.of(context).size.width - 32,
+                            fit: BoxFit.cover
+                        ),
+                      ),
+                  ),
+                  const SizedBox(height: 100),
                 ],
               )
           ),

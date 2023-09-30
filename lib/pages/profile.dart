@@ -280,7 +280,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             icon: SolarIconsOutline.usersGroupRounded,
             titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
             onPress: () {
-              ToastService.showToast(context, AppLocalizations.of(context)!.comingSoon, false);
+              Navigator.of(context).pushNamed('/subscribers', arguments: _user.feeds![_selectedFeedIndex].id);
               _animationController.reverse();
             },
           ),
@@ -446,7 +446,11 @@ class _FeedPostsState extends State<FeedPosts> {
   _getPosts(DateTime startAfter) async {
     setState(() => _isLoading = true);
     List<Post> posts = await _feedProvider.getPosts(startAfter, widget.user, widget.user.feeds![widget.feedIndex]);
-    widget.user.feeds?[widget.feedIndex].posts = posts;
+    if (startAfter.isAfter(DateTime.now().subtract(const Duration(seconds: 5)))) {
+      widget.user.feeds![widget.feedIndex].posts = posts;
+    } else {
+      widget.user.feeds![widget.feedIndex].posts?.addAll(posts);
+    }
     setState(() => _isLoading = false);
   }
 
@@ -479,12 +483,21 @@ class _FeedPostsState extends State<FeedPosts> {
     ) :
     widget.user.feeds?[widget.feedIndex].posts?.isNotEmpty == true ? Column(
       children: [
-        for (Post post in widget.user.feeds?[widget.feedIndex].posts ?? []) OpenContainer(
-            closedElevation: 0,
-            closedColor: Theme.of(context).colorScheme.surface,
-            closedBuilder: (context, action) => PostComponent(post: post),
-            openBuilder: (context, action) => PostPage(post: post)
-        ),
+        for (Post post in widget.user.feeds?[widget.feedIndex].posts ?? []) ...[
+            OpenContainer(
+              closedElevation: 0,
+              closedColor: Theme.of(context).colorScheme.surface,
+              closedBuilder: (context, action) => PostComponent(post: post),
+              openBuilder: (context, action) => PostPage(post: post)
+          ),
+        ],
+        if (widget.user.feeds![widget.feedIndex].posts!.length % 10 == 0) ...[
+          const SizedBox(height: 10),
+          IconButton(
+            onPressed: () => _getPosts(widget.user.feeds![widget.feedIndex].posts!.last.createdAt ?? DateTime.now()),
+            icon: Icon(SolarIconsBold.arrowDown),
+          ),
+        ],
       ],
     ) : widget.user.uid != _authProvider.user?.uid ? Center(
       child: NothingToShowComponent(

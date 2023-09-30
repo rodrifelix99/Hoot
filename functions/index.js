@@ -1,3 +1,22 @@
+/**
+ * Import function triggers from their respective submodules:
+ *
+ * const {onCall} = require("firebase-functions/v2/https");
+ * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
+ *
+ * See a full list of supported triggers at https://firebase.google.com/docs/functions
+ */
+
+const {onRequest} = require("firebase-functions/v2/https");
+const logger = require("firebase-functions/logger");
+
+// Create and deploy your first functions
+// https://firebase.google.com/docs/functions/get-started
+
+// exports.helloWorld = onRequest((request, response) => {
+//   logger.info("Hello logs!", {structuredData: true});
+//   response.send("Hello from Firebase!");
+// });
 const functions = require("firebase-functions");
 const {
   // log,
@@ -908,6 +927,25 @@ exports.getFeedPosts = functions.region("europe-west1").https.onCall(async (data
         feedPostObj.reFeedError = feedPostObj.reFeededFrom ? false : true;
       }
       results.push(feedPostObj);
+    }
+    return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+exports.getFeedSubscribers = functions.region("europe-west1").https.onCall(async (data) => {
+  try {
+    const { feedId } = data;
+    const uid = context.auth.uid;
+    const subscribers = await db.collection("users").doc(uid).collection("feeds").doc(feedId).collection("subscribers").get();
+    const results = [];
+    for (const subscriber of subscribers.docs) {
+      const subscriberObj = await getUser(subscriber.id, false);
+      if (!subscriberObj) {
+        continue;
+      }
+      results.push(subscriberObj);
     }
     return JSON.stringify(results);
   } catch (e) {

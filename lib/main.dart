@@ -1,5 +1,6 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:hoot/pages/subscribers_list.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -94,7 +95,7 @@ Future<void> main() async {
                     AppLocalizations.delegate,
                   ],
                   home: AnimatedSplashScreen(
-                    nextScreen: HomePage(),
+                    nextScreen: const HomePage(),
                     splash: 'assets/logo_white.png',
                     backgroundColor: Theme.of(context).primaryColor,
                     splashTransition: SplashTransition.slideTransition,
@@ -103,28 +104,28 @@ Future<void> main() async {
                   onGenerateRoute: (settings) {
                     switch (settings.name) {
                       case '/login':
-                        return MaterialPageRoute(builder: (context) => LoginPage());
+                        return MaterialPageRoute(builder: (context) => const LoginPage());
                       case '/home':
-                        return MaterialPageRoute(builder: (context) => HomePage());
+                        return MaterialPageRoute(builder: (context) => const HomePage());
                       case '/signup':
-                        return MaterialPageRoute(builder: (context) => SignUpPage());
+                        return MaterialPageRoute(builder: (context) => const SignUpPage());
                       case '/signin':
-                        return MaterialPageRoute(builder: (context) => SignInPage());
+                        return MaterialPageRoute(builder: (context) => const SignInPage());
                       case '/verify':
-                        return MaterialPageRoute(builder: (context) => VerifyPage());
+                        return MaterialPageRoute(builder: (context) => const VerifyPage());
                       case '/terms_of_service':
-                        return MaterialPageRoute(builder: (context) => TermsOfService());
+                        return MaterialPageRoute(builder: (context) => const TermsOfService());
                       case '/welcome':
-                        return MaterialPageRoute(builder: (context) => WelcomePage());
+                        return MaterialPageRoute(builder: (context) => const WelcomePage());
                       case '/create_post':
                         final String? feedId = settings.arguments as String?;
                         return MaterialPageRoute(
                             builder: (context) => CreatePostPage(feedId: feedId));
                       case '/settings':
-                        return MaterialPageRoute(builder: (context) => SettingsPage());
+                        return MaterialPageRoute(builder: (context) => const SettingsPage());
                       case '/profile':
                         if (settings.arguments == null) {
-                          return MaterialPageRoute(builder: (context) => ProfilePage());
+                          return MaterialPageRoute(builder: (context) => const ProfilePage());
                         } else if (settings.arguments.runtimeType != String && settings.arguments.runtimeType != U) {
                           final List<dynamic> args = settings.arguments as List<dynamic>;
                           final U user = args[0] as U;
@@ -138,23 +139,26 @@ Future<void> main() async {
                           return MaterialPageRoute(builder: (context) => ProfilePage(user: user));
                         }
                       case '/edit_profile':
-                        return MaterialPageRoute(builder: (context) => EditProfilePage());
+                        return MaterialPageRoute(builder: (context) => const EditProfilePage());
                       case '/search':
-                        return MaterialPageRoute(builder: (context) => SearchPage());
-                        case '/search_by_genre':
-                          final FeedType type = settings.arguments as FeedType;
-                          return MaterialPageRoute(builder: (context) => SearchByGenrePage(type: type));
+                        return MaterialPageRoute(builder: (context) => const SearchPage());
+                      case '/search_by_genre':
+                        final FeedType type = settings.arguments as FeedType;
+                        return MaterialPageRoute(builder: (context) => SearchByGenrePage(type: type));
                       case '/create_feed':
-                        return MaterialPageRoute(builder: (context) => CreateFeedPage());
+                        return MaterialPageRoute(builder: (context) => const CreateFeedPage());
                       case '/edit_feed':
                         final Feed feed = settings.arguments as Feed;
                         return MaterialPageRoute(builder: (context) => CreateFeedPage(feed: feed));
                       case '/feed_requests':
                         final String feedId = settings.arguments as String;
                         return MaterialPageRoute(builder: (context) => FeedRequestsPage(feedId: feedId));
-                        case '/subscriptions':
-                          final String userId = settings.arguments as String;
-                          return MaterialPageRoute(builder: (context) => SubscriptionsListPage(userId: userId));
+                      case '/subscriptions':
+                        final String userId = settings.arguments as String;
+                        return MaterialPageRoute(builder: (context) => SubscriptionsListPage(userId: userId));
+                      case '/subscribers':
+                        final String feedId = settings.arguments as String;
+                        return MaterialPageRoute(builder: (context) => SubscribersListPage(feedId: feedId));
                       case '/post':
                         if (settings.arguments.runtimeType != Post) {
                           // get userId, feedId and postId from arguments
@@ -175,9 +179,9 @@ Future<void> main() async {
                         final String feedId = args.length >= 3 ? args[2] as String : '';
                         return MaterialPageRoute(builder: (context) => ReportPage(user: user, postId: postId, feedId: feedId));
                       case '/about_us':
-                        return MaterialPageRoute(builder: (context) => AboutUsPage());
+                        return MaterialPageRoute(builder: (context) => const AboutUsPage());
                       default:
-                        return MaterialPageRoute(builder: (context) => HomePage());
+                        return MaterialPageRoute(builder: (context) => const HomePage());
                     }
                   },
                 );

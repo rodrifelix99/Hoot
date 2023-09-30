@@ -120,7 +120,7 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
               maxHeight: 400,
             ),
             child: Skeleton(
-              isLoading: _nativeAdIsLoaded == false,
+              isLoading: _nativeAdIsLoaded == false || _nativeAd == null,
               skeleton: Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
@@ -128,7 +128,7 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: AdWidget(ad: _nativeAd!),
+              child: _nativeAd != null ? AdWidget(ad: _nativeAd!) : const SizedBox.shrink(),
             ),
           ),
           Container(
