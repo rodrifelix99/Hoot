@@ -253,5 +253,7 @@
     "privateFeedRequestAccepted": "@{username} aceptó tu solicitud para ver su feed privado: {feedName}",
     "privateFeedRequestRejected": "@{username} rechazó tu solicitud para ver su feed privado: {feedName}",
     "userLikedYourHoot": "@{username} le dio me gusta a tu hoot",
-    "userReFeededYourHoot": "@{username} rehootió tu hoot"
+    "userReFeededYourHoot": "@{username} rehootió tu hoot",
+    "hootMightBeBuggy": "Quería informarte que creé Hoot por mi cuenta durante mis vacaciones de verano. Fue un trabajo lleno de amor, y puse todo mi corazón y alma en crear una plataforma que pudiera conectar a las personas y fomentar la comunidad. Sin embargo, al ser un equipo de una sola persona trabajando en un marco de tiempo limitado, es posible que haya algunos errores o características que no funcionen como se pretendía. Agradezco tu paciencia y comprensión mientras corrijo estos problemas y mejoro la aplicación. Quiero enfatizar que tu seguridad y la protección de tu información han sido mis principales prioridades desde el principio. He implementado fuertes medidas de seguridad para garantizar que tus datos estén seguros y se manejen con el mayor cuidado. Aunque soy solo una persona, estoy totalmente dedicado a mejorar Hoot. Me comprometo a actualizar y perfeccionar la aplicación, para que sea lo mejor posible. Tus comentarios y apoyo significan mucho para mí, y estoy emocionado de hacer que Hoot se convierta en algo verdaderamente excepcional en el futuro. Gracias por ser parte de este viaje, y no puedo esperar a que veas cómo Hoot evoluciona y se vuelve aún mejor con el tiempo.",
+    "messageFromCreator": "Mensaje del creador"
 }
