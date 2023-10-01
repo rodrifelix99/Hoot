@@ -110,88 +110,90 @@ class _SettingsPageState extends State<SettingsPage> {
         fit: StackFit.expand,
         children: [
           SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListTile(
-                    leading: const Icon(SolarIconsBold.moonFog),
-                    title: Text(AppLocalizations.of(context)!.darkMode),
-                    subtitle: Text(AppLocalizations.of(context)!.syncedWithSystem),
-                    trailing: Switch(
-                      value: Theme.of(context).brightness == Brightness.dark,
-                      onChanged: (value) {},
-                    ),
-                  ),
-                  ListTile(
-                    leading: const Icon(SolarIconsBold.userRounded),
-                    title: Text(AppLocalizations.of(context)!.editProfile),
-                    trailing: const Icon(Icons.arrow_forward_ios),
-                    onTap: () => Navigator.pushNamed(context, '/edit_profile'),
-                  ),
-                  ListTile(
-                    leading: const Icon(SolarIconsBold.phoneRounded),
-                    title: Text(AppLocalizations.of(context)!.findFriends),
-                    subtitle: Text(AppLocalizations.of(context)!.findFriendsFromContacts),
-                    trailing: const Icon(Icons.arrow_forward_ios),
-                    onTap: () => Navigator.pushNamed(context, '/contacts'),
-                  ),
-                  ListTile(
-                    leading: const Icon(SolarIconsBold.shieldCheck),
-                    title: Text(AppLocalizations.of(context)!.termsOfService),
-                    trailing: const Icon(Icons.arrow_forward_ios),
-                    onTap: () => Navigator.pushNamed(context, '/terms_of_service'),
-                  ),
-                  /*ListTile(
-                    leading: const Icon(SolarIconsBold.verifiedCheck),
-                    title: Text(AppLocalizations.of(context)!.aboutUs),
-                    trailing: const Icon(Icons.arrow_forward_ios),
-                    onTap: () => Navigator.pushNamed(context, '/about_us'),
-                  ),*/
-                  ListTile(
-                    leading: const Icon(SolarIconsBold.trashBinMinimalistic),
-                    title: Text(AppLocalizations.of(context)!.deleteAccount),
-                    onTap: _deleteAccount,
-                  ),
-                  ListTile(
-                    title: Text(AppLocalizations.of(context)!.version),
-                    subtitle: Text(_version),
-                  ),
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Text(
-                        AppLocalizations.of(context)!.messageFromCreator,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold
-                        )
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(AppLocalizations.of(context)!.hootMightBeBuggy),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Text(
-                        '- Felix',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold
-                        )
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Center(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: OctoImage(
-                            image: const AssetImage('assets/images/felix.jpg'),
-                            width: MediaQuery.of(context).size.width - 32,
-                            fit: BoxFit.cover
-                        ),
+              child: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      leading: const Icon(SolarIconsBold.moonFog),
+                      title: Text(AppLocalizations.of(context)!.darkMode),
+                      subtitle: Text(AppLocalizations.of(context)!.syncedWithSystem),
+                      trailing: Switch(
+                        value: Theme.of(context).brightness == Brightness.dark,
+                        onChanged: (value) {},
                       ),
-                  ),
-                  const SizedBox(height: 100),
-                ],
+                    ),
+                    ListTile(
+                      leading: const Icon(SolarIconsBold.userRounded),
+                      title: Text(AppLocalizations.of(context)!.editProfile),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () => Navigator.pushNamed(context, '/edit_profile'),
+                    ),
+                    ListTile(
+                      leading: const Icon(SolarIconsBold.phoneRounded),
+                      title: Text(AppLocalizations.of(context)!.findFriends),
+                      subtitle: Text(AppLocalizations.of(context)!.findFriendsFromContacts),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () => Navigator.pushNamed(context, '/contacts'),
+                    ),
+                    ListTile(
+                      leading: const Icon(SolarIconsBold.shieldCheck),
+                      title: Text(AppLocalizations.of(context)!.termsOfService),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () => Navigator.pushNamed(context, '/terms_of_service'),
+                    ),
+                    /*ListTile(
+                      leading: const Icon(SolarIconsBold.verifiedCheck),
+                      title: Text(AppLocalizations.of(context)!.aboutUs),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () => Navigator.pushNamed(context, '/about_us'),
+                    ),*/
+                    ListTile(
+                      leading: const Icon(SolarIconsBold.trashBinMinimalistic),
+                      title: Text(AppLocalizations.of(context)!.deleteAccount),
+                      onTap: _deleteAccount,
+                    ),
+                    ListTile(
+                      title: Text(AppLocalizations.of(context)!.version),
+                      subtitle: Text(_version),
+                    ),
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Text(
+                          AppLocalizations.of(context)!.messageFromCreator,
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold
+                          )
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(AppLocalizations.of(context)!.hootMightBeBuggy),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Text(
+                          '- Felix',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold
+                          )
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: OctoImage(
+                              image: const AssetImage('assets/images/felix.jpg'),
+                              width: MediaQuery.of(context).size.width - 32,
+                              fit: BoxFit.cover
+                          ),
+                        ),
+                    ),
+                    const SizedBox(height: 100),
+                  ],
+                ),
               )
           ),
           Positioned(

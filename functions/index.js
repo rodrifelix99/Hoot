@@ -960,7 +960,8 @@ exports.getContacts = functions.region("europe-west1").https.onCall(async (data,
     const users = await admin.auth().listUsers();
     const results = [];
     for (const user of users.users) {
-      if (contacts.includes(user.phoneNumber) && user.uid !== context.auth.uid) {
+      // check if there's a contact and if it has a phoneNumber property that includes the user's phone number
+      if (contacts.find(contact => contact.includes(user.phoneNumber)) && context.auth.uid !== user.uid) {
         const userInfo = await getUser(user.uid, true);
         userInfo.phoneNumber = user.phoneNumber;
         results.push(userInfo);
