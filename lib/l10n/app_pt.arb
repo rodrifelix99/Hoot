@@ -255,5 +255,8 @@
     "userLikedYourHoot": "@{username} gostou do teu hoot",
     "userReFeededYourHoot": "@{username} rehootou o teu hoot",
     "hootMightBeBuggy": "Queria informar-te que criei o Hoot sozinho durante as minhas férias de verão. Foi um trabalho de amor, e dediquei-me de corpo e alma a criar uma plataforma que pudesse conectar pessoas e fomentar a comunidade. No entanto, sendo uma equipa de uma só pessoa a trabalhar num período limitado, poderão existir alguns bugs ou funcionalidades que não funcionem como planeado. Agradeço a tua paciência e compreensão enquanto resolvo estas questões e melhoro a aplicação. Quero salientar que a tua segurança e a proteção da tua informação foram sempre as minhas principais prioridades. Implementei medidas de segurança rigorosas para garantir que os teus dados estão seguros e são tratados com o máximo cuidado. Apesar de ser apenas uma pessoa, estou totalmente empenhado em melhorar o Hoot. Comprometo-me a atualizar e aperfeiçoar a aplicação, tornando-a o melhor que pode ser. As tuas opiniões e apoio significam muito para mim, e estou entusiasmado por fazer com que o Hoot se torne algo verdadeiramente excepcional no futuro. Obrigado por fazeres parte desta jornada, e mal posso esperar que vejas como o Hoot evolui e se torna ainda melhor ao longo do tempo.",
-    "messageFromCreator": "Mensagem do criador"
+    "messageFromCreator": "Mensagem do criador",
+    "findFriends": "Encontrar Amigos",
+    "findFriendsFromContacts": "Encontrar amigos a partir da tua lista de contactos",
+    "contactsPermission": "Precisamos da tua permissão para aceder aos teus contactos"
 }
