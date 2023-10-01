@@ -934,7 +934,7 @@ exports.getFeedPosts = functions.region("europe-west1").https.onCall(async (data
   }
 });
 
-exports.getFeedSubscribers = functions.region("europe-west1").https.onCall(async (data) => {
+exports.getFeedSubscribers = functions.region("europe-west1").https.onCall(async (data, context) => {
   try {
     const { feedId } = data;
     const uid = context.auth.uid;
@@ -948,6 +948,25 @@ exports.getFeedSubscribers = functions.region("europe-west1").https.onCall(async
       results.push(subscriberObj);
     }
     return JSON.stringify(results);
+  } catch (e) {
+    error(e);
+  }
+});
+
+// get users from phone contacts
+exports.getContacts = functions.region("europe-west1").https.onCall(async (data, context) => {
+  try {
+    const contacts = data;
+    const users = await admin.auth().listUsers();
+    const results = [];
+    for (const user of users.users) {
+      if (contacts.includes(user.phoneNumber) && user.uid !== context.auth.uid) {
+        const userInfo = await getUser(user.uid, true);
+        userInfo.phoneNumber = user.phoneNumber;
+        results.push(userInfo);
+      }
+    }
+    return results;
   } catch (e) {
     error(e);
   }

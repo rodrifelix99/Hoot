@@ -4,7 +4,6 @@ import 'package:animations/animations.dart';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/radio_component.dart';
 import 'package:hoot/pages/explore.dart';
@@ -191,10 +190,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         onPageChanged: (i) => setState(() {}),
                         children: [
                           FeedPage(toggleRadio: _openRadio),
-                          ExplorePage(),
-                          CreatePostPage(),
-                          NotificationsPage(),
-                          ProfilePage(),
+                          const ExplorePage(),
+                          const CreatePostPage(),
+                          const NotificationsPage(),
+                          const ProfilePage(),
                         ],
                       ),
                     ),
@@ -206,7 +205,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         closedElevation: 10,
                         closedColor: Colors.transparent,
                         transitionType: ContainerTransitionType.fadeThrough,
-                        closedBuilder: (context, open) => RadioComponent(),
+                        closedBuilder: (context, open) => const RadioComponent(),
                         openBuilder: (context, close) => RadioPage(closeRadio: _closeRadio),
                       ),
                     ) : const Positioned(bottom: 0, child: SizedBox.shrink())),
@@ -253,7 +252,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   size: 50,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                openBuilder: (context, close) => CreatePostPage(),
+                openBuilder: (context, close) => const CreatePostPage(),
               ),
               label: '',
             ),

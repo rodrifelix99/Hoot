@@ -50,7 +50,8 @@ class _SubscribersListPageState extends State<SubscribersListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBarComponent(
-          title: AppLocalizations.of(context)!.subscriptions,
+          title: _subscriptions.isEmpty ? AppLocalizations.of(context)!.subscriptions
+          : AppLocalizations.of(context)!.numberOfSubscribers(_subscriptions.length),
         ),
         body: _loading ? Center(
           child: LoadingAnimationWidget.inkDrop(
