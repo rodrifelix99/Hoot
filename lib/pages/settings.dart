@@ -104,7 +104,9 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         title: Text(AppLocalizations.of(context)!.settings),
       ),
-      body: Stack(
+      body: _loading ? const Center(
+        child: CircularProgressIndicator(),
+      ) : Stack(
         fit: StackFit.expand,
         children: [
           SingleChildScrollView(
@@ -125,6 +127,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(AppLocalizations.of(context)!.editProfile),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () => Navigator.pushNamed(context, '/edit_profile'),
+                  ),
+                  ListTile(
+                    leading: const Icon(SolarIconsBold.phoneRounded),
+                    title: Text(AppLocalizations.of(context)!.findFriends),
+                    subtitle: Text(AppLocalizations.of(context)!.findFriendsFromContacts),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () => Navigator.pushNamed(context, '/contacts'),
                   ),
                   ListTile(
                     leading: const Icon(SolarIconsBold.shieldCheck),
@@ -189,16 +198,19 @@ class _SettingsPageState extends State<SettingsPage> {
             bottom: 0,
             left: 0,
             right: 0,
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: ElevatedButton(
-                  onPressed: _signOut,
-                  style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            child: Container(
+              color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: ElevatedButton(
+                    onPressed: _signOut,
+                    style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                    ),
+                    child: Text(AppLocalizations.of(context)!.signOut),
                   ),
-                  child: Text(AppLocalizations.of(context)!.signOut),
                 ),
               ),
             ),

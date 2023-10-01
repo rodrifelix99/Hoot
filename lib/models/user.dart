@@ -15,6 +15,8 @@ class U {
   String? bio;
   String? location;
   String? website;
+
+  String? phoneNumber;
   bool? verified;
   bool? tester;
   DateTime? birthday;
@@ -31,6 +33,7 @@ class U {
     this.color, this.musicUrl,
     this.bio, this.location,
     this.website,
+    this.phoneNumber,
     this.verified = false,
     this.tester = false,
     this.birthday,
@@ -57,6 +60,7 @@ class U {
       bio: json['bio'],
       location: json['location'],
       website: json['website'],
+      phoneNumber: json['phoneNumber'],
       verified: json['verified'],
       tester: json['tester'],
       birthday: json['birthday'],
@@ -78,6 +82,7 @@ class U {
       'bio': bio,
       'location': location,
       'website': website,
+      'phoneNumber': phoneNumber,
       'birthday': birthday,
     });
     return json;
@@ -96,6 +101,7 @@ class U {
     'bio': bio,
     'location': location,
     'website': website,
+    'phoneNumber': phoneNumber,
     'birthday': birthday,
     'verified': verified,
     'tester': tester,

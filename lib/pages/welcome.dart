@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/models/user.dart';
-import 'package:hoot/pages/last_welcome.dart';
+import 'package:hoot/pages/contacts.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/upload_service.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -498,7 +498,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
   void _goHome() {
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
-        builder: (context) => const LastWelcomeScreen()
+        builder: (context) => const ContactsPage(skipable: true)
       ),
       (Route<dynamic> route) => false,
     );

@@ -1,5 +1,6 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:hoot/pages/contacts.dart';
 import 'package:hoot/pages/subscribers_list.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter/material.dart';
@@ -180,6 +181,8 @@ Future<void> main() async {
                         return MaterialPageRoute(builder: (context) => ReportPage(user: user, postId: postId, feedId: feedId));
                       case '/about_us':
                         return MaterialPageRoute(builder: (context) => const AboutUsPage());
+                        case '/contacts':
+                        return MaterialPageRoute(builder: (context) => const ContactsPage());
                       default:
                         return MaterialPageRoute(builder: (context) => const HomePage());
                     }
