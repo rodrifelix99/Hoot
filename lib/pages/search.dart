@@ -1,13 +1,14 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/models/user.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../services/auth_provider.dart';
-import '../services/error_service.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
+import 'package:hoot/services/error_service.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -25,7 +26,7 @@ class _SearchPageState extends State<SearchPage> {
     try {
       FocusScope.of(context).unfocus();
       setState(() => _isLoading = true);
-      List<U> res = await Provider.of<AuthProvider>(context, listen: false).searchUsers(_searchController.text);
+      List<U> res = await Get.find<AuthController>().searchUsers(_searchController.text);
       setState(() {
         _users = res;
         _isLoading = false;
@@ -75,7 +76,7 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     title: Text(_users[index].name ?? ''),
                     subtitle: Text("@${_users[index].username}"),
-                    onTap: () => Navigator.of(context).pushNamed('/profile', arguments: _users[index]),
+                    onTap: () => Get.toNamed('/profile', arguments: _users[index]),
                   );
                 },
               ),

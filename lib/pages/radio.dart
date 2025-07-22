@@ -1,3 +1,4 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/services/radio_controller.dart';
@@ -25,7 +26,7 @@ class _RadioPageState extends State<RadioPage> {
         actions: [
           IconButton(
             onPressed: () => {
-              Navigator.of(context).pop(),
+              Get.back(),
               widget.closeRadio()
             },
             icon: const Icon(Icons.close, color: Colors.white),

@@ -1,10 +1,11 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/models/user.dart';
-import 'package:hoot/services/feed_provider.dart';
+import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -17,13 +18,13 @@ class SubscribersListPage extends StatefulWidget {
 }
 
 class _SubscribersListPageState extends State<SubscribersListPage> {
-  late FeedProvider _feedProvider;
+  late FeedController _feedProvider;
   List<U> _subscriptions = [];
   bool _loading = true;
 
   @override
   void initState() {
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
+    _feedProvider = Get.find<FeedController>();
     super.initState();
     _getSubscriptions();
   }
@@ -67,7 +68,7 @@ class _SubscribersListPageState extends State<SubscribersListPage> {
           itemCount: _subscriptions.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-              onTap: () => Navigator.pushNamed(context, '/profile', arguments: _subscriptions[index]),
+              onTap: () => Get.toNamed(context, '/profile', arguments: _subscriptions[index]),
               leading: ProfileAvatarComponent(
                 image: _subscriptions[index].smallProfilePictureUrl ?? '',
                 size: 40,

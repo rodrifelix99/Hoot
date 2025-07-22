@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hoot/services/auth_provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+import 'package:hoot/app/routes/app_routes.dart';
 
-import '../services/error_service.dart';
+import 'package:hoot/services/error_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -17,8 +18,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String version = "";
-  late AuthProvider _authProvider;
-  late VoidCallback _authProviderListener;
+  late AuthController _authController;
+  late VoidCallback _authControllerListener;
 
   Future _loadVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -31,29 +32,29 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _loadVersion();
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _authController = Get.find<AuthController>();
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _authProviderListener = () async  {
-        if (_authProvider.isSignedIn) {
-          await Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+      _authControllerListener = () async  {
+        if (_authController.isSignedIn) {
+          await Get.offAllNamed(AppRoutes.home);
         }
       };
-      _authProvider.addListener(_authProviderListener);
-      _authProvider.phoneNumber = PhoneNumber(isoCode: WidgetsBinding.instance.window.locale.countryCode ?? 'US');
+      _authController.addListener(_authControllerListener);
+      _authController.phoneNumber = PhoneNumber(isoCode: WidgetsBinding.instance.window.locale.countryCode ?? 'US');
     });
   }
 
   @override
   void dispose() {
-    _authProvider.removeListener(_authProviderListener);
+    _authController.removeListener(_authControllerListener);
     super.dispose();
   }
 
   void _next() {
-    if (_authProvider.phoneNumber.phoneNumber != null) {
-      _authProvider.removeListener(_authProviderListener);
-      Navigator.pushNamed(context, '/verify');
+    if (_authController.phoneNumber.phoneNumber != null) {
+      _authController.removeListener(_authControllerListener);
+      Get.toNamed(AppRoutes.verify);
     } else {
       ToastService.showToast(context, AppLocalizations.of(context)!.phoneNumberInvalid, true);
     }
@@ -117,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     InternationalPhoneNumberInput(
                         onInputChanged: (PhoneNumber number) {
-                          _authProvider.phoneNumber = number;
+                          _authController.phoneNumber = number;
                         },
                         selectorConfig: const SelectorConfig(
                           selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
@@ -135,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                         autofillHints: const [AutofillHints.telephoneNumber],
-                        initialValue: _authProvider.phoneNumber,
+                        initialValue: _authController.phoneNumber,
                         errorMessage: AppLocalizations.of(context)!.phoneNumberInvalid,
                         inputDecoration: InputDecoration(
                           hintText: AppLocalizations.of(context)!.phoneNumber,
@@ -157,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: const TextStyle(color: Colors.white)
                         ),
                         TextButton(
-                          onPressed: () => Navigator.pushNamed(context, '/terms_of_service'),
+                          onPressed: () => Get.toNamed(AppRoutes.terms),
                           style: ButtonStyle(
                             padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
                             overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),

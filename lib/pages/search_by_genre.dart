@@ -1,3 +1,5 @@
+import 'package:hoot/app/routes/app_routes.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
@@ -5,7 +7,7 @@ import 'package:hoot/components/subscribe_component.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/feed_types.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hoot/services/feed_provider.dart';
+import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -18,13 +20,13 @@ class SearchByGenrePage extends StatefulWidget {
 }
 
 class _SearchByGenrePageState extends State<SearchByGenrePage> {
-  late FeedProvider _feedProvider;
+  late FeedController _feedProvider;
   late RefreshController _refreshController;
   List<Feed> _results = [];
 
   @override
   void initState() {
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
+    _feedProvider = Get.find<FeedController>();
     _refreshController = RefreshController(initialRefresh: true);
     super.initState();
   }
@@ -91,7 +93,7 @@ class _SearchByGenrePageState extends State<SearchByGenrePage> {
                   itemCount: _results.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      onTap: () => Navigator.pushNamed(context, '/profile', arguments: [_results[index].user, _results[index].id]),
+                      onTap: () => Get.toNamed(context, '/profile', arguments: [_results[index].user, _results[index].id]),
                       title: Text(_results[index].title),
                       subtitle: Text(_results[index].description!),
                       leading: ProfileAvatarComponent(

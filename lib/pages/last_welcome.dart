@@ -1,3 +1,5 @@
+import 'package:hoot/app/routes/app_routes.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -32,7 +34,7 @@ class LastWelcomeScreen extends StatelessWidget {
               right: 20,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                  Get.offAllNamed(context, '/home', (route) => false);
                 },
                 style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
                   backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary),

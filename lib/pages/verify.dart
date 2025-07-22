@@ -1,9 +1,10 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
-import 'package:hoot/services/auth_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
+import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../services/error_service.dart';
+import 'package:hoot/services/error_service.dart';
 
 class VerifyPage extends StatefulWidget {
   const VerifyPage({super.key});
@@ -13,19 +14,19 @@ class VerifyPage extends StatefulWidget {
 }
 
 class _VerifyPageState extends State<VerifyPage> {
-  late AuthProvider _authProvider;
+  late AuthController _authProvider;
   final TextEditingController _codeController = TextEditingController();
   bool _loading = false;
 
   @override
   void initState() {
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _authProvider = Get.find<AuthController>();
     try {
       _authProvider.verifyPhoneNumber();
     } catch (e) {
       setState(() {
         ToastService.showToast(context, e.toString(), true);
-        Navigator.pop(context);
+        Get.back();
       });
     }
     super.initState();
@@ -48,12 +49,12 @@ class _VerifyPageState extends State<VerifyPage> {
       switch (code) {
         case "success":
           setState(() {
-            Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+            Get.offAllNamed('/home', (route) => false);
           });
           break;
         case "new-user":
           setState(() {
-            Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
+            Get.offAllNamed('/welcome', (route) => false);
           });
           break;
         case "invalid-verification-code":
@@ -121,7 +122,7 @@ class _VerifyPageState extends State<VerifyPage> {
               ),
               const Spacer(),
               ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Get.back(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.25),
                     foregroundColor: Theme.of(context).colorScheme.secondary,

@@ -1,20 +1,21 @@
+import 'package:hoot/app/routes/app_routes.dart';
+import 'package:get/get.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/url_preview_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/models/post.dart';
-import 'package:hoot/services/auth_provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../models/feed.dart';
-import '../services/feed_provider.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/app/controllers/feed_controller.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
@@ -30,14 +31,14 @@ class PostComponent extends StatefulWidget {
 }
 
 class _PostComponentState extends State<PostComponent> with TickerProviderStateMixin {
-  late AuthProvider _authProvider;
-  late FeedProvider _feedProvider;
+  late AuthController _authProvider;
+  late FeedController _feedProvider;
   bool _deleted = false;
 
   @override
   void initState() {
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
+    _authProvider = Get.find<AuthController>();
+    _feedProvider = Get.find<FeedController>();
     super.initState();
   }
 

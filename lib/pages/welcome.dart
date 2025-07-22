@@ -1,3 +1,4 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'dart:io';
 import 'dart:math';
 
@@ -11,10 +12,10 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:solar_icons/solar_icons.dart';
 
-import '../services/auth_provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -204,11 +205,11 @@ class _FirstScreenState extends State<FirstScreen> {
   Future _onSubmit() async {
     if (_isNameValid() && _nameController.text.isNotEmpty) {
       FocusScope.of(context).unfocus();
-      U? user = Provider.of<AuthProvider>(context, listen: false).user;
+      U? user = Get.find<AuthController>().user;
       if (user != null) {
         user.name = _nameController.text;
         widget.controller.next();
-        bool response = await Provider.of<AuthProvider>(context, listen: false).updateUser(user);
+        bool response = await Get.find<AuthController>().updateUser(user);
         if (!response) {
           widget.controller.move(1, animation: true);
           setState(() {
@@ -302,16 +303,16 @@ class _SecondScreenState extends State<SecondScreen> {
       setState(() {
         _loading = true;
       });
-      if (await Provider.of<AuthProvider>(context, listen: false).isUsernameAvailable(_usernameController.text)) {
+      if (await Get.find<AuthController>().isUsernameAvailable(_usernameController.text)) {
         FocusScope.of(context).unfocus();
-        U? user = Provider.of<AuthProvider>(context, listen: false).user;
+        U? user = Get.find<AuthController>().user;
         if (user != null) {
           user.username = _usernameController.text;
           setState(() {
             _loading = false;
           });
           widget.controller.next();
-          bool response = await Provider.of<AuthProvider>(context, listen: false).updateUser(user);
+          bool response = await Get.find<AuthController>().updateUser(user);
           if (!response) {
             widget.controller.move(2, animation: true);
             setState(() {
@@ -448,16 +449,16 @@ class _ThirdScreenState extends State<ThirdScreen> {
         _loading = true;
       });
 
-      String uid = Provider.of<AuthProvider>(context, listen: false).user!.uid;
+      String uid = Get.find<AuthController>().user!.uid;
       String smallAvatarUrl = await UploadService().uploadFile(_selectedImage!, 'avatars/$uid/small', compressed: true, size: 100, square: true);
       String bigAvatarUrl = await UploadService().uploadFile(_selectedImage!, 'avatars/$uid/big', compressed: true, size: 250, square: true);
 
       if (smallAvatarUrl.isNotEmpty && bigAvatarUrl.isNotEmpty) {
-        U? user = Provider.of<AuthProvider>(context, listen: false).user;
+        U? user = Get.find<AuthController>().user;
         if (user != null) {
           user.smallProfilePictureUrl = smallAvatarUrl;
           user.largeProfilePictureUrl = bigAvatarUrl;
-          bool response = await Provider.of<AuthProvider>(context, listen: false).updateUser(user);
+          bool response = await Get.find<AuthController>().updateUser(user);
           if (response) {
             _goHome();
           } else {

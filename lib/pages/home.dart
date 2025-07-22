@@ -1,3 +1,4 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'dart:async';
 
 import 'package:animations/animations.dart';
@@ -12,11 +13,10 @@ import 'package:hoot/pages/notifications.dart';
 import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/radio.dart';
 import 'package:hoot/services/radio_controller.dart';
-import 'package:provider/provider.dart';
 import 'package:shake/shake.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../models/user.dart';
-import '../services/auth_provider.dart';
+import 'package:hoot/models/user.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'create_post.dart';
@@ -31,7 +31,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final RadioController _radioController = Get.put(RadioController());
   late PageController _pageController;
-  late AuthProvider _authProvider;
+  late AuthController _authProvider;
   late StreamSubscription<RemoteMessage> _messageStreamSubscription;
   late VoidCallback _authProviderListener = () {};
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -58,14 +58,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     U? user = _authProvider.user;
     if (user != null) {
       if (user.username == null || user.username!.isEmpty) {
-        await Navigator.of(context).pushNamed('/welcome');
+        await Get.toNamed(AppRoutes.welcome);
       } else {
         await _countUnreadNotifications();
       }
       await _setFCMToken();
       await _checkTrackingStatus();
     } else {
-      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+      Get.offAllNamed(AppRoutes.login);
     }
   }
 
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _authProvider = Get.find<AuthController>();
     _pageController = PageController();
     super.initState();
     ShakeDetector.autoStart(
@@ -96,13 +96,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bool isSignedIn = _authProvider.isSignedIn;
       if (!isSignedIn) {
-        Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+        Get.offAllNamed(AppRoutes.login);
       } else {
         isNewUser();
         _loading = false;
         _authProviderListener = () async {
           if (!_authProvider.isSignedIn) {
-            await Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+            await Get.offAllNamed(AppRoutes.login);
           }
         };
         _authProvider.addListener(_authProviderListener);

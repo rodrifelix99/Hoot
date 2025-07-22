@@ -1,3 +1,5 @@
+import 'package:hoot/app/routes/app_routes.dart';
+import 'package:get/get.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
@@ -6,14 +8,14 @@ import 'package:hoot/components/native_ad_component.dart';
 import 'package:hoot/components/user_suggestions.dart';
 import 'package:hoot/pages/post.dart';
 import 'package:hoot/services/error_service.dart';
-import 'package:hoot/services/feed_provider.dart';
+import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../components/post_component.dart';
-import '../models/post.dart';
+import 'package:hoot/components/post_component.dart';
+import 'package:hoot/models/post.dart';
 
 class FeedPage extends StatefulWidget {
   final VoidCallback toggleRadio;
@@ -24,7 +26,7 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-  late FeedProvider _feedProvider;
+  late FeedController _feedProvider;
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
   bool _isLoading = false;
 
@@ -46,7 +48,7 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   void initState() {
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
+    _feedProvider = Get.find<FeedController>();
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _feedProvider.mainFeedPosts.isEmpty ? _getPosts(DateTime.now()) : _refreshController.requestRefresh();
@@ -65,7 +67,7 @@ class _FeedPageState extends State<FeedPage> {
           ),
           IconButton(
             icon: const Icon(SolarIconsOutline.magnifier),
-            onPressed: () => Navigator.of(context).pushNamed('/search'),
+            onPressed: () => Get.toNamed('/search'),
           ),
         ],
       ),

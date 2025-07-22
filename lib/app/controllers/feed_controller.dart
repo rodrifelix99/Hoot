@@ -2,18 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hoot/models/feed_types.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
-import 'package:hoot/services/auth_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:hoot/models/feed.dart';
 
-class FeedProvider extends ChangeNotifier {
+class FeedController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFunctions _functions = FirebaseFunctions.instanceFor(region: 'europe-west1');
 
@@ -29,14 +29,14 @@ class FeedProvider extends ChangeNotifier {
   List<Feed> _newFeeds = [];
   List<Feed> get newFeeds => _newFeeds;
 
-  FeedProvider() {
+  FeedController() {
     _getPrefs();
     _auth.authStateChanges().listen((User? user) {
       if (user == null) {
         _mainFeedPosts = [];
         _topFeeds = [];
         _newFeeds = [];
-        notifyListeners();
+        update();
       }
     });
   }
@@ -54,7 +54,7 @@ class FeedProvider extends ChangeNotifier {
         List<dynamic> mainFeedPostsJson = jsonDecode(mainFeedPosts);
         _mainFeedPosts = mainFeedPostsJson.map((post) => Post.fromCache(post)).toList();
       }
-      notifyListeners();
+      update();
     } catch (e) {
       print(e.toString());
       await getMainFeed(DateTime.now(), true);
@@ -63,7 +63,7 @@ class FeedProvider extends ChangeNotifier {
 
   Future<bool> createPost(context, {required String feedId, String? text, List<String>? media}) async {
     try {
-      AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+      AuthController authController = Get.find<AuthController>();
       Post post = Post(
         id: '',
         text: text,
@@ -73,11 +73,11 @@ class FeedProvider extends ChangeNotifier {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('createPost');
       await callable.call(post.toJson());
-      post.user = authProvider.user;
-      post.feed = authProvider.user?.feeds?.firstWhere((f) => f.id == feedId) ?? Feed(id: feedId, title: 'Posted just now', description: '', icon: '', color: Colors.white, private: false, nsfw: false);
+      post.user = authController.user;
+      post.feed = authController.user?.feeds?.firstWhere((f) => f.id == feedId) ?? Feed(id: feedId, title: 'Posted just now', description: '', icon: '', color: Colors.white, private: false, nsfw: false);
       mainFeedPosts.insert(0, post);
-      authProvider.user?.feeds != null ? authProvider.user?.feeds?.firstWhere((f) => f.id == feedId).posts?.insert(0, post) : null;
-      notifyListeners();
+      authController.user?.feeds != null ? authController.user?.feeds?.firstWhere((f) => f.id == feedId).posts?.insert(0, post) : null;
+      update();
       return true;
     } catch (e) {
       print(e.toString());
@@ -87,13 +87,13 @@ class FeedProvider extends ChangeNotifier {
 
   Future<bool> deletePost(BuildContext context, String postId, String feedId) async {
     try {
-      AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+      AuthController authController = Get.find<AuthController>();
       _mainFeedPosts.removeWhere((post) => post.id == postId);
-      authProvider.user?.feeds != null ? authProvider.user?.feeds?.firstWhere((f) => f.id == feedId).posts?.removeWhere((post) => post.id == postId) : null;
+      authController.user?.feeds != null ? authController.user?.feeds?.firstWhere((f) => f.id == feedId).posts?.removeWhere((post) => post.id == postId) : null;
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('deletePost');
       await callable.call({'postId': postId, 'feedId': feedId});
-      notifyListeners();
+      update();
       return true;
     } catch (e) {
       print(e.toString());
@@ -122,7 +122,7 @@ class FeedProvider extends ChangeNotifier {
         'nsfw': nsfw
       });
       Feed feed = Feed(id: res.data, title: title, description: description, icon: icon, color: color, private: private, nsfw: nsfw, type: type);
-      Provider.of<AuthProvider>(context, listen: false).addFeedToUser(feed);
+      Get.find<AuthController>().addFeedToUser(feed);
       return res.data;
     } catch (e) {
       print(e.toString());
@@ -144,8 +144,8 @@ class FeedProvider extends ChangeNotifier {
         'private': feed.private,
         'nsfw': feed.nsfw
       });
-      Provider.of<AuthProvider>(context, listen: false).removeFeedFromUser(feed.id);
-      Provider.of<AuthProvider>(context, listen: false).addFeedToUser(feed);
+      Get.find<AuthController>().removeFeedFromUser(feed.id);
+      Get.find<AuthController>().addFeedToUser(feed);
       return res.data;
     } catch (e) {
       if (kDebugMode) {
@@ -160,7 +160,7 @@ class FeedProvider extends ChangeNotifier {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('deleteFeed');
       final res = await callable.call({'feedId': feedId});
-      Provider.of<AuthProvider>(context, listen: false).removeFeedFromUser(feedId);
+      Get.find<AuthController>().removeFeedFromUser(feedId);
       return res.data;
     } catch (e) {
       if (kDebugMode) {
@@ -204,7 +204,7 @@ class FeedProvider extends ChangeNotifier {
         }
       }
       refresh ? _mainFeedPosts = posts : _mainFeedPosts.addAll(posts);
-      notifyListeners();
+      update();
       _setPrefs();
     } catch (e) {
       if (kDebugMode) {
@@ -379,7 +379,7 @@ class FeedProvider extends ChangeNotifier {
         }
       }
       _topFeeds = feeds;
-      notifyListeners();
+      update();
       return feeds;
     } catch (e) {
       print(e.toString());
@@ -401,7 +401,7 @@ class FeedProvider extends ChangeNotifier {
         }
       }
       _popularTypes = types;
-      notifyListeners();
+      update();
       return types;
     } catch (e) {
       print(e.toString());
@@ -422,7 +422,7 @@ class FeedProvider extends ChangeNotifier {
         }
       }
       _newFeeds = feeds;
-      notifyListeners();
+      update();
       return feeds;
     } catch (e) {
       print(e.toString());

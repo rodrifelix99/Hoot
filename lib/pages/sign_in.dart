@@ -1,10 +1,12 @@
+import 'package:hoot/app/routes/app_routes.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/sign_in_with_apple.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-import '../services/error_service.dart';
+import 'package:hoot/services/error_service.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -33,7 +35,7 @@ class _SignInPageState extends State<SignInPage> {
 
   Future _signInWithEmailAndPassword() async {
     setState(() => _isLoading = true);
-    String code = ''; //await Provider.of<AuthProvider>(context, listen: false).signInWithEmailAndPassword(_emailController.text, _passwordController.text);
+    String code = ''; //await Get.find<AuthController>().signInWithEmailAndPassword(_emailController.text, _passwordController.text);
 
     if (code != "success" && code != "new-user") {
       setState(() => _isLoading = false);
@@ -58,10 +60,10 @@ class _SignInPageState extends State<SignInPage> {
       ToastService.showToast(context, error, true);
     } else if (code == "new-user") {
       TextInput.finishAutofillContext();
-      Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
+      Get.offAllNamed(AppRoutes.welcome);
     } else {
       TextInput.finishAutofillContext();
-      Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+      Get.offAllNamed(AppRoutes.home);
     }
   }
 
@@ -126,7 +128,7 @@ class _SignInPageState extends State<SignInPage> {
                               ),
                             ),
                             TextButton(
-                                onPressed: () => Navigator.of(context).pushNamed('/terms_of_service'),
+                                onPressed: () => Get.toNamed(AppRoutes.terms),
                                 child: Text(
                                   AppLocalizations.of(context)!.termsOfService,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(

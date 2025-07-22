@@ -1,3 +1,4 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +7,10 @@ import 'package:hoot/models/user.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/upload_service.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../services/auth_provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -29,7 +30,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   void initState() {
-    user = Provider.of<AuthProvider>(context, listen: false).user!;
+    user = Get.find<AuthController>().user!;
     _nameController.text = user.name ?? '';
     _usernameController.text = user.username ?? '';
     _bioController.text = user.bio ?? '';
@@ -102,14 +103,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
           user.bannerPictureUrl = await UploadService().uploadFile(_bannerPicture!, 'banners/${user.uid}', compressed: true, size: 1000, square: false);
         }
 
-        bool res = await Provider.of<AuthProvider>(context, listen: false).updateUser(user);
+        bool res = await Get.find<AuthController>().updateUser(user);
         if (!res) {
           setState(() {
             _isLoading = false;
             ToastService.showToast(context, AppLocalizations.of(context)!.errorEditingProfile, true);
           });
         } else {
-          Navigator.pop(context);
+          Get.back();
         }
       } catch (e) {
         setState(() {
