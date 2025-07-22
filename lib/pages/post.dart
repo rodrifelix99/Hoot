@@ -1,17 +1,19 @@
+import 'package:hoot/app/routes/app_routes.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/post_component.dart';
-import 'package:hoot/services/feed_provider.dart';
+import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:solar_icons/solar_icons.dart';
 
-import '../models/post.dart';
-import '../models/user.dart';
-import '../services/error_service.dart';
+import 'package:hoot/models/post.dart';
+import 'package:hoot/models/user.dart';
+import 'package:hoot/services/error_service.dart';
 
 class PostPage extends StatefulWidget {
   Post? post;
@@ -25,13 +27,13 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
-  FeedProvider _feedProvider = FeedProvider();
+  FeedController _feedProvider = FeedController();
   bool _loading = false;
   bool _loadingLikes = false;
 
   @override
   void initState() {
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
+    _feedProvider = Get.find<FeedController>();
     super.initState();
     widget.post == null ? _getPost() : _getLikes(DateTime.now());
   }
@@ -79,7 +81,7 @@ class _PostPageState extends State<PostPage> {
                 isSkeleton: true,
               ) : PostComponent(
                 post: widget.post!,
-                onDeleted: () => Navigator.pop(context),
+                onDeleted: () => Get.back(),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -146,7 +148,7 @@ class _PostPageState extends State<PostPage> {
                 itemCount: widget.post!.likers.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    onTap: () => Navigator.pushNamed(context, '/profile', arguments: widget.post!.likers[index]),
+                    onTap: () => Get.toNamed(context, '/profile', arguments: widget.post!.likers[index]),
                     leading: ProfileAvatarComponent(
                         image: widget.post!.likers[index].smallProfilePictureUrl ?? '',
                         size: 50

@@ -1,3 +1,4 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'dart:io';
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:hoot/components/appbar_component.dart';
@@ -6,19 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:hoot/services/error_service.dart';
-import 'package:hoot/services/feed_provider.dart';
+import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/upload_service.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:octo_image/octo_image.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:uri_content/uri_content.dart';
 
-import '../models/feed.dart';
-import '../services/auth_provider.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 
 class CreatePostPage extends StatefulWidget {
   final String? feedId;
@@ -29,8 +30,8 @@ class CreatePostPage extends StatefulWidget {
 }
 
 class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProviderStateMixin {
-  late FeedProvider _feedProvider;
-  late AuthProvider _authProvider;
+  late FeedController _feedProvider;
+  late AuthController _authProvider;
   final TextEditingController _textEditingController = TextEditingController();
   final List<File> _images = [];
   final List<String> _gifs = [];
@@ -43,8 +44,8 @@ class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProvid
   
   @override
   void initState() {
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _feedProvider = Get.find<FeedController>();
+    _authProvider = Get.find<AuthController>();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 260),
       vsync: this,
@@ -127,7 +128,7 @@ class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProvid
           media: media,
         );
         if (code) {
-          Navigator.pop(context);
+          Get.back();
         } else {
           setState(() {
             _isLoading = false;

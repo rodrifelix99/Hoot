@@ -1,3 +1,4 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
@@ -6,8 +7,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/models/user.dart';
-import 'package:hoot/services/auth_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
+import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:solar_icons/solar_icons.dart';
 
@@ -22,7 +23,7 @@ class ContactsPage extends StatefulWidget {
 }
 
 class _ContactsPageState extends State<ContactsPage> {
-  late AuthProvider _authProvider;
+  late AuthController _authProvider;
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
   bool allowed = false;
   bool loading = true;
@@ -32,7 +33,7 @@ class _ContactsPageState extends State<ContactsPage> {
 
   @override
   void initState() {
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _authProvider = Get.find<AuthController>();
     super.initState();
     listContacts(false);
   }
@@ -141,7 +142,7 @@ class _ContactsPageState extends State<ContactsPage> {
           itemBuilder: (context, index) {
             U contact = friends[index];
             return ListTile(
-              onTap: () => Navigator.pushNamed(context, '/profile', arguments: contact),
+              onTap: () => Get.toNamed(context, '/profile', arguments: contact),
               leading: Avatar(
                 image: contact.smallProfilePictureUrl ?? '',
                 size: 40,

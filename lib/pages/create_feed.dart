@@ -1,3 +1,5 @@
+import 'package:hoot/app/routes/app_routes.dart';
+import 'package:get/get.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -6,9 +8,9 @@ import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
-import '../models/feed.dart';
-import '../services/error_service.dart';
-import '../services/feed_provider.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/services/error_service.dart';
+import 'package:hoot/app/controllers/feed_controller.dart';
 
 class CreateFeedPage extends StatefulWidget {
   final Feed? feed;
@@ -19,7 +21,7 @@ class CreateFeedPage extends StatefulWidget {
 }
 
 class _CreateFeedPageState extends State<CreateFeedPage> {
-  late FeedProvider _feedProvider;
+  late FeedController _feedProvider;
   bool _editing = false;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -31,7 +33,7 @@ FeedType _feedType = FeedType.general;
 
   @override
   void initState() {
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
+    _feedProvider = Get.find<FeedController>();
     _titleController.text = widget.feed?.title ?? '';
     _descriptionController.text = widget.feed?.description ?? '';
     _color = widget.feed?.color ?? Colors.blue;
@@ -61,7 +63,7 @@ FeedType _feedType = FeedType.general;
         nsfw: _nsfw || _feedType == FeedType.adultContent,
     );
     if (feedId.isNotEmpty) {
-      Navigator.pop(context);
+      Get.back();
     } else {
       setState(() {
         _isLoading = false;
@@ -84,7 +86,7 @@ FeedType _feedType = FeedType.general;
         widget.feed!
     );
     if (res) {
-      Navigator.pop(context);
+      Get.back();
     } else {
       setState(() {
         _isLoading = false;
@@ -119,7 +121,7 @@ FeedType _feedType = FeedType.general;
           widget.feed?.id ?? ''
       );
       if (res) {
-        Navigator.pop(context);
+        Get.back();
       } else {
         setState(() {
           _isLoading = false;

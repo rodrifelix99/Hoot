@@ -1,12 +1,13 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
-import 'package:hoot/services/auth_provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/services/error_service.dart';
-import 'package:hoot/services/feed_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:hoot/app/controllers/feed_controller.dart';
+import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../models/user.dart';
+import 'package:hoot/models/user.dart';
 
 class FeedRequestsPage extends StatefulWidget {
   final String feedId;
@@ -17,16 +18,16 @@ class FeedRequestsPage extends StatefulWidget {
 }
 
 class _FeedRequestsPageState extends State<FeedRequestsPage> {
-  late FeedProvider _feedProvider;
-  late AuthProvider _authProvider;
+  late FeedController _feedProvider;
+  late AuthController _authProvider;
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
   List<U> _requests = [];
   bool _loading = true;
 
   @override
   void initState() {
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
+    _authProvider = Get.find<AuthController>();
+    _feedProvider = Get.find<FeedController>();
     super.initState();
     _getRequests();
   }

@@ -1,11 +1,12 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/error_service.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
-import '../components/sign_in_with_apple.dart';
-import '../services/auth_provider.dart';
+import 'package:hoot/components/sign_in_with_apple.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -35,7 +36,7 @@ class _SignUpPageState extends State<SignUpPage> {
       _isLoading = true;
     });
 
-    String code = await Provider.of<AuthProvider>(context, listen: false).signUpWithEmailAndPassword(
+    String code = await Get.find<AuthController>().signUpWithEmailAndPassword(
       _emailController.text,
       _passwordController.text
     );
@@ -62,7 +63,7 @@ class _SignUpPageState extends State<SignUpPage> {
         ToastService.showToast(context, errorMessage, true);
       });
     } else {
-      Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
+      Get.offAllNamed('/welcome', (route) => false);
     }
   }
 
@@ -158,7 +159,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 ),
                               ),
                               TextButton(
-                                  onPressed: () => Navigator.of(context).pushNamed('/terms_of_service'),
+                                  onPressed: () => Get.toNamed('/terms_of_service'),
                                   child: Text(
                                     AppLocalizations.of(context)!.termsOfService,
                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(

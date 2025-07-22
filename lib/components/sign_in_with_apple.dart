@@ -1,12 +1,12 @@
+import 'package:hoot/app/routes/app_routes.dart';
+import 'package:get/get.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../services/auth_provider.dart';
 
 class SignInWithAppleButton extends StatefulWidget {
   const SignInWithAppleButton({super.key});
@@ -18,7 +18,7 @@ class SignInWithAppleButton extends StatefulWidget {
 class _SignInWithAppleButtonState extends State<SignInWithAppleButton> {
 
   Future _signInWithApple() async {
-    String code = await Provider.of<AuthProvider>(context, listen: false).signInWithApple();
+    String code = await Get.find<AuthController>().signInWithApple();
     if (code != "success" && code != "new-user") {
       setState(() {
         ScaffoldMessenger.of(context).showSnackBar(

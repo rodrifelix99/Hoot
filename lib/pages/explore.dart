@@ -1,3 +1,4 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,11 +11,11 @@ import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/search.dart';
 import 'package:hoot/pages/search_by_genre.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:provider/provider.dart';
-import '../models/feed.dart';
-import '../models/feed_types.dart';
-import '../services/auth_provider.dart';
-import '../services/feed_provider.dart';
+import 'package:get/get.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/models/feed_types.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
+import 'package:hoot/app/controllers/feed_controller.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -24,16 +25,16 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  late AuthProvider _authProvider;
-  late FeedProvider _feedProvider;
+  late AuthController _authProvider;
+  late FeedController _feedProvider;
   List<Feed> _top10Feeds = [];
   List<Feed> _recentFeeds = [];
   List<FeedType> _popularTypes = [];
 
   @override
   void initState() {
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
+    _authProvider = Get.find<AuthController>();
+    _feedProvider = Get.find<FeedController>();
     super.initState();
     _top10MostSubscribedFeeds();
     _getPopularTypes();
@@ -247,7 +248,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     ),
                     const SizedBox(width: 10),
                     GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, '/search_by_genre', arguments: FeedType.general),
+                        onTap: () => Get.toNamed(context, '/search_by_genre', arguments: FeedType.general),
                         child: const TypeBoxComponent(type: FeedType.other, isLast: true)
                     ),
                     const SizedBox(width: 20),

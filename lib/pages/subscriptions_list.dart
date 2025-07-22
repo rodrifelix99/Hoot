@@ -1,17 +1,18 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
-import 'package:hoot/services/auth_provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/services/error_service.dart';
-import 'package:hoot/services/feed_provider.dart';
+import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../models/feed.dart';
+import 'package:hoot/models/feed.dart';
 
 class SubscriptionsListPage extends StatefulWidget {
   final String userId;
@@ -22,15 +23,15 @@ class SubscriptionsListPage extends StatefulWidget {
 }
 
 class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
-  late FeedProvider _feedProvider;
-  late AuthProvider _authProvider;
+  late FeedController _feedProvider;
+  late AuthController _authProvider;
   List<Feed> _subscriptions = [];
   bool _loading = true;
 
   @override
   void initState() {
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _feedProvider = Get.find<FeedController>();
+    _authProvider = Get.find<AuthController>();
     super.initState();
     _getSubscriptions();
   }
@@ -92,7 +93,7 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
         itemCount: _subscriptions.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
-            onTap: () => Navigator.pushNamed(context, '/profile', arguments: _subscriptions[index].user),
+            onTap: () => Get.toNamed(context, '/profile', arguments: _subscriptions[index].user),
             leading: ProfileAvatarComponent(
               image: _subscriptions[index].user?.smallProfilePictureUrl ?? '',
               size: 40,

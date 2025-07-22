@@ -1,10 +1,11 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hoot/services/auth_provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -15,13 +16,13 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  late AuthProvider _authProvider;
+  late AuthController _authProvider;
   bool _loading = false;
   String _version = "";
 
   @override
   void initState() {
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _authProvider = Get.find<AuthController>();
     _loadVersion();
     super.initState();
   }
@@ -54,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
     if (result == true) {
       await _authProvider.signOut();
-      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+      Get.offAllNamed('/login', (route) => false);
     }
   }
 
@@ -84,7 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
       bool res = await _authProvider.deleteAccount();
       if (res) {
         ToastService.showToast(context, AppLocalizations.of(context)!.deleteAccountSuccess, false);
-        Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+        Get.offAllNamed('/login', (route) => false);
       } else {
         setState(() {
           _loading = false;
@@ -100,7 +101,7 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false),
+          onPressed: () => Get.offAllNamed('/home', (route) => false),
         ),
         title: Text(AppLocalizations.of(context)!.settings),
       ),
@@ -127,26 +128,26 @@ class _SettingsPageState extends State<SettingsPage> {
                       leading: const Icon(SolarIconsBold.userRounded),
                       title: Text(AppLocalizations.of(context)!.editProfile),
                       trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () => Navigator.pushNamed(context, '/edit_profile'),
+                      onTap: () => Get.toNamed(context, '/edit_profile'),
                     ),
                     ListTile(
                       leading: const Icon(SolarIconsBold.phoneRounded),
                       title: Text(AppLocalizations.of(context)!.findFriends),
                       subtitle: Text(AppLocalizations.of(context)!.findFriendsFromContacts),
                       trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () => Navigator.pushNamed(context, '/contacts'),
+                      onTap: () => Get.toNamed(context, '/contacts'),
                     ),
                     ListTile(
                       leading: const Icon(SolarIconsBold.shieldCheck),
                       title: Text(AppLocalizations.of(context)!.termsOfService),
                       trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () => Navigator.pushNamed(context, '/terms_of_service'),
+                      onTap: () => Get.toNamed(context, '/terms_of_service'),
                     ),
                     /*ListTile(
                       leading: const Icon(SolarIconsBold.verifiedCheck),
                       title: Text(AppLocalizations.of(context)!.aboutUs),
                       trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () => Navigator.pushNamed(context, '/about_us'),
+                      onTap: () => Get.toNamed(context, '/about_us'),
                     ),*/
                     ListTile(
                       leading: const Icon(SolarIconsBold.trashBinMinimalistic),

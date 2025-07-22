@@ -1,3 +1,4 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'package:animations/animations.dart';
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
@@ -10,20 +11,20 @@ import 'package:hoot/components/subscribe_component.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/pages/post.dart';
 import 'package:hoot/services/error_service.dart';
-import 'package:hoot/services/feed_provider.dart';
+import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:hoot/services/auth_provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:vibration/vibration.dart';
 
-import '../components/post_component.dart';
-import '../models/post.dart';
+import 'package:hoot/components/post_component.dart';
+import 'package:hoot/models/post.dart';
 
 class ProfilePage extends StatefulWidget {
   final U? user;
@@ -35,8 +36,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStateMixin {
-  late AuthProvider _authProvider;
-  late FeedProvider _feedProvider;
+  late AuthController _authProvider;
+  late FeedController _feedProvider;
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
   late U _user;
   late bool _isCurrentUser;
@@ -49,8 +50,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
 
   @override
   void initState() {
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
+    _authProvider = Get.find<AuthController>();
+    _feedProvider = Get.find<FeedController>();
     _user = widget.user ?? _authProvider.user!;
     _isCurrentUser = _user.uid == _authProvider.user!.uid;
     _animationController = AnimationController(
@@ -118,8 +119,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               title: Text(AppLocalizations.of(context)!.reportUsername(_user.username ?? '')),
               onTap: () =>
               {
-                Navigator.of(context).pop(),
-                Navigator.of(context).pushNamed('/report', arguments: [_user])
+                Get.back(),
+                Get.toNamed('/report', arguments: [_user])
               },
             ),
             ListTile(
@@ -127,7 +128,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               leading: const LineIcon(LineIcons.removeUser),
               title: Text(AppLocalizations.of(context)!.blockUser(_user.username ?? '')),
               onTap: () => {
-                Navigator.of(context).pop(),
+                Get.back(),
                 ToastService.showToast(
                     context, AppLocalizations.of(context)!.comingSoon, false)
               },
@@ -208,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
             padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
           ),
-          onPressed: () => Navigator.of(context).pushNamed('/edit_profile'),
+          onPressed: () => Get.toNamed('/edit_profile'),
           child: Text(AppLocalizations.of(context)!.editProfile),
         ) : IconButton(
           icon: const Icon(Icons.more_vert_rounded),
@@ -251,7 +252,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         foregroundColor: Colors.white,
         actions: [
           TextButton(
-              onPressed: () => Navigator.pushNamed(context, '/subscriptions', arguments: _user.uid),
+              onPressed: () => Get.toNamed(context, '/subscriptions', arguments: _user.uid),
               style: TextButton.styleFrom(
                 backgroundColor: Colors.white.withOpacity(0.1),
               ),
@@ -265,7 +266,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               )
           ),
           _isCurrentUser ? IconButton(
-            onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/settings', (route) => false),
+            onPressed: () => Get.offAllNamed(context, '/settings', (route) => false),
             icon: const Icon(SolarIconsBold.settings, color: Colors.white, size: 30),
           ) : const SizedBox(width: 10),
         ],
@@ -280,7 +281,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             icon: SolarIconsOutline.usersGroupRounded,
             titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
             onPress: () {
-              Navigator.of(context).pushNamed('/subscribers', arguments: _user.feeds![_selectedFeedIndex].id);
+              Get.toNamed('/subscribers', arguments: _user.feeds![_selectedFeedIndex].id);
               _animationController.reverse();
             },
           ),
@@ -291,7 +292,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             icon: SolarIconsOutline.pen,
             titleStyle:TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
             onPress: () {
-              Navigator.of(context).pushNamed('/edit_feed', arguments: _user.feeds![_selectedFeedIndex]);
+              Get.toNamed('/edit_feed', arguments: _user.feeds![_selectedFeedIndex]);
               _animationController.reverse();
             },
           ),
@@ -302,7 +303,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             icon: SolarIconsOutline.addSquare,
             titleStyle: TextStyle(fontSize: 16, color: _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white),
             onPress: () {
-              Navigator.of(context).pushNamed('/create_post', arguments: _user.feeds![_selectedFeedIndex].id);
+              Get.toNamed('/create_post', arguments: _user.feeds![_selectedFeedIndex].id);
               _animationController.reverse();
             },
           ),
@@ -341,7 +342,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                 child: Row(
                     children: [
                       _isCurrentUser && (_authProvider.user?.feeds?.length ?? 0) < 25 ? GestureDetector(
-                        onTap: () => Navigator.of(context).pushNamed('/create_feed'),
+                        onTap: () => Get.toNamed('/create_feed'),
                         child: Chip(
                           label: LineIcon(LineIcons.plus, color: Theme.of(context).colorScheme.primary, size: 16),
                         ),
@@ -357,7 +358,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                           GestureDetector(
                             onTap: () => setState(() => _selectedFeedIndex = _user.feeds?.indexOf(feed) ?? 0),
                             onForcePressStart: (details) => Vibration.vibrate(),
-                            onForcePressPeak: (details) => Navigator.of(context).pushNamed('/feed', arguments: feed),
+                            onForcePressPeak: (details) => Get.toNamed('/feed', arguments: feed),
                             child: _selectedFeedIndex == _user.feeds?.indexOf(feed) ? Chip(
                               label: Text(feed.title),
                               avatar: feed.nsfw == true ? LineIcon(LineIcons.exclamationTriangle, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : feed.private == true ? LineIcon(LineIcons.lock, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : feed.verified == true ? Icon(Icons.verified_rounded, color: feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white) : null,
@@ -402,7 +403,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                 icon: const LineIcon(LineIcons.newspaperAlt),
                 text: !_isCurrentUser ? AppLocalizations.of(context)!.noFeeds(_user.name ?? _user.username ?? 'This user') : AppLocalizations.of(context)!.noFeedsYou,
                 buttonText: _isCurrentUser ? AppLocalizations.of(context)!.createFeed : null,
-                buttonAction: () => Navigator.of(context).pushNamed('/create_feed'),
+                buttonAction: () => Get.toNamed('/create_feed'),
               ),
               const SizedBox(height: 100),
             ],
@@ -423,14 +424,14 @@ class FeedPosts extends StatefulWidget {
 }
 
 class _FeedPostsState extends State<FeedPosts> {
-  late FeedProvider _feedProvider;
-  late AuthProvider _authProvider;
+  late FeedController _feedProvider;
+  late AuthController _authProvider;
   bool _isLoading = true;
 
   @override
   void initState() {
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _feedProvider = Get.find<FeedController>();
+    _authProvider = Get.find<AuthController>();
     super.initState();
     widget.user.feeds?[widget.feedIndex].posts == null ? _getPosts(DateTime.now()) : setState(() => _isLoading = false);
   }
@@ -509,7 +510,7 @@ class _FeedPostsState extends State<FeedPosts> {
         icon: const Icon(Icons.article_rounded),
         text: '${AppLocalizations.of(context)?.emptyFeed}\n\n${AppLocalizations.of(context)?.emptyFeedDescription}',
         buttonText: AppLocalizations.of(context)?.createPost,
-        buttonAction: () => Navigator.of(context).pushNamed('/create_post', arguments: widget.user.feeds![widget.feedIndex].id),
+        buttonAction: () => Get.toNamed('/create_post', arguments: widget.user.feeds![widget.feedIndex].id),
       ),
     );
   }

@@ -1,10 +1,11 @@
+import 'package:hoot/app/routes/app_routes.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
-import 'package:hoot/services/auth_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:skeletons/skeletons.dart';
 
-import '../models/user.dart';
+import 'package:hoot/models/user.dart';
 
 class UserSuggestions extends StatefulWidget {
   const UserSuggestions({super.key});
@@ -14,12 +15,12 @@ class UserSuggestions extends StatefulWidget {
 }
 
 class _UserSuggestionsState extends State<UserSuggestions> {
-  late AuthProvider _authProvider;
+  late AuthController _authProvider;
   bool _isLoading = false;
 
   @override
   void initState() {
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _authProvider = Get.find<AuthController>();
     _authProvider.userSuggestions.isEmpty ? _loadUsers() : null;
     super.initState();
   }
@@ -27,7 +28,7 @@ class _UserSuggestionsState extends State<UserSuggestions> {
   Future _loadUsers() async {
     try {
       setState(() => _isLoading = true);
-      List<U> users = await Provider.of<AuthProvider>(context, listen: false).getSuggestions();
+      List<U> users = await Get.find<AuthController>().getSuggestions();
       if (users.isNotEmpty) {
         _authProvider.userSuggestions = users;
       }

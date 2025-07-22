@@ -1,13 +1,14 @@
+import 'package:hoot/app/routes/app_routes.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hoot/services/auth_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
+import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:solar_icons/solar_icons.dart';
 
-import '../models/user.dart';
-import '../services/error_service.dart';
-import '../services/feed_provider.dart';
+import 'package:hoot/models/user.dart';
+import 'package:hoot/services/error_service.dart';
 /// A component that allows the user to subscribe to a feed and manage requests
 class SubscribeComponent extends StatefulWidget {
   /// The feed to subscribe to
@@ -21,16 +22,16 @@ class SubscribeComponent extends StatefulWidget {
 }
 
 class _SubscribeComponentState extends State<SubscribeComponent> {
-  late AuthProvider _authProvider;
-  late FeedProvider _feedProvider;
+  late AuthController _authProvider;
+  late FeedController _feedProvider;
 
   bool _subscribeCooldown = false;
   bool _requestCooldown = false;
 
   @override
   void initState() {
-    _feedProvider = Provider.of<FeedProvider>(context, listen: false);
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _feedProvider = Get.find<FeedController>();
+    _authProvider = Get.find<AuthController>();
     super.initState();
   }
 

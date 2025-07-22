@@ -1,3 +1,4 @@
+import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
@@ -9,8 +10,8 @@ import 'package:skeletons/skeletons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/error_service.dart';
-import 'package:provider/provider.dart';
-import '../services/auth_provider.dart';
+import 'package:get/get.dart';
+import 'package:hoot/app/controllers/auth_controller.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -20,7 +21,7 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  late AuthProvider _authProvider;
+  late AuthController _authProvider;
   List<Notif.Notification> _notifications = [];
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
   bool _isLoading = false;
@@ -28,7 +29,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   void initState() {
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _authProvider = Get.find<AuthController>();
     super.initState();
     _loadNotifications();
   }
@@ -90,19 +91,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case 2:
       case 3:
       case 4:
-        Navigator.pushNamed(context, '/profile', arguments: notification.user);
+        Get.toNamed(context, '/profile', arguments: notification.user);
         break;
       case 6:
       case 7:
-        Navigator.pushNamed(context, '/profile', arguments: [notification.user, notification.feed?.id]);
+        Get.toNamed(context, '/profile', arguments: [notification.user, notification.feed?.id]);
         break;
       case 5:
-        Navigator.pushNamed(context, '/feed_requests', arguments: notification.feed?.id ?? '');
+        Get.toNamed(context, '/feed_requests', arguments: notification.feed?.id ?? '');
         break;
       case 8:
-        Navigator.pushNamed(context, '/post', arguments: [_authProvider.user?.uid, notification.feed?.id, notification.postId]);
+        Get.toNamed(context, '/post', arguments: [_authProvider.user?.uid, notification.feed?.id, notification.postId]);
       case 9:
-        Navigator.pushNamed(context, '/post', arguments: [notification.user.uid, notification.feed?.id, notification.postId]);
+        Get.toNamed(context, '/post', arguments: [notification.user.uid, notification.feed?.id, notification.postId]);
         break;
     }
   }
