@@ -1,13 +1,12 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:hoot/components/sign_in_with_google.dart';
+import 'package:hoot/components/sign_in_with_apple.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:get/get.dart';
 import 'package:hoot/app/routes/app_routes.dart';
-
-import 'package:hoot/services/error_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -42,8 +41,6 @@ class _LoginPageState extends State<LoginPage> {
         }
       };
       _authController.addListener(_authControllerListener);
-      _authController.phoneNumber = PhoneNumber(
-          isoCode: WidgetsBinding.instance.window.locale.countryCode ?? 'US');
     });
   }
 
@@ -51,16 +48,6 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _authController.removeListener(_authControllerListener);
     super.dispose();
-  }
-
-  void _next() {
-    if (_authController.phoneNumber.phoneNumber != null) {
-      _authController.removeListener(_authControllerListener);
-      Get.toNamed(AppRoutes.verify);
-    } else {
-      ToastService.showToast(
-          context, 'phoneNumberInvalid'.tr, true);
-    }
   }
 
   @override
@@ -120,45 +107,9 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      InternationalPhoneNumberInput(
-                        onInputChanged: (PhoneNumber number) {
-                          _authController.phoneNumber = number;
-                        },
-                        selectorConfig: const SelectorConfig(
-                          selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                          useEmoji: true,
-                          setSelectorButtonAsPrefixIcon: true,
-                          leadingPadding: 16,
-                        ),
-                        selectorTextStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface),
-                        ignoreBlank: false,
-                        autoValidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (String? value) {
-                          if (value!.isEmpty || value.length < 6) {
-                            return 'phoneNumberInvalid'.tr;
-                          }
-                          return null;
-                        },
-                        autofillHints: const [AutofillHints.telephoneNumber],
-                        initialValue: _authController.phoneNumber,
-                        errorMessage:
-                            'phoneNumberInvalid'.tr,
-                        inputDecoration: InputDecoration(
-                          hintText: 'phoneNumber'.tr,
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .secondary
-                                  .withValues(alpha: 0.5)),
-                          errorStyle: const TextStyle(color: Colors.redAccent),
-                        ),
-                        hintText: 'phoneNumber'.tr,
-                        formatInput: false,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            signed: true, decimal: true),
-                        onSubmit: () => _next(),
-                      ),
+                      const SignInWithGoogleButton(),
+                      const SizedBox(height: 8),
+                      const SignInWithAppleButton(),
                       const SizedBox(height: 30),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -174,8 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                                 overlayColor: WidgetStateProperty.all<Color>(
                                     Colors.transparent),
                               ),
-                              child: Text(
-                                  'termsOfService'.tr,
+                              child: Text('termsOfService'.tr,
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)))
