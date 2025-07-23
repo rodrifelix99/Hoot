@@ -4,7 +4,6 @@ import 'package:hoot/models/feed.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:solar_icons/solar_icons.dart';
-import 'package:hoot/services/dialog_service.dart';
 
 import 'package:hoot/models/user.dart';
 
@@ -56,14 +55,24 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
   }
 
   Future _requestToJoinFeed() async {
-    bool confirm = await DialogService.confirm(
+    bool? confirm = await showDialog<bool>(
       context: context,
-      title: 'requestToJoin'.tr,
-      message: 'requestToJoinConfirmation'.tr,
-      okLabel: 'requestToJoin'.tr,
-      cancelLabel: 'cancel'.tr,
+      builder: (context) => AlertDialog(
+        title: Text('requestToJoin'.tr),
+        content: Text('requestToJoinConfirmation'.tr),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('cancel'.tr),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('requestToJoin'.tr),
+          ),
+        ],
+      ),
     );
-    if (confirm) {
+    if (confirm == true) {
       if (_requestCooldown) {
         // TODO: Use ToastService.showInfo 'youAreGoingTooFast'.tr
         return;
@@ -88,14 +97,24 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       // TODO: Use ToastService.showInfo and handle error 'youAreGoingTooFast'.tr
       return;
     }
-    bool confirm = await DialogService.confirm(
+    bool? confirm = await showDialog<bool>(
       context: context,
-      title: 'subscribe'.tr,
-      message: 'subscribeConfirmation'.tr,
-      okLabel: 'subscribe'.tr,
-      cancelLabel: 'cancel'.tr,
+      builder: (context) => AlertDialog(
+        title: Text('subscribe'.tr),
+        content: Text('subscribeConfirmation'.tr),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('cancel'.tr),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('subscribe'.tr),
+          ),
+        ],
+      ),
     );
-    if (confirm) {
+    if (confirm == true) {
       setState(() => widget.feed.subscribers!.add(_authProvider.user!.uid));
       bool res =
           await _feedProvider.subscribeToFeed(widget.user.uid, widget.feed.id);
@@ -112,14 +131,24 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
   }
 
   Future _unsubscribeFromFeed() async {
-    bool confirm = await DialogService.confirm(
+    bool? confirm = await showDialog<bool>(
       context: context,
-      title: 'unsubscribe'.tr,
-      message: 'unsubscribeConfirmation'.tr,
-      okLabel: 'unsubscribe'.tr,
-      cancelLabel: 'cancel'.tr,
+      builder: (context) => AlertDialog(
+        title: Text('unsubscribe'.tr),
+        content: Text('unsubscribeConfirmation'.tr),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('cancel'.tr),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('unsubscribe'.tr),
+          ),
+        ],
+      ),
     );
-    if (confirm) {
+    if (confirm == true) {
       setState(() => widget.feed.subscribers!.remove(_authProvider.user!.uid));
       bool res = await _feedProvider.unsubscribeFromFeed(
           widget.user.uid, widget.feed.id);
