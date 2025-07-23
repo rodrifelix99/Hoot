@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:hoot/models/notification.dart' as n;
 import '../utils/logger.dart';
@@ -19,15 +18,6 @@ class AuthController extends GetxController {
   U? _user;
   U? get user => _user;
 
-  PhoneNumber _phoneNumber = PhoneNumber(isoCode: 'US');
-  PhoneNumber get phoneNumber => _phoneNumber;
-  set phoneNumber(PhoneNumber phoneNumber) {
-    _phoneNumber = phoneNumber;
-    update();
-  }
-
-  String? _verificationId;
-  String? get verificationId => _verificationId;
 
   int _notificationsCount = 0;
   int get notificationsCount => _notificationsCount;
@@ -77,56 +67,7 @@ class AuthController extends GetxController {
     }
   }
 
-  Future verifyPhoneNumber() async {
-    try {
-      _auth.verifyPhoneNumber(
-        phoneNumber: _phoneNumber.phoneNumber!,
-        timeout: const Duration(seconds: 60),
-        verificationCompleted: (PhoneAuthCredential credential) async {},
-        verificationFailed: (FirebaseAuthException e) {
-          logError(e.toString());
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          _verificationId = verificationId;
-          update();
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          _verificationId = verificationId;
-          update();
-        },
-      );
-    } catch (e) {
-      logError(e.toString());
-      FirebaseAuthException exception = e as FirebaseAuthException;
-      throw exception.code;
-    }
-  }
 
-  Future<String> signInWithPhoneCredential(String smsCode) async {
-    try {
-      final PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: _verificationId!,
-        smsCode: smsCode,
-      );
-      final UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-      if (userCredential.user == null) {
-        return "unknown-error";
-      } else if (userCredential.additionalUserInfo!.isNewUser) {
-        _user = U(uid: 'HOOT-IS-AWESOME');
-        update();
-        return "new-user";
-      } else {
-        _user = await getUserInfo();
-        update();
-        return "success";
-      }
-    } catch (e) {
-      logError(e.toString());
-      FirebaseAuthException error = e as FirebaseAuthException;
-      return error.code;
-    }
-  }
 
   Future<String> signInWithApple() async {
     try {
