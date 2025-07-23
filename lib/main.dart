@@ -8,9 +8,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hoot/theme/theme.dart';
+import 'package:hoot/util/translations/app_translations.dart';
 import 'package:toastification/toastification.dart';
 import 'firebase_options.dart';
-import 'app/translations/app_translations.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();

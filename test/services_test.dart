@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:toastification/toastification.dart';
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 
 import 'package:hoot/services/toast_service.dart';
 import 'package:hoot/services/dialog_service.dart';
