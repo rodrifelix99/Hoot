@@ -8,8 +8,9 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 class UrlPreviewComponent extends StatefulWidget {
   final String url;
-  final bool isClickable = true;
-  const UrlPreviewComponent({super.key, required this.url, isClickable});
+  final bool isClickable;
+  const UrlPreviewComponent(
+      {super.key, required this.url, this.isClickable = true});
 
   @override
   State<UrlPreviewComponent> createState() => _UrlPreviewComponentState();
@@ -69,9 +70,11 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const ShimmerParagraph(lines: 1, spacing: 10, height: 10),
+                          const ShimmerParagraph(
+                              lines: 1, spacing: 10, height: 10),
                           const SizedBox(height: 10),
-                          const ShimmerParagraph(lines: 2, spacing: 10, height: 10),
+                          const ShimmerParagraph(
+                              lines: 2, spacing: 10, height: 10),
                         ],
                       ),
                     ),
