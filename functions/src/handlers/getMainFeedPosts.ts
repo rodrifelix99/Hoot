@@ -1,6 +1,6 @@
 import { onCall } from 'firebase-functions/v2/https';
-import { db, admin, info, error } from '../common';
-import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
+import { db, admin, error } from '../common';
+import { getUser, getHootObj } from '../utils';
 export const getMainFeedPosts = onCall({ region: 'europe-west1' }, async (request) => {
   const data = request.data;
   const context = request;
@@ -8,15 +8,41 @@ export const getMainFeedPosts = onCall({ region: 'europe-west1' }, async (reques
     const uid = context.auth.uid;
     let { startAfter } = data || { startAfter: null };
     const startAfterTimestamp = startAfter ? admin.firestore.Timestamp.fromDate(new Date(startAfter)) : admin.firestore.Timestamp.fromDate(new Date());
-    const feedPosts = await db.collection("users").doc(uid).collection("mainFeed").orderBy("createdAt", "desc").startAfter(startAfterTimestamp).limit(10).get();
-    const results = [];
+    const subscriptions = await db.collection('users').doc(uid).collection('subscriptions').get();
+    const aggregated: any[] = [];
+    for (const sub of subscriptions.docs) {
+      const feedUserId = sub.data().userId;
+      if (!feedUserId) {
+        continue;
+      }
+      const posts = await db
+        .collection('users')
+        .doc(feedUserId)
+        .collection('feeds')
+        .doc(sub.id)
+        .collection('posts')
+        .orderBy('createdAt', 'desc')
+        .startAfter(startAfterTimestamp)
+        .limit(10)
+        .get();
+      for (const p of posts.docs) {
+        const obj = p.data();
+        obj.id = p.id;
+        obj.feedId = sub.id;
+        obj.userId = feedUserId;
+        aggregated.push(obj);
+      }
+    }
 
-    let cachedUsers = [];
-    let cachedFeeds = [];
+    aggregated.sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis());
+    const selected = aggregated.slice(0, 10);
 
-    for (const feedPost of feedPosts.docs) {
-      const feedPostObj = feedPost.data();
-      feedPostObj.id = feedPost.id;
+    const results: any[] = [];
+
+    const cachedUsers: any[] = [];
+    const cachedFeeds: any[] = [];
+
+    for (const feedPostObj of selected) {
       if (cachedFeeds.find((feed) => feed.id === feedPostObj.feedId)) {
         feedPostObj.feed = cachedFeeds.find((feed) => feed.id === feedPostObj.feedId);
       } else {
@@ -37,15 +63,57 @@ export const getMainFeedPosts = onCall({ region: 'europe-west1' }, async (reques
         }
         cachedUsers.push(feedPostObj.user);
       }
-      const liked = await db.collection("users").doc(feedPostObj.userId).collection("feeds").doc(feedPostObj.feedId).collection("posts").doc(feedPost.id).collection("likes").doc(uid).get();
+      const liked = await db
+        .collection('users')
+        .doc(feedPostObj.userId)
+        .collection('feeds')
+        .doc(feedPostObj.feedId)
+        .collection('posts')
+        .doc(feedPostObj.id)
+        .collection('likes')
+        .doc(uid)
+        .get();
       feedPostObj.liked = liked.exists;
-      const likeCount = await db.collection("users").doc(feedPostObj.userId).collection("feeds").doc(feedPostObj.feedId).collection("posts").doc(feedPost.id).collection("likes").get();
+      const likeCount = await db
+        .collection('users')
+        .doc(feedPostObj.userId)
+        .collection('feeds')
+        .doc(feedPostObj.feedId)
+        .collection('posts')
+        .doc(feedPostObj.id)
+        .collection('likes')
+        .get();
       feedPostObj.likes = likeCount.size || 0;
-      const reFeeded = await db.collection("users").doc(feedPostObj.userId).collection("feeds").doc(feedPostObj.feedId).collection("posts").doc(feedPost.id).collection("reFeeds").doc(uid).get();
+      const reFeeded = await db
+        .collection('users')
+        .doc(feedPostObj.userId)
+        .collection('feeds')
+        .doc(feedPostObj.feedId)
+        .collection('posts')
+        .doc(feedPostObj.id)
+        .collection('reFeeds')
+        .doc(uid)
+        .get();
       feedPostObj.reFeeded = reFeeded.exists;
-      const reFeedCount = await db.collection("users").doc(feedPostObj.userId).collection("feeds").doc(feedPostObj.feedId).collection("posts").doc(feedPost.id).collection("reFeeds").get();
+      const reFeedCount = await db
+        .collection('users')
+        .doc(feedPostObj.userId)
+        .collection('feeds')
+        .doc(feedPostObj.feedId)
+        .collection('posts')
+        .doc(feedPostObj.id)
+        .collection('reFeeds')
+        .get();
       feedPostObj.reFeeds = reFeedCount.size || 0;
-      const commentCount = await db.collection("users").doc(feedPostObj.userId).collection("feeds").doc(feedPostObj.feedId).collection("posts").doc(feedPost.id).collection("comments").get();
+      const commentCount = await db
+        .collection('users')
+        .doc(feedPostObj.userId)
+        .collection('feeds')
+        .doc(feedPostObj.feedId)
+        .collection('posts')
+        .doc(feedPostObj.id)
+        .collection('comments')
+        .get();
       feedPostObj.comments = commentCount.size || 0;
       if (feedPostObj.reFeededFrom) {
         // reFeededFrom is a path string to the original post

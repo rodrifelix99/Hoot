@@ -1,26 +1,20 @@
 import { onDocumentDeleted } from 'firebase-functions/v2/firestore';
-import { db, admin, info, error } from '../common';
-import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const onDeletePost = onDocumentDeleted({ document: "users/{userId}/feeds/{feedId}/posts/{postId}", region: "europe-west1" }, async (event) => {
-  const snap = event.data;
-  const context = event;
-  try {
-    const { userId, feedId, postId } = context.params;
-    const feedSubscribers = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("subscribers").get();
-    let batch = db.batch();
-    let writeCount = 0;
-    for (const feedSubscriber of feedSubscribers.docs) {
-      const feedPostRef = db.collection("users").doc(feedSubscriber.id).collection("mainFeed").doc(postId);
-      writeCount++;
-      if (writeCount > 499) {
-        await batch.commit();
-        batch = db.batch();
-        writeCount = 0;
-      }
-      batch.delete(feedPostRef);
+import { db, admin, error } from '../common';
+
+// Old implementation removed duplicated posts from each subscriber's `mainFeed`.
+// The new architecture stores posts only once so this trigger simply updates the
+// parent feed timestamp for consistency.
+export const onDeletePost = onDocumentDeleted(
+  { document: 'users/{userId}/feeds/{feedId}/posts/{postId}', region: 'europe-west1' },
+  async (event) => {
+    const { userId, feedId } = event.params;
+    try {
+      const feedRef = db.collection('users').doc(userId).collection('feeds').doc(feedId);
+      await feedRef.update({
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      error(e);
     }
-    await batch.commit();
-  } catch (e) {
-    error(e);
-  }
-});
+  },
+);

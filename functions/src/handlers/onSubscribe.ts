@@ -1,31 +1,17 @@
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
-import { db, admin, info, error } from '../common';
-import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const onSubscribe = onDocumentCreated({ document: "users/{userId}/feeds/{feedId}/subscribers/{subscribedId}", region: "europe-west1" }, async (event) => {
-  const snap = event.data;
-  const context = event;
-  try {
-    const { subscribedId, userId, feedId } = context.params;
-    const feedPosts = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").get();
-    let batch = db.batch();
-    let writeCount = 0;
-    for (const feedPost of feedPosts.docs) {
-      const feedPostRef = db.collection("users").doc(subscribedId).collection("mainFeed").doc(feedPost.id);
-      writeCount++;
-      if (writeCount > 499) {
-        await batch.commit();
-        batch = db.batch();
-        writeCount = 0;
-      } else {
-        batch.set(feedPostRef, {
-          feedId,
-          userId,
-          ...feedPost.data()
-        });
-      }
+import { error } from '../common';
+
+// In the simplified architecture there is no need to copy existing posts to the
+// subscriber's `mainFeed` collection. The client now queries the original posts
+// directly, so this trigger does nothing.
+export const onSubscribe = onDocumentCreated(
+  { document: 'users/{userId}/feeds/{feedId}/subscribers/{subscribedId}', region: 'europe-west1' },
+  async () => {
+    try {
+      // Intentionally left blank.
+      return;
+    } catch (e) {
+      error(e);
     }
-    await batch.commit();
-  } catch (e) {
-    error(e);
-  }
-});
+  },
+);

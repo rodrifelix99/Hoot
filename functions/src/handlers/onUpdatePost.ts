@@ -1,35 +1,19 @@
 import { onDocumentUpdated } from 'firebase-functions/v2/firestore';
-import { db, admin, info, error } from '../common';
-import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const onUpdatePost = onDocumentUpdated({ document: "users/{userId}/feeds/{feedId}/posts/{postId}", region: "europe-west1" }, async (event) => {
-  const change = event.data;
-  const context = event;
-  try {
-    const { userId, feedId, postId } = context.params;
-    const feedSubscribers = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("subscribers").get();
-    let batch = db.batch();
-    let writeCount = 0;
-    //update feed 'updatedAt' field
-    const feedRef = db.collection("users").doc(userId).collection("feeds").doc(feedId);
-    batch.update(feedRef, {
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-    writeCount++;
-    for (const feedSubscriber of feedSubscribers.docs) {
-      const feedPostRef = db.collection("users").doc(feedSubscriber.id).collection("mainFeed").doc(postId);
-      writeCount++;
-      if (writeCount > 499) {
-        await batch.commit();
-        batch = db.batch();
-        writeCount = 0;
-      }
-      batch.update(feedPostRef, {
-        ...change.after.data(),
+import { db, admin, error } from '../common';
+
+// With posts no longer copied to user feeds there is only a single document to
+// update. This trigger updates the feed timestamp when a post changes.
+export const onUpdatePost = onDocumentUpdated(
+  { document: 'users/{userId}/feeds/{feedId}/posts/{postId}', region: 'europe-west1' },
+  async (event) => {
+    const { userId, feedId } = event.params;
+    try {
+      const feedRef = db.collection('users').doc(userId).collection('feeds').doc(feedId);
+      await feedRef.update({
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
+    } catch (e) {
+      error(e);
     }
-    await batch.commit();
-  } catch (e) {
-    error(e);
-  }
-});
+  },
+);
