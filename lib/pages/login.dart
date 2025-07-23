@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/components/sign_in_with_google.dart';
 import 'package:hoot/components/sign_in_with_apple.dart';
-import 'package:octo_image/octo_image.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:get/get.dart';
 import 'package:hoot/app/routes/app_routes.dart';
@@ -57,10 +56,8 @@ class _LoginPageState extends State<LoginPage> {
         body: Stack(
           children: [
             Positioned.fill(
-              child: OctoImage(
-                image: const AssetImage('assets/login/bg.jpg'),
-                placeholderBuilder:
-                    OctoPlaceholder.blurHash('L74MSacI5Ro#L}jDxaWBEdjD,?ad'),
+              child: Image.asset(
+                'assets/login/bg.jpg',
                 fit: BoxFit.cover,
               ),
             ),
