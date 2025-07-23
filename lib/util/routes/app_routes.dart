@@ -4,6 +4,8 @@ class AppRoutes {
   static const signup = '/signup';
   static const terms = '/terms_of_service';
   static const welcome = '/welcome';
+  static const username = '/username';
+  static const avatar = '/avatar';
   static const createPost = '/create_post';
   static const settings = '/settings';
   static const profile = '/profile';
