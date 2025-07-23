@@ -3,7 +3,6 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/empty_message.dart';
-import 'package:hoot/components/native_ad_component.dart';
 import 'package:hoot/components/user_suggestions.dart';
 import 'package:hoot/pages/post.dart';
 import 'package:hoot/services/error_service.dart';
@@ -120,27 +119,13 @@ class _FeedPageState extends State<FeedPage> {
                             ],
                           );
                         } else if (index % 3 == 0) {
-                          return Column(
-                            children: [
-                              OpenContainer(
-                                closedElevation: 0,
-                                closedColor:
-                                    Theme.of(context).colorScheme.surface,
-                                closedBuilder: (context, action) =>
-                                    PostComponent(post: post),
-                                openBuilder: (context, action) =>
-                                    PostPage(post: post),
-                              ),
-                              const NativeAdComponent(),
-                              Divider(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurface
-                                    .withValues(alpha: 0.1),
-                                thickness: 1,
-                                height: 40,
-                              ),
-                            ],
+                          return OpenContainer(
+                            closedElevation: 0,
+                            closedColor: Theme.of(context).colorScheme.surface,
+                            closedBuilder: (context, action) =>
+                                PostComponent(post: post),
+                            openBuilder: (context, action) =>
+                                PostPage(post: post),
                           );
                         } else {
                           return OpenContainer(
