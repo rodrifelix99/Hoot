@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:hoot/components/shimmer_skeletons.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -53,15 +53,13 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SkeletonAvatar(
-                    style: SkeletonAvatarStyle(
-                      width: 100,
-                      height: 100,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        bottomLeft: Radius.circular(10),
-                      ),
+                  const ShimmerBox(
+                    width: 100,
+                    height: 100,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
                     ),
                   ),
                   Expanded(
@@ -71,27 +69,9 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SkeletonParagraph(
-                            style: const SkeletonParagraphStyle(
-                              lines: 1,
-                              spacing: 10,
-                              lineStyle: SkeletonLineStyle(
-                                height: 10,
-                                width: double.infinity,
-                              ),
-                            ),
-                          ),
+                          const ShimmerParagraph(lines: 1, spacing: 10, height: 10),
                           const SizedBox(height: 10),
-                          SkeletonParagraph(
-                            style: const SkeletonParagraphStyle(
-                              lines: 2,
-                              spacing: 10,
-                              lineStyle: SkeletonLineStyle(
-                                height: 10,
-                                width: double.infinity,
-                              ),
-                            ),
-                          ),
+                          const ShimmerParagraph(lines: 2, spacing: 10, height: 10),
                         ],
                       ),
                     ),

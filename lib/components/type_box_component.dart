@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/models/feed_types.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:hoot/components/shimmer_skeletons.dart';
 
 class TypeBoxComponent extends StatefulWidget {
   final FeedType type;
@@ -25,7 +25,7 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
-      child: widget.isSkeleton ? Skeleton(
+      child: widget.isSkeleton ? ShimmerLoading(
           isLoading: widget.isSkeleton,
           skeleton: Container(
             width: 200,

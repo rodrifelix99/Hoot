@@ -5,7 +5,7 @@ import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/list_item_component.dart';
 import 'package:hoot/models/notification.dart' as Notif;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:hoot/components/shimmer_skeletons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:hoot/services/error_service.dart';
 import 'package:get/get.dart';
@@ -133,7 +133,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
           ? ListView.builder(
               itemCount: 10,
               itemBuilder: (context, index) => const ListItemComponent(
-                    leading: SkeletonAvatar(),
+                    leading: ShimmerBox(
+                      width: 40,
+                      height: 40,
+                      shape: BoxShape.circle,
+                    ),
                     title: '',
                     subtitle: '',
                     isLoading: true,

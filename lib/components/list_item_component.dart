@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:hoot/components/shimmer_skeletons.dart';
 
 class ListItemComponent extends StatelessWidget {
   final Widget? leading;
@@ -24,7 +25,7 @@ class ListItemComponent extends StatelessWidget {
             left: 0,
             right: 0,
             bottom: 0,
-            child: Skeleton(
+            child: ShimmerLoading(
               isLoading: isLoading,
               skeleton: Container(
                 decoration: BoxDecoration(
@@ -69,7 +70,7 @@ class ListItemComponent extends StatelessWidget {
           leading != null ? Positioned(
             top: 0,
             left: 20,
-            child: Skeleton(
+            child: ShimmerLoading(
               isLoading: isLoading,
               skeleton: Container(
                 width: 100,
