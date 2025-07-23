@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get/get.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 enum FeedType {
@@ -78,127 +78,127 @@ extension FeedTypeExtension on FeedType {
   static String toTranslatedString(BuildContext context, FeedType type) {
     switch (type) {
       case FeedType.activism:
-        return AppLocalizations.of(context)!.activism;
+        return 'activism'.tr;
       case FeedType.activities:
-        return AppLocalizations.of(context)!.activities;
+        return 'activities'.tr;
       case FeedType.adultContent:
-        return AppLocalizations.of(context)!.adultContent;
+        return 'adultContent'.tr;
       case FeedType.art:
-        return AppLocalizations.of(context)!.art;
+        return 'art'.tr;
       case FeedType.beauty:
-        return AppLocalizations.of(context)!.beauty;
+        return 'beauty'.tr;
       case FeedType.celebrities:
-        return AppLocalizations.of(context)!.celebrities;
+        return 'celebrities'.tr;
       case FeedType.comedy:
-        return AppLocalizations.of(context)!.comedy;
+        return 'comedy'.tr;
       case FeedType.design:
-        return AppLocalizations.of(context)!.design;
+        return 'design'.tr;
       case FeedType.environment:
-        return AppLocalizations.of(context)!.environment;
+        return 'environment'.tr;
       case FeedType.family:
-        return AppLocalizations.of(context)!.family;
+        return 'family'.tr;
       case FeedType.fitness:
-        return AppLocalizations.of(context)!.fitness;
+        return 'fitness'.tr;
       case FeedType.general:
-        return AppLocalizations.of(context)!.general;
+        return 'general'.tr;
       case FeedType.gaming:
-        return AppLocalizations.of(context)!.gaming;
+        return 'gaming'.tr;
       case FeedType.history:
-        return AppLocalizations.of(context)!.history;
+        return 'history'.tr;
       case FeedType.inspiration:
-        return AppLocalizations.of(context)!.inspiration;
+        return 'inspiration'.tr;
       case FeedType.jobs:
-        return AppLocalizations.of(context)!.jobs;
+        return 'jobs'.tr;
       case FeedType.lgbtQ:
-        return AppLocalizations.of(context)!.lgbtQ;
+        return 'lgbtQ'.tr;
       case FeedType.marketing:
-        return AppLocalizations.of(context)!.marketing;
+        return 'marketing'.tr;
       case FeedType.movies:
-        return AppLocalizations.of(context)!.movies;
+        return 'movies'.tr;
       case FeedType.music:
-        return AppLocalizations.of(context)!.music;
+        return 'music'.tr;
       case FeedType.nature:
-        return AppLocalizations.of(context)!.nature;
+        return 'nature'.tr;
       case FeedType.news:
-        return AppLocalizations.of(context)!.news;
+        return 'news'.tr;
       case FeedType.onlineCourses:
-        return AppLocalizations.of(context)!.onlineCourses;
+        return 'onlineCourses'.tr;
       case FeedType.outdoors:
-        return AppLocalizations.of(context)!.outdoors;
+        return 'outdoors'.tr;
       case FeedType.parenting:
-        return AppLocalizations.of(context)!.parenting;
+        return 'parenting'.tr;
       case FeedType.pets:
-        return AppLocalizations.of(context)!.pets;
+        return 'pets'.tr;
       case FeedType.photography:
-        return AppLocalizations.of(context)!.photography;
+        return 'photography'.tr;
       case FeedType.quotes:
-        return AppLocalizations.of(context)!.quotes;
+        return 'quotes'.tr;
       case FeedType.relationships:
-        return AppLocalizations.of(context)!.relationships;
+        return 'relationships'.tr;
       case FeedType.recipes:
-        return AppLocalizations.of(context)!.recipes;
+        return 'recipes'.tr;
       case FeedType.religion:
-        return AppLocalizations.of(context)!.religion;
+        return 'religion'.tr;
       case FeedType.school:
-        return AppLocalizations.of(context)!.school;
+        return 'school'.tr;
       case FeedType.science:
-        return AppLocalizations.of(context)!.science;
+        return 'science'.tr;
       case FeedType.selfImprovement:
-        return AppLocalizations.of(context)!.selfImprovement;
+        return 'selfImprovement'.tr;
       case FeedType.series:
-        return AppLocalizations.of(context)!.series;
+        return 'series'.tr;
       case FeedType.sports:
-        return AppLocalizations.of(context)!.sports;
+        return 'sports'.tr;
       case FeedType.technology:
-        return AppLocalizations.of(context)!.technology;
+        return 'technology'.tr;
       case FeedType.travel:
-        return AppLocalizations.of(context)!.travel;
+        return 'travel'.tr;
       case FeedType.tv:
-        return AppLocalizations.of(context)!.tv;
+        return 'tv'.tr;
       case FeedType.university:
-        return AppLocalizations.of(context)!.university;
+        return 'university'.tr;
       case FeedType.vegetarian:
-        return AppLocalizations.of(context)!.vegetarian;
+        return 'vegetarian'.tr;
       case FeedType.wellness:
-        return AppLocalizations.of(context)!.wellness;
+        return 'wellness'.tr;
       case FeedType.writing:
-        return AppLocalizations.of(context)!.writing;
+        return 'writing'.tr;
       case FeedType.yoga:
-        return AppLocalizations.of(context)!.yoga;
+        return 'yoga'.tr;
       case FeedType.business:
-        return AppLocalizations.of(context)!.business;
+        return 'business'.tr;
       case FeedType.cooking:
-        return AppLocalizations.of(context)!.cooking;
+        return 'cooking'.tr;
       case FeedType.diY:
-        return AppLocalizations.of(context)!.diY;
+        return 'diY'.tr;
       case FeedType.economics:
-        return AppLocalizations.of(context)!.economics;
+        return 'economics'.tr;
       case FeedType.education:
-        return AppLocalizations.of(context)!.education;
+        return 'education'.tr;
       case FeedType.entertainment:
-        return AppLocalizations.of(context)!.entertainment;
+        return 'entertainment'.tr;
       case FeedType.entrepreneurship:
-        return AppLocalizations.of(context)!.entrepreneurship;
+        return 'entrepreneurship'.tr;
       case FeedType.gardening:
-        return AppLocalizations.of(context)!.gardening;
+        return 'gardening'.tr;
       case FeedType.health:
-        return AppLocalizations.of(context)!.health;
+        return 'health'.tr;
       case FeedType.investing:
-        return AppLocalizations.of(context)!.investing;
+        return 'investing'.tr;
       case FeedType.journalism:
-        return AppLocalizations.of(context)!.journalism;
+        return 'journalism'.tr;
       case FeedType.kids:
-        return AppLocalizations.of(context)!.kids;
+        return 'kids'.tr;
       case FeedType.literature:
-        return AppLocalizations.of(context)!.literature;
+        return 'literature'.tr;
       case FeedType.urbanExploration:
-        return AppLocalizations.of(context)!.urbanExploration;
+        return 'urbanExploration'.tr;
       case FeedType.virtualReality:
-        return AppLocalizations.of(context)!.virtualReality;
+        return 'virtualReality'.tr;
       case FeedType.zoology:
-        return AppLocalizations.of(context)!.zoology;
+        return 'zoology'.tr;
       default:
-        return AppLocalizations.of(context)!.other;
+        return 'other'.tr;
     }
   }
 

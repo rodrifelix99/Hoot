@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:skeletons/skeletons.dart';
 import '../app/utils/logger.dart';
 
@@ -104,7 +104,7 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        AppLocalizations.of(context)!.sponsored,
+                        'sponsored'.tr,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Theme.of(context).colorScheme.secondary,
                             ),
@@ -113,7 +113,7 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        AppLocalizations.of(context)!.ethicalAdDescription,
+                        'ethicalAdDescription'.tr,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
@@ -156,7 +156,7 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    AppLocalizations.of(context)!.thankYouForSupporting,
+                    'thankYouForSupporting'.tr,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary,
                         ),

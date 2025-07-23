@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/error_service.dart';
 import '../app/utils/logger.dart';
 
@@ -62,7 +61,7 @@ class _VerifyPageState extends State<VerifyPage> {
         case "invalid-verification-code":
           setState(() {
             ToastService.showToast(context,
-                AppLocalizations.of(context)!.invalidVerificationCode, true);
+                'invalidVerificationCode'.tr, true);
           });
           break;
         default:
@@ -95,7 +94,7 @@ class _VerifyPageState extends State<VerifyPage> {
                   children: [
                     SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                     Text(
-                      AppLocalizations.of(context)!.verificationCode,
+                      'verificationCode'.tr,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).colorScheme.primary,
@@ -103,15 +102,15 @@ class _VerifyPageState extends State<VerifyPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      AppLocalizations.of(context)!.codeSent(
-                          _authProvider.phoneNumber.phoneNumber.toString()),
+                      'codeSent'.trParams({'value': 
+                          _authProvider.phoneNumber.phoneNumber.toString(})),
                     ),
                     const SizedBox(height: 50),
                     AutofillGroup(
                       child: TextField(
                           controller: _codeController,
                           decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.enterCode,
+                            hintText: 'enterCode'.tr,
                           ),
                           autofocus: true,
                           autofillHints: const [AutofillHints.oneTimeCode],
@@ -138,7 +137,7 @@ class _VerifyPageState extends State<VerifyPage> {
                         foregroundColor:
                             Theme.of(context).colorScheme.secondary,
                       ),
-                      child: Text(AppLocalizations.of(context)!.changeNumber),
+                      child: Text('changeNumber'.tr),
                     ),
                   ],
                 ),

@@ -1,6 +1,5 @@
 import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:octo_image/octo_image.dart';
@@ -39,16 +38,16 @@ class _SettingsPageState extends State<SettingsPage> {
     bool? result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.signOut),
-        content: Text(AppLocalizations.of(context)!.signOutConfirmation),
+        title: Text('signOut'.tr),
+        content: Text('signOutConfirmation'.tr),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text(AppLocalizations.of(context)!.signOut),
+            child: Text('signOut'.tr),
           ),
         ],
       ),
@@ -63,16 +62,16 @@ class _SettingsPageState extends State<SettingsPage> {
     bool? confirmation = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteAccountConfirmation),
-        content: Text(AppLocalizations.of(context)!.deleteAccountDescription),
+        title: Text('deleteAccountConfirmation'.tr),
+        content: Text('deleteAccountDescription'.tr),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text(AppLocalizations.of(context)!.deleteAccount),
+            child: Text('deleteAccount'.tr),
           ),
         ],
       ),
@@ -84,12 +83,12 @@ class _SettingsPageState extends State<SettingsPage> {
       });
       bool res = await _authProvider.deleteAccount();
       if (res) {
-        ToastService.showToast(context, AppLocalizations.of(context)!.deleteAccountSuccess, false);
+        ToastService.showToast(context, 'deleteAccountSuccess'.tr, false);
         Get.offAllNamed('/login', (route) => false);
       } else {
         setState(() {
           _loading = false;
-          ToastService.showToast(context, AppLocalizations.of(context)!.deleteAccountFailed, true);
+          ToastService.showToast(context, 'deleteAccountFailed'.tr, true);
         });
       }
     }
@@ -103,7 +102,7 @@ class _SettingsPageState extends State<SettingsPage> {
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Get.offAllNamed('/home', (route) => false),
         ),
-        title: Text(AppLocalizations.of(context)!.settings),
+        title: Text('settings'.tr),
       ),
       body: _loading ? const Center(
         child: CircularProgressIndicator(),
@@ -117,8 +116,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     ListTile(
                       leading: const Icon(SolarIconsBold.moonFog),
-                      title: Text(AppLocalizations.of(context)!.darkMode),
-                      subtitle: Text(AppLocalizations.of(context)!.syncedWithSystem),
+                      title: Text('darkMode'.tr),
+                      subtitle: Text('syncedWithSystem'.tr),
                       trailing: Switch(
                         value: Theme.of(context).brightness == Brightness.dark,
                         onChanged: (value) {},
@@ -126,43 +125,43 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     ListTile(
                       leading: const Icon(SolarIconsBold.userRounded),
-                      title: Text(AppLocalizations.of(context)!.editProfile),
+                      title: Text('editProfile'.tr),
                       trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () => Get.toNamed(context, '/edit_profile'),
+                      onTap: () => Get.toNamed('/edit_profile'),
                     ),
                     ListTile(
                       leading: const Icon(SolarIconsBold.phoneRounded),
-                      title: Text(AppLocalizations.of(context)!.findFriends),
-                      subtitle: Text(AppLocalizations.of(context)!.findFriendsFromContacts),
+                      title: Text('findFriends'.tr),
+                      subtitle: Text('findFriendsFromContacts'.tr),
                       trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () => Get.toNamed(context, '/contacts'),
+                      onTap: () => Get.toNamed('/contacts'),
                     ),
                     ListTile(
                       leading: const Icon(SolarIconsBold.shieldCheck),
-                      title: Text(AppLocalizations.of(context)!.termsOfService),
+                      title: Text('termsOfService'.tr),
                       trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () => Get.toNamed(context, '/terms_of_service'),
+                      onTap: () => Get.toNamed('/terms_of_service'),
                     ),
                     /*ListTile(
                       leading: const Icon(SolarIconsBold.verifiedCheck),
-                      title: Text(AppLocalizations.of(context)!.aboutUs),
+                      title: Text('aboutUs'.tr),
                       trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () => Get.toNamed(context, '/about_us'),
+                      onTap: () => Get.toNamed('/about_us'),
                     ),*/
                     ListTile(
                       leading: const Icon(SolarIconsBold.trashBinMinimalistic),
-                      title: Text(AppLocalizations.of(context)!.deleteAccount),
+                      title: Text('deleteAccount'.tr),
                       onTap: _deleteAccount,
                     ),
                     ListTile(
-                      title: Text(AppLocalizations.of(context)!.version),
+                      title: Text('version'.tr),
                       subtitle: Text(_version),
                     ),
                     const SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: Text(
-                          AppLocalizations.of(context)!.messageFromCreator,
+                          'messageFromCreator'.tr,
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.bold
                           )
@@ -170,7 +169,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(AppLocalizations.of(context)!.hootMightBeBuggy),
+                      child: Text('hootMightBeBuggy'.tr),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -212,7 +211,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
                       foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                     ),
-                    child: Text(AppLocalizations.of(context)!.signOut),
+                    child: Text('signOut'.tr),
                   ),
                 ),
               ),

@@ -2,7 +2,6 @@ import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/models/feed.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -59,16 +58,16 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
     bool confirm = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.requestToJoin),
-          content: Text(AppLocalizations.of(context)!.requestToJoinConfirmation),
+          title: Text('requestToJoin'.tr),
+          content: Text('requestToJoinConfirmation'.tr),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text('cancel'.tr),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text(AppLocalizations.of(context)!.requestToJoin),
+              child: Text('requestToJoin'.tr),
             ),
           ],
         )
@@ -76,14 +75,14 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
     if (confirm) {
       if (_requestCooldown) {
         ToastService.showToast(
-            context, AppLocalizations.of(context)!.youAreGoingTooFast, true);
+            context, 'youAreGoingTooFast'.tr, true);
         return;
       }
       setState(() => widget.feed.requests!.add(_authProvider.user!.uid));
       bool res = await _feedProvider.requestToJoinFeed(widget.user.uid, widget.feed.id);
       !res ? setState(() {
         widget.feed.requests!.remove(_authProvider.user!.uid);
-        ToastService.showToast(context, AppLocalizations.of(context)!.errorRequestingToJoin, true);
+        ToastService.showToast(context, 'errorRequestingToJoin'.tr, true);
       }) : null;
       setState(() => _requestCooldown = true);
       Future.delayed(const Duration(seconds: 60), () => setState(() => _requestCooldown = false));
@@ -93,22 +92,22 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
   Future _subscribeToFeed() async {
     if (_subscribeCooldown) {
       ToastService.showToast(
-          context, AppLocalizations.of(context)!.youAreGoingTooFast, true);
+          context, 'youAreGoingTooFast'.tr, true);
       return;
     }
     bool confirm = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.subscribe),
-          content: Text(AppLocalizations.of(context)!.subscribeConfirmation),
+          title: Text('subscribe'.tr),
+          content: Text('subscribeConfirmation'.tr),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text('cancel'.tr),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text(AppLocalizations.of(context)!.subscribe),
+              child: Text('subscribe'.tr),
             ),
           ],
         )
@@ -118,7 +117,7 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       bool res = await _feedProvider.subscribeToFeed(widget.user.uid, widget.feed.id);
       !res ? setState(() {
         widget.feed.subscribers!.remove(_authProvider.user!.uid);
-        ToastService.showToast(context, AppLocalizations.of(context)!.errorSubscribing, true);
+        ToastService.showToast(context, 'errorSubscribing'.tr, true);
       }) : null;
       setState(() => _subscribeCooldown = true);
       Future.delayed(const Duration(seconds: 60), () => setState(() => _subscribeCooldown = false));
@@ -129,16 +128,16 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
     bool confirm = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.unsubscribe),
-          content: Text(AppLocalizations.of(context)!.unsubscribeConfirmation),
+          title: Text('unsubscribe'.tr),
+          content: Text('unsubscribeConfirmation'.tr),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text('cancel'.tr),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text(AppLocalizations.of(context)!.unsubscribe),
+              child: Text('unsubscribe'.tr),
             ),
           ],
         )
@@ -148,7 +147,7 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       bool res = await _feedProvider.unsubscribeFromFeed(widget.user.uid, widget.feed.id);
       !res ? setState(() {
         widget.feed.subscribers!.add(_authProvider.user!.uid);
-        ToastService.showToast(context, AppLocalizations.of(context)!.errorUnsubscribing, true);
+        ToastService.showToast(context, 'errorUnsubscribing'.tr, true);
       }) : null;
     }
   }
@@ -165,7 +164,7 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
               backgroundColor: MaterialStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
               foregroundColor: MaterialStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
           ),
-          child: Text(AppLocalizations.of(context)!.numberOfRequests(widget.feed.requests?.length ?? 0))
+          child: Text('numberOfRequests'.trParams({'value': widget.feed.requests?.length ?? 0}))
       );
     } else if (_isAuthor()) {
       return const SizedBox.shrink();
@@ -203,7 +202,7 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
               backgroundColor: MaterialStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
               foregroundColor: MaterialStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
           ),
-          child: Text(AppLocalizations.of(context)!.requested)
+          child: Text('requested'.tr)
       );
     } else {
       return IconButton(

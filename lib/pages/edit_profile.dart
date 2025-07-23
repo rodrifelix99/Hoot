@@ -8,7 +8,6 @@ import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/upload_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 
@@ -79,7 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         return File(pickedFile.path);
       }
     } else if (pickedFile != null) {
-      ToastService.showToast(context, AppLocalizations.of(context)!.imageTooLarge, true);
+      ToastService.showToast(context, 'imageTooLarge'.tr, true);
       return File('');
     } else {
       return File('');
@@ -107,7 +106,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         if (!res) {
           setState(() {
             _isLoading = false;
-            ToastService.showToast(context, AppLocalizations.of(context)!.errorEditingProfile, true);
+            ToastService.showToast(context, 'errorEditingProfile'.tr, true);
           });
         } else {
           Get.back();
@@ -115,7 +114,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       } catch (e) {
         setState(() {
           _isLoading = false;
-          ToastService.showToast(context, AppLocalizations.of(context)!.errorEditingProfile, true);
+          ToastService.showToast(context, 'errorEditingProfile'.tr, true);
         });
       }
     }
@@ -125,7 +124,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.editProfile),
+          title: Text('editProfile'.tr),
           actions: [
             _isLoading ? const Padding(
               padding: EdgeInsets.all(16.0),
@@ -138,7 +137,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             TextButton(
               onPressed: _updateProfile,
               child: Text(
-                AppLocalizations.of(context)!.done,
+                'done'.tr,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.secondary,
                   fontSize: 16,
@@ -231,7 +230,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         controller: _nameController,
                         maxLength: 30,
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.displayName,
+                          labelText: 'displayName'.tr,
                           counter: const SizedBox(),
                         ),
                       ),
@@ -240,7 +239,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         controller: _usernameController,
                         maxLength: 15,
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.username,
+                          labelText: 'username'.tr,
                           counter: const SizedBox(),
                           enabled: false,
                         ),
@@ -251,7 +250,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         maxLines: 3,
                         maxLength: 150,
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.bio,
+                          labelText: 'bio'.tr,
                           alignLabelWithHint: true,
                         ),
                       )

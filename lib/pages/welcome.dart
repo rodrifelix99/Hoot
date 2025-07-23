@@ -11,8 +11,8 @@ import 'package:hoot/services/upload_service.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:octo_image/octo_image.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import '../app/utils/logger.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:solar_icons/solar_icons.dart';
 
@@ -219,14 +219,14 @@ class _FirstScreenState extends State<FirstScreen> {
           widget.controller.move(1, animation: true);
           setState(() {
             ToastService.showToast(
-                context, AppLocalizations.of(context)!.errorUnknown, true);
+                context, 'errorUnknown'.tr, true);
           });
         }
       } else {
         FirebaseCrashlytics.instance.log('User is null');
         setState(() {
           ToastService.showToast(
-              context, AppLocalizations.of(context)!.errorUnknown, true);
+              context, 'errorUnknown'.tr, true);
         });
       }
     }
@@ -239,7 +239,7 @@ class _FirstScreenState extends State<FirstScreen> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.waitANewFriend,
+          'waitANewFriend'.tr,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w900,
                 color: Theme.of(context).colorScheme.primary,
@@ -247,7 +247,7 @@ class _FirstScreenState extends State<FirstScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          AppLocalizations.of(context)!.displayNameDescription,
+          'displayNameDescription'.tr,
         ),
         const SizedBox(height: 25),
         TextField(
@@ -260,18 +260,18 @@ class _FirstScreenState extends State<FirstScreen> {
           onChanged: (value) => setState(() {}),
           onSubmitted: (value) => _onSubmit(),
           decoration: InputDecoration(
-            labelText: AppLocalizations.of(context)!.displayName,
+            labelText: 'displayName'.tr,
             counter: const SizedBox(),
           ),
         ),
         const SizedBox(height: 5),
         _isNameValid() || _nameController.text.isEmpty
             ? Text(
-                AppLocalizations.of(context)!.displayNameExample,
+                'displayNameExample'.tr,
                 style: Theme.of(context).textTheme.bodySmall,
               )
             : Text(
-                AppLocalizations.of(context)!.displayNameTooShort,
+                'displayNameTooShort'.tr,
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                       color: Colors.red,
                     ),
@@ -280,7 +280,7 @@ class _FirstScreenState extends State<FirstScreen> {
         ElevatedButton(
           onPressed: _isNameValid() ? _onSubmit : null,
           child: Text(
-            AppLocalizations.of(context)!.next,
+            'next'.tr,
           ),
         ),
       ],
@@ -327,7 +327,7 @@ class _SecondScreenState extends State<SecondScreen> {
             widget.controller.move(2, animation: true);
             setState(() {
               ToastService.showToast(
-                  context, AppLocalizations.of(context)!.errorUnknown, true);
+                  context, 'errorUnknown'.tr, true);
             });
           }
         } else {
@@ -335,14 +335,14 @@ class _SecondScreenState extends State<SecondScreen> {
           setState(() {
             _loading = false;
             ToastService.showToast(context,
-                AppLocalizations.of(context)!.somethingWentWrong, true);
+                'somethingWentWrong'.tr, true);
           });
         }
       } else {
         setState(() {
           _loading = false;
           ToastService.showToast(
-              context, AppLocalizations.of(context)!.usernameTaken, true);
+              context, 'usernameTaken'.tr, true);
         });
       }
     }
@@ -361,7 +361,7 @@ class _SecondScreenState extends State<SecondScreen> {
               icon: const Icon(SolarIconsOutline.arrowLeft),
             ),
             Text(
-              AppLocalizations.of(context)!.letsSpiceItUp,
+              'letsSpiceItUp'.tr,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w900,
                     color: Theme.of(context).colorScheme.primary,
@@ -371,7 +371,7 @@ class _SecondScreenState extends State<SecondScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          AppLocalizations.of(context)!.usernameDescription,
+          'usernameDescription'.tr,
         ),
         const SizedBox(height: 25),
         _loading
@@ -390,20 +390,20 @@ class _SecondScreenState extends State<SecondScreen> {
                         : null),
                 onSubmitted: (value) => _onSubmit(),
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.username,
+                  labelText: 'username'.tr,
                   counter: const SizedBox(),
                 ),
               ),
         const SizedBox(height: 5),
         _isValid() || _usernameController.text.isEmpty
             ? Text(
-                AppLocalizations.of(context)!.usernameExample,
+                'usernameExample'.tr,
                 style: const TextStyle(
                   fontSize: 12,
                 ),
               )
             : Text(
-                AppLocalizations.of(context)!.usernameInvalid,
+                'usernameInvalid'.tr,
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                       color: Colors.red,
                     ),
@@ -412,7 +412,7 @@ class _SecondScreenState extends State<SecondScreen> {
         ElevatedButton(
           onPressed: _isValid() ? _onSubmit : null,
           child: Text(
-            AppLocalizations.of(context)!.next,
+            'next'.tr,
           ),
         ),
       ],
@@ -462,7 +462,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
       });
     } else if (pickedFile != null) {
       ToastService.showToast(
-          context, AppLocalizations.of(context)!.imageTooLarge, true);
+          context, 'imageTooLarge'.tr, true);
     }
   }
 
@@ -491,7 +491,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
           } else {
             setState(() {
               ToastService.showToast(
-                  context, AppLocalizations.of(context)!.errorUnknown, true);
+                  context, 'errorUnknown'.tr, true);
             });
           }
         } else {
@@ -500,7 +500,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
       } else {
         setState(() {
           ToastService.showToast(
-              context, AppLocalizations.of(context)!.errorUnknown, true);
+              context, 'errorUnknown'.tr, true);
         });
       }
       setState(() {
@@ -508,7 +508,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
       });
     } else if (_selectedImage != null) {
       ToastService.showToast(
-          context, AppLocalizations.of(context)!.imageTooLarge, true);
+          context, 'imageTooLarge'.tr, true);
     }
   }
 
@@ -516,13 +516,13 @@ class _ThirdScreenState extends State<ThirdScreen> {
     int random = Random().nextInt(3) + 1;
     switch (random) {
       case 1:
-        return AppLocalizations.of(context)!.avatarSelectedFunny1;
+        return 'avatarSelectedFunny1'.tr;
       case 2:
-        return AppLocalizations.of(context)!.avatarSelectedFunny2;
+        return 'avatarSelectedFunny2'.tr;
       case 3:
-        return AppLocalizations.of(context)!.avatarSelectedFunny3;
+        return 'avatarSelectedFunny3'.tr;
       default:
-        return AppLocalizations.of(context)!.avatarSelectedFunny1;
+        return 'avatarSelectedFunny1'.tr;
     }
   }
 
@@ -541,7 +541,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.almostThere,
+          'almostThere'.tr,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.w900,
@@ -550,7 +550,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
         const SizedBox(height: 8),
         Text(
           _selectedImage == null
-              ? AppLocalizations.of(context)!.profilePictureDescription
+              ? 'profilePictureDescription'.tr
               : _getRandomSuccessPhrase(),
         ),
         const Spacer(),
@@ -582,10 +582,10 @@ class _ThirdScreenState extends State<ThirdScreen> {
             onPressed: _selectedImage == null ? _goHome : _uploadImage,
             child: _selectedImage == null
                 ? Text(
-                    AppLocalizations.of(context)!.skipForNow,
+                    'skipForNow'.tr,
                   )
                 : Text(
-                    AppLocalizations.of(context)!.continueButton,
+                    'continueButton'.tr,
                   ))
       ],
     );

@@ -16,7 +16,6 @@ import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/models/user.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -116,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               leading: const LineIcon(LineIcons.userShield),
-              title: Text(AppLocalizations.of(context)!.reportUsername(_user.username ?? '')),
+              title: Text('reportUsername'.trParams({'value': _user.username ?? ''})),
               onTap: () =>
               {
                 Get.back(),
@@ -126,11 +125,11 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               leading: const LineIcon(LineIcons.removeUser),
-              title: Text(AppLocalizations.of(context)!.blockUser(_user.username ?? '')),
+              title: Text('blockUser'.trParams({'value': _user.username ?? ''})),
               onTap: () => {
                 Get.back(),
                 ToastService.showToast(
-                    context, AppLocalizations.of(context)!.comingSoon, false)
+                    context, 'comingSoon'.tr, false)
               },
             ),
             const SizedBox(height: 10),
@@ -210,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
           ),
           onPressed: () => Get.toNamed('/edit_profile'),
-          child: Text(AppLocalizations.of(context)!.editProfile),
+          child: Text('editProfile'.tr),
         ) : IconButton(
           icon: const Icon(Icons.more_vert_rounded),
           style: ElevatedButtonTheme.of(context).style?.copyWith(
@@ -235,7 +234,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         ) : const SizedBox(),
         _mostSubscribedFeed() != null ? const SizedBox(height: 10) : const SizedBox(),
         _mostSubscribedFeed() != null ? Text(
-          AppLocalizations.of(context)!.betterKnownForFeed(_mostSubscribedFeed()?.title ?? ''),
+          'betterKnownForFeed'.trParams({'value': _mostSubscribedFeed(})?.title ?? ''),
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -252,7 +251,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         foregroundColor: Colors.white,
         actions: [
           TextButton(
-              onPressed: () => Get.toNamed(context, '/subscriptions', arguments: _user.uid),
+              onPressed: () => Get.toNamed('/subscriptions', arguments: _user.uid),
               style: TextButton.styleFrom(
                 backgroundColor: Colors.white.withOpacity(0.1),
               ),
@@ -266,7 +265,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               )
           ),
           _isCurrentUser ? IconButton(
-            onPressed: () => Get.offAllNamed(context, '/settings', (route) => false),
+            onPressed: () => Get.offAllNamed('/settings', (route) => false),
             icon: const Icon(SolarIconsBold.settings, color: Colors.white, size: 30),
           ) : const SizedBox(width: 10),
         ],
@@ -275,7 +274,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
       floatingActionButton: _isCurrentUser && _user.feeds != null && _user.feeds!.isNotEmpty ? FloatingActionBubble(
         items: <Bubble>[
           Bubble(
-            title: AppLocalizations.of(context)!.numberOfSubscribers(_user.feeds![_selectedFeedIndex].subscribers?.length ?? 0),
+            title: 'numberOfSubscribers'.trParams({'value': _user.feeds![_selectedFeedIndex].subscribers?.length ?? 0}),
             iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
             bubbleColor : _user.feeds![_selectedFeedIndex].color!,
             icon: SolarIconsOutline.usersGroupRounded,
@@ -286,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             },
           ),
           Bubble(
-            title: AppLocalizations.of(context)!.editFeed,
+            title: 'editFeed'.tr,
             iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
             bubbleColor : _user.feeds![_selectedFeedIndex].color!,
             icon: SolarIconsOutline.pen,
@@ -297,7 +296,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             },
           ),
           Bubble(
-            title: AppLocalizations.of(context)!.appName,
+            title: 'appName'.tr,
             iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
             bubbleColor : _user.feeds![_selectedFeedIndex].color!,
             icon: SolarIconsOutline.addSquare,
@@ -401,8 +400,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               )
                   : NothingToShowComponent(
                 icon: const LineIcon(LineIcons.newspaperAlt),
-                text: !_isCurrentUser ? AppLocalizations.of(context)!.noFeeds(_user.name ?? _user.username ?? 'This user') : AppLocalizations.of(context)!.noFeedsYou,
-                buttonText: _isCurrentUser ? AppLocalizations.of(context)!.createFeed : null,
+                text: !_isCurrentUser ? 'noFeeds'.trParams({'value': _user.name ?? _user.username ?? 'This user'}) : 'noFeedsYou'.tr,
+                buttonText: _isCurrentUser ? 'createFeed'.tr : null,
                 buttonAction: () => Get.toNamed('/create_feed'),
               ),
               const SizedBox(height: 100),
@@ -479,7 +478,9 @@ class _FeedPostsState extends State<FeedPosts> {
     Center(
       child: NothingToShowComponent(
         icon: const Icon(Icons.lock_rounded),
-        text: '${AppLocalizations.of(context)?.thisFeedIsPrivate}\n\n${AppLocalizations.of(context)?.onlyMembersCanSee(widget.user.name ?? widget.user.username ?? 'this user')}',
+        text: 'thisFeedIsPrivate'.tr +
+            '\n\n' +
+            'onlyMembersCanSee'.trParams({'displayName': widget.user.name ?? widget.user.username ?? 'this user'}),
       ),
     ) :
     widget.user.feeds?[widget.feedIndex].posts?.isNotEmpty == true ? Column(
@@ -503,13 +504,15 @@ class _FeedPostsState extends State<FeedPosts> {
     ) : widget.user.uid != _authProvider.user?.uid ? Center(
       child: NothingToShowComponent(
         icon: const Icon(Icons.article_rounded),
-        text: '${AppLocalizations.of(context)?.emptyFeed}\n\n${AppLocalizations.of(context)?.emptyFeedToOtherUsers(widget.user.name ?? widget.user.username ?? 'this user')}',
+        text: 'emptyFeed'.tr +
+            '\n\n' +
+            'emptyFeedToOtherUsers'.trParams({'displayName': widget.user.name ?? widget.user.username ?? 'this user'}),
       ),
     ) : Center(
       child: NothingToShowComponent(
         icon: const Icon(Icons.article_rounded),
-        text: '${AppLocalizations.of(context)?.emptyFeed}\n\n${AppLocalizations.of(context)?.emptyFeedDescription}',
-        buttonText: AppLocalizations.of(context)?.createPost,
+        text: 'emptyFeed'.tr + '\n\n' + 'emptyFeedDescription'.tr,
+        buttonText: 'createPost'.tr,
         buttonAction: () => Get.toNamed('/create_post', arguments: widget.user.feeds![widget.feedIndex].id),
       ),
     );

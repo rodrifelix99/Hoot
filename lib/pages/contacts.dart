@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/models/user.dart';
@@ -111,12 +110,12 @@ class _ContactsPageState extends State<ContactsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComponent(
-        title: AppLocalizations.of(context)!.findFriends,
+        title: 'findFriends'.tr,
         actions: widget.skipable ? [
           TextButton(
             onPressed: _goHome,
             child: Text(
-              AppLocalizations.of(context)!.skip,
+              'skip'.tr,
             ),
           )
         ] : [],
@@ -129,12 +128,12 @@ class _ContactsPageState extends State<ContactsPage> {
           child: CircularProgressIndicator(),
         ) : !allowed ? NothingToShowComponent(
           icon: const Icon(SolarIconsBold.phoneCallingRounded),
-          text: AppLocalizations.of(context)!.contactsPermission,
+          text: 'contactsPermission'.tr,
         ) : friends.isEmpty ? Center(
           child: NothingToShowComponent(
             icon: const Icon(SolarIconsBold.magnifierZoomOut),
-            text: AppLocalizations.of(context)!.noResults,
-            buttonText: widget.skipable ? AppLocalizations.of(context)!.continueButton : null,
+            text: 'noResults'.tr,
+            buttonText: widget.skipable ? 'continueButton'.tr : null,
             buttonAction: widget.skipable ? _goHome : null,
           ),
         ) : ListView.builder(

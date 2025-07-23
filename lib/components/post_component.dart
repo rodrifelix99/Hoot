@@ -12,7 +12,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
@@ -101,7 +100,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         return widget.post.user?.uid == _authProvider.user?.uid ? ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           leading: const Icon(Icons.delete),
-          title: Text(AppLocalizations.of(context)!.delete),
+          title: Text('delete'.tr),
           onTap: () {
             Navigator.of(context).pop();
             _deletePost();
@@ -109,7 +108,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         ) : ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
             leading: const Icon(Icons.report),
-            title: Text(AppLocalizations.of(context)!.reportUsername(widget.post.user?.username ?? '')),
+            title: Text('reportUsername'.trParams({'value': widget.post.user?.username ?? ''})),
             onTap: () {
               Navigator.of(context).pop();
               ToastService.showToast(context, 'Reported', false);
@@ -130,12 +129,12 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         _authProvider.user!.feeds = feeds;
       });
     } else if (widget.post.reFeeded) {
-      ToastService.showToast(context, AppLocalizations.of(context)!.deleteOnRefeededPost, false);
+      ToastService.showToast(context, 'deleteOnRefeededPost'.tr, false);
       return;
     }
 
     if (_authProvider.user?.feeds == null || _authProvider.user!.feeds!.isEmpty) {
-      ToastService.showToast(context, AppLocalizations.of(context)!.youNeedToCreateAFeedFirst, false);
+      ToastService.showToast(context, 'youNeedToCreateAFeedFirst'.tr, false);
       return;
     }
 
@@ -147,7 +146,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(AppLocalizations.of(context)!.selectAFeedToRefeedTo),
+            Text('selectAFeedToRefeedTo'.tr),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
@@ -166,7 +165,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop( _authProvider.user?.feeds?.first.id),

@@ -18,7 +18,6 @@ import 'package:shake/shake.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'create_post.dart';
 
@@ -256,14 +255,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             _pageController.page!.round() == 0
                         ? const Icon(SolarIconsBold.feed)
                         : const Icon(SolarIconsOutline.feed),
-                    label: AppLocalizations.of(context)!.myFeeds,
+                    label: 'myFeeds'.tr,
                   ),
                   BottomNavigationBarItem(
                     icon: _pageController.hasClients &&
                             _pageController.page!.round() == 1
                         ? const Icon(SolarIconsBold.compass)
                         : const Icon(SolarIconsOutline.compass),
-                    label: AppLocalizations.of(context)!.explore,
+                    label: 'explore'.tr,
                   ),
                   BottomNavigationBarItem(
                     icon: OpenContainer(
@@ -317,14 +316,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 : const SizedBox()),
                       ],
                     ),
-                    label: AppLocalizations.of(context)!.notifications,
+                    label: 'notifications'.tr,
                   ),
                   BottomNavigationBarItem(
                     icon: _pageController.hasClients &&
                             _pageController.page!.round() == 4
                         ? const Icon(SolarIconsBold.userCircle)
                         : const Icon(SolarIconsOutline.userCircle),
-                    label: AppLocalizations.of(context)!.profile,
+                    label: 'profile'.tr,
                   ),
                 ],
               ),

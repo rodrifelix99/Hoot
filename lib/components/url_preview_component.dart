@@ -6,7 +6,6 @@ import 'package:ogp_data_extract/ogp_data_extract.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UrlPreviewComponent extends StatefulWidget {
   final String url;
@@ -143,7 +142,7 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
-                      _ogp.title ?? AppLocalizations.of(context)!.clickToViewThisWebsite,
+                      _ogp.title ?? 'clickToViewThisWebsite'.tr,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),

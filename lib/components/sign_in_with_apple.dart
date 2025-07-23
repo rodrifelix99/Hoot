@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class SignInWithAppleButton extends StatefulWidget {
@@ -24,7 +23,7 @@ class _SignInWithAppleButtonState extends State<SignInWithAppleButton> {
       setState(() {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.signInFailed),
+            content: Text('signInFailed'.tr),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

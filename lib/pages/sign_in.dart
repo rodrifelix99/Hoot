@@ -2,7 +2,6 @@ import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/sign_in_with_apple.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -47,16 +46,16 @@ class _SignInPageState extends State<SignInPage> {
       String error = "";
       switch (code) {
         case "invalid-email":
-          error = AppLocalizations.of(context)!.emailInvalid;
+          error = 'emailInvalid'.tr;
           break;
         case "user-disabled":
-          error = AppLocalizations.of(context)!.userDisabled;
+          error = 'userDisabled'.tr;
           break;
         case "user-not-found":
-          error = AppLocalizations.of(context)!.errorUserNotFound;
+          error = 'errorUserNotFound'.tr;
           break;
         case "wrong-password":
-          error = AppLocalizations.of(context)!.errorWrongPassword;
+          error = 'errorWrongPassword'.tr;
           break;
         default:
           error = code;
@@ -75,7 +74,7 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.signIn)),
+      appBar: AppBar(title: Text('signIn'.tr)),
       body: Stack(
         children: [
           Positioned.fill(
@@ -103,18 +102,17 @@ class _SignInPageState extends State<SignInPage> {
                         autoValidateMode: AutovalidateMode.onUserInteraction,
                         validator: (String? value) {
                           if (value!.isEmpty || value.length < 6) {
-                            return AppLocalizations.of(context)!
-                                .phoneNumberInvalid;
+                            return 'phoneNumberInvalid'.tr;
                           }
                           return null;
                         },
                         autofillHints: const [AutofillHints.telephoneNumber],
                         initialValue: PhoneNumber(isoCode: _countryCode),
                         errorMessage:
-                            AppLocalizations.of(context)!.phoneNumberInvalid,
+                            'phoneNumberInvalid'.tr,
                         textFieldController: _phoneNumberController,
                         inputDecoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.phoneNumber,
+                          labelText: 'phoneNumber'.tr,
                         ),
                         formatInput: false,
                         keyboardType: const TextInputType.numberWithOptions(
@@ -131,8 +129,7 @@ class _SignInPageState extends State<SignInPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              AppLocalizations.of(context)!
-                                  .bySigningUpYouAgreeToOur,
+                              'bySigningUpYouAgreeToOur'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
@@ -145,7 +142,7 @@ class _SignInPageState extends State<SignInPage> {
                             TextButton(
                                 onPressed: () => Get.toNamed(AppRoutes.terms),
                                 child: Text(
-                                  AppLocalizations.of(context)!.termsOfService,
+                                  'termsOfService'.tr,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall
@@ -187,7 +184,7 @@ class _SignInPageState extends State<SignInPage> {
                               .withOpacity(0.5),
                     ),
                     child: !_isLoading
-                        ? Text(AppLocalizations.of(context)!.signIn,
+                        ? Text('signIn'.tr,
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary))
                         : CircularProgressIndicator(

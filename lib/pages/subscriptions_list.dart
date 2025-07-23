@@ -10,7 +10,6 @@ import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../app/utils/logger.dart';
 
 import 'package:hoot/models/feed.dart';
@@ -80,7 +79,7 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBarComponent(
-          title: AppLocalizations.of(context)!.subscriptions,
+          title: 'subscriptions'.tr,
         ),
         body: _loading
             ? Center(
@@ -100,7 +99,7 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
                     itemCount: _subscriptions.length,
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
-                        onTap: () => Get.toNamed(context, '/profile',
+                        onTap: () => Get.toNamed('/profile',
                             arguments: _subscriptions[index].user),
                         leading: ProfileAvatarComponent(
                           image: _subscriptions[index]

@@ -1,6 +1,5 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:octo_image/octo_image.dart';
@@ -61,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
       Get.toNamed(AppRoutes.verify);
     } else {
       ToastService.showToast(
-          context, AppLocalizations.of(context)!.phoneNumberInvalid, true);
+          context, 'phoneNumberInvalid'.tr, true);
     }
   }
 
@@ -82,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
             Positioned.fill(
               child: Center(
                 child: Text(
-                  AppLocalizations.of(context)!.appName,
+                  'appName'.tr,
                   style: const TextStyle(
                     shadows: [
                       Shadow(
@@ -138,17 +137,16 @@ class _LoginPageState extends State<LoginPage> {
                         autoValidateMode: AutovalidateMode.onUserInteraction,
                         validator: (String? value) {
                           if (value!.isEmpty || value.length < 6) {
-                            return AppLocalizations.of(context)!
-                                .phoneNumberInvalid;
+                            return 'phoneNumberInvalid'.tr;
                           }
                           return null;
                         },
                         autofillHints: const [AutofillHints.telephoneNumber],
                         initialValue: _authController.phoneNumber,
                         errorMessage:
-                            AppLocalizations.of(context)!.phoneNumberInvalid,
+                            'phoneNumberInvalid'.tr,
                         inputDecoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!.phoneNumber,
+                          hintText: 'phoneNumber'.tr,
                           hintStyle: TextStyle(
                               color: Theme.of(context)
                                   .colorScheme
@@ -156,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                                   .withOpacity(0.5)),
                           errorStyle: const TextStyle(color: Colors.redAccent),
                         ),
-                        hintText: AppLocalizations.of(context)!.phoneNumber,
+                        hintText: 'phoneNumber'.tr,
                         formatInput: false,
                         keyboardType: const TextInputType.numberWithOptions(
                             signed: true, decimal: true),
@@ -167,9 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                              AppLocalizations.of(context)!
-                                  .bySigningUpYouAgreeToOur,
+                          Text('bySigningUpYouAgreeToOur'.tr,
                               style: const TextStyle(color: Colors.white)),
                           TextButton(
                               onPressed: () => Get.toNamed(AppRoutes.terms),
@@ -180,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                                     Colors.transparent),
                               ),
                               child: Text(
-                                  AppLocalizations.of(context)!.termsOfService,
+                                  'termsOfService'.tr,
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)))

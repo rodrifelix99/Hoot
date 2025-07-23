@@ -10,7 +10,6 @@ import 'package:hoot/pages/post.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeletons/skeletons.dart';
 import '../app/utils/logger.dart';
@@ -63,7 +62,7 @@ class _FeedPageState extends State<FeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComponent(
-        title: AppLocalizations.of(context)!.myFeeds,
+        title: 'myFeeds'.tr,
         actions: [
           IconButton(
             onPressed: widget.toggleRadio,
@@ -161,7 +160,7 @@ class _FeedPageState extends State<FeedPage> {
                       child: NothingToShowComponent(
                         icon: const Icon(Icons.newspaper_rounded),
                         text:
-                            '${AppLocalizations.of(context)!.noHoots}\n${AppLocalizations.of(context)!.subscribeToSeeHoots}',
+                            '${'noHoots'.tr}\n${'subscribeToSeeHoots'.tr}',
                       ),
                     ),
             ),

@@ -1,6 +1,5 @@
 import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
@@ -45,7 +44,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarComponent(title: AppLocalizations.of(context)!.search),
+      appBar: AppBarComponent(title: 'search'.tr),
       body: Column(
         children: [
           Padding(
@@ -56,7 +55,7 @@ class _SearchPageState extends State<SearchPage> {
               onEditingComplete: () => _search(),
               textInputAction: TextInputAction.search,
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)!.searchPlaceholder,
+                hintText: 'searchPlaceholder'.tr,
                 suffixIcon: IconButton(
                   icon: const Icon(SolarIconsOutline.magnifier),
                   onPressed: () => _search(),
@@ -91,7 +90,7 @@ class _SearchPageState extends State<SearchPage> {
                   : Center(
                       child: NothingToShowComponent(
                       icon: const Icon(SolarIconsBold.magnifierZoomOut),
-                      text: AppLocalizations.of(context)!.noUsersToShow,
+                      text: 'noUsersToShow'.tr,
                     ))
         ],
       ),
