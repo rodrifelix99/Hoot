@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:hoot/components/shimmer_skeletons.dart';
 import '../app/utils/logger.dart';
 
 import 'package:hoot/models/user.dart';
@@ -54,13 +54,14 @@ class _UserSuggestionsState extends State<UserSuggestions> {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: _isLoading
-                      ? SizedBox(
+                      ? const SizedBox(
                           width: 60,
                           height: 60,
-                          child: SkeletonAvatar(
-                            style: SkeletonAvatarStyle(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
+                          child: ShimmerBox(
+                            width: 60,
+                            height: 60,
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
                           ),
                         )
                       : Column(

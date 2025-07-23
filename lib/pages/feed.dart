@@ -8,7 +8,6 @@ import 'package:hoot/pages/post.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:skeletons/skeletons.dart';
 import '../app/utils/logger.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/components/post_component.dart';
@@ -72,7 +71,7 @@ class _FeedPageState extends State<FeedPage> {
         ],
       ),
       body: _isLoading
-          ? SkeletonListView(
+          ? ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: 10),
               itemCount: 10,
               itemBuilder: (context, index) =>

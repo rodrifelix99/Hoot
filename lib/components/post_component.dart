@@ -8,7 +8,8 @@ import 'package:hoot/models/post.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:hoot/components/shimmer_skeletons.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -231,41 +232,30 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         children: [
           Row(
             children: [
-              const SkeletonAvatar(
-                style: SkeletonAvatarStyle(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  width: 40,
-                  height: 40,
-                ),
+              const ShimmerBox(
+                width: 40,
+                height: 40,
+                shape: BoxShape.circle,
               ),
               const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SkeletonLine(
-                    style: SkeletonLineStyle(
-                      width: MediaQuery.of(context).size.width * 0.25,
-                      height: 20,
-                    ),
+                  ShimmerBox(
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    height: 20,
                   ),
                   const SizedBox(height: 5),
-                  SkeletonLine(
-                    style: SkeletonLineStyle(
-                      width: MediaQuery.of(context).size.width * 0.10,
-                      height: 20,
-                    ),
+                  ShimmerBox(
+                    width: MediaQuery.of(context).size.width * 0.10,
+                    height: 20,
                   ),
                 ],
               )
             ],
           ),
           const SizedBox(height: 10),
-          SkeletonParagraph(
-            style: const SkeletonParagraphStyle(
-              spacing: 10,
-              lines: 2,
-            ),
-          ),
+          const ShimmerParagraph(lines: 2, spacing: 10),
         ],
       ),
     ) :

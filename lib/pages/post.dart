@@ -5,7 +5,7 @@ import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:hoot/components/shimmer_skeletons.dart';
 import '../app/utils/logger.dart';
 import 'package:solar_icons/solar_icons.dart';
 
@@ -114,33 +114,21 @@ class _PostPageState extends State<PostPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
                           children: [
-                            SkeletonListTile(
-                              leadingStyle: const SkeletonAvatarStyle(
-                                shape: BoxShape.circle,
-                                width: 50,
-                                height: 50,
-                              ),
+                            ShimmerListTile(
+                              leadingSize: 50,
+                              hasSubtitle: false,
                             ),
-                            SkeletonListTile(
-                              leadingStyle: const SkeletonAvatarStyle(
-                                shape: BoxShape.circle,
-                                width: 50,
-                                height: 50,
-                              ),
+                            ShimmerListTile(
+                              leadingSize: 50,
+                              hasSubtitle: false,
                             ),
-                            SkeletonListTile(
-                              leadingStyle: const SkeletonAvatarStyle(
-                                shape: BoxShape.circle,
-                                width: 50,
-                                height: 50,
-                              ),
+                            ShimmerListTile(
+                              leadingSize: 50,
+                              hasSubtitle: false,
                             ),
-                            SkeletonListTile(
-                              leadingStyle: const SkeletonAvatarStyle(
-                                shape: BoxShape.circle,
-                                width: 50,
-                                height: 50,
-                              ),
+                            ShimmerListTile(
+                              leadingSize: 50,
+                              hasSubtitle: false,
                             ),
                           ],
                         ),
