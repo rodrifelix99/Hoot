@@ -12,12 +12,10 @@ import 'package:hoot/pages/report.dart';
 import 'package:hoot/pages/search.dart';
 import 'package:hoot/pages/search_by_genre.dart';
 import 'package:hoot/pages/settings.dart';
-import 'package:hoot/pages/sign_in.dart';
 import 'package:hoot/pages/sign_up.dart';
 import 'package:hoot/pages/subscribers_list.dart';
 import 'package:hoot/pages/subscriptions_list.dart';
 import 'package:hoot/pages/terms.dart';
-import 'package:hoot/pages/verify.dart';
 import 'package:hoot/pages/welcome.dart';
 import 'package:hoot/pages/login.dart';
 import 'package:hoot/models/feed_types.dart';
@@ -29,8 +27,6 @@ class AppPages {
     GetPage(name: AppRoutes.login, page: () => const LoginPage()),
     GetPage(name: AppRoutes.home, page: () => const HomePage()),
     GetPage(name: AppRoutes.signup, page: () => const SignUpPage()),
-    GetPage(name: AppRoutes.signin, page: () => const SignInPage()),
-    GetPage(name: AppRoutes.verify, page: () => const VerifyPage()),
     GetPage(name: AppRoutes.terms, page: () => const TermsOfService()),
     GetPage(name: AppRoutes.welcome, page: () => const WelcomePage()),
     GetPage(name: AppRoutes.createPost, page: () => const CreatePostPage()),

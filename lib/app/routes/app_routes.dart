@@ -2,8 +2,6 @@ class AppRoutes {
   static const login = '/login';
   static const home = '/home';
   static const signup = '/signup';
-  static const signin = '/signin';
-  static const verify = '/verify';
   static const terms = '/terms_of_service';
   static const welcome = '/welcome';
   static const createPost = '/create_post';
