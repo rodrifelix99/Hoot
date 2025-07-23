@@ -1,6 +1,6 @@
-import { functions, db, admin, info, error } from '../common';
+import { functionsV1, db, admin, info, error } from '../common';
 import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const deleteUserDocument = functions.region("europe-west1").auth.user().onDelete(async (u) => {
+export const deleteUserDocument = functionsV1.region("europe-west1").auth.user().onDelete(async (u) => {
   try {
     const uid = u.uid;
     let writeCount = 0;

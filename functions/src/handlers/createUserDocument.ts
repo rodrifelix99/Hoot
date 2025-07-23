@@ -1,6 +1,6 @@
-import { functions, db, admin, info, error } from '../common';
+import { functionsV1, db, admin, info, error } from '../common';
 import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const createUserDocument = functions.region("europe-west1").auth.user().onCreate(async (user) => {
+export const createUserDocument = functionsV1.region("europe-west1").auth.user().onCreate(async (user) => {
   try {
     // Create a document for the new user in Firestore
     await db.collection("users").doc(user.uid).set({

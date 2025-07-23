@@ -1,6 +1,9 @@
-import { functions, db, admin, info, error } from '../common';
+import { onDocumentDeleted } from 'firebase-functions/v2/firestore';
+import { db, admin, info, error } from '../common';
 import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const onUnsubscribe = functions.region("europe-west1").firestore.document("users/{userId}/feeds/{feedId}/subscribers/{subscribedId}").onDelete(async (snap, context) => {
+export const onUnsubscribe = onDocumentDeleted({ document: "users/{userId}/feeds/{feedId}/subscribers/{subscribedId}", region: "europe-west1" }, async (event) => {
+  const snap = event.data;
+  const context = event;
   try {
     const { subscribedId, userId, feedId } = context.params;
     const feedPosts = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("posts").get();

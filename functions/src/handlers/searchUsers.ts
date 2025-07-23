@@ -1,6 +1,8 @@
-import { functions, db, admin, info, error } from '../common';
+import { onCall } from 'firebase-functions/v2/https';
+import { db, admin, info, error } from '../common';
 import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const searchUsers = functions.region("europe-west1").https.onCall(async (data) => {
+export const searchUsers = onCall({ region: 'europe-west1' }, async (request) => {
+  const data = request.data;
   try {
     // query is the search string trimmed and lowercased and remove @
     const query = data.trim().toLowerCase().replace("@", "");

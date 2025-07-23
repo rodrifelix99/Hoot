@@ -1,6 +1,9 @@
-import { functions, db, admin, info, error } from '../common';
+import { onCall } from 'firebase-functions/v2/https';
+import { db, admin, info, error } from '../common';
 import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const getContacts = functions.region("europe-west1").https.onCall(async (data, context) => {
+export const getContacts = onCall({ region: 'europe-west1' }, async (request) => {
+  const data = request.data;
+  const context = request;
   try {
     const contacts = data;
     const users = await admin.auth().listUsers();
