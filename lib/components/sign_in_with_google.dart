@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:hoot/services/toast_service.dart';
+import '../util/routes/app_routes.dart';
 
 class SignInWithGoogleButton extends StatefulWidget {
   const SignInWithGoogleButton({super.key});
@@ -20,10 +21,9 @@ class _SignInWithGoogleButtonState extends State<SignInWithGoogleButton> {
         ToastService.showError('signInFailed'.tr);
       });
     } else if (auth.user?.uid == 'HOOT-IS-AWESOME') {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/welcome', (route) => false);
+      Get.offAllNamed(AppRoutes.welcome);
     } else {
-      Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+      Get.offAllNamed(AppRoutes.home);
     }
   }
 

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:hoot/services/toast_service.dart';
+import '../util/routes/app_routes.dart';
 
 class SignInWithAppleButton extends StatefulWidget {
   const SignInWithAppleButton({super.key});
@@ -22,10 +23,9 @@ class _SignInWithAppleButtonState extends State<SignInWithAppleButton> {
         ToastService.showError('signInFailed'.tr);
       });
     } else if (code == "new-user") {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/welcome', (route) => false);
+      Get.offAllNamed(AppRoutes.welcome);
     } else {
-      Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+      Get.offAllNamed(AppRoutes.home);
     }
   }
 
