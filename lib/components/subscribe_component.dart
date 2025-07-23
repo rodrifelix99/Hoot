@@ -5,6 +5,8 @@ import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/services/dialog_service.dart';
+import 'package:hoot/services/error_service.dart';
+import 'package:hoot/services/toast_service.dart';
 
 import 'package:hoot/models/user.dart';
 
@@ -65,18 +67,19 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
     );
     if (confirm) {
       if (_requestCooldown) {
-        // TODO: Use ToastService.showInfo 'youAreGoingTooFast'.tr
+        ToastService.showInfo('youAreGoingTooFast'.tr);
         return;
       }
       setState(() => widget.feed.requests!.add(_authProvider.user!.uid));
       bool res = await _feedProvider.requestToJoinFeed(
           widget.user.uid, widget.feed.id);
-      !res
-          ? setState(() {
-              widget.feed.requests!.remove(_authProvider.user!.uid);
-              // TODO: Use ToastService.showError and handle error 'errorRequestingToJoin'.tr
-            })
-          : null;
+      if (!res) {
+        setState(() {
+          widget.feed.requests!.remove(_authProvider.user!.uid);
+        });
+        ErrorService.reportError('requestToJoinFailed',
+            message: 'errorRequestingToJoin'.tr);
+      }
       setState(() => _requestCooldown = true);
       Future.delayed(const Duration(seconds: 60),
           () => setState(() => _requestCooldown = false));
@@ -85,7 +88,7 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
 
   Future _subscribeToFeed() async {
     if (_subscribeCooldown) {
-      // TODO: Use ToastService.showInfo and handle error 'youAreGoingTooFast'.tr
+      ToastService.showInfo('youAreGoingTooFast'.tr);
       return;
     }
     bool confirm = await DialogService.confirm(
@@ -99,12 +102,13 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       setState(() => widget.feed.subscribers!.add(_authProvider.user!.uid));
       bool res =
           await _feedProvider.subscribeToFeed(widget.user.uid, widget.feed.id);
-      !res
-          ? setState(() {
-              widget.feed.subscribers!.remove(_authProvider.user!.uid);
-              // TODO: Use ToastService.showError and handle error 'errorSubscribing'.tr
-            })
-          : null;
+      if (!res) {
+        setState(() {
+          widget.feed.subscribers!.remove(_authProvider.user!.uid);
+        });
+        ErrorService.reportError('subscribeFailed',
+            message: 'errorSubscribing'.tr);
+      }
       setState(() => _subscribeCooldown = true);
       Future.delayed(const Duration(seconds: 60),
           () => setState(() => _subscribeCooldown = false));
@@ -123,12 +127,13 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       setState(() => widget.feed.subscribers!.remove(_authProvider.user!.uid));
       bool res = await _feedProvider.unsubscribeFromFeed(
           widget.user.uid, widget.feed.id);
-      !res
-          ? setState(() {
-              widget.feed.subscribers!.add(_authProvider.user!.uid);
-              // TODO: Use ToastService.showError and handle error 'errorUnsubscribing'.tr
-            })
-          : null;
+      if (!res) {
+        setState(() {
+          widget.feed.subscribers!.add(_authProvider.user!.uid);
+        });
+        ErrorService.reportError('unsubscribeFailed',
+            message: 'errorUnsubscribing'.tr);
+      }
     }
   }
 
