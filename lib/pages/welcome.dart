@@ -9,7 +9,6 @@ import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/upload_service.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:octo_image/octo_image.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:get/get.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -216,15 +215,13 @@ class _FirstScreenState extends State<FirstScreen> {
         if (!response) {
           widget.controller.move(1, animation: true);
           setState(() {
-            ToastService.showToast(
-                context, 'errorUnknown'.tr, true);
+            ToastService.showToast(context, 'errorUnknown'.tr, true);
           });
         }
       } else {
         FirebaseCrashlytics.instance.log('User is null');
         setState(() {
-          ToastService.showToast(
-              context, 'errorUnknown'.tr, true);
+          ToastService.showToast(context, 'errorUnknown'.tr, true);
         });
       }
     }
@@ -324,23 +321,20 @@ class _SecondScreenState extends State<SecondScreen> {
           if (!response) {
             widget.controller.move(2, animation: true);
             setState(() {
-              ToastService.showToast(
-                  context, 'errorUnknown'.tr, true);
+              ToastService.showToast(context, 'errorUnknown'.tr, true);
             });
           }
         } else {
           FirebaseCrashlytics.instance.log('User is null');
           setState(() {
             _loading = false;
-            ToastService.showToast(context,
-                'somethingWentWrong'.tr, true);
+            ToastService.showToast(context, 'somethingWentWrong'.tr, true);
           });
         }
       } else {
         setState(() {
           _loading = false;
-          ToastService.showToast(
-              context, 'usernameTaken'.tr, true);
+          ToastService.showToast(context, 'usernameTaken'.tr, true);
         });
       }
     }
@@ -453,8 +447,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
         _selectedImage = croppedImage == null ? null : File(croppedImage.path);
       });
     } else if (pickedFile != null) {
-      ToastService.showToast(
-          context, 'imageTooLarge'.tr, true);
+      ToastService.showToast(context, 'imageTooLarge'.tr, true);
     }
   }
 
@@ -482,8 +475,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
             _goHome();
           } else {
             setState(() {
-              ToastService.showToast(
-                  context, 'errorUnknown'.tr, true);
+              ToastService.showToast(context, 'errorUnknown'.tr, true);
             });
           }
         } else {
@@ -491,16 +483,14 @@ class _ThirdScreenState extends State<ThirdScreen> {
         }
       } else {
         setState(() {
-          ToastService.showToast(
-              context, 'errorUnknown'.tr, true);
+          ToastService.showToast(context, 'errorUnknown'.tr, true);
         });
       }
       setState(() {
         _loading = false;
       });
     } else if (_selectedImage != null) {
-      ToastService.showToast(
-          context, 'imageTooLarge'.tr, true);
+      ToastService.showToast(context, 'imageTooLarge'.tr, true);
     }
   }
 
@@ -553,20 +543,25 @@ class _ThirdScreenState extends State<ThirdScreen> {
             : Center(
                 child: GestureDetector(
                   onTap: _pickImage,
-                  child: OctoImage.fromSet(
-                    image: _selectedImage != null
-                        ? FileImage(_selectedImage!)
-                        : const NetworkImage('') as ImageProvider,
-                    fit: BoxFit.cover,
-                    width: 125,
-                    height: 125,
-                    octoSet: OctoSet.circleAvatar(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.primaryContainer,
-                        text: Icon(SolarIconsBold.galleryAdd,
+                  child: _selectedImage != null
+                      ? ClipOval(
+                          child: Image.file(
+                            _selectedImage!,
+                            fit: BoxFit.cover,
+                            width: 125,
+                            height: 125,
+                          ),
+                        )
+                      : CircleAvatar(
+                          radius: 62.5,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primaryContainer,
+                          child: Icon(
+                            SolarIconsBold.galleryAdd,
                             size: 50,
-                            color: Theme.of(context).colorScheme.primary)),
-                  ),
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
                 ),
               ),
         const Spacer(),
