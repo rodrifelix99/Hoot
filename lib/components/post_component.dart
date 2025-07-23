@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
@@ -308,13 +307,13 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
               ),
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.background,
+                  color: Theme.of(context).colorScheme.surface,
                   border: Border.all(
-                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                    color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                      color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     ),
@@ -368,7 +367,7 @@ class TitleBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: post.feed?.color?.withOpacity(0.25) ?? Theme.of(context).colorScheme.secondary.withOpacity(0.25),
+                    color: post.feed?.color?.withValues(alpha: 0.25) ?? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.25),
                     blurRadius: 10,
                     spreadRadius: 0,
                     offset: const Offset(-4, 2),
@@ -399,7 +398,7 @@ class TitleBar extends StatelessWidget {
                 post.feed?.title ?? '',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   fontSize: 12,
-                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
             ],
@@ -409,7 +408,7 @@ class TitleBar extends StatelessWidget {
             timeago.format(post.createdAt ?? DateTime.now()),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               fontSize: 12,
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ),
         ],
@@ -447,8 +446,8 @@ class MediaSection extends StatelessWidget {
           builder: DotSwiperPaginationBuilder(
             space: 5,
             activeSize: 10,
-            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
-            activeColor: Theme.of(context).colorScheme.onBackground,
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+            activeColor: Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ),
@@ -478,13 +477,13 @@ class ToolBar extends StatelessWidget {
                   onPressed: () => onLikeTap(),
                   icon: Icon(
                     post.liked ? SolarIconsBold.heart : SolarIconsOutline.heart,
-                    color: post.liked ? color : Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                    color: post.liked ? color : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                 ),
                 Text(
                   '${post.likes ?? 0}',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                 ),
               ],
@@ -495,13 +494,13 @@ class ToolBar extends StatelessWidget {
                   onPressed: canRefeed ? () => onRefeedTap() : null,
                   icon: Icon(
                     post.reFeeded ? SolarIconsBold.refreshSquare : SolarIconsOutline.refreshSquare,
-                    color: post.reFeeded ? color : Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                    color: post.reFeeded ? color : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                 ),
                 Text(
                   '${post.reFeeds ?? 0}',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                 ),
               ],
@@ -510,13 +509,13 @@ class ToolBar extends StatelessWidget {
               onPressed: () => onMenuTap(),
               icon: Icon(
                 SolarIconsOutline.menuDots,
-                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
               ),
             ),
           ],
         ),
         Divider(
-          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
           thickness: 1,
         ),
         const SizedBox(height: 20),

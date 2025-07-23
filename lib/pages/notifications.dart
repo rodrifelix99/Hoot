@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
@@ -66,13 +65,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
     String feedName = notification.feed?.title ?? 'Feed';
     switch (notification.type) {
       case 1:
-        return 'newFollower'.trParams({'value': username});
+        return 'newFollower'.trParams({'username': username});
       case 2:
-        return 'newUnfollower'.trParams({'value': username});
+        return 'newUnfollower'.trParams({'username': username});
       case 3:
-        return 'newSubscriber'.trParams({'value': feedName, username});
+        return 'newSubscriber'.trParams({'feedName': feedName, 'username': username});
       case 4:
-        return 'unsubscriber'.trParams({'value': feedName, username});
+        return 'unsubscriber'.trParams({'feedName': feedName, 'username': username});
       case 5:
         return 'privateFeedRequest'
             .trParams({'feedName': feedName, 'username': username});
@@ -83,9 +82,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
         return 'privateFeedRequestRejected'
             .trParams({'feedName': feedName, 'username': username});
       case 8:
-        return 'userLikedYourHoot'.trParams({'value': username});
+        return 'userLikedYourHoot'.trParams({'username': username});
       case 9:
-        return 'userReFeededYourHoot'.trParams({'value': username});
+        return 'userReFeededYourHoot'.trParams({'username': username});
       default:
         return "";
     }
@@ -143,7 +142,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           : _notifications.isEmpty
               ? Center(
                   child: NothingToShowComponent(
-                      icon: Icon(Icons.notifications_off_rounded),
+                      icon: const Icon(Icons.notifications_off_rounded),
                       text: 'noNotifications'.tr))
               : SmartRefresher(
                   controller: _refreshController,

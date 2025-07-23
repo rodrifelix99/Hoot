@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:animations/animations.dart';
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
@@ -162,9 +161,9 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.black.withOpacity(0),
-                Colors.black.withOpacity(0.5),
-                Colors.black.withOpacity(1),
+                Colors.black.withValues(alpha: 0),
+                Colors.black.withValues(alpha: 0.5),
+                Colors.black.withValues(alpha: 1),
               ],
             ),
           ),
@@ -184,7 +183,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               borderRadius: const BorderRadius.all(Radius.circular(55)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
+                  color: Colors.black.withValues(alpha: 0.25),
                   spreadRadius: 0,
                   blurRadius: 25,
                   offset: const Offset(0, 0),
@@ -204,18 +203,18 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
       children: [
         _isCurrentUser ? ElevatedButton(
           style: ElevatedButtonTheme.of(context).style?.copyWith(
-            backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary.withOpacity(0.15)),
-            foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+            backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary.withValues(alpha: 0.15)),
+            foregroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary),
+            padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
           ),
           onPressed: () => Get.toNamed('/edit_profile'),
           child: Text('editProfile'.tr),
         ) : IconButton(
           icon: const Icon(Icons.more_vert_rounded),
           style: ElevatedButtonTheme.of(context).style?.copyWith(
-            backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary.withOpacity(0.15)),
-            foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-            padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
+            backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary.withValues(alpha: 0.15)),
+            foregroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary),
+            padding: WidgetStateProperty.all(const EdgeInsets.all(10)),
           ),
           onPressed: _showContextMenu,
         ),
@@ -234,7 +233,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         ) : const SizedBox(),
         _mostSubscribedFeed() != null ? const SizedBox(height: 10) : const SizedBox(),
         _mostSubscribedFeed() != null ? Text(
-          'betterKnownForFeed'.trParams({'value': _mostSubscribedFeed(})?.title ?? ''),
+          'betterKnownForFeed'.trParams({'value': _mostSubscribedFeed()?.title ?? ''}),
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -247,13 +246,13 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComponent(
-        backgroundColor: Colors.black.withOpacity(0.25),
+        backgroundColor: Colors.black.withValues(alpha: 0.25),
         foregroundColor: Colors.white,
         actions: [
           TextButton(
               onPressed: () => Get.toNamed('/subscriptions', arguments: _user.uid),
               style: TextButton.styleFrom(
-                backgroundColor: Colors.white.withOpacity(0.1),
+                backgroundColor: Colors.white.withValues(alpha: 0.1),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -265,7 +264,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               )
           ),
           _isCurrentUser ? IconButton(
-            onPressed: () => Get.offAllNamed('/settings', (route) => false),
+            onPressed: () => Get.offAllNamed('/settings', predicate: (route) => false),
             icon: const Icon(SolarIconsBold.settings, color: Colors.white, size: 30),
           ) : const SizedBox(width: 10),
         ],
@@ -274,7 +273,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
       floatingActionButton: _isCurrentUser && _user.feeds != null && _user.feeds!.isNotEmpty ? FloatingActionBubble(
         items: <Bubble>[
           Bubble(
-            title: 'numberOfSubscribers'.trParams({'value': _user.feeds![_selectedFeedIndex].subscribers?.length ?? 0}),
+            title: 'numberOfSubscribers'.trParams({'value': (_user.feeds![_selectedFeedIndex].subscribers?.length ?? 0).toString()}),
             iconColor:  _user.feeds![_selectedFeedIndex].color!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
             bubbleColor : _user.feeds![_selectedFeedIndex].color!,
             icon: SolarIconsOutline.usersGroupRounded,
@@ -478,9 +477,7 @@ class _FeedPostsState extends State<FeedPosts> {
     Center(
       child: NothingToShowComponent(
         icon: const Icon(Icons.lock_rounded),
-        text: 'thisFeedIsPrivate'.tr +
-            '\n\n' +
-            'onlyMembersCanSee'.trParams({'displayName': widget.user.name ?? widget.user.username ?? 'this user'}),
+        text: '${'thisFeedIsPrivate'.tr}\n\n${'onlyMembersCanSee'.trParams({'displayName': widget.user.name ?? widget.user.username ?? 'this user'})}',
       ),
     ) :
     widget.user.feeds?[widget.feedIndex].posts?.isNotEmpty == true ? Column(
@@ -497,21 +494,19 @@ class _FeedPostsState extends State<FeedPosts> {
           const SizedBox(height: 10),
           IconButton(
             onPressed: () => _getPosts(widget.user.feeds![widget.feedIndex].posts!.last.createdAt ?? DateTime.now()),
-            icon: Icon(SolarIconsBold.arrowDown),
+            icon: const Icon(SolarIconsBold.arrowDown),
           ),
         ],
       ],
     ) : widget.user.uid != _authProvider.user?.uid ? Center(
       child: NothingToShowComponent(
         icon: const Icon(Icons.article_rounded),
-        text: 'emptyFeed'.tr +
-            '\n\n' +
-            'emptyFeedToOtherUsers'.trParams({'displayName': widget.user.name ?? widget.user.username ?? 'this user'}),
+        text: '${'emptyFeed'.tr}\n\n${'emptyFeedToOtherUsers'.trParams({'displayName': widget.user.name ?? widget.user.username ?? 'this user'})}',
       ),
     ) : Center(
       child: NothingToShowComponent(
         icon: const Icon(Icons.article_rounded),
-        text: 'emptyFeed'.tr + '\n\n' + 'emptyFeedDescription'.tr,
+        text: '${'emptyFeed'.tr}\n\n${'emptyFeedDescription'.tr}',
         buttonText: 'createPost'.tr,
         buttonAction: () => Get.toNamed('/create_post', arguments: widget.user.feeds![widget.feedIndex].id),
       ),

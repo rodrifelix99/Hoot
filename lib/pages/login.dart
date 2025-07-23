@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:hoot/app/routes/app_routes.dart';
 
 import 'package:hoot/services/error_service.dart';
-import '../app/utils/logger.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -151,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                               color: Theme.of(context)
                                   .colorScheme
                                   .secondary
-                                  .withOpacity(0.5)),
+                                  .withValues(alpha: 0.5)),
                           errorStyle: const TextStyle(color: Colors.redAccent),
                         ),
                         hintText: 'phoneNumber'.tr,
@@ -170,9 +169,9 @@ class _LoginPageState extends State<LoginPage> {
                           TextButton(
                               onPressed: () => Get.toNamed(AppRoutes.terms),
                               style: ButtonStyle(
-                                padding: MaterialStateProperty.all<EdgeInsets>(
+                                padding: WidgetStateProperty.all<EdgeInsets>(
                                     EdgeInsets.zero),
-                                overlayColor: MaterialStateProperty.all<Color>(
+                                overlayColor: WidgetStateProperty.all<Color>(
                                     Colors.transparent),
                               ),
                               child: Text(

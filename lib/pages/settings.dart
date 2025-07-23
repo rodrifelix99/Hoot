@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/services/error_service.dart';
@@ -54,7 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
     if (result == true) {
       await _authProvider.signOut();
-      Get.offAllNamed('/login', (route) => false);
+      Get.offAllNamed('/login', predicate: (route) => false);
     }
   }
 
@@ -84,7 +83,7 @@ class _SettingsPageState extends State<SettingsPage> {
       bool res = await _authProvider.deleteAccount();
       if (res) {
         ToastService.showToast(context, 'deleteAccountSuccess'.tr, false);
-        Get.offAllNamed('/login', (route) => false);
+        Get.offAllNamed('/login', predicate: (route) => false);
       } else {
         setState(() {
           _loading = false;
@@ -100,7 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () => Get.offAllNamed('/home', (route) => false),
+          onPressed: () => Get.offAllNamed('/home', predicate: (route) => false),
         ),
         title: Text('settings'.tr),
       ),
@@ -201,15 +200,15 @@ class _SettingsPageState extends State<SettingsPage> {
             left: 0,
             right: 0,
             child: Container(
-              color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
+              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
               child: SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: ElevatedButton(
                     onPressed: _signOut,
                     style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                      backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
+                      foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
                     ),
                     child: Text('signOut'.tr),
                   ),

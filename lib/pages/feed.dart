@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'package:hoot/components/user_suggestions.dart';
 import 'package:hoot/pages/post.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
-import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeletons/skeletons.dart';
 import '../app/utils/logger.dart';
@@ -137,8 +135,8 @@ class _FeedPageState extends State<FeedPage> {
                               Divider(
                                 color: Theme.of(context)
                                     .colorScheme
-                                    .onBackground
-                                    .withOpacity(0.1),
+                                    .onSurface
+                                    .withValues(alpha: 0.1),
                                 thickness: 1,
                                 height: 40,
                               ),

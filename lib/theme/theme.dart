@@ -76,26 +76,26 @@ class AppTheme {
 
   static ElevatedButtonThemeData elevatedButtonTheme = ElevatedButtonThemeData(
     style: ButtonStyle(
-      textStyle: MaterialStateProperty.all(
+      textStyle: WidgetStateProperty.all(
         const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold
         ),
       ),
-      elevation: MaterialStateProperty.all(0),
-      shape: MaterialStateProperty.all(
+      elevation: WidgetStateProperty.all(0),
+      shape: WidgetStateProperty.all(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: BorderSide.none,
         ),
       ),
-      backgroundColor: MaterialStateProperty.all(
+      backgroundColor: WidgetStateProperty.all(
         primaryColor,
       ),
-      foregroundColor: MaterialStateProperty.all(
+      foregroundColor: WidgetStateProperty.all(
         Colors.white,
       ),
-      padding: MaterialStateProperty.all(
+      padding: WidgetStateProperty.all(
         const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
     ),
@@ -122,7 +122,7 @@ class AppTheme {
       borderRadius: BorderRadius.all(Radius.circular(100)),
     ),
     side: BorderSide.none,
-    backgroundColor: lightColorScheme.primary.withOpacity(0.25),
+    backgroundColor: lightColorScheme.primary.withValues(alpha: 0.25),
     labelStyle: TextStyle(
       fontSize: 12,
       color: lightColorScheme.primary,

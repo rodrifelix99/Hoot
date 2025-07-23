@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'dart:io';
 import 'dart:math';
 
@@ -12,7 +11,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import '../app/utils/logger.dart';
 import 'package:get/get.dart';
 import 'package:solar_icons/solar_icons.dart';
 
@@ -155,7 +153,7 @@ class _WelcomePageState extends State<WelcomePage> {
               height: MediaQuery.of(context).size.height * 0.6,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
@@ -164,8 +162,8 @@ class _WelcomePageState extends State<WelcomePage> {
                   BoxShadow(
                     color: Theme.of(context)
                         .colorScheme
-                        .onBackground
-                        .withOpacity(0.15),
+                        .onSurface
+                        .withValues(alpha: 0.15),
                     spreadRadius: 2,
                     blurRadius: 20,
                     offset: const Offset(0, -5), // changes position of shadow

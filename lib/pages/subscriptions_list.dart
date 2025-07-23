@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
@@ -47,7 +46,7 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
         _subscriptions = subscriptions;
       });
     } catch (e) {
-      logError(e);
+      logError(e.toString());
     } finally {
       setState(() {
         _loading = false;
@@ -68,7 +67,7 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
         });
       }
     } catch (e) {
-      logError(e);
+      logError(e.toString());
     }
   }
 

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'app/utils/logger.dart';
 import 'package:hoot/pages/home.dart';
 import 'app/routes/app_pages.dart';
 import 'app/routes/initial_binding.dart';

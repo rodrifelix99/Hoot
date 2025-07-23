@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:octo_image/octo_image.dart';
@@ -43,7 +42,7 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
       onTap: widget.isClickable ? _visitUrl : null,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Theme.of(context).colorScheme.secondary.withOpacity(0.5)),
+          border: Border.all(color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.5)),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -102,11 +101,11 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
         height: 100,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
-          border: Border.all(color: Theme.of(context).colorScheme.secondary.withOpacity(0.1)),
+          border: Border.all(color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1)),
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -156,7 +155,7 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
                         _ogp.url ?? widget.url,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+                          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.5),
                         )
                     ),
                   ],

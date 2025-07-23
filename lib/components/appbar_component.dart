@@ -24,7 +24,7 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: backgroundColor,
       foregroundColor: foregroundColor,
       scrolledUnderElevation: elevationDuringScroll,
-      shadowColor: Theme.of(context).colorScheme.background.withOpacity(.25),
+      shadowColor: Theme.of(context).colorScheme.surface.withValues(alpha: .25),
       title: title != null ? PreferredSize(
         preferredSize: preferredSize,
         child: Text(

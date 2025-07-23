@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter/material.dart';
@@ -175,7 +174,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           height: 30,
                           width: 30,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Icon(
@@ -207,7 +206,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             height: 30,
                             width: 30,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: Icon(

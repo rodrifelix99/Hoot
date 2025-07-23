@@ -1,11 +1,9 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/models/feed_types.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:provider/provider.dart';
 
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/services/error_service.dart';
@@ -427,7 +425,7 @@ FeedType _feedType = FeedType.general;
                   onChanged: (value) => setState(() => _feedType = value as FeedType),
               ),
               ColorPicker(
-                  onColorChanged: (Color color) => setState(() => this._color = color),
+                  onColorChanged: (Color color) => setState(() => _color = color),
                   enableShadesSelection: false,
                   enableTonalPalette: false,
                   pickersEnabled: const <ColorPickerType, bool>{
@@ -480,8 +478,8 @@ FeedType _feedType = FeedType.general;
               ) : ElevatedButton(
                 onPressed: _isValid() ? _editFeed : null,
                 style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-                  backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-                  foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onSecondary),
+                  backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary),
+                  foregroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.onSecondary),
                 ),
                 child: Text('editFeed'.tr),
               ),
@@ -491,8 +489,8 @@ FeedType _feedType = FeedType.general;
                   ElevatedButton(
                     onPressed: _deleteFeed,
                     style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-                      backgroundColor: MaterialStateProperty.all(Colors.red),
-                      foregroundColor: MaterialStateProperty.all(Colors.white),
+                      backgroundColor: WidgetStateProperty.all(Colors.red),
+                      foregroundColor: WidgetStateProperty.all(Colors.white),
                     ),
                     child: Text('deleteFeed'.tr),
                   )

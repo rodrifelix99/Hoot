@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hoot/services/error_service.dart';
@@ -62,7 +61,7 @@ class _SignUpPageState extends State<SignUpPage> {
         ToastService.showToast(context, errorMessage, true);
       });
     } else {
-      Get.offAllNamed('/welcome', (route) => false);
+      Get.offAllNamed('/welcome', predicate: (route) => false);
     }
   }
 
@@ -154,7 +153,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               Text(
                                 'bySigningUpYouAgreeToOur'.tr,
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)
+                                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
                                 ),
                               ),
                               TextButton(
@@ -189,7 +188,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ElevatedButton(
                       onPressed: _isValid() && !_isLoading ? _signUp : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: _isValid() ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                        backgroundColor: _isValid() ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                       ),
                       child: !_isLoading ? Text(
                           'signUp'.tr,

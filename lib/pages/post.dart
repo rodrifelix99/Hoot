@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
@@ -6,7 +5,6 @@ import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
-import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 import '../app/utils/logger.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -55,7 +53,7 @@ class _PostPageState extends State<PostPage> {
           widget.post!.feed!.id, widget.post!.id, startAfter);
       setState(() => widget.post!.likers = likes);
     } catch (e) {
-      logError(e);
+      logError(e.toString());
       ToastService.showToast(context, "Error getting likes", true);
     } finally {
       setState(() => _loadingLikes = false);
@@ -100,8 +98,8 @@ class _PostPageState extends State<PostPage> {
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
-                                  .onBackground
-                                  .withOpacity(0.5),
+                                  .onSurface
+                                  .withValues(alpha: 0.5),
                             ),
                       )
                     ],

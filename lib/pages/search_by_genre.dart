@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
@@ -7,7 +6,6 @@ import 'package:hoot/components/subscribe_component.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/feed_types.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
-import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class SearchByGenrePage extends StatefulWidget {
@@ -46,7 +44,7 @@ class _SearchByGenrePageState extends State<SearchByGenrePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('searchForGenreFeeds'.trParams({'value': FeedTypeExtension.toTranslatedString(context, widget.type}))),
+        title: Text('searchForGenreFeeds'.trParams({'value': FeedTypeExtension.toTranslatedString(context, widget.type)})),
       ),
       body: SafeArea(
         child: Column(

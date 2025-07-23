@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
@@ -33,7 +32,7 @@ class _SearchPageState extends State<SearchPage> {
         _isLoading = false;
       });
     } catch (e) {
-      logError(e);
+      logError(e.toString());
       setState(() {
         _isLoading = false;
         ToastService.showToast(context, e.toString(), true);

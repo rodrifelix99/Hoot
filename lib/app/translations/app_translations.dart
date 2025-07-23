@@ -124,14 +124,7 @@ class AppTranslations extends Translations {
       'upAndComing': 'Up and coming feeds',
       'upAndComingDescription': 'Recent feeds that are gaining popularity',
       'noteToUser': 'Note to {displayName}',
-      'noteToUserDetails': 'Hoot is a place to explore one\'s creativity and identity. We encourage you to be yourself and express your creativity. Be it through feeds, hoots, comments, or anything else.
-
-There\'s no contest to be the best or the most popular. There\'s no need to be the most subscribed feed or the most liked hoot. There\'s no need to be the most followed user or the most commented hoot.
-
-Your experience is what you make of it and most of all, your people are ready to subscribe to you because your content is unique and so are you.
-
-Big hugs,
-The Hoot Team',
+      'noteToUserDetails': 'Hoot is a place to explore one\'s creativity and identity. We encourage you to be yourself and express your creativity. Be it through feeds, hoots, comments, or anything else. There\'s no contest to be the best or the most popular. There\'s no need to be the most subscribed feed or the most liked hoot. There\'s no need to be the most followed user or the most commented hoot. Your experience is what you make of it and most of all, your people are ready to subscribe to you because your content is unique and so are you. Big hugs, The Hoot Team',
       'emptyFeed': 'This feed is empty',
       'emptyFeedDescription': 'This feed is empty because it has no hoots. You can create a new hoot by clicking the floating button at the bottom right corner of the screen.',
       'emptyFeedToOtherUsers': 'Give {displayName} some love to motivate them to hoot more!',
@@ -393,14 +386,7 @@ The Hoot Team',
       'upAndComing': 'Feeds en Ascenso',
       'upAndComingDescription': 'Feeds recientes que están ganando popularidad',
       'noteToUser': 'Nota para {displayName}',
-      'noteToUserDetails': 'Hoot es un lugar para explorar tu creatividad e identidad. Te animamos a ser tú mismo y expresar tu creatividad, ya sea a través de feeds, hoots, comentarios o cualquier otra cosa.
-
-No hay concurso para ser el mejor o el más popular. No es necesario ser el feed más suscrito o el hoot con más me gusta. No es necesario ser el usuario con más seguidores o el hoot más comentado.
-
-Tu experiencia es lo que haces de ella y, sobre todo, tus seguidores están listos para suscribirse a ti porque tu contenido es único y tú también lo eres.
-
-¡Un abrazo grande,
-El Equipo de Hoot',
+      'noteToUserDetails': 'Hoot es un lugar para explorar tu creatividad e identidad. Te animamos a ser tú mismo y expresar tu creatividad, ya sea a través de feeds, hoots, comentarios o cualquier otra cosa. No hay concurso para ser el mejor o el más popular. No es necesario ser el feed más suscrito o el hoot con más me gusta. No es necesario ser el usuario con más seguidores o el hoot más comentado. Tu experiencia es lo que haces de ella y, sobre todo, tus seguidores están listos para suscribirse a ti porque tu contenido es único y tú también lo eres. ¡Un abrazo grande, El Equipo de Hoot',
       'emptyFeed': 'Este feed está vacío',
       'emptyFeedDescription': 'Este feed está vacío porque no tiene hoots. Puedes crear un nuevo hoot haciendo clic en el botón flotante en la esquina inferior derecha de la pantalla.',
       'emptyFeedToOtherUsers': '¡Da un poco de amor a {displayName} para motivarlos a hootear más!',
@@ -662,14 +648,7 @@ El Equipo de Hoot',
       'upAndComing': 'Feeds em Ascensão',
       'upAndComingDescription': 'Feeds recentes que estão a ganhar popularidade',
       'noteToUser': 'Nota para {displayName}',
-      'noteToUserDetails': 'O Hoot é um lugar para explorar a tua criatividade e identidade. Encorajamos-te a seres tu próprio e a expressar a tua criatividade, seja através de feeds, hoots, comentários ou qualquer outra coisa.
-
-Não há concurso para ser o melhor ou o mais popular. Não precisas de ter o feed mais subscrito ou o hoot com mais gostos. Não precisas de ser o utilizador com mais seguidores ou o hoot mais comentado.
-
-A tua experiência é o que dela fizeres e, acima de tudo, os teus seguidores estão prontos para se subscreverem a ti porque o teu conteúdo é único e tu também o és.
-
-Um abraço apertado,
-A Equipa do Hoot',
+      'noteToUserDetails': 'O Hoot é um lugar para explorar a tua criatividade e identidade. Encorajamos-te a seres tu próprio e a expressar a tua criatividade, seja através de feeds, hoots, comentários ou qualquer outra coisa. Não há concurso para ser o melhor ou o mais popular. Não precisas de ter o feed mais subscrito ou o hoot com mais gostos. Não precisas de ser o utilizador com mais seguidores ou o hoot mais comentado. A tua experiência é o que dela fizeres e, acima de tudo, os teus seguidores estão prontos para se subscreverem a ti porque o teu conteúdo é único e tu também o és. Um abraço apertado, A Equipa do Hoot',
       'emptyFeed': 'Este feed está vazio',
       'emptyFeedDescription': 'Este feed está vazio porque não tem hoots. Podes criar um novo hoot clicando no botão flutuante no canto inferior direito do ecrã.',
       'emptyFeedToOtherUsers': 'Dá um pouco de amor a {displayName} para os motivar a hootear mais!',
@@ -931,14 +910,7 @@ A Equipa do Hoot',
       'upAndComing': 'Novos em Ascensão',
       'upAndComingDescription': 'Feeds recentes que estão ganhando popularidade',
       'noteToUser': 'Nota para {displayName}',
-      'noteToUserDetails': 'O Hoot é um lugar para explorar sua criatividade e identidade. Encorajamos você a ser você mesmo e expressar sua criatividade, seja através de feeds, hoots, comentários ou qualquer outra coisa.
-
-Não há competição para ser o melhor ou o mais popular. Você não precisa ter o feed mais inscrito ou o hoot com mais curtidas. Você não precisa ser o usuário com mais seguidores ou o hoot mais comentado.
-
-Sua experiência é o que você faz dela e, acima de tudo, seus seguidores estão prontos para se inscrever em você porque seu conteúdo é único e você também é.
-
-Grande abraço,
-A Equipe Hoot',
+      'noteToUserDetails': 'O Hoot é um lugar para explorar sua criatividade e identidade. Encorajamos você a ser você mesmo e expressar sua criatividade, seja através de feeds, hoots, comentários ou qualquer outra coisa. Não há competição para ser o melhor ou o mais popular. Você não precisa ter o feed mais inscrito ou o hoot com mais curtidas. Você não precisa ser o usuário com mais seguidores ou o hoot mais comentado. Sua experiência é o que você faz dela e, acima de tudo, seus seguidores estão prontos para se inscrever em você porque seu conteúdo é único e você também é. Grande abraço, A Equipe Hoot',
       'emptyFeed': 'Este feed está vazio',
       'emptyFeedDescription': 'Este feed está vazio porque não tem hoots. Você pode criar um novo hoot clicando no botão flutuante no canto inferior direito da tela.',
       'emptyFeedToOtherUsers': 'Dê um pouco de amor para {displayName} para incentivá-los a hootear mais!',

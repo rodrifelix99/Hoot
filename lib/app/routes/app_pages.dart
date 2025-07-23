@@ -1,6 +1,4 @@
 import 'package:get/get.dart';
-import 'package:hoot/app/controllers/auth_controller.dart';
-import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:hoot/pages/about_us.dart';
 import 'package:hoot/pages/contacts.dart';
 import 'package:hoot/pages/create_feed.dart';

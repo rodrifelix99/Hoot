@@ -45,7 +45,7 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
         // Styling
         nativeTemplateStyle: NativeTemplateStyle(
             templateType: TemplateType.medium,
-            mainBackgroundColor: Theme.of(context).colorScheme.background,
+            mainBackgroundColor: Theme.of(context).colorScheme.surface,
             cornerRadius: 20.0,
             callToActionTextStyle: NativeTemplateTextStyle(
                 textColor: Theme.of(context).colorScheme.onPrimary,
@@ -54,11 +54,11 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
             primaryTextStyle: NativeTemplateTextStyle(
                 textColor: Theme.of(context).colorScheme.primary, size: 16.0),
             secondaryTextStyle: NativeTemplateTextStyle(
-                textColor: Theme.of(context).colorScheme.onBackground,
+                textColor: Theme.of(context).colorScheme.onSurface,
                 size: 16.0),
             tertiaryTextStyle: NativeTemplateTextStyle(
                 textColor:
-                    Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                    Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                 size: 16.0)))
       ..load();
   }
@@ -100,7 +100,7 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
                         color: Theme.of(context)
                             .colorScheme
                             .secondary
-                            .withOpacity(0.1),
+                            .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -117,8 +117,8 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
-                                  .onBackground
-                                  .withOpacity(0.5),
+                                  .onSurface
+                                  .withValues(alpha: 0.5),
                             ),
                       ),
                     ),
@@ -152,7 +152,7 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
                     color: Theme.of(context)
                         .colorScheme
                         .secondary
-                        .withOpacity(0.1),
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(

@@ -85,12 +85,9 @@ class FeedProvider extends ChangeNotifier {
               private: false,
               nsfw: false);
       mainFeedPosts.insert(0, post);
-      authProvider.user?.feeds != null
-          ? authProvider.user?.feeds
-              ?.firstWhere((f) => f.id == feedId)
+      authProvider.user?.feeds?.firstWhere((f) => f.id == feedId)
               .posts
-              ?.insert(0, post)
-          : null;
+              ?.insert(0, post);
       notifyListeners();
       return true;
     } catch (e) {
@@ -105,12 +102,9 @@ class FeedProvider extends ChangeNotifier {
       AuthProvider authProvider =
           Provider.of<AuthProvider>(context, listen: false);
       _mainFeedPosts.removeWhere((post) => post.id == postId);
-      authProvider.user?.feeds != null
-          ? authProvider.user?.feeds
-              ?.firstWhere((f) => f.id == feedId)
+      authProvider.user?.feeds?.firstWhere((f) => f.id == feedId)
               .posts
-              ?.removeWhere((post) => post.id == postId)
-          : null;
+              ?.removeWhere((post) => post.id == postId);
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('deletePost');
       await callable.call({'postId': postId, 'feedId': feedId});

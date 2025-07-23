@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/models/feed.dart';
@@ -158,13 +157,13 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       return ElevatedButton(
           onPressed: () => Navigator.of(context).pushNamed('/feed_requests', arguments: widget.feed.id),
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-              elevation: MaterialStateProperty.all<double>(0),
-              textStyle: MaterialStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
-              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
-              backgroundColor: MaterialStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
-              foregroundColor: MaterialStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
+              elevation: WidgetStateProperty.all<double>(0),
+              textStyle: WidgetStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
+              backgroundColor: WidgetStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
+              foregroundColor: WidgetStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
           ),
-          child: Text('numberOfRequests'.trParams({'value': widget.feed.requests?.length ?? 0}))
+          child: Text('numberOfRequests'.trParams({'value': (widget.feed.requests?.length ?? 0).toString()}))
       );
     } else if (_isAuthor()) {
       return const SizedBox.shrink();
@@ -172,11 +171,11 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       return IconButton(
           onPressed: _unsubscribeFromFeed,
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-              elevation: MaterialStateProperty.all<double>(0),
-              textStyle: MaterialStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
-              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
-              backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.errorContainer),
-              foregroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onErrorContainer)
+              elevation: WidgetStateProperty.all<double>(0),
+              textStyle: WidgetStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
+              backgroundColor: WidgetStateProperty.all<Color>(Theme.of(context).colorScheme.errorContainer),
+              foregroundColor: WidgetStateProperty.all<Color>(Theme.of(context).colorScheme.onErrorContainer)
           ),
           icon: const Icon(SolarIconsBold.homeAngle)
       );
@@ -184,11 +183,11 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       return IconButton(
           onPressed: _requestToJoinFeed,
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-              elevation: MaterialStateProperty.all<double>(0),
-              textStyle: MaterialStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
-              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
-              backgroundColor: MaterialStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
-              foregroundColor: MaterialStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
+              elevation: WidgetStateProperty.all<double>(0),
+              textStyle: WidgetStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
+              backgroundColor: WidgetStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
+              foregroundColor: WidgetStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
           ),
           icon: const Icon(SolarIconsOutline.lockKeyholeMinimalistic)
       );
@@ -196,11 +195,11 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       return ElevatedButton(
           onPressed: null,
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-              elevation: MaterialStateProperty.all<double>(0),
-              textStyle: MaterialStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
-              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
-              backgroundColor: MaterialStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
-              foregroundColor: MaterialStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
+              elevation: WidgetStateProperty.all<double>(0),
+              textStyle: WidgetStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
+              backgroundColor: WidgetStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
+              foregroundColor: WidgetStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
           ),
           child: Text('requested'.tr)
       );
@@ -208,11 +207,11 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       return IconButton(
           onPressed: _subscribeToFeed,
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-              elevation: MaterialStateProperty.all<double>(0),
-              textStyle: MaterialStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
-              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
-              backgroundColor: MaterialStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
-              foregroundColor: MaterialStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
+              elevation: WidgetStateProperty.all<double>(0),
+              textStyle: WidgetStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
+              backgroundColor: WidgetStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
+              foregroundColor: WidgetStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
           ),
           icon: const Icon(SolarIconsOutline.homeAddAngle)
       );

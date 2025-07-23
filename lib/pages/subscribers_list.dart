@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
@@ -7,7 +6,6 @@ import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:provider/provider.dart';
 import '../app/utils/logger.dart';
 
 class SubscribersListPage extends StatefulWidget {
@@ -40,7 +38,7 @@ class _SubscribersListPageState extends State<SubscribersListPage> {
         _subscriptions = subscriptions;
       });
     } catch (e) {
-      logError(e);
+      logError(e.toString());
     } finally {
       setState(() {
         _loading = false;
@@ -55,7 +53,7 @@ class _SubscribersListPageState extends State<SubscribersListPage> {
           title: _subscriptions.isEmpty
               ? 'subscriptions'.tr
               : 'numberOfSubscribers'
-                  .trParams({'count': _subscriptions.length}),
+                  .trParams({'count': _subscriptions.length.toString()}),
         ),
         body: _loading
             ? Center(

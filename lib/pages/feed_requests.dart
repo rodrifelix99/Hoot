@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
@@ -51,9 +50,9 @@ class _FeedRequestsPageState extends State<FeedRequestsPage> {
       ToastService.showToast(context, 'Error accepting request', true);
     } else {
       int feedIndex = _authProvider.user!.feeds!.indexWhere((element) => element.id == widget.feedId);
-      setState(() => {
-        _authProvider.user!.feeds![feedIndex].requests!.remove(uid),
-        _authProvider.user!.feeds![feedIndex].subscribers!.add(uid),
+      setState(() {
+        _authProvider.user!.feeds![feedIndex].requests!.remove(uid);
+        _authProvider.user!.feeds![feedIndex].subscribers!.add(uid);
       });
     }
   }
@@ -67,9 +66,9 @@ class _FeedRequestsPageState extends State<FeedRequestsPage> {
       ToastService.showToast(context, 'Error declining request', true);
     } else {
       int feedIndex = _authProvider.user!.feeds!.indexWhere((element) => element.id == widget.feedId);
-      setState(() => {
-        _authProvider.user!.feeds![feedIndex].requests!.remove(uid),
-        _authProvider.user!.feeds![feedIndex].subscribers!.add(uid)
+      setState(() {
+        _authProvider.user!.feeds![feedIndex].requests!.remove(uid);
+        _authProvider.user!.feeds![feedIndex].subscribers!.add(uid);
       });
     }
   }

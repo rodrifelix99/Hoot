@@ -49,7 +49,7 @@ class U {
   factory U.fromJson(Map<String, dynamic> json) {
     return U(
       uid: json['uid'],
-      name: json['displayName'] != null ? json['displayName'].trim() : null,
+      name: json['displayName']?.trim(),
       username: json['username'],
       smallProfilePictureUrl: json['smallAvatar'],
       largeProfilePictureUrl: json['bigAvatar'],

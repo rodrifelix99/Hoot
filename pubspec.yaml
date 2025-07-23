@@ -85,6 +85,7 @@ dependencies:
   solar_icons: ^0.0.5
   flutter_contacts: ^1.1.7+1
 
+  page_transition: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

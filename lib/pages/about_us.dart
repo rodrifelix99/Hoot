@@ -14,7 +14,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
       appBar: AppBar(
         title: const Text('About Us'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('About Us'),
       ),
     );

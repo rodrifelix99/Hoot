@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hoot/app/routes/app_routes.dart';
 import 'dart:async';
 
@@ -10,7 +11,6 @@ import 'package:hoot/components/radio_component.dart';
 import 'package:hoot/pages/explore.dart';
 import 'package:hoot/pages/feed.dart';
 import 'package:hoot/pages/notifications.dart';
-import '../app/utils/logger.dart';
 import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/radio.dart';
 import 'package:hoot/services/radio_controller.dart';
@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ? Container()
         : Scaffold(
             backgroundColor:
-                Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
             body: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               color: Theme.of(context)
                                   .colorScheme
                                   .onSurface
-                                  .withOpacity(0.1),
+                                  .withValues(alpha: 0.1),
                               blurRadius: 10,
                               offset: const Offset(0, 5),
                             ),
@@ -246,7 +246,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 selectedItemColor: Theme.of(context).colorScheme.primary,
                 unselectedItemColor:
-                    Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                    Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                 iconSize: 28,
                 elevation: 5,
                 items: [

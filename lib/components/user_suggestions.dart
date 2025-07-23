@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
@@ -87,13 +86,13 @@ class _UserSuggestionsState extends State<UserSuggestions> {
                                     ?.copyWith(
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .onBackground
-                                            .withOpacity(0.5))),
+                                            .onSurface
+                                            .withValues(alpha: 0.5))),
                             Divider(
                               color: Theme.of(context)
                                   .colorScheme
-                                  .onBackground
-                                  .withOpacity(0.1),
+                                  .onSurface
+                                  .withValues(alpha: 0.1),
                               thickness: 1,
                             ),
                           ],

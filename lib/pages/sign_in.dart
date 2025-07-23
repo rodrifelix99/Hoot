@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,6 @@ import 'package:hoot/components/sign_in_with_apple.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import 'package:hoot/services/error_service.dart';
-import '../app/utils/logger.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -137,7 +137,7 @@ class _SignInPageState extends State<SignInPage> {
                                       color: Theme.of(context)
                                           .colorScheme
                                           .onSurface
-                                          .withOpacity(0.5)),
+                                          .withValues(alpha: 0.5)),
                             ),
                             TextButton(
                                 onPressed: () => Get.toNamed(AppRoutes.terms),
@@ -181,7 +181,7 @@ class _SignInPageState extends State<SignInPage> {
                           : Theme.of(context)
                               .colorScheme
                               .primary
-                              .withOpacity(0.5),
+                              .withValues(alpha: 0.5),
                     ),
                     child: !_isLoading
                         ? Text('signIn'.tr,

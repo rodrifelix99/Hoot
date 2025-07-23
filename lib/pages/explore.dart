@@ -1,4 +1,4 @@
-import 'package:hoot/app/routes/app_routes.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
@@ -9,7 +9,6 @@ import 'package:hoot/components/type_box_component.dart';
 import 'package:hoot/pages/profile.dart';
 import 'package:hoot/pages/search.dart';
 import 'package:hoot/pages/search_by_genre.dart';
-import '../app/utils/logger.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:get/get.dart';
 import 'package:hoot/models/feed.dart';
@@ -65,7 +64,9 @@ class _ExplorePageState extends State<ExplorePage> {
         : _feedProvider.popularTypes;
     setState(() {
       _popularTypes = types;
-      FirebaseCrashlytics.instance.log(_popularTypes);
+      FirebaseCrashlytics.instance.log(_popularTypes
+          .map((type) => type.name)
+          .join(', '));
     });
   }
 
@@ -86,7 +87,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   openElevation: 0,
                   closedElevation: 0,
                   closedColor:
-                      Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                      Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
                   closedShape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
@@ -150,7 +151,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                                 decoration: ShapeDecoration(
                                                   color: _top10Feeds[i]
                                                       .color
-                                                      ?.withOpacity(0.1),
+                                                      ?.withValues(alpha: 0.1),
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -171,8 +172,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   style: TextStyle(
                                                     color: Theme.of(context)
                                                         .colorScheme
-                                                        .onBackground
-                                                        .withOpacity(0.5),
+                                                        .onSurface
+                                                        .withValues(alpha: 0.5),
                                                     fontSize: 14,
                                                     height: 1.57,
                                                     letterSpacing: -0.41,
@@ -359,7 +360,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                         _recentFeeds[index].description ?? '',
                                     backgroundColor: _recentFeeds[index]
                                             .color
-                                            ?.withOpacity(.15) ??
+                                            ?.withValues(alpha: .15) ??
                                         Theme.of(context).colorScheme.surface,
                                     // if feed color too bright, use surface color
                                     foregroundColor: _recentFeeds[index]
@@ -371,7 +372,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                             .onSurface
                                         : Theme.of(context)
                                             .colorScheme
-                                            .onBackground,
+                                            .onSurface,
                                     leading: ProfileAvatarComponent(
                                       image: _recentFeeds[index]
                                               .user
@@ -417,7 +418,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       const SizedBox(height: 20),
                       Text(
                         'noteToUser'.trParams({'value': 
-                            _authProvider.user!.name!.split(' '})[0]),
+                            _authProvider.user!.name!.split(' ')[0]}),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 5),

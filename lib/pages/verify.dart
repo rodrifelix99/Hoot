@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
@@ -32,14 +31,6 @@ class _VerifyPageState extends State<VerifyPage> {
     super.initState();
   }
 
-  Future _resentCode() async {
-    try {
-      await _authProvider.verifyPhoneNumber();
-    } catch (e) {
-      logError(e.toString());
-    }
-  }
-
   Future _onSubmit() async {
     setState(() {
       _loading = true;
@@ -50,18 +41,17 @@ class _VerifyPageState extends State<VerifyPage> {
       switch (code) {
         case "success":
           setState(() {
-            Get.offAllNamed('/home', (route) => false);
+            Get.offAllNamed('/home', predicate: (route) => false);
           });
           break;
         case "new-user":
           setState(() {
-            Get.offAllNamed('/welcome', (route) => false);
+            Get.offAllNamed('/welcome', predicate: (route) => false);
           });
           break;
         case "invalid-verification-code":
           setState(() {
-            ToastService.showToast(context,
-                'invalidVerificationCode'.tr, true);
+            ToastService.showToast(context, 'invalidVerificationCode'.tr, true);
           });
           break;
         default:
@@ -102,8 +92,10 @@ class _VerifyPageState extends State<VerifyPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'codeSent'.trParams({'value': 
-                          _authProvider.phoneNumber.phoneNumber.toString(})),
+                      'codeSent'.trParams({
+                        'value':
+                            _authProvider.phoneNumber.phoneNumber.toString()
+                      }),
                     ),
                     const SizedBox(height: 50),
                     AutofillGroup(
@@ -133,7 +125,7 @@ class _VerifyPageState extends State<VerifyPage> {
                         backgroundColor: Theme.of(context)
                             .colorScheme
                             .secondary
-                            .withOpacity(0.25),
+                            .withValues(alpha: 0.25),
                         foregroundColor:
                             Theme.of(context).colorScheme.secondary,
                       ),

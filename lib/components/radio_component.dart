@@ -58,14 +58,14 @@ class _RadioComponentState extends State<RadioComponent> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Theme.of(context).colorScheme.primaryContainer.withOpacity(0.95),
-            Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.95),
+            Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.95),
+            Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.95),
           ],
         ),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).colorScheme.shadow.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.2),
             offset: const Offset(0, 2),
             blurRadius: 5,
           ),

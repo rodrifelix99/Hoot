@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
@@ -36,8 +35,8 @@ class LastWelcomeScreen extends StatelessWidget {
                   Get.offAllNamed('/home', predicate: (route) => false);
                 },
                 style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-                  backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary),
-                  foregroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
+                  backgroundColor: WidgetStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary),
+                  foregroundColor: WidgetStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
                 ),
                 child: Text('getStarted'.tr),
               ),

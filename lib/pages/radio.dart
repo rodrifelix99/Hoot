@@ -1,4 +1,3 @@
-import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/services/radio_controller.dart';
@@ -57,7 +56,7 @@ class _RadioPageState extends State<RadioPage> {
                     height: 300,
                     child: Material(
                       elevation: radioController.loading.isFalse ? 10 : 0,
-                      shadowColor: Colors.black.withOpacity(0.5),
+                      shadowColor: Colors.black.withValues(alpha: 0.5),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
@@ -94,7 +93,7 @@ class _RadioPageState extends State<RadioPage> {
                         Text(
                             'Live',
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withValues(alpha: 0.5),
                               fontWeight: FontWeight.bold,
                             )
                         ),

@@ -13,7 +13,7 @@ class ReportPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Report @${user.username}'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Report'),
       )
     );

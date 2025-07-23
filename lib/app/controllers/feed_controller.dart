@@ -85,12 +85,9 @@ class FeedController extends GetxController {
                   private: false,
                   nsfw: false);
       mainFeedPosts.insert(0, post);
-      authController.user?.feeds != null
-          ? authController.user?.feeds
-              ?.firstWhere((f) => f.id == feedId)
+      authController.user?.feeds?.firstWhere((f) => f.id == feedId)
               .posts
-              ?.insert(0, post)
-          : null;
+              ?.insert(0, post);
       update();
       return true;
     } catch (e) {
@@ -104,12 +101,9 @@ class FeedController extends GetxController {
     try {
       AuthController authController = Get.find<AuthController>();
       _mainFeedPosts.removeWhere((post) => post.id == postId);
-      authController.user?.feeds != null
-          ? authController.user?.feeds
-              ?.firstWhere((f) => f.id == feedId)
+      authController.user?.feeds?.firstWhere((f) => f.id == feedId)
               .posts
-              ?.removeWhere((post) => post.id == postId)
-          : null;
+              ?.removeWhere((post) => post.id == postId);
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('deletePost');
       await callable.call({'postId': postId, 'feedId': feedId});
