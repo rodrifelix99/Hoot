@@ -6,10 +6,12 @@ import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 import 'package:hoot/models/user.dart';
+
 /// A component that allows the user to subscribe to a feed and manage requests
 class SubscribeComponent extends StatefulWidget {
   /// The feed to subscribe to
   final Feed feed;
+
   /// The user that owns the feed
   final U user;
   const SubscribeComponent({super.key, required this.feed, required this.user});
@@ -56,67 +58,73 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
     bool confirm = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('requestToJoin'.tr),
-          content: Text('requestToJoinConfirmation'.tr),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('cancel'.tr),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text('requestToJoin'.tr),
-            ),
-          ],
-        )
-    );
+              title: Text('requestToJoin'.tr),
+              content: Text('requestToJoinConfirmation'.tr),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('cancel'.tr),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text('requestToJoin'.tr),
+                ),
+              ],
+            ));
     if (confirm) {
       if (_requestCooldown) {
-        // TODO: Show a toast 'youAreGoingTooFast'.tr
+        // TODO: Use ToastService.showInfo 'youAreGoingTooFast'.tr
         return;
       }
       setState(() => widget.feed.requests!.add(_authProvider.user!.uid));
-      bool res = await _feedProvider.requestToJoinFeed(widget.user.uid, widget.feed.id);
-      !res ? setState(() {
-        widget.feed.requests!.remove(_authProvider.user!.uid);
-        // TODO: Show a toast and handle error 'errorRequestingToJoin'.tr
-      }) : null;
+      bool res = await _feedProvider.requestToJoinFeed(
+          widget.user.uid, widget.feed.id);
+      !res
+          ? setState(() {
+              widget.feed.requests!.remove(_authProvider.user!.uid);
+              // TODO: Use ToastService.showError and handle error 'errorRequestingToJoin'.tr
+            })
+          : null;
       setState(() => _requestCooldown = true);
-      Future.delayed(const Duration(seconds: 60), () => setState(() => _requestCooldown = false));
+      Future.delayed(const Duration(seconds: 60),
+          () => setState(() => _requestCooldown = false));
     }
   }
 
   Future _subscribeToFeed() async {
     if (_subscribeCooldown) {
-      // TODO: Show a toast and handle error 'youAreGoingTooFast'.tr
+      // TODO: Use ToastService.showInfo and handle error 'youAreGoingTooFast'.tr
       return;
     }
     bool confirm = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('subscribe'.tr),
-          content: Text('subscribeConfirmation'.tr),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('cancel'.tr),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text('subscribe'.tr),
-            ),
-          ],
-        )
-    );
+              title: Text('subscribe'.tr),
+              content: Text('subscribeConfirmation'.tr),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('cancel'.tr),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text('subscribe'.tr),
+                ),
+              ],
+            ));
     if (confirm) {
-      setState(() =>  widget.feed.subscribers!.add(_authProvider.user!.uid));
-      bool res = await _feedProvider.subscribeToFeed(widget.user.uid, widget.feed.id);
-      !res ? setState(() {
-        widget.feed.subscribers!.remove(_authProvider.user!.uid);
-        // TODO: Show a toast and handle error 'errorSubscribing'.tr
-      }) : null;
+      setState(() => widget.feed.subscribers!.add(_authProvider.user!.uid));
+      bool res =
+          await _feedProvider.subscribeToFeed(widget.user.uid, widget.feed.id);
+      !res
+          ? setState(() {
+              widget.feed.subscribers!.remove(_authProvider.user!.uid);
+              // TODO: Use ToastService.showError and handle error 'errorSubscribing'.tr
+            })
+          : null;
       setState(() => _subscribeCooldown = true);
-      Future.delayed(const Duration(seconds: 60), () => setState(() => _subscribeCooldown = false));
+      Future.delayed(const Duration(seconds: 60),
+          () => setState(() => _subscribeCooldown = false));
     }
   }
 
@@ -124,27 +132,29 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
     bool confirm = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('unsubscribe'.tr),
-          content: Text('unsubscribeConfirmation'.tr),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('cancel'.tr),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text('unsubscribe'.tr),
-            ),
-          ],
-        )
-    );
+              title: Text('unsubscribe'.tr),
+              content: Text('unsubscribeConfirmation'.tr),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('cancel'.tr),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text('unsubscribe'.tr),
+                ),
+              ],
+            ));
     if (confirm) {
       setState(() => widget.feed.subscribers!.remove(_authProvider.user!.uid));
-      bool res = await _feedProvider.unsubscribeFromFeed(widget.user.uid, widget.feed.id);
-      !res ? setState(() {
-        widget.feed.subscribers!.add(_authProvider.user!.uid);
-        // TODO: Show a toast and handle error 'errorUnsubscribing'.tr
-      }) : null;
+      bool res = await _feedProvider.unsubscribeFromFeed(
+          widget.user.uid, widget.feed.id);
+      !res
+          ? setState(() {
+              widget.feed.subscribers!.add(_authProvider.user!.uid);
+              // TODO: Use ToastService.showError and handle error 'errorUnsubscribing'.tr
+            })
+          : null;
     }
   }
 
@@ -152,16 +162,22 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
   Widget build(BuildContext context) {
     if (_isAuthor() && _hasRequests()) {
       return ElevatedButton(
-          onPressed: () => Navigator.of(context).pushNamed('/feed_requests', arguments: widget.feed.id),
+          onPressed: () => Navigator.of(context)
+              .pushNamed('/feed_requests', arguments: widget.feed.id),
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
               elevation: WidgetStateProperty.all<double>(0),
-              textStyle: WidgetStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
-              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
-              backgroundColor: WidgetStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
-              foregroundColor: WidgetStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
-          ),
-          child: Text('numberOfRequests'.trParams({'value': (widget.feed.requests?.length ?? 0).toString()}))
-      );
+              textStyle: WidgetStateProperty.all<TextStyle>(
+                  Theme.of(context).textTheme.bodyMedium!),
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+                  const EdgeInsets.symmetric(horizontal: 16)),
+              backgroundColor: WidgetStateProperty.all<Color>(
+                  widget.feed.color ?? Theme.of(context).primaryColor),
+              foregroundColor: WidgetStateProperty.all<Color>(
+                  widget.feed.color!.computeLuminance() > 0.5
+                      ? Colors.black
+                      : Colors.white)),
+          child: Text('numberOfRequests'
+              .trParams({'value': (widget.feed.requests?.length ?? 0).toString()})));
     } else if (_isAuthor()) {
       return const SizedBox.shrink();
     } else if (_isSubscribed()) {
@@ -169,49 +185,63 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
           onPressed: _unsubscribeFromFeed,
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
               elevation: WidgetStateProperty.all<double>(0),
-              textStyle: WidgetStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
-              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
-              backgroundColor: WidgetStateProperty.all<Color>(Theme.of(context).colorScheme.errorContainer),
-              foregroundColor: WidgetStateProperty.all<Color>(Theme.of(context).colorScheme.onErrorContainer)
-          ),
-          icon: const Icon(SolarIconsBold.homeAngle)
-      );
+              textStyle: WidgetStateProperty.all<TextStyle>(
+                  Theme.of(context).textTheme.bodyMedium!),
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+                  const EdgeInsets.symmetric(horizontal: 16)),
+              backgroundColor: WidgetStateProperty.all<Color>(
+                  Theme.of(context).colorScheme.errorContainer),
+              foregroundColor: WidgetStateProperty.all<Color>(
+                  Theme.of(context).colorScheme.onErrorContainer)),
+          icon: const Icon(SolarIconsBold.homeAngle));
     } else if (_isPrivate() && !_isRequested()) {
       return IconButton(
           onPressed: _requestToJoinFeed,
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
               elevation: WidgetStateProperty.all<double>(0),
-              textStyle: WidgetStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
-              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
-              backgroundColor: WidgetStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
-              foregroundColor: WidgetStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
-          ),
-          icon: const Icon(SolarIconsOutline.lockKeyholeMinimalistic)
-      );
+              textStyle: WidgetStateProperty.all<TextStyle>(
+                  Theme.of(context).textTheme.bodyMedium!),
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+                  const EdgeInsets.symmetric(horizontal: 16)),
+              backgroundColor: WidgetStateProperty.all<Color>(
+                  widget.feed.color ?? Theme.of(context).primaryColor),
+              foregroundColor: WidgetStateProperty.all<Color>(
+                  widget.feed.color!.computeLuminance() > 0.5
+                      ? Colors.black
+                      : Colors.white)),
+          icon: const Icon(SolarIconsOutline.lockKeyholeMinimalistic));
     } else if (_isPrivate() && _isRequested()) {
       return ElevatedButton(
           onPressed: null,
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
               elevation: WidgetStateProperty.all<double>(0),
-              textStyle: WidgetStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
-              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
-              backgroundColor: WidgetStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
-              foregroundColor: WidgetStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
-          ),
-          child: Text('requested'.tr)
-      );
+              textStyle: WidgetStateProperty.all<TextStyle>(
+                  Theme.of(context).textTheme.bodyMedium!),
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+                  const EdgeInsets.symmetric(horizontal: 16)),
+              backgroundColor: WidgetStateProperty.all<Color>(
+                  widget.feed.color ?? Theme.of(context).primaryColor),
+              foregroundColor: WidgetStateProperty.all<Color>(
+                  widget.feed.color!.computeLuminance() > 0.5
+                      ? Colors.black
+                      : Colors.white)),
+          child: Text('requested'.tr));
     } else {
       return IconButton(
           onPressed: _subscribeToFeed,
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
               elevation: WidgetStateProperty.all<double>(0),
-              textStyle: WidgetStateProperty.all<TextStyle>(Theme.of(context).textTheme.bodyMedium!),
-              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 16)),
-              backgroundColor: WidgetStateProperty.all<Color>(widget.feed.color ?? Theme.of(context).primaryColor),
-              foregroundColor: WidgetStateProperty.all<Color>(widget.feed.color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
-          ),
-          icon: const Icon(SolarIconsOutline.homeAddAngle)
-      );
+              textStyle: WidgetStateProperty.all<TextStyle>(
+                  Theme.of(context).textTheme.bodyMedium!),
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+                  const EdgeInsets.symmetric(horizontal: 16)),
+              backgroundColor: WidgetStateProperty.all<Color>(
+                  widget.feed.color ?? Theme.of(context).primaryColor),
+              foregroundColor: WidgetStateProperty.all<Color>(
+                  widget.feed.color!.computeLuminance() > 0.5
+                      ? Colors.black
+                      : Colors.white)),
+          icon: const Icon(SolarIconsOutline.homeAddAngle));
     }
   }
 }

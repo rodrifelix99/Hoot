@@ -2,6 +2,7 @@ import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:hoot/services/toast_service.dart';
 
 class SignInWithGoogleButton extends StatefulWidget {
   const SignInWithGoogleButton({super.key});
@@ -16,12 +17,7 @@ class _SignInWithGoogleButtonState extends State<SignInWithGoogleButton> {
     bool success = await auth.signInWithGoogle();
     if (!success) {
       setState(() {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('signInFailed'.tr),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        ToastService.showError('signInFailed'.tr);
       });
     } else if (auth.user?.uid == 'HOOT-IS-AWESOME') {
       Navigator.of(context)

@@ -21,13 +21,21 @@ class PostComponent extends StatefulWidget {
   final VoidFutureCallBack? onRefeed;
   final bool isSkeleton;
   final Function? onDeleted;
-  const PostComponent({super.key, required this.post, this.showToolbar = true, this.showTitleBar = true, this.onRefeed, this.isSkeleton = false, this.onDeleted});
+  const PostComponent(
+      {super.key,
+      required this.post,
+      this.showToolbar = true,
+      this.showTitleBar = true,
+      this.onRefeed,
+      this.isSkeleton = false,
+      this.onDeleted});
 
   @override
   State<PostComponent> createState() => _PostComponentState();
 }
 
-class _PostComponentState extends State<PostComponent> with TickerProviderStateMixin {
+class _PostComponentState extends State<PostComponent>
+    with TickerProviderStateMixin {
   late AuthController _authProvider;
   late FeedController _feedProvider;
   bool _deleted = false;
@@ -40,7 +48,8 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
   }
 
   void _handleProfileTap() {
-    Navigator.of(context).pushNamed('/profile', arguments: [widget.post.user, widget.post.feed?.id]);
+    Navigator.of(context).pushNamed('/profile',
+        arguments: [widget.post.user, widget.post.feed?.id]);
   }
 
   String? _getUrl() {
@@ -77,9 +86,10 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
             onPressed: () async {
               Navigator.of(context).pop(true);
               setState(() => _deleted = true);
-              bool res = await _feedProvider.deletePost(context, widget.post.id, widget.post.feed!.id);
+              bool res = await _feedProvider.deletePost(
+                  context, widget.post.id, widget.post.feed!.id);
               if (!res) {
-                // TODO: Handle error and show a toast
+                // TODO: Use ToastService.showError and handle error
               } else if (widget.onDeleted != null) {
                 widget.onDeleted!();
               }
@@ -95,44 +105,50 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return widget.post.user?.uid == _authProvider.user?.uid ? ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-          leading: const Icon(Icons.delete),
-          title: Text('delete'.tr),
-          onTap: () {
-            Navigator.of(context).pop();
-            _deletePost();
-          },
-        ) : ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-            leading: const Icon(Icons.report),
-            title: Text('reportUsername'.trParams({'value': widget.post.user?.username ?? ''})),
-            onTap: () {
-              Navigator.of(context).pop();
-              // TODO: Show a toast
-            }
-        );
+        return widget.post.user?.uid == _authProvider.user?.uid
+            ? ListTile(
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                leading: const Icon(Icons.delete),
+                title: Text('delete'.tr),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _deletePost();
+                },
+              )
+            : ListTile(
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                leading: const Icon(Icons.report),
+                title: Text('reportUsername'
+                    .trParams({'value': widget.post.user?.username ?? ''})),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // TODO: Use ToastService to show a toast
+                });
       },
     );
   }
 
   Future refeed() async {
-    if(widget.post.reFeeded && widget.onRefeed != null) {
+    if (widget.post.reFeeded && widget.onRefeed != null) {
       await widget.onRefeed!();
       return;
-    } else if (_authProvider.user?.feeds == null || _authProvider.user!.feeds!.isEmpty) {
-      // TODO: Show a toast
+    } else if (_authProvider.user?.feeds == null ||
+        _authProvider.user!.feeds!.isEmpty) {
+      // TODO: Use ToastService.showInfo
       List<Feed> feeds = await _feedProvider.getFeeds(_authProvider.user!.uid);
       setState(() {
         _authProvider.user!.feeds = feeds;
       });
     } else if (widget.post.reFeeded) {
-      // TODO: Show a toast 'deleteOnRefeededPost'.tr
+      // TODO: Use ToastService.showInfo 'deleteOnRefeededPost'.tr
       return;
     }
 
-    if (_authProvider.user?.feeds == null || _authProvider.user!.feeds!.isEmpty) {
-      // TODO: Show a toast 'youNeedToCreateAFeedFirst'.tr
+    if (_authProvider.user?.feeds == null ||
+        _authProvider.user!.feeds!.isEmpty) {
+      // TODO: Use ToastService.showInfo 'youNeedToCreateAFeedFirst'.tr
       return;
     }
 
@@ -153,10 +169,13 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
               ),
               value: _authProvider.user?.feeds?.first.id,
               onChanged: (value) => Navigator.of(context).pop(value),
-              items: _authProvider.user?.feeds?.map((feed) => DropdownMenuItem<String>(
-                value: feed.id,
-                child: Text(feed.title),
-              )).toList() ?? [],
+              items: _authProvider.user?.feeds
+                      ?.map((feed) => DropdownMenuItem<String>(
+                            value: feed.id,
+                            child: Text(feed.title),
+                          ))
+                      .toList() ??
+                  [],
             ),
           ],
         ),
@@ -166,25 +185,29 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
             child: Text('cancel'.tr),
           ),
           TextButton(
-            onPressed: () => Navigator.of(context).pop( _authProvider.user?.feeds?.first.id),
+            onPressed: () =>
+                Navigator.of(context).pop(_authProvider.user?.feeds?.first.id),
             child: const Text('ReFeed'),
           ),
         ],
       ),
     );
-    if(feedId == null) return;
+    if (feedId == null) return;
 
     setState(() {
       widget.post.reFeeded = true;
       widget.post.reFeeds = (widget.post.reFeeds ?? 0) + 1;
     });
-    bool res = await _feedProvider.refeedPost(widget.post.user!.uid, widget.post.feed!.id, widget.post.id, feedId, '', []);
+    bool res = await _feedProvider.refeedPost(widget.post.user!.uid,
+        widget.post.feed!.id, widget.post.id, feedId, '', []);
     if (!res) {
       setState(() {
         widget.post.reFeeded = false;
-        widget.post.reFeeds = (widget.post.reFeeds ?? 0) - 1 < 0 ? 0 : (widget.post.reFeeds ?? 0) - 1;
+        widget.post.reFeeds = (widget.post.reFeeds ?? 0) - 1 < 0
+            ? 0
+            : (widget.post.reFeeds ?? 0) - 1;
       });
-      // TODO: Show a toast and handle error
+      // TODO: Use ToastService.showError and handle error
     }
   }
 
@@ -192,15 +215,17 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
     if (widget.post.liked) {
       setState(() {
         widget.post.liked = false;
-        widget.post.likes = (widget.post.likes ?? 0) - 1 < 0 ? 0 : (widget.post.likes ?? 0) - 1;
+        widget.post.likes =
+            (widget.post.likes ?? 0) - 1 < 0 ? 0 : (widget.post.likes ?? 0) - 1;
       });
-      bool res = await _feedProvider.likePost(widget.post.id, widget.post.feed!.id, widget.post.user!.uid);
+      bool res = await _feedProvider.likePost(
+          widget.post.id, widget.post.feed!.id, widget.post.user!.uid);
       if (!res) {
         setState(() {
           widget.post.liked = true;
           widget.post.likes = (widget.post.likes ?? 0) + 1;
         });
-        // TODO: Show a toast and handle error
+        // TODO: Use ToastService.showError and handle error
       }
     } else {
       // Like the post
@@ -208,132 +233,149 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         widget.post.liked = true;
         widget.post.likes = (widget.post.likes ?? 0) + 1;
       });
-      bool res = await _feedProvider.likePost(widget.post.id, widget.post.feed!.id, widget.post.user!.uid);
+      bool res = await _feedProvider.likePost(
+          widget.post.id, widget.post.feed!.id, widget.post.user!.uid);
       if (!res) {
         setState(() {
           widget.post.liked = false;
-          widget.post.likes = (widget.post.likes ?? 0) - 1 < 0 ? 0 : (widget.post.likes ?? 0) - 1;
+          widget.post.likes = (widget.post.likes ?? 0) - 1 < 0
+              ? 0
+              : (widget.post.likes ?? 0) - 1;
         });
-        // TODO: Show a toast and handle error
+        // TODO: Use ToastService.showError and handle error
       }
     }
   }
 
-  bool _canRefeed() => widget.post.user!.uid != _authProvider.user!.uid && widget.post.reFeededFrom == null;
+  bool _canRefeed() =>
+      widget.post.user!.uid != _authProvider.user!.uid &&
+      widget.post.reFeededFrom == null;
 
   @override
   Widget build(BuildContext context) {
-    return _deleted ? const SizedBox() : widget.isSkeleton ? Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const ShimmerBox(
-                width: 40,
-                height: 40,
-                shape: BoxShape.circle,
-              ),
-              const SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ShimmerBox(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    height: 20,
-                  ),
-                  const SizedBox(height: 5),
-                  ShimmerBox(
-                    width: MediaQuery.of(context).size.width * 0.10,
-                    height: 20,
-                  ),
-                ],
-              )
-            ],
-          ),
-          const SizedBox(height: 10),
-          const ShimmerParagraph(lines: 2, spacing: 10),
-        ],
-      ),
-    ) :
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          widget.showTitleBar ? TitleBar(
-            post: widget.post,
-            onProfileTap: _handleProfileTap,
-          ) : const SizedBox(),
-          if (widget.post.text?.isNotEmpty ?? false) ...[
-            Text(
-              _getText(),
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                fontSize: 20,
-              ),
-            ),
-          ],
-          if (_getUrl() != null) ...[
-            const SizedBox(height: 10),
-            UrlPreviewComponent(
-              url: _getUrl()!,
-            ),
-          ],
-          if (widget.post.media?.isNotEmpty ?? false) ...[
-            const SizedBox(height: 10),
-            MediaSection(
-              post: widget.post,
-            ),
-          ],
-          if (widget.post.reFeededFrom != null) ...[
-            const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () => Navigator.of(context).pushNamed(
-                '/post',
-                arguments: widget.post.reFeededFrom,
-              ),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(20),
-                ),
+    return _deleted
+        ? const SizedBox()
+        : widget.isSkeleton
+            ? Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 20),
-                    PostComponent(
-                        post: widget.post.reFeededFrom!,
-                        showToolbar: false,
+                    Row(
+                      children: [
+                        const ShimmerBox(
+                          width: 40,
+                          height: 40,
+                          shape: BoxShape.circle,
+                        ),
+                        const SizedBox(width: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ShimmerBox(
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              height: 20,
+                            ),
+                            const SizedBox(height: 5),
+                            ShimmerBox(
+                              width: MediaQuery.of(context).size.width * 0.10,
+                              height: 20,
+                            ),
+                          ],
+                        )
+                      ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
+                    const ShimmerParagraph(lines: 2, spacing: 10),
                   ],
                 ),
-              ),
-            ),
-          ],
-          if (widget.showToolbar) ...[
-            const SizedBox(height: 10),
-            ToolBar(
-              post: widget.post,
-              onMenuTap: _handleMenuTap,
-              onLikeTap: toggleLike,
-              onRefeedTap: refeed,
-              canRefeed: _canRefeed(),
-            ),
-          ]
-        ],
-      ),
-    );
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    widget.showTitleBar
+                        ? TitleBar(
+                            post: widget.post,
+                            onProfileTap: _handleProfileTap,
+                          )
+                        : const SizedBox(),
+                    if (widget.post.text?.isNotEmpty ?? false) ...[
+                      Text(
+                        _getText(),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              fontSize: 20,
+                            ),
+                      ),
+                    ],
+                    if (_getUrl() != null) ...[
+                      const SizedBox(height: 10),
+                      UrlPreviewComponent(
+                        url: _getUrl()!,
+                      ),
+                    ],
+                    if (widget.post.media?.isNotEmpty ?? false) ...[
+                      const SizedBox(height: 10),
+                      MediaSection(
+                        post: widget.post,
+                      ),
+                    ],
+                    if (widget.post.reFeededFrom != null) ...[
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).pushNamed(
+                          '/post',
+                          arguments: widget.post.reFeededFrom,
+                        ),
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            border: Border.all(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondary
+                                  .withValues(alpha: 0.1),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .secondary
+                                    .withValues(alpha: 0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              PostComponent(
+                                post: widget.post.reFeededFrom!,
+                                showToolbar: false,
+                              ),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                    if (widget.showToolbar) ...[
+                      const SizedBox(height: 10),
+                      ToolBar(
+                        post: widget.post,
+                        onMenuTap: _handleMenuTap,
+                        onLikeTap: toggleLike,
+                        onRefeedTap: refeed,
+                        canRefeed: _canRefeed(),
+                      ),
+                    ]
+                  ],
+                ),
+              );
   }
 }
 
@@ -352,16 +394,19 @@ class TitleBar extends StatelessWidget {
             onTap: () => onProfileTap(),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: post.feed?.color?.withValues(alpha: 0.25) ?? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.25),
-                    blurRadius: 10,
-                    spreadRadius: 0,
-                    offset: const Offset(-4, 2),
-                  ),
-                ]
-              ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: post.feed?.color?.withValues(alpha: 0.25) ??
+                          Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withValues(alpha: 0.25),
+                      blurRadius: 10,
+                      spreadRadius: 0,
+                      offset: const Offset(-4, 2),
+                    ),
+                  ]),
               child: ProfileAvatarComponent(
                 image: post.user!.smallProfilePictureUrl ?? '',
                 size: 50,
@@ -377,17 +422,20 @@ class TitleBar extends StatelessWidget {
                 child: Text(
                   post.user!.name ?? post.user!.username!,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
               Text(
                 post.feed?.title ?? '',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontSize: 12,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                ),
+                      fontSize: 12,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.5),
+                    ),
               ),
             ],
           ),
@@ -395,9 +443,12 @@ class TitleBar extends StatelessWidget {
           Text(
             timeago.format(post.createdAt ?? DateTime.now()),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-            ),
+                  fontSize: 12,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.5),
+                ),
           ),
         ],
       ),
@@ -411,35 +462,42 @@ class MediaSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return (post.media?.isNotEmpty ?? false) ? SizedBox(
-      height: 300,
-      width: MediaQuery.of(context).size.width - 40,
-      child: Swiper(
-        containerHeight: 300,
-        containerWidth: MediaQuery.of(context).size.width - 40,
-        itemCount: post.media!.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: ImageComponent(
-                url: post.media![index],
-                radius: 10,
-              ),
+    return (post.media?.isNotEmpty ?? false)
+        ? SizedBox(
+            height: 300,
+            width: MediaQuery.of(context).size.width - 40,
+            child: Swiper(
+              containerHeight: 300,
+              containerWidth: MediaQuery.of(context).size.width - 40,
+              itemCount: post.media!.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: ImageComponent(
+                      url: post.media![index],
+                      radius: 10,
+                    ),
+                  ),
+                );
+              },
+              pagination: post.media!.length <= 1
+                  ? null
+                  : SwiperPagination(
+                      builder: DotSwiperPaginationBuilder(
+                        space: 5,
+                        activeSize: 10,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.5),
+                        activeColor: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
             ),
-          );
-        },
-        pagination: post.media!.length <= 1 ? null : SwiperPagination(
-          builder: DotSwiperPaginationBuilder(
-            space: 5,
-            activeSize: 10,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-            activeColor: Theme.of(context).colorScheme.onSurface,
-          ),
-        ),
-      ),
-    ) : const SizedBox.shrink();
+          )
+        : const SizedBox.shrink();
   }
 }
 
@@ -449,7 +507,13 @@ class ToolBar extends StatelessWidget {
   final Function onLikeTap;
   final Function onRefeedTap;
   final bool canRefeed;
-  const ToolBar({super.key, required this.post, required this.onMenuTap, required this.onLikeTap, required this.onRefeedTap, required this.canRefeed});
+  const ToolBar(
+      {super.key,
+      required this.post,
+      required this.onMenuTap,
+      required this.onLikeTap,
+      required this.onRefeedTap,
+      required this.canRefeed});
 
   @override
   Widget build(BuildContext context) {
@@ -465,39 +529,62 @@ class ToolBar extends StatelessWidget {
                   onPressed: () => onLikeTap(),
                   icon: Icon(
                     post.liked ? SolarIconsBold.heart : SolarIconsOutline.heart,
-                    color: post.liked ? color : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                    color: post.liked
+                        ? color
+                        : Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.5),
                   ),
                 ),
                 Text(
                   '${post.likes ?? 0}',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                  ),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.5),
+                      ),
                 ),
               ],
             ),
-            canRefeed ? Row(
-              children: [
-                IconButton(
-                  onPressed: canRefeed ? () => onRefeedTap() : null,
-                  icon: Icon(
-                    post.reFeeded ? SolarIconsBold.refreshSquare : SolarIconsOutline.refreshSquare,
-                    color: post.reFeeded ? color : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                  ),
-                ),
-                Text(
-                  '${post.reFeeds ?? 0}',
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                  ),
-                ),
-              ],
-            ) : const SizedBox.shrink(),
+            canRefeed
+                ? Row(
+                    children: [
+                      IconButton(
+                        onPressed: canRefeed ? () => onRefeedTap() : null,
+                        icon: Icon(
+                          post.reFeeded
+                              ? SolarIconsBold.refreshSquare
+                              : SolarIconsOutline.refreshSquare,
+                          color: post.reFeeded
+                              ? color
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.5),
+                        ),
+                      ),
+                      Text(
+                        '${post.reFeeds ?? 0}',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.5),
+                            ),
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
             IconButton(
               onPressed: () => onMenuTap(),
               icon: Icon(
                 SolarIconsOutline.menuDots,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.5),
               ),
             ),
           ],
@@ -511,5 +598,3 @@ class ToolBar extends StatelessWidget {
     );
   }
 }
-
-
