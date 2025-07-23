@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:skeletons/skeletons.dart';
+import '../app/utils/logger.dart';
 
 import 'package:hoot/models/user.dart';
 
@@ -33,7 +34,7 @@ class _UserSuggestionsState extends State<UserSuggestions> {
         _authProvider.userSuggestions = users;
       }
     } catch (e) {
-      print(e);
+      logError(e);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -44,50 +45,62 @@ class _UserSuggestionsState extends State<UserSuggestions> {
     return _authProvider.userSuggestions.isEmpty && !_isLoading
         ? const SizedBox()
         : SizedBox(
-      height: 120,
-      width: double.infinity,
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        scrollDirection: Axis.horizontal,
-        itemCount: _isLoading ? 7 : _authProvider.userSuggestions.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _isLoading ? SizedBox(
-              width: 60,
-              height: 60,
-              child: SkeletonAvatar(
-                style: SkeletonAvatarStyle(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-            ) : Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/profile', arguments: _authProvider.userSuggestions[index]);
-                  },
-                  child: ProfileAvatarComponent(
-                      image: _authProvider.userSuggestions[index].smallProfilePictureUrl ?? '',
-                      size: 60
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                    "@${_authProvider.userSuggestions[index].username!}",
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)
-                    )
-                ),
-                Divider(
-                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
-                  thickness: 1,
-                ),
-              ],
+            height: 120,
+            width: double.infinity,
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              scrollDirection: Axis.horizontal,
+              itemCount: _isLoading ? 7 : _authProvider.userSuggestions.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _isLoading
+                      ? SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: SkeletonAvatar(
+                            style: SkeletonAvatarStyle(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        )
+                      : Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pushNamed('/profile',
+                                    arguments:
+                                        _authProvider.userSuggestions[index]);
+                              },
+                              child: ProfileAvatarComponent(
+                                  image: _authProvider.userSuggestions[index]
+                                          .smallProfilePictureUrl ??
+                                      '',
+                                  size: 60),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                                "@${_authProvider.userSuggestions[index].username!}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground
+                                            .withOpacity(0.5))),
+                            Divider(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onBackground
+                                  .withOpacity(0.1),
+                              thickness: 1,
+                            ),
+                          ],
+                        ),
+                );
+              },
             ),
           );
-        },
-      ),
-    );
   }
 }

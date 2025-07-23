@@ -8,6 +8,7 @@ import 'package:hoot/models/user.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import '../app/utils/logger.dart';
 
 class SubscribersListPage extends StatefulWidget {
   final String feedId;
@@ -39,7 +40,7 @@ class _SubscribersListPageState extends State<SubscribersListPage> {
         _subscriptions = subscriptions;
       });
     } catch (e) {
-      print(e);
+      logError(e);
     } finally {
       setState(() {
         _loading = false;
@@ -51,33 +52,41 @@ class _SubscribersListPageState extends State<SubscribersListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBarComponent(
-          title: _subscriptions.isEmpty ? AppLocalizations.of(context)!.subscriptions
-          : AppLocalizations.of(context)!.numberOfSubscribers(_subscriptions.length),
+          title: _subscriptions.isEmpty
+              ? AppLocalizations.of(context)!.subscriptions
+              : AppLocalizations.of(context)!
+                  .numberOfSubscribers(_subscriptions.length),
         ),
-        body: _loading ? Center(
-          child: LoadingAnimationWidget.inkDrop(
-            color: Theme.of(context).colorScheme.onSurface,
-            size: 50,
-          ),
-        ) : _subscriptions.isEmpty ? const Center(
-          child: NothingToShowComponent(
-            icon: Icon(Icons.article_rounded),
-            text: "No subscriptions found",
-          ),
-        ) : ListView.builder(
-          itemCount: _subscriptions.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              onTap: () => Get.toNamed(context, '/profile', arguments: _subscriptions[index]),
-              leading: ProfileAvatarComponent(
-                image: _subscriptions[index].smallProfilePictureUrl ?? '',
-                size: 40,
-              ),
-              title: Text(_subscriptions[index].name ?? ''),
-              subtitle: Text("@${_subscriptions[index].username ?? ''}"),
-            );
-          },
-        )
-    );
+        body: _loading
+            ? Center(
+                child: LoadingAnimationWidget.inkDrop(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  size: 50,
+                ),
+              )
+            : _subscriptions.isEmpty
+                ? const Center(
+                    child: NothingToShowComponent(
+                      icon: Icon(Icons.article_rounded),
+                      text: "No subscriptions found",
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: _subscriptions.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        onTap: () => Get.toNamed(context, '/profile',
+                            arguments: _subscriptions[index]),
+                        leading: ProfileAvatarComponent(
+                          image: _subscriptions[index].smallProfilePictureUrl ??
+                              '',
+                          size: 40,
+                        ),
+                        title: Text(_subscriptions[index].name ?? ''),
+                        subtitle:
+                            Text("@${_subscriptions[index].username ?? ''}"),
+                      );
+                    },
+                  ));
   }
 }

@@ -10,12 +10,14 @@ import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/logger.dart';
 
 import 'package:hoot/models/feed.dart';
 
 class FeedController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFunctions _functions = FirebaseFunctions.instanceFor(region: 'europe-west1');
+  final FirebaseFunctions _functions =
+      FirebaseFunctions.instanceFor(region: 'europe-west1');
 
   List<Post> _mainFeedPosts = [];
   List<Post> get mainFeedPosts => _mainFeedPosts;
@@ -43,7 +45,8 @@ class FeedController extends GetxController {
 
   Future _setPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('mainFeedPosts', jsonEncode(_mainFeedPosts.map((post) => post.toCache()).toList()));
+    await prefs.setString('mainFeedPosts',
+        jsonEncode(_mainFeedPosts.map((post) => post.toCache()).toList()));
   }
 
   Future _getPrefs() async {
@@ -52,51 +55,68 @@ class FeedController extends GetxController {
       String? mainFeedPosts = prefs.getString('mainFeedPosts');
       if (mainFeedPosts != null) {
         List<dynamic> mainFeedPostsJson = jsonDecode(mainFeedPosts);
-        _mainFeedPosts = mainFeedPostsJson.map((post) => Post.fromCache(post)).toList();
+        _mainFeedPosts =
+            mainFeedPostsJson.map((post) => Post.fromCache(post)).toList();
       }
       update();
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       await getMainFeed(DateTime.now(), true);
     }
   }
 
-  Future<bool> createPost(context, {required String feedId, String? text, List<String>? media}) async {
+  Future<bool> createPost(context,
+      {required String feedId, String? text, List<String>? media}) async {
     try {
       AuthController authController = Get.find<AuthController>();
-      Post post = Post(
-        id: '',
-        text: text,
-        media: media,
-        feedId: feedId
-      );
+      Post post = Post(id: '', text: text, media: media, feedId: feedId);
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('createPost');
       await callable.call(post.toJson());
       post.user = authController.user;
-      post.feed = authController.user?.feeds?.firstWhere((f) => f.id == feedId) ?? Feed(id: feedId, title: 'Posted just now', description: '', icon: '', color: Colors.white, private: false, nsfw: false);
+      post.feed =
+          authController.user?.feeds?.firstWhere((f) => f.id == feedId) ??
+              Feed(
+                  id: feedId,
+                  title: 'Posted just now',
+                  description: '',
+                  icon: '',
+                  color: Colors.white,
+                  private: false,
+                  nsfw: false);
       mainFeedPosts.insert(0, post);
-      authController.user?.feeds != null ? authController.user?.feeds?.firstWhere((f) => f.id == feedId).posts?.insert(0, post) : null;
+      authController.user?.feeds != null
+          ? authController.user?.feeds
+              ?.firstWhere((f) => f.id == feedId)
+              .posts
+              ?.insert(0, post)
+          : null;
       update();
       return true;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
 
-  Future<bool> deletePost(BuildContext context, String postId, String feedId) async {
+  Future<bool> deletePost(
+      BuildContext context, String postId, String feedId) async {
     try {
       AuthController authController = Get.find<AuthController>();
       _mainFeedPosts.removeWhere((post) => post.id == postId);
-      authController.user?.feeds != null ? authController.user?.feeds?.firstWhere((f) => f.id == feedId).posts?.removeWhere((post) => post.id == postId) : null;
+      authController.user?.feeds != null
+          ? authController.user?.feeds
+              ?.firstWhere((f) => f.id == feedId)
+              .posts
+              ?.removeWhere((post) => post.id == postId)
+          : null;
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('deletePost');
       await callable.call({'postId': postId, 'feedId': feedId});
       update();
       return true;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
@@ -108,7 +128,7 @@ class FeedController extends GetxController {
       required Color color,
       required FeedType type,
       required bool private,
-      required bool nsfw }) async {
+      required bool nsfw}) async {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('createFeed');
@@ -121,11 +141,19 @@ class FeedController extends GetxController {
         'private': private,
         'nsfw': nsfw
       });
-      Feed feed = Feed(id: res.data, title: title, description: description, icon: icon, color: color, private: private, nsfw: nsfw, type: type);
+      Feed feed = Feed(
+          id: res.data,
+          title: title,
+          description: description,
+          icon: icon,
+          color: color,
+          private: private,
+          nsfw: nsfw,
+          type: type);
       Get.find<AuthController>().addFeedToUser(feed);
       return res.data;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return '';
     }
   }
@@ -149,7 +177,7 @@ class FeedController extends GetxController {
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -164,7 +192,7 @@ class FeedController extends GetxController {
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -185,7 +213,7 @@ class FeedController extends GetxController {
       return feeds;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return [];
     }
@@ -195,7 +223,8 @@ class FeedController extends GetxController {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('getMainFeedPosts');
-      final res = await callable.call({'startAfter': startAfter.millisecondsSinceEpoch});
+      final res = await callable
+          .call({'startAfter': startAfter.millisecondsSinceEpoch});
       List<Post> posts = [];
       if (res.data != null) {
         dynamic responseData = jsonDecode(res.data);
@@ -208,7 +237,7 @@ class FeedController extends GetxController {
       _setPrefs();
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
     }
   }
@@ -217,7 +246,11 @@ class FeedController extends GetxController {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('getFeedPosts');
-      final res = await callable.call({'startAfter': startAfter.millisecondsSinceEpoch, 'uid': user.uid, 'feedId': feed.id});
+      final res = await callable.call({
+        'startAfter': startAfter.millisecondsSinceEpoch,
+        'uid': user.uid,
+        'feedId': feed.id
+      });
       List<Post> posts = [];
       if (res.data != null) {
         dynamic responseData = jsonDecode(res.data);
@@ -231,7 +264,7 @@ class FeedController extends GetxController {
       return posts;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return [];
     }
@@ -245,7 +278,7 @@ class FeedController extends GetxController {
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -259,7 +292,7 @@ class FeedController extends GetxController {
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -273,7 +306,7 @@ class FeedController extends GetxController {
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -294,7 +327,7 @@ class FeedController extends GetxController {
       return users;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return [];
     }
@@ -308,7 +341,7 @@ class FeedController extends GetxController {
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -322,7 +355,7 @@ class FeedController extends GetxController {
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -342,7 +375,7 @@ class FeedController extends GetxController {
       }
       return feeds;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -361,7 +394,7 @@ class FeedController extends GetxController {
       }
       return users;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -369,7 +402,8 @@ class FeedController extends GetxController {
   Future<List<Feed>> top10MostSubscribedFeeds() async {
     try {
       await _auth.currentUser!.getIdToken(true);
-      HttpsCallable callable = _functions.httpsCallable('top10MostSubscribedFeeds');
+      HttpsCallable callable =
+          _functions.httpsCallable('top10MostSubscribedFeeds');
       final res = await callable.call();
       List<Feed> feeds = [];
       if (res.data != null) {
@@ -382,7 +416,7 @@ class FeedController extends GetxController {
       update();
       return feeds;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -392,7 +426,7 @@ class FeedController extends GetxController {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('top5MostPopularTypes');
       final res = await callable.call();
-      print(res.data);
+      logError(res.data);
       List<FeedType> types = [];
       if (res.data != null) {
         dynamic responseData = jsonDecode(res.data);
@@ -404,7 +438,7 @@ class FeedController extends GetxController {
       update();
       return types;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -425,7 +459,7 @@ class FeedController extends GetxController {
       update();
       return feeds;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -434,7 +468,8 @@ class FeedController extends GetxController {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('searchFeedsByType');
-      final res = await callable.call({'type': type.toString().split('.').last, 'startAtId': startAtId});
+      final res = await callable.call(
+          {'type': type.toString().split('.').last, 'startAtId': startAtId});
       List<Feed> feeds = [];
       if (res.data != null) {
         dynamic responseData = jsonDecode(res.data);
@@ -444,7 +479,7 @@ class FeedController extends GetxController {
       }
       return feeds;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -453,22 +488,31 @@ class FeedController extends GetxController {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('likePost');
-      final res = await callable.call({'postId': postId, 'userId': userId, 'feedId': feedId});
+      final res = await callable
+          .call({'postId': postId, 'userId': userId, 'feedId': feedId});
       return res.data;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
 
-  Future<bool> refeedPost(String userId, String feedId, String postId, String chosenFeedId, String text, List<String> images) async {
+  Future<bool> refeedPost(String userId, String feedId, String postId,
+      String chosenFeedId, String text, List<String> images) async {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('refeedPost');
-      final res = await callable.call({'userId': userId, 'feedId': feedId, 'postId': postId, 'chosenFeedId': chosenFeedId, 'text': text, 'images': images});
+      final res = await callable.call({
+        'userId': userId,
+        'feedId': feedId,
+        'postId': postId,
+        'chosenFeedId': chosenFeedId,
+        'text': text,
+        'images': images
+      });
       return res.data;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
@@ -477,21 +521,28 @@ class FeedController extends GetxController {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('getPost');
-      final res = await callable.call({'userId': userId, 'feedId': feedId, 'postId': postId});
+      final res = await callable
+          .call({'userId': userId, 'feedId': feedId, 'postId': postId});
       dynamic responseData = jsonDecode(res.data);
       Post p = Post.fromJson(responseData);
       return p;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       rethrow;
     }
   }
 
-  Future<List<U>> getLikes(String userId, String feedId, String postId, DateTime startAfter) async {
+  Future<List<U>> getLikes(
+      String userId, String feedId, String postId, DateTime startAfter) async {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('getLikes');
-      final res = await callable.call({'userId': userId, 'feedId': feedId, 'postId': postId, 'startAfter': startAfter.millisecondsSinceEpoch});
+      final res = await callable.call({
+        'userId': userId,
+        'feedId': feedId,
+        'postId': postId,
+        'startAfter': startAfter.millisecondsSinceEpoch
+      });
       List<U> users = [];
       if (res.data != null) {
         dynamic responseData = jsonDecode(res.data);
@@ -501,7 +552,7 @@ class FeedController extends GetxController {
       }
       return users;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }

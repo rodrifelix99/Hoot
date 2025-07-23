@@ -7,6 +7,7 @@ import 'package:hoot/components/sign_in_with_apple.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import 'package:hoot/services/error_service.dart';
+import '../app/utils/logger.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -22,7 +23,10 @@ class _SignInPageState extends State<SignInPage> {
 
   bool _isValid() {
     // _phoneNumberController.text.isNotEmpty && _phoneNumberController.text.length >= 6 && _phoneNumberController.text.length <= 15 && is only numbers
-    return _phoneNumberController.text.isNotEmpty && _phoneNumberController.text.length >= 6 && _phoneNumberController.text.length <= 15 && RegExp(r'^[0-9]+$').hasMatch(_phoneNumberController.text);
+    return _phoneNumberController.text.isNotEmpty &&
+        _phoneNumberController.text.length >= 6 &&
+        _phoneNumberController.text.length <= 15 &&
+        RegExp(r'^[0-9]+$').hasMatch(_phoneNumberController.text);
   }
 
   @override
@@ -35,7 +39,8 @@ class _SignInPageState extends State<SignInPage> {
 
   Future _signInWithEmailAndPassword() async {
     setState(() => _isLoading = true);
-    String code = ''; //await Get.find<AuthController>().signInWithEmailAndPassword(_emailController.text, _passwordController.text);
+    String code =
+        ''; //await Get.find<AuthController>().signInWithEmailAndPassword(_emailController.text, _passwordController.text);
 
     if (code != "success" && code != "new-user") {
       setState(() => _isLoading = false);
@@ -89,29 +94,33 @@ class _SignInPageState extends State<SignInPage> {
                           leadingPadding: 16,
                         ),
                         onInputChanged: (PhoneNumber number) {
-                          print(_phoneNumberController.text);
+                          FirebaseCrashlytics.instance
+                              .log(_phoneNumberController.text);
                         },
-                        selectorTextStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                        selectorTextStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface),
                         ignoreBlank: false,
                         autoValidateMode: AutovalidateMode.onUserInteraction,
                         validator: (String? value) {
                           if (value!.isEmpty || value.length < 6) {
-                            return AppLocalizations.of(context)!.phoneNumberInvalid;
+                            return AppLocalizations.of(context)!
+                                .phoneNumberInvalid;
                           }
                           return null;
                         },
                         autofillHints: const [AutofillHints.telephoneNumber],
                         initialValue: PhoneNumber(isoCode: _countryCode),
-                        errorMessage: AppLocalizations.of(context)!.phoneNumberInvalid,
+                        errorMessage:
+                            AppLocalizations.of(context)!.phoneNumberInvalid,
                         textFieldController: _phoneNumberController,
-
                         inputDecoration: InputDecoration(
                           labelText: AppLocalizations.of(context)!.phoneNumber,
                         ),
                         formatInput: false,
-                        keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            signed: true, decimal: true),
                         onSaved: (PhoneNumber number) {
-                          print('On Saved: $number');
+                          FirebaseCrashlytics.instance.log('On Saved: $number');
                         },
                       ),
                       const SizedBox(height: 50),
@@ -122,20 +131,29 @@ class _SignInPageState extends State<SignInPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              AppLocalizations.of(context)!.bySigningUpYouAgreeToOur,
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)
-                              ),
+                              AppLocalizations.of(context)!
+                                  .bySigningUpYouAgreeToOur,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withOpacity(0.5)),
                             ),
                             TextButton(
                                 onPressed: () => Get.toNamed(AppRoutes.terms),
                                 child: Text(
                                   AppLocalizations.of(context)!.termsOfService,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context).colorScheme.primary
-                                  ),
-                                )
-                            )
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                ))
                           ],
                         ),
                       )
@@ -157,14 +175,23 @@ class _SignInPageState extends State<SignInPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ElevatedButton(
-                    onPressed: _isValid() && !_isLoading ? _signInWithEmailAndPassword : null,
+                    onPressed: _isValid() && !_isLoading
+                        ? _signInWithEmailAndPassword
+                        : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _isValid() ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                      backgroundColor: _isValid()
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.5),
                     ),
-                    child: !_isLoading ? Text(
-                        AppLocalizations.of(context)!.signIn,
-                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)
-                    ) : CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary),
+                    child: !_isLoading
+                        ? Text(AppLocalizations.of(context)!.signIn,
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary))
+                        : CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.onPrimary),
                   ),
                   const SizedBox(height: 8),
                   const SignInWithAppleButton()

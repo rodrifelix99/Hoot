@@ -5,6 +5,7 @@ import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/error_service.dart';
+import '../app/utils/logger.dart';
 
 class VerifyPage extends StatefulWidget {
   const VerifyPage({super.key});
@@ -36,7 +37,7 @@ class _VerifyPageState extends State<VerifyPage> {
     try {
       await _authProvider.verifyPhoneNumber();
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
     }
   }
 
@@ -45,7 +46,8 @@ class _VerifyPageState extends State<VerifyPage> {
       _loading = true;
     });
     try {
-      String code = await _authProvider.signInWithPhoneCredential(_codeController.text);
+      String code =
+          await _authProvider.signInWithPhoneCredential(_codeController.text);
       switch (code) {
         case "success":
           setState(() {
@@ -59,7 +61,8 @@ class _VerifyPageState extends State<VerifyPage> {
           break;
         case "invalid-verification-code":
           setState(() {
-            ToastService.showToast(context, AppLocalizations.of(context)!.invalidVerificationCode, true);
+            ToastService.showToast(context,
+                AppLocalizations.of(context)!.invalidVerificationCode, true);
           });
           break;
         default:
@@ -67,7 +70,7 @@ class _VerifyPageState extends State<VerifyPage> {
           break;
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
     } finally {
       setState(() {
         _loading = false;
@@ -79,60 +82,68 @@ class _VerifyPageState extends State<VerifyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarComponent(),
-      body: _authProvider.verificationId == null || _loading ? const Center(
-        child: CircularProgressIndicator(),
-      ) : SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-              Text(
-                AppLocalizations.of(context)!.verificationCode,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
+      body: _authProvider.verificationId == null || _loading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    Text(
+                      AppLocalizations.of(context)!.verificationCode,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      AppLocalizations.of(context)!.codeSent(
+                          _authProvider.phoneNumber.phoneNumber.toString()),
+                    ),
+                    const SizedBox(height: 50),
+                    AutofillGroup(
+                      child: TextField(
+                          controller: _codeController,
+                          decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)!.enterCode,
+                          ),
+                          autofocus: true,
+                          autofillHints: const [AutofillHints.oneTimeCode],
+                          keyboardType: TextInputType.number,
+                          maxLength: 6,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                          onSubmitted: (_) => _onSubmit(),
+                          onChanged: (_) => {
+                                if (_codeController.text.length == 6)
+                                  {
+                                    _onSubmit(),
+                                  }
+                              }),
+                    ),
+                    const Spacer(),
+                    ElevatedButton(
+                      onPressed: () => Get.back(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withOpacity(0.25),
+                        foregroundColor:
+                            Theme.of(context).colorScheme.secondary,
+                      ),
+                      child: Text(AppLocalizations.of(context)!.changeNumber),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                AppLocalizations.of(context)!.codeSent(_authProvider.phoneNumber.phoneNumber.toString()),
-              ),
-              const SizedBox(height: 50),
-              AutofillGroup(
-                child: TextField(
-                    controller: _codeController,
-                    decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!.enterCode,
-                    ),
-                    autofocus: true,
-                    autofillHints: const [AutofillHints.oneTimeCode],
-                    keyboardType: TextInputType.number,
-                    maxLength: 6,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                    onSubmitted: (_) => _onSubmit(),
-                    onChanged: (_) => {
-                      if (_codeController.text.length == 6) {
-                        _onSubmit(),
-                      }
-                    }),
-              ),
-              const Spacer(),
-              ElevatedButton(
-                  onPressed: () => Get.back(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.25),
-                    foregroundColor: Theme.of(context).colorScheme.secondary,
-                  ),
-                  child: Text(AppLocalizations.of(context)!.changeNumber),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

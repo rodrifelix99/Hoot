@@ -10,12 +10,14 @@ import 'package:hoot/models/user.dart';
 import 'package:hoot/services/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../app/utils/logger.dart';
 
 import 'package:hoot/models/feed.dart';
 
 class FeedProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFunctions _functions = FirebaseFunctions.instanceFor(region: 'europe-west1');
+  final FirebaseFunctions _functions =
+      FirebaseFunctions.instanceFor(region: 'europe-west1');
 
   List<Post> _mainFeedPosts = [];
   List<Post> get mainFeedPosts => _mainFeedPosts;
@@ -43,7 +45,8 @@ class FeedProvider extends ChangeNotifier {
 
   Future _setPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('mainFeedPosts', jsonEncode(_mainFeedPosts.map((post) => post.toCache()).toList()));
+    await prefs.setString('mainFeedPosts',
+        jsonEncode(_mainFeedPosts.map((post) => post.toCache()).toList()));
   }
 
   Future _getPrefs() async {
@@ -52,51 +55,69 @@ class FeedProvider extends ChangeNotifier {
       String? mainFeedPosts = prefs.getString('mainFeedPosts');
       if (mainFeedPosts != null) {
         List<dynamic> mainFeedPostsJson = jsonDecode(mainFeedPosts);
-        _mainFeedPosts = mainFeedPostsJson.map((post) => Post.fromCache(post)).toList();
+        _mainFeedPosts =
+            mainFeedPostsJson.map((post) => Post.fromCache(post)).toList();
       }
       notifyListeners();
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       await getMainFeed(DateTime.now(), true);
     }
   }
 
-  Future<bool> createPost(context, {required String feedId, String? text, List<String>? media}) async {
+  Future<bool> createPost(context,
+      {required String feedId, String? text, List<String>? media}) async {
     try {
-      AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
-      Post post = Post(
-        id: '',
-        text: text,
-        media: media,
-        feedId: feedId
-      );
+      AuthProvider authProvider =
+          Provider.of<AuthProvider>(context, listen: false);
+      Post post = Post(id: '', text: text, media: media, feedId: feedId);
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('createPost');
       await callable.call(post.toJson());
       post.user = authProvider.user;
-      post.feed = authProvider.user?.feeds?.firstWhere((f) => f.id == feedId) ?? Feed(id: feedId, title: 'Posted just now', description: '', icon: '', color: Colors.white, private: false, nsfw: false);
+      post.feed = authProvider.user?.feeds?.firstWhere((f) => f.id == feedId) ??
+          Feed(
+              id: feedId,
+              title: 'Posted just now',
+              description: '',
+              icon: '',
+              color: Colors.white,
+              private: false,
+              nsfw: false);
       mainFeedPosts.insert(0, post);
-      authProvider.user?.feeds != null ? authProvider.user?.feeds?.firstWhere((f) => f.id == feedId).posts?.insert(0, post) : null;
+      authProvider.user?.feeds != null
+          ? authProvider.user?.feeds
+              ?.firstWhere((f) => f.id == feedId)
+              .posts
+              ?.insert(0, post)
+          : null;
       notifyListeners();
       return true;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
 
-  Future<bool> deletePost(BuildContext context, String postId, String feedId) async {
+  Future<bool> deletePost(
+      BuildContext context, String postId, String feedId) async {
     try {
-      AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+      AuthProvider authProvider =
+          Provider.of<AuthProvider>(context, listen: false);
       _mainFeedPosts.removeWhere((post) => post.id == postId);
-      authProvider.user?.feeds != null ? authProvider.user?.feeds?.firstWhere((f) => f.id == feedId).posts?.removeWhere((post) => post.id == postId) : null;
+      authProvider.user?.feeds != null
+          ? authProvider.user?.feeds
+              ?.firstWhere((f) => f.id == feedId)
+              .posts
+              ?.removeWhere((post) => post.id == postId)
+          : null;
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('deletePost');
       await callable.call({'postId': postId, 'feedId': feedId});
       notifyListeners();
       return true;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
@@ -108,7 +129,7 @@ class FeedProvider extends ChangeNotifier {
       required Color color,
       required FeedType type,
       required bool private,
-      required bool nsfw }) async {
+      required bool nsfw}) async {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('createFeed');
@@ -121,11 +142,19 @@ class FeedProvider extends ChangeNotifier {
         'private': private,
         'nsfw': nsfw
       });
-      Feed feed = Feed(id: res.data, title: title, description: description, icon: icon, color: color, private: private, nsfw: nsfw, type: type);
+      Feed feed = Feed(
+          id: res.data,
+          title: title,
+          description: description,
+          icon: icon,
+          color: color,
+          private: private,
+          nsfw: nsfw,
+          type: type);
       Provider.of<AuthProvider>(context, listen: false).addFeedToUser(feed);
       return res.data;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return '';
     }
   }
@@ -144,12 +173,13 @@ class FeedProvider extends ChangeNotifier {
         'private': feed.private,
         'nsfw': feed.nsfw
       });
-      Provider.of<AuthProvider>(context, listen: false).removeFeedFromUser(feed.id);
+      Provider.of<AuthProvider>(context, listen: false)
+          .removeFeedFromUser(feed.id);
       Provider.of<AuthProvider>(context, listen: false).addFeedToUser(feed);
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -160,11 +190,12 @@ class FeedProvider extends ChangeNotifier {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('deleteFeed');
       final res = await callable.call({'feedId': feedId});
-      Provider.of<AuthProvider>(context, listen: false).removeFeedFromUser(feedId);
+      Provider.of<AuthProvider>(context, listen: false)
+          .removeFeedFromUser(feedId);
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -185,7 +216,7 @@ class FeedProvider extends ChangeNotifier {
       return feeds;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return [];
     }
@@ -195,7 +226,8 @@ class FeedProvider extends ChangeNotifier {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('getMainFeedPosts');
-      final res = await callable.call({'startAfter': startAfter.millisecondsSinceEpoch});
+      final res = await callable
+          .call({'startAfter': startAfter.millisecondsSinceEpoch});
       List<Post> posts = [];
       if (res.data != null) {
         dynamic responseData = jsonDecode(res.data);
@@ -208,7 +240,7 @@ class FeedProvider extends ChangeNotifier {
       _setPrefs();
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
     }
   }
@@ -217,7 +249,11 @@ class FeedProvider extends ChangeNotifier {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('getFeedPosts');
-      final res = await callable.call({'startAfter': startAfter.millisecondsSinceEpoch, 'uid': user.uid, 'feedId': feed.id});
+      final res = await callable.call({
+        'startAfter': startAfter.millisecondsSinceEpoch,
+        'uid': user.uid,
+        'feedId': feed.id
+      });
       List<Post> posts = [];
       if (res.data != null) {
         dynamic responseData = jsonDecode(res.data);
@@ -231,7 +267,7 @@ class FeedProvider extends ChangeNotifier {
       return posts;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return [];
     }
@@ -245,7 +281,7 @@ class FeedProvider extends ChangeNotifier {
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -259,7 +295,7 @@ class FeedProvider extends ChangeNotifier {
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -273,7 +309,7 @@ class FeedProvider extends ChangeNotifier {
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -294,7 +330,7 @@ class FeedProvider extends ChangeNotifier {
       return users;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return [];
     }
@@ -308,7 +344,7 @@ class FeedProvider extends ChangeNotifier {
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -322,7 +358,7 @@ class FeedProvider extends ChangeNotifier {
       return res.data;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        logError(e.toString());
       }
       return false;
     }
@@ -342,7 +378,7 @@ class FeedProvider extends ChangeNotifier {
       }
       return feeds;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -361,7 +397,7 @@ class FeedProvider extends ChangeNotifier {
       }
       return users;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -369,7 +405,8 @@ class FeedProvider extends ChangeNotifier {
   Future<List<Feed>> top10MostSubscribedFeeds() async {
     try {
       await _auth.currentUser!.getIdToken(true);
-      HttpsCallable callable = _functions.httpsCallable('top10MostSubscribedFeeds');
+      HttpsCallable callable =
+          _functions.httpsCallable('top10MostSubscribedFeeds');
       final res = await callable.call();
       List<Feed> feeds = [];
       if (res.data != null) {
@@ -382,7 +419,7 @@ class FeedProvider extends ChangeNotifier {
       notifyListeners();
       return feeds;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -392,7 +429,7 @@ class FeedProvider extends ChangeNotifier {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('top5MostPopularTypes');
       final res = await callable.call();
-      print(res.data);
+      logInfo(res.data.toString());
       List<FeedType> types = [];
       if (res.data != null) {
         dynamic responseData = jsonDecode(res.data);
@@ -404,7 +441,7 @@ class FeedProvider extends ChangeNotifier {
       notifyListeners();
       return types;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -425,7 +462,7 @@ class FeedProvider extends ChangeNotifier {
       notifyListeners();
       return feeds;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -434,7 +471,8 @@ class FeedProvider extends ChangeNotifier {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('searchFeedsByType');
-      final res = await callable.call({'type': type.toString().split('.').last, 'startAtId': startAtId});
+      final res = await callable.call(
+          {'type': type.toString().split('.').last, 'startAtId': startAtId});
       List<Feed> feeds = [];
       if (res.data != null) {
         dynamic responseData = jsonDecode(res.data);
@@ -444,7 +482,7 @@ class FeedProvider extends ChangeNotifier {
       }
       return feeds;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -453,22 +491,31 @@ class FeedProvider extends ChangeNotifier {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('likePost');
-      final res = await callable.call({'postId': postId, 'userId': userId, 'feedId': feedId});
+      final res = await callable
+          .call({'postId': postId, 'userId': userId, 'feedId': feedId});
       return res.data;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
 
-  Future<bool> refeedPost(String userId, String feedId, String postId, String chosenFeedId, String text, List<String> images) async {
+  Future<bool> refeedPost(String userId, String feedId, String postId,
+      String chosenFeedId, String text, List<String> images) async {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('refeedPost');
-      final res = await callable.call({'userId': userId, 'feedId': feedId, 'postId': postId, 'chosenFeedId': chosenFeedId, 'text': text, 'images': images});
+      final res = await callable.call({
+        'userId': userId,
+        'feedId': feedId,
+        'postId': postId,
+        'chosenFeedId': chosenFeedId,
+        'text': text,
+        'images': images
+      });
       return res.data;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
@@ -477,21 +524,28 @@ class FeedProvider extends ChangeNotifier {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('getPost');
-      final res = await callable.call({'userId': userId, 'feedId': feedId, 'postId': postId});
+      final res = await callable
+          .call({'userId': userId, 'feedId': feedId, 'postId': postId});
       dynamic responseData = jsonDecode(res.data);
       Post p = Post.fromJson(responseData);
       return p;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       rethrow;
     }
   }
 
-  Future<List<U>> getLikes(String userId, String feedId, String postId, DateTime startAfter) async {
+  Future<List<U>> getLikes(
+      String userId, String feedId, String postId, DateTime startAfter) async {
     try {
       await _auth.currentUser!.getIdToken(true);
       HttpsCallable callable = _functions.httpsCallable('getLikes');
-      final res = await callable.call({'userId': userId, 'feedId': feedId, 'postId': postId, 'startAfter': startAfter.millisecondsSinceEpoch});
+      final res = await callable.call({
+        'userId': userId,
+        'feedId': feedId,
+        'postId': postId,
+        'startAfter': startAfter.millisecondsSinceEpoch
+      });
       List<U> users = [];
       if (res.data != null) {
         dynamic responseData = jsonDecode(res.data);
@@ -501,7 +555,7 @@ class FeedProvider extends ChangeNotifier {
       }
       return users;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }

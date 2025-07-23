@@ -11,6 +11,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../app/utils/logger.dart';
 
 import 'package:hoot/models/feed.dart';
 
@@ -41,12 +42,13 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
       setState(() {
         _loading = true;
       });
-      List<Feed> subscriptions = await _feedProvider.getSubscriptions(widget.userId);
+      List<Feed> subscriptions =
+          await _feedProvider.getSubscriptions(widget.userId);
       setState(() {
         _subscriptions = subscriptions;
       });
     } catch (e) {
-      print(e);
+      logError(e);
     } finally {
       setState(() {
         _loading = false;
@@ -56,7 +58,8 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
 
   Future _unsubscribe(String userId, String feedId) async {
     try {
-      Feed cachedFeed = _subscriptions.firstWhere((element) => element.id == feedId);
+      Feed cachedFeed =
+          _subscriptions.firstWhere((element) => element.id == feedId);
       setState(() => _subscriptions.remove(cachedFeed));
       bool res = await _feedProvider.unsubscribeFromFeed(userId, feedId);
       if (!res) {
@@ -66,7 +69,7 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
         });
       }
     } catch (e) {
-      print(e);
+      logError(e);
     }
   }
 
@@ -76,37 +79,50 @@ class _SubscriptionsListPageState extends State<SubscriptionsListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarComponent(
-        title: AppLocalizations.of(context)!.subscriptions,
-      ),
-      body: _loading ? Center(
-        child: LoadingAnimationWidget.inkDrop(
-            color: Theme.of(context).colorScheme.onSurface,
-            size: 50,
+        appBar: AppBarComponent(
+          title: AppLocalizations.of(context)!.subscriptions,
         ),
-      ) : _subscriptions.isEmpty ? const Center(
-        child: NothingToShowComponent(
-          icon: Icon(Icons.article_rounded),
-          text: "No subscriptions found",
-        ),
-      ) : ListView.builder(
-        itemCount: _subscriptions.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            onTap: () => Get.toNamed(context, '/profile', arguments: _subscriptions[index].user),
-            leading: ProfileAvatarComponent(
-              image: _subscriptions[index].user?.smallProfilePictureUrl ?? '',
-              size: 40,
-            ),
-            title: Text(_subscriptions[index].title),
-            subtitle: Text(_subscriptions[index].description ?? ''),
-            trailing: !_isAuthor(_subscriptions[index].user!.uid) && _isUser() ? IconButton(
-              icon: const LineIcon(LineIcons.minusCircle, color: Colors.red, size: 30),
-              onPressed: () => _unsubscribe(_subscriptions[index].user!.uid, _subscriptions[index].id),
-            ) : null,
-          );
-        },
-      )
-    );
+        body: _loading
+            ? Center(
+                child: LoadingAnimationWidget.inkDrop(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  size: 50,
+                ),
+              )
+            : _subscriptions.isEmpty
+                ? const Center(
+                    child: NothingToShowComponent(
+                      icon: Icon(Icons.article_rounded),
+                      text: "No subscriptions found",
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: _subscriptions.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        onTap: () => Get.toNamed(context, '/profile',
+                            arguments: _subscriptions[index].user),
+                        leading: ProfileAvatarComponent(
+                          image: _subscriptions[index]
+                                  .user
+                                  ?.smallProfilePictureUrl ??
+                              '',
+                          size: 40,
+                        ),
+                        title: Text(_subscriptions[index].title),
+                        subtitle: Text(_subscriptions[index].description ?? ''),
+                        trailing: !_isAuthor(_subscriptions[index].user!.uid) &&
+                                _isUser()
+                            ? IconButton(
+                                icon: const LineIcon(LineIcons.minusCircle,
+                                    color: Colors.red, size: 30),
+                                onPressed: () => _unsubscribe(
+                                    _subscriptions[index].user!.uid,
+                                    _subscriptions[index].id),
+                              )
+                            : null,
+                      );
+                    },
+                  ));
   }
 }

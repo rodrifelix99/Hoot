@@ -9,10 +9,12 @@ import 'package:hoot/models/user.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:hoot/models/notification.dart' as n;
+import '../app/utils/logger.dart';
 
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFunctions _functions = FirebaseFunctions.instanceFor(region: 'europe-west1');
+  final FirebaseFunctions _functions =
+      FirebaseFunctions.instanceFor(region: 'europe-west1');
 
   U? _user;
   U? get user => _user;
@@ -45,14 +47,15 @@ class AuthProvider extends ChangeNotifier {
     try {
       if (firebaseUser == null) {
         _user = null;
-      } else if (_user == null || (_user!.uid != firebaseUser.uid && _user!.uid != 'HOOT-IS-AWESOME')) {
+      } else if (_user == null ||
+          (_user!.uid != firebaseUser.uid && _user!.uid != 'HOOT-IS-AWESOME')) {
         _user = await getUserInfo() ?? U(uid: firebaseUser.uid);
       } else {
         _user = U(uid: firebaseUser.uid);
       }
       notifyListeners();
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
     }
   }
 
@@ -69,7 +72,7 @@ class AuthProvider extends ChangeNotifier {
       final json = response.data;
       return U.fromJson(json);
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return null;
     }
   }
@@ -77,23 +80,23 @@ class AuthProvider extends ChangeNotifier {
   Future verifyPhoneNumber() async {
     try {
       _auth.verifyPhoneNumber(
-          phoneNumber: _phoneNumber.phoneNumber!,
-          timeout: const Duration(seconds: 60),
-          verificationCompleted: (PhoneAuthCredential credential) async { },
-          verificationFailed: (FirebaseAuthException e) {
-            print(e.toString());
-          },
-          codeSent: (String verificationId, int? resendToken) {
-            _verificationId = verificationId;
-            notifyListeners();
-          },
-          codeAutoRetrievalTimeout: (String verificationId) {
-            _verificationId = verificationId;
-            notifyListeners();
-          },
+        phoneNumber: _phoneNumber.phoneNumber!,
+        timeout: const Duration(seconds: 60),
+        verificationCompleted: (PhoneAuthCredential credential) async {},
+        verificationFailed: (FirebaseAuthException e) {
+          logError(e.toString());
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          _verificationId = verificationId;
+          notifyListeners();
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          _verificationId = verificationId;
+          notifyListeners();
+        },
       );
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       FirebaseAuthException exception = e as FirebaseAuthException;
       throw exception.code;
     }
@@ -105,7 +108,8 @@ class AuthProvider extends ChangeNotifier {
         verificationId: _verificationId!,
         smsCode: smsCode,
       );
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
       if (userCredential.user == null) {
         return "unknown-error";
       } else if (userCredential.additionalUserInfo!.isNewUser) {
@@ -118,7 +122,7 @@ class AuthProvider extends ChangeNotifier {
         return "success";
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       FirebaseAuthException error = e as FirebaseAuthException;
       return error.code;
     }
@@ -142,7 +146,7 @@ class AuthProvider extends ChangeNotifier {
       final userCredential = await _auth.signInWithCredential(oauthCredential);
 
       if (userCredential.user == null) {
-        print('User is null');
+        logError('User is null');
         return "unknown-error";
       } else if (userCredential.additionalUserInfo!.isNewUser) {
         notifyListeners();
@@ -152,9 +156,8 @@ class AuthProvider extends ChangeNotifier {
         notifyListeners();
         return "success";
       }
-
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       _user = null;
       FirebaseAuthException exception = e as FirebaseAuthException;
       return exception.code;
@@ -163,17 +166,20 @@ class AuthProvider extends ChangeNotifier {
 
   Future<bool> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleSignInAccount = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication googleAuth = await googleSignInAccount!.authentication;
+      final GoogleSignInAccount? googleSignInAccount =
+          await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleSignInAccount!.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
       if (userCredential.user == null) {
-        print('User is null');
+        logError('User is null');
         return false;
       } else if (userCredential.additionalUserInfo!.isNewUser) {
         _user = U(uid: 'HOOT-IS-AWESOME');
@@ -184,16 +190,17 @@ class AuthProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       }
-
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
 
-  Future<String> signInWithEmailAndPassword(String email, String password) async {
+  Future<String> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
-      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      final UserCredential userCredential =
+          await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -201,7 +208,8 @@ class AuthProvider extends ChangeNotifier {
         _user = await getUserInfo();
         notifyListeners();
         return "success";
-      } else if (userCredential.additionalUserInfo!.isNewUser || userCredential.user!.displayName == null) {
+      } else if (userCredential.additionalUserInfo!.isNewUser ||
+          userCredential.user!.displayName == null) {
         _user = U(uid: 'HOOT-IS-AWESOME');
         notifyListeners();
         return "new-user";
@@ -209,16 +217,18 @@ class AuthProvider extends ChangeNotifier {
         return "unknown-error";
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       FirebaseAuthException exception = e as FirebaseAuthException;
       return exception.code;
     }
   }
 
-  Future<String> signUpWithEmailAndPassword(String email, String password) async {
+  Future<String> signUpWithEmailAndPassword(
+      String email, String password) async {
     try {
       _user = U(uid: 'HOOT-IS-AWESOME');
-      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      final UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -253,7 +263,7 @@ class AuthProvider extends ChangeNotifier {
         return false;
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
@@ -264,7 +274,7 @@ class AuthProvider extends ChangeNotifier {
       final response = await callable.call(username);
       return response.data;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
@@ -275,7 +285,7 @@ class AuthProvider extends ChangeNotifier {
       final response = await callable.call(token);
       return response.data;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
@@ -286,7 +296,7 @@ class AuthProvider extends ChangeNotifier {
       _user = null;
       notifyListeners();
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
     }
   }
 
@@ -297,31 +307,36 @@ class AuthProvider extends ChangeNotifier {
       final data = response.data;
 
       if (data != null && data is List) {
-        final List<U> users = data.map<U>((user) => U.fromJson(Map<String, dynamic>.from(user))).toList();
+        final List<U> users = data
+            .map<U>((user) => U.fromJson(Map<String, dynamic>.from(user)))
+            .toList();
         return users;
       } else {
         return [];
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
 
   Future<List<U>> getFollows(String userId, bool following) async {
     try {
-      HttpsCallable callable = _functions.httpsCallable(following ? 'getFollowing' : 'getFollowers');
+      HttpsCallable callable =
+          _functions.httpsCallable(following ? 'getFollowing' : 'getFollowers');
       final response = await callable.call(userId);
       final data = response.data;
 
       if (data != null && data is List) {
-        final List<U> users = data.map<U>((user) => U.fromJson(Map<String, dynamic>.from(user))).toList();
+        final List<U> users = data
+            .map<U>((user) => U.fromJson(Map<String, dynamic>.from(user)))
+            .toList();
         return users;
       } else {
         return [];
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -333,20 +348,23 @@ class AuthProvider extends ChangeNotifier {
       final data = response.data;
 
       if (data != null && data is List) {
-        final List<U> users = data.map<U>((user) => U.fromJson(Map<String, dynamic>.from(user))).toList();
+        final List<U> users = data
+            .map<U>((user) => U.fromJson(Map<String, dynamic>.from(user)))
+            .toList();
         return users;
       } else {
         return [];
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
 
   Future countUnreadNotifications() async {
     try {
-      HttpsCallable callable = _functions.httpsCallable('countUnreadNotifications');
+      HttpsCallable callable =
+          _functions.httpsCallable('countUnreadNotifications');
       final response = await callable.call();
       final data = response.data;
 
@@ -357,7 +375,7 @@ class AuthProvider extends ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
     }
   }
 
@@ -365,30 +383,37 @@ class AuthProvider extends ChangeNotifier {
     try {
       HttpsCallable callable = _functions.httpsCallable('getNotifications');
       final response = await callable.call({
-        'startAfter': startAt.toIso8601String(), // Convert DateTime to a string representation
+        'startAfter': startAt
+            .toIso8601String(), // Convert DateTime to a string representation
       });
       final decodedData = jsonDecode(response.data);
-      final List<dynamic> data = decodedData is List<dynamic> ? decodedData : [];
-      return data.map<n.Notification>((notification) => n.Notification.fromJson(notification as Map<String, dynamic>)).toList();
+      final List<dynamic> data =
+          decodedData is List<dynamic> ? decodedData : [];
+      return data
+          .map<n.Notification>((notification) =>
+              n.Notification.fromJson(notification as Map<String, dynamic>))
+          .toList();
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
 
   Future markNotificationsAsRead() async {
     try {
-      HttpsCallable callable = _functions.httpsCallable('markNotificationsRead');
+      HttpsCallable callable =
+          _functions.httpsCallable('markNotificationsRead');
       await callable.call();
       _notificationsCount = 0;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
     }
   }
 
   Future<int> getSubscriptionsCount(String userId) async {
     try {
-      HttpsCallable callable = _functions.httpsCallable('getSubscriptionsCount');
+      HttpsCallable callable =
+          _functions.httpsCallable('getSubscriptionsCount');
       final response = await callable.call({
         'uid': userId,
       });
@@ -400,7 +425,7 @@ class AuthProvider extends ChangeNotifier {
         return 0;
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return 0;
     }
   }
@@ -411,7 +436,7 @@ class AuthProvider extends ChangeNotifier {
       final response = await callable.call();
       return response.data;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
@@ -438,15 +463,16 @@ class AuthProvider extends ChangeNotifier {
       final data = response.data;
 
       if (data != null && data is List) {
-        final List<U> users = data.map<U>((user) => U.fromJson(Map<String, dynamic>.from(user))).toList();
+        final List<U> users = data
+            .map<U>((user) => U.fromJson(Map<String, dynamic>.from(user)))
+            .toList();
         return users;
       } else {
         return [];
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
-
 }

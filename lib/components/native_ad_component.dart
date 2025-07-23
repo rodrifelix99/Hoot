@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:skeletons/skeletons.dart';
+import '../app/utils/logger.dart';
 
 class NativeAdComponent extends StatefulWidget {
   const NativeAdComponent({super.key});
@@ -26,15 +27,16 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
         adUnitId: _adUnitId,
         listener: NativeAdListener(
           onAdLoaded: (ad) {
-            debugPrint('$NativeAd loaded.');
+            FirebaseCrashlytics.instance.log('$NativeAd loaded.');
             setState(() {
               _nativeAdIsLoaded = true;
             });
           },
           onAdFailedToLoad: (ad, error) {
             // Dispose the ad here to free resources.
-            debugPrint('$NativeAd failed to load: $error');
-            print(error);
+            FirebaseCrashlytics.instance
+                .log('$NativeAd failed to load: $error');
+            logError(error);
             ad.dispose();
           },
         ),
@@ -49,13 +51,13 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 size: 16.0),
             primaryTextStyle: NativeTemplateTextStyle(
-                textColor: Theme.of(context).colorScheme.primary,
-                size: 16.0),
+                textColor: Theme.of(context).colorScheme.primary, size: 16.0),
             secondaryTextStyle: NativeTemplateTextStyle(
                 textColor: Theme.of(context).colorScheme.onBackground,
                 size: 16.0),
             tertiaryTextStyle: NativeTemplateTextStyle(
-                textColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                textColor:
+                    Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
                 size: 16.0)))
       ..load();
   }
@@ -81,71 +83,86 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return _hideAd ? const SizedBox.shrink() : Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
+    return _hideAd
+        ? const SizedBox.shrink()
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.sponsored,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.ethicalAdDescription,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onBackground
+                                  .withOpacity(0.5),
+                            ),
+                      ),
+                    ),
+                  ],
                 ),
-                child: Text(
-                  AppLocalizations.of(context)!.sponsored,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
+                const SizedBox(height: 10),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minWidth: 320,
+                    maxWidth: 400,
+                    maxHeight: 400,
+                  ),
+                  child: Skeleton(
+                    isLoading: _nativeAdIsLoaded == false || _nativeAd == null,
+                    skeleton: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondary,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: _nativeAd != null
+                        ? AdWidget(ad: _nativeAd!)
+                        : const SizedBox.shrink(),
                   ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  AppLocalizations.of(context)!.ethicalAdDescription,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)!.thankYouForSupporting,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          ConstrainedBox(
-            constraints: const BoxConstraints(
-              minWidth: 320,
-              maxWidth: 400,
-              maxHeight: 400,
+              ],
             ),
-            child: Skeleton(
-              isLoading: _nativeAdIsLoaded == false || _nativeAd == null,
-              skeleton: Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: _nativeAd != null ? AdWidget(ad: _nativeAd!) : const SizedBox.shrink(),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              AppLocalizations.of(context)!.thankYouForSupporting,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 }
