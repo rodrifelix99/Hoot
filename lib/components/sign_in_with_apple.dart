@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
-
+import 'package:hoot/services/toast_service.dart';
 
 class SignInWithAppleButton extends StatefulWidget {
   const SignInWithAppleButton({super.key});
@@ -15,20 +15,15 @@ class SignInWithAppleButton extends StatefulWidget {
 }
 
 class _SignInWithAppleButtonState extends State<SignInWithAppleButton> {
-
   Future _signInWithApple() async {
     String code = await Get.find<AuthController>().signInWithApple();
     if (code != "success" && code != "new-user") {
       setState(() {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('signInFailed'.tr),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        ToastService.showError('signInFailed'.tr);
       });
     } else if (code == "new-user") {
-      Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/welcome', (route) => false);
     } else {
       Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
     }
