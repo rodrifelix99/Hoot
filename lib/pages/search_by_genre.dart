@@ -9,8 +9,8 @@ import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class SearchByGenrePage extends StatefulWidget {
-  FeedType type;
-  SearchByGenrePage({super.key, required this.type});
+  final FeedType type;
+  const SearchByGenrePage({super.key, required this.type});
 
   @override
   State<SearchByGenrePage> createState() => _SearchByGenrePageState();
@@ -20,6 +20,9 @@ class _SearchByGenrePageState extends State<SearchByGenrePage> {
   late FeedController _feedProvider;
   late RefreshController _refreshController;
   List<Feed> _results = [];
+  FeedType? _type;
+
+  FeedType get type => _type ?? widget.type;
 
   @override
   void initState() {
@@ -30,7 +33,7 @@ class _SearchByGenrePageState extends State<SearchByGenrePage> {
 
   Future _getResults(String startAtId) async {
     setState(() => { });
-    List<Feed> feeds = await _feedProvider.searchFeedsByType(widget.type, startAtId);
+    List<Feed> feeds = await _feedProvider.searchFeedsByType(type, startAtId);
     setState(() {
       _results = feeds;
       _refreshController.refreshCompleted();
@@ -44,7 +47,7 @@ class _SearchByGenrePageState extends State<SearchByGenrePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('searchForGenreFeeds'.trParams({'value': FeedTypeExtension.toTranslatedString(context, widget.type)})),
+        title: Text('searchForGenreFeeds'.trParams({'value': FeedTypeExtension.toTranslatedString(context, type)})),
       ),
       body: SafeArea(
         child: Column(
@@ -55,7 +58,7 @@ class _SearchByGenrePageState extends State<SearchByGenrePage> {
                 isExpanded: true,
                   borderRadius: BorderRadius.circular(10),
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  value: widget.type,
+                  value: type,
                   items: FeedType.values.map((FeedType feedType) {
                     return DropdownMenuItem(
                       value: feedType,
@@ -73,7 +76,7 @@ class _SearchByGenrePageState extends State<SearchByGenrePage> {
                   onChanged: (FeedType? value) {
                     if (value != null) {
                       setState(() {
-                        widget.type = value;
+                        _type = value;
                         _refreshController.requestRefresh();
                       });
                     }

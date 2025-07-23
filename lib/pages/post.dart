@@ -14,11 +14,11 @@ import 'package:hoot/models/user.dart';
 import 'package:hoot/services/error_service.dart';
 
 class PostPage extends StatefulWidget {
-  Post? post;
+  final Post? post;
   final String? postId;
   final String? feedId;
   final String? userId;
-  PostPage({super.key, this.post, this.postId, this.feedId, this.userId});
+  const PostPage({super.key, this.post, this.postId, this.feedId, this.userId});
 
   @override
   State<PostPage> createState() => _PostPageState();
@@ -28,6 +28,9 @@ class _PostPageState extends State<PostPage> {
   FeedController _feedProvider = FeedController();
   bool _loading = false;
   bool _loadingLikes = false;
+  Post? _post;
+  
+  Post? get post => widget.post ?? _post;
 
   @override
   void initState() {
@@ -38,7 +41,7 @@ class _PostPageState extends State<PostPage> {
 
   Future _getPost() async {
     setState(() => _loading = true);
-    widget.post = await _feedProvider.getPost(
+    _post = await _feedProvider.getPost(
         widget.userId!, widget.feedId!, widget.postId!);
     setState(() => _loading = false);
     await _getLikes(DateTime.now());
@@ -46,12 +49,12 @@ class _PostPageState extends State<PostPage> {
 
   Future _getLikes(DateTime startAfter, {bool refresh = false}) async {
     try {
-      if (widget.post!.likers.isEmpty && !refresh) {
+      if (post!.likers.isEmpty && !refresh) {
         setState(() => _loadingLikes = true);
       }
-      List<U> likes = await _feedProvider.getLikes(widget.post!.user!.uid,
-          widget.post!.feed!.id, widget.post!.id, startAfter);
-      setState(() => widget.post!.likers = likes);
+      List<U> likes = await _feedProvider.getLikes(post!.user!.uid,
+          post!.feed!.id, post!.id, startAfter);
+      setState(() => post!.likers = likes);
     } catch (e) {
       logError(e.toString());
       ToastService.showToast(context, "Error getting likes", true);
@@ -66,7 +69,7 @@ class _PostPageState extends State<PostPage> {
       appBar: AppBarComponent(
         title: 'appName'.tr,
       ),
-      body: widget.post == null && !_loading
+      body: post == null && !_loading
           ? Center(
               child: NothingToShowComponent(
                   icon: const Icon(SolarIconsBold.eraserSquare),
@@ -82,7 +85,7 @@ class _PostPageState extends State<PostPage> {
                         isSkeleton: true,
                       )
                     : PostComponent(
-                        post: widget.post!,
+                        post: post!,
                         onDeleted: () => Get.back(),
                       ),
                 Padding(
@@ -142,7 +145,7 @@ class _PostPageState extends State<PostPage> {
                           ],
                         ),
                       )
-                    : (widget.post?.likers.isEmpty ?? true)
+                    : (post?.likers.isEmpty ?? true)
                         ? const Center(
                             child: NothingToShowComponent(
                             icon: Icon(SolarIconsBold.heartAngle),
@@ -151,20 +154,20 @@ class _PostPageState extends State<PostPage> {
                         : ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: widget.post!.likers.length,
+                            itemCount: post!.likers.length,
                             itemBuilder: (context, index) {
                               return ListTile(
                                 onTap: () => Get.toNamed('/profile',
-                                    arguments: widget.post!.likers[index]),
+                                    arguments: post!.likers[index]),
                                 leading: ProfileAvatarComponent(
-                                    image: widget.post!.likers[index]
+                                    image: post!.likers[index]
                                             .smallProfilePictureUrl ??
                                         '',
                                     size: 50),
                                 title:
-                                    Text(widget.post!.likers[index].name ?? ''),
+                                    Text(post!.likers[index].name ?? ''),
                                 subtitle: Text(
-                                    "@${widget.post!.likers[index].username}"),
+                                    "@${post!.likers[index].username}"),
                               );
                             },
                           )
