@@ -13,6 +13,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:hoot/services/dialog_service.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:hoot/services/error_service.dart';
 
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
@@ -86,7 +87,8 @@ class _PostComponentState extends State<PostComponent>
     setState(() => _deleted = true);
     bool res = await _feedProvider.deletePost(context, widget.post.id, widget.post.feed!.id);
     if (!res) {
-      // TODO: Handle error and show a toast
+      ErrorService.reportError('deletePostFailed',
+          message: 'errorDeletingPost'.tr);
     } else if (widget.onDeleted != null) {
       widget.onDeleted!();
     }
@@ -191,7 +193,8 @@ class _PostComponentState extends State<PostComponent>
             ? 0
             : (widget.post.reFeeds ?? 0) - 1;
       });
-      // TODO: Use ToastService.showError and handle error
+      ErrorService.reportError('refeedFailed',
+          message: 'somethingWentWrong'.tr);
     }
   }
 
@@ -209,7 +212,8 @@ class _PostComponentState extends State<PostComponent>
           widget.post.liked = true;
           widget.post.likes = (widget.post.likes ?? 0) + 1;
         });
-        // TODO: Use ToastService.showError and handle error
+        ErrorService.reportError('unlikeFailed',
+            message: 'somethingWentWrong'.tr);
       }
     } else {
       // Like the post
@@ -226,7 +230,8 @@ class _PostComponentState extends State<PostComponent>
               ? 0
               : (widget.post.likes ?? 0) - 1;
         });
-        // TODO: Use ToastService.showError and handle error
+        ErrorService.reportError('likeFailed',
+            message: 'somethingWentWrong'.tr);
       }
     }
   }
