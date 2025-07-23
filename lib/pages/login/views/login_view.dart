@@ -16,7 +16,7 @@ class LoginView extends GetView<LoginController> {
           mainAxisSize: MainAxisSize.min,
           children: [
             buttons.SignInButton(
-              buttons.Buttons.google,
+              buttons.Buttons.Google,
               onPressed: controller.signInWithGoogle,
             ),
             const SizedBox(height: 16),
