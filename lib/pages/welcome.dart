@@ -11,6 +11,7 @@ import 'package:hoot/services/upload_service.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:octo_image/octo_image.dart';
+import '../app/utils/logger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -25,7 +26,6 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-
   SwiperController controller = SwiperController();
   late List<Widget> screens;
   List<String> images = [
@@ -162,7 +162,10 @@ class _WelcomePageState extends State<WelcomePage> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.15),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onBackground
+                        .withOpacity(0.15),
                     spreadRadius: 2,
                     blurRadius: 20,
                     offset: const Offset(0, -5), // changes position of shadow
@@ -199,7 +202,9 @@ class _FirstScreenState extends State<FirstScreen> {
   final TextEditingController _nameController = TextEditingController();
 
   bool _isNameValid() {
-    return _nameController.text.isNotEmpty && _nameController.text.length > 2 && _nameController.text.length < 30;
+    return _nameController.text.isNotEmpty &&
+        _nameController.text.length > 2 &&
+        _nameController.text.length < 30;
   }
 
   Future _onSubmit() async {
@@ -213,13 +218,15 @@ class _FirstScreenState extends State<FirstScreen> {
         if (!response) {
           widget.controller.move(1, animation: true);
           setState(() {
-            ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
+            ToastService.showToast(
+                context, AppLocalizations.of(context)!.errorUnknown, true);
           });
         }
       } else {
-        print('User is null');
+        FirebaseCrashlytics.instance.log('User is null');
         setState(() {
-          ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
+          ToastService.showToast(
+              context, AppLocalizations.of(context)!.errorUnknown, true);
         });
       }
     }
@@ -234,9 +241,9 @@ class _FirstScreenState extends State<FirstScreen> {
         Text(
           AppLocalizations.of(context)!.waitANewFriend,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w900,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+                fontWeight: FontWeight.w900,
+                color: Theme.of(context).colorScheme.primary,
+              ),
         ),
         const SizedBox(height: 8),
         Text(
@@ -258,15 +265,17 @@ class _FirstScreenState extends State<FirstScreen> {
           ),
         ),
         const SizedBox(height: 5),
-        _isNameValid() || _nameController.text.isEmpty ? Text(
-          AppLocalizations.of(context)!.displayNameExample,
-          style: Theme.of(context).textTheme.bodySmall,
-        ) : Text(
-          AppLocalizations.of(context)!.displayNameTooShort,
-          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-            color: Colors.red,
-          ),
-        ),
+        _isNameValid() || _nameController.text.isEmpty
+            ? Text(
+                AppLocalizations.of(context)!.displayNameExample,
+                style: Theme.of(context).textTheme.bodySmall,
+              )
+            : Text(
+                AppLocalizations.of(context)!.displayNameTooShort,
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Colors.red,
+                    ),
+              ),
         const Spacer(),
         ElevatedButton(
           onPressed: _isNameValid() ? _onSubmit : null,
@@ -292,10 +301,10 @@ class _SecondScreenState extends State<SecondScreen> {
   bool _loading = false;
 
   bool _isValid() {
-    return _usernameController.text.isNotEmpty
-        && _usernameController.text.length >= 6
-        && _usernameController.text.length <= 15
-        && RegExp(r'^[a-zA-Z0-9_.]+$').hasMatch(_usernameController.text);
+    return _usernameController.text.isNotEmpty &&
+        _usernameController.text.length >= 6 &&
+        _usernameController.text.length <= 15 &&
+        RegExp(r'^[a-zA-Z0-9_.]+$').hasMatch(_usernameController.text);
   }
 
   Future _onSubmit() async {
@@ -303,7 +312,8 @@ class _SecondScreenState extends State<SecondScreen> {
       setState(() {
         _loading = true;
       });
-      if (await Get.find<AuthController>().isUsernameAvailable(_usernameController.text)) {
+      if (await Get.find<AuthController>()
+          .isUsernameAvailable(_usernameController.text)) {
         FocusScope.of(context).unfocus();
         U? user = Get.find<AuthController>().user;
         if (user != null) {
@@ -316,20 +326,23 @@ class _SecondScreenState extends State<SecondScreen> {
           if (!response) {
             widget.controller.move(2, animation: true);
             setState(() {
-              ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
+              ToastService.showToast(
+                  context, AppLocalizations.of(context)!.errorUnknown, true);
             });
           }
         } else {
-          print('User is null');
+          FirebaseCrashlytics.instance.log('User is null');
           setState(() {
             _loading = false;
-            ToastService.showToast(context, AppLocalizations.of(context)!.somethingWentWrong, true);
+            ToastService.showToast(context,
+                AppLocalizations.of(context)!.somethingWentWrong, true);
           });
         }
       } else {
         setState(() {
           _loading = false;
-          ToastService.showToast(context, AppLocalizations.of(context)!.usernameTaken, true);
+          ToastService.showToast(
+              context, AppLocalizations.of(context)!.usernameTaken, true);
         });
       }
     }
@@ -350,9 +363,9 @@ class _SecondScreenState extends State<SecondScreen> {
             Text(
               AppLocalizations.of(context)!.letsSpiceItUp,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w900,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+                    fontWeight: FontWeight.w900,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
             ),
           ],
         ),
@@ -361,32 +374,40 @@ class _SecondScreenState extends State<SecondScreen> {
           AppLocalizations.of(context)!.usernameDescription,
         ),
         const SizedBox(height: 25),
-        _loading ? const Center(
-          child: CircularProgressIndicator(),
-        ) : TextField(
-          controller: _usernameController,
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.done,
-          maxLength: 15,
-          onChanged: (value) => setState(() => _usernameController.text.contains("@") ? _usernameController.text = _usernameController.text.replaceAll("@", "") : null),
-          onSubmitted: (value) => _onSubmit(),
-          decoration: InputDecoration(
-            labelText: AppLocalizations.of(context)!.username,
-            counter: const SizedBox(),
-          ),
-        ),
+        _loading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : TextField(
+                controller: _usernameController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                maxLength: 15,
+                onChanged: (value) => setState(() =>
+                    _usernameController.text.contains("@")
+                        ? _usernameController.text =
+                            _usernameController.text.replaceAll("@", "")
+                        : null),
+                onSubmitted: (value) => _onSubmit(),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.username,
+                  counter: const SizedBox(),
+                ),
+              ),
         const SizedBox(height: 5),
-        _isValid() || _usernameController.text.isEmpty ? Text(
-          AppLocalizations.of(context)!.usernameExample,
-          style: const TextStyle(
-            fontSize: 12,
-          ),
-        ) : Text(
-          AppLocalizations.of(context)!.usernameInvalid,
-          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-            color: Colors.red,
-          ),
-        ),
+        _isValid() || _usernameController.text.isEmpty
+            ? Text(
+                AppLocalizations.of(context)!.usernameExample,
+                style: const TextStyle(
+                  fontSize: 12,
+                ),
+              )
+            : Text(
+                AppLocalizations.of(context)!.usernameInvalid,
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Colors.red,
+                    ),
+              ),
         const Spacer(),
         ElevatedButton(
           onPressed: _isValid() ? _onSubmit : null,
@@ -412,7 +433,8 @@ class _ThirdScreenState extends State<ThirdScreen> {
   File? _selectedImage;
 
   void _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null && pickedFile.path.isNotEmpty) {
       CroppedFile? croppedImage = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
@@ -439,7 +461,8 @@ class _ThirdScreenState extends State<ThirdScreen> {
         _selectedImage = croppedImage == null ? null : File(croppedImage.path);
       });
     } else if (pickedFile != null) {
-      ToastService.showToast(context, AppLocalizations.of(context)!.imageTooLarge, true);
+      ToastService.showToast(
+          context, AppLocalizations.of(context)!.imageTooLarge, true);
     }
   }
 
@@ -450,8 +473,12 @@ class _ThirdScreenState extends State<ThirdScreen> {
       });
 
       String uid = Get.find<AuthController>().user!.uid;
-      String smallAvatarUrl = await UploadService().uploadFile(_selectedImage!, 'avatars/$uid/small', compressed: true, size: 100, square: true);
-      String bigAvatarUrl = await UploadService().uploadFile(_selectedImage!, 'avatars/$uid/big', compressed: true, size: 250, square: true);
+      String smallAvatarUrl = await UploadService().uploadFile(
+          _selectedImage!, 'avatars/$uid/small',
+          compressed: true, size: 100, square: true);
+      String bigAvatarUrl = await UploadService().uploadFile(
+          _selectedImage!, 'avatars/$uid/big',
+          compressed: true, size: 250, square: true);
 
       if (smallAvatarUrl.isNotEmpty && bigAvatarUrl.isNotEmpty) {
         U? user = Get.find<AuthController>().user;
@@ -463,22 +490,25 @@ class _ThirdScreenState extends State<ThirdScreen> {
             _goHome();
           } else {
             setState(() {
-              ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
+              ToastService.showToast(
+                  context, AppLocalizations.of(context)!.errorUnknown, true);
             });
           }
         } else {
-          print('User is null');
+          FirebaseCrashlytics.instance.log('User is null');
         }
       } else {
         setState(() {
-          ToastService.showToast(context, AppLocalizations.of(context)!.errorUnknown, true);
+          ToastService.showToast(
+              context, AppLocalizations.of(context)!.errorUnknown, true);
         });
       }
       setState(() {
         _loading = false;
       });
     } else if (_selectedImage != null) {
-      ToastService.showToast(context, AppLocalizations.of(context)!.imageTooLarge, true);
+      ToastService.showToast(
+          context, AppLocalizations.of(context)!.imageTooLarge, true);
     }
   }
 
@@ -499,8 +529,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
   void _goHome() {
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
-        builder: (context) => const ContactsPage(skipable: true)
-      ),
+          builder: (context) => const ContactsPage(skipable: true)),
       (Route<dynamic> route) => false,
     );
   }
@@ -514,45 +543,50 @@ class _ThirdScreenState extends State<ThirdScreen> {
         Text(
           AppLocalizations.of(context)!.almostThere,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: Theme.of(context).colorScheme.primary,
-            fontWeight: FontWeight.w900,
-          ),
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w900,
+              ),
         ),
         const SizedBox(height: 8),
         Text(
-          _selectedImage == null ? AppLocalizations.of(context)!.profilePictureDescription : _getRandomSuccessPhrase(),
+          _selectedImage == null
+              ? AppLocalizations.of(context)!.profilePictureDescription
+              : _getRandomSuccessPhrase(),
         ),
         const Spacer(),
-        _loading ? const Center(
-          child: CircularProgressIndicator(),
-        ) : Center(
-          child: GestureDetector(
-            onTap: _pickImage,
-            child: OctoImage.fromSet(
-              image: _selectedImage != null ? FileImage(_selectedImage!) : const NetworkImage('') as ImageProvider,
-              fit: BoxFit.cover,
-              width: 125,
-              height: 125,
-              octoSet: OctoSet.circleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                  text: Icon(
-                      SolarIconsBold.galleryAdd,
-                      size: 50,
-                      color: Theme.of(context).colorScheme.primary
-                  )
+        _loading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Center(
+                child: GestureDetector(
+                  onTap: _pickImage,
+                  child: OctoImage.fromSet(
+                    image: _selectedImage != null
+                        ? FileImage(_selectedImage!)
+                        : const NetworkImage('') as ImageProvider,
+                    fit: BoxFit.cover,
+                    width: 125,
+                    height: 125,
+                    octoSet: OctoSet.circleAvatar(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                        text: Icon(SolarIconsBold.galleryAdd,
+                            size: 50,
+                            color: Theme.of(context).colorScheme.primary)),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
         const Spacer(),
         ElevatedButton(
             onPressed: _selectedImage == null ? _goHome : _uploadImage,
-            child: _selectedImage == null ? Text(
-              AppLocalizations.of(context)!.skipForNow,
-            ) : Text(
-              AppLocalizations.of(context)!.continueButton,
-            )
-        )
+            child: _selectedImage == null
+                ? Text(
+                    AppLocalizations.of(context)!.skipForNow,
+                  )
+                : Text(
+                    AppLocalizations.of(context)!.continueButton,
+                  ))
       ],
     );
   }

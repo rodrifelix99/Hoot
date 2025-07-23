@@ -10,10 +10,12 @@ import 'package:hoot/models/user.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:hoot/models/notification.dart' as n;
+import '../utils/logger.dart';
 
 class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFunctions _functions = FirebaseFunctions.instanceFor(region: 'europe-west1');
+  final FirebaseFunctions _functions =
+      FirebaseFunctions.instanceFor(region: 'europe-west1');
 
   U? _user;
   U? get user => _user;
@@ -46,14 +48,15 @@ class AuthController extends GetxController {
     try {
       if (firebaseUser == null) {
         _user = null;
-      } else if (_user == null || (_user!.uid != firebaseUser.uid && _user!.uid != 'HOOT-IS-AWESOME')) {
+      } else if (_user == null ||
+          (_user!.uid != firebaseUser.uid && _user!.uid != 'HOOT-IS-AWESOME')) {
         _user = await getUserInfo() ?? U(uid: firebaseUser.uid);
       } else {
         _user = U(uid: firebaseUser.uid);
       }
       update();
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
     }
   }
 
@@ -70,7 +73,7 @@ class AuthController extends GetxController {
       final json = response.data;
       return U.fromJson(json);
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return null;
     }
   }
@@ -78,23 +81,23 @@ class AuthController extends GetxController {
   Future verifyPhoneNumber() async {
     try {
       _auth.verifyPhoneNumber(
-          phoneNumber: _phoneNumber.phoneNumber!,
-          timeout: const Duration(seconds: 60),
-          verificationCompleted: (PhoneAuthCredential credential) async { },
-          verificationFailed: (FirebaseAuthException e) {
-            print(e.toString());
-          },
-          codeSent: (String verificationId, int? resendToken) {
-            _verificationId = verificationId;
-            update();
-          },
-          codeAutoRetrievalTimeout: (String verificationId) {
-            _verificationId = verificationId;
-            update();
-          },
+        phoneNumber: _phoneNumber.phoneNumber!,
+        timeout: const Duration(seconds: 60),
+        verificationCompleted: (PhoneAuthCredential credential) async {},
+        verificationFailed: (FirebaseAuthException e) {
+          logError(e.toString());
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          _verificationId = verificationId;
+          update();
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          _verificationId = verificationId;
+          update();
+        },
       );
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       FirebaseAuthException exception = e as FirebaseAuthException;
       throw exception.code;
     }
@@ -106,7 +109,8 @@ class AuthController extends GetxController {
         verificationId: _verificationId!,
         smsCode: smsCode,
       );
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
       if (userCredential.user == null) {
         return "unknown-error";
       } else if (userCredential.additionalUserInfo!.isNewUser) {
@@ -119,7 +123,7 @@ class AuthController extends GetxController {
         return "success";
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       FirebaseAuthException error = e as FirebaseAuthException;
       return error.code;
     }
@@ -143,7 +147,7 @@ class AuthController extends GetxController {
       final userCredential = await _auth.signInWithCredential(oauthCredential);
 
       if (userCredential.user == null) {
-        print('User is null');
+        logError('User is null');
         return "unknown-error";
       } else if (userCredential.additionalUserInfo!.isNewUser) {
         update();
@@ -153,9 +157,8 @@ class AuthController extends GetxController {
         update();
         return "success";
       }
-
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       _user = null;
       FirebaseAuthException exception = e as FirebaseAuthException;
       return exception.code;
@@ -164,17 +167,20 @@ class AuthController extends GetxController {
 
   Future<bool> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleSignInAccount = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication googleAuth = await googleSignInAccount!.authentication;
+      final GoogleSignInAccount? googleSignInAccount =
+          await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleSignInAccount!.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
       if (userCredential.user == null) {
-        print('User is null');
+        logError('User is null');
         return false;
       } else if (userCredential.additionalUserInfo!.isNewUser) {
         _user = U(uid: 'HOOT-IS-AWESOME');
@@ -185,16 +191,17 @@ class AuthController extends GetxController {
         update();
         return true;
       }
-
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
 
-  Future<String> signInWithEmailAndPassword(String email, String password) async {
+  Future<String> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
-      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      final UserCredential userCredential =
+          await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -202,7 +209,8 @@ class AuthController extends GetxController {
         _user = await getUserInfo();
         update();
         return "success";
-      } else if (userCredential.additionalUserInfo!.isNewUser || userCredential.user!.displayName == null) {
+      } else if (userCredential.additionalUserInfo!.isNewUser ||
+          userCredential.user!.displayName == null) {
         _user = U(uid: 'HOOT-IS-AWESOME');
         update();
         return "new-user";
@@ -210,16 +218,18 @@ class AuthController extends GetxController {
         return "unknown-error";
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       FirebaseAuthException exception = e as FirebaseAuthException;
       return exception.code;
     }
   }
 
-  Future<String> signUpWithEmailAndPassword(String email, String password) async {
+  Future<String> signUpWithEmailAndPassword(
+      String email, String password) async {
     try {
       _user = U(uid: 'HOOT-IS-AWESOME');
-      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      final UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -254,7 +264,7 @@ class AuthController extends GetxController {
         return false;
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
@@ -265,7 +275,7 @@ class AuthController extends GetxController {
       final response = await callable.call(username);
       return response.data;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
@@ -276,7 +286,7 @@ class AuthController extends GetxController {
       final response = await callable.call(token);
       return response.data;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
@@ -287,7 +297,7 @@ class AuthController extends GetxController {
       _user = null;
       update();
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
     }
   }
 
@@ -298,31 +308,36 @@ class AuthController extends GetxController {
       final data = response.data;
 
       if (data != null && data is List) {
-        final List<U> users = data.map<U>((user) => U.fromJson(Map<String, dynamic>.from(user))).toList();
+        final List<U> users = data
+            .map<U>((user) => U.fromJson(Map<String, dynamic>.from(user)))
+            .toList();
         return users;
       } else {
         return [];
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
 
   Future<List<U>> getFollows(String userId, bool following) async {
     try {
-      HttpsCallable callable = _functions.httpsCallable(following ? 'getFollowing' : 'getFollowers');
+      HttpsCallable callable =
+          _functions.httpsCallable(following ? 'getFollowing' : 'getFollowers');
       final response = await callable.call(userId);
       final data = response.data;
 
       if (data != null && data is List) {
-        final List<U> users = data.map<U>((user) => U.fromJson(Map<String, dynamic>.from(user))).toList();
+        final List<U> users = data
+            .map<U>((user) => U.fromJson(Map<String, dynamic>.from(user)))
+            .toList();
         return users;
       } else {
         return [];
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
@@ -334,20 +349,23 @@ class AuthController extends GetxController {
       final data = response.data;
 
       if (data != null && data is List) {
-        final List<U> users = data.map<U>((user) => U.fromJson(Map<String, dynamic>.from(user))).toList();
+        final List<U> users = data
+            .map<U>((user) => U.fromJson(Map<String, dynamic>.from(user)))
+            .toList();
         return users;
       } else {
         return [];
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
 
   Future countUnreadNotifications() async {
     try {
-      HttpsCallable callable = _functions.httpsCallable('countUnreadNotifications');
+      HttpsCallable callable =
+          _functions.httpsCallable('countUnreadNotifications');
       final response = await callable.call();
       final data = response.data;
 
@@ -358,7 +376,7 @@ class AuthController extends GetxController {
       }
       update();
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
     }
   }
 
@@ -366,30 +384,37 @@ class AuthController extends GetxController {
     try {
       HttpsCallable callable = _functions.httpsCallable('getNotifications');
       final response = await callable.call({
-        'startAfter': startAt.toIso8601String(), // Convert DateTime to a string representation
+        'startAfter': startAt
+            .toIso8601String(), // Convert DateTime to a string representation
       });
       final decodedData = jsonDecode(response.data);
-      final List<dynamic> data = decodedData is List<dynamic> ? decodedData : [];
-      return data.map<n.Notification>((notification) => n.Notification.fromJson(notification as Map<String, dynamic>)).toList();
+      final List<dynamic> data =
+          decodedData is List<dynamic> ? decodedData : [];
+      return data
+          .map<n.Notification>((notification) =>
+              n.Notification.fromJson(notification as Map<String, dynamic>))
+          .toList();
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
 
   Future markNotificationsAsRead() async {
     try {
-      HttpsCallable callable = _functions.httpsCallable('markNotificationsRead');
+      HttpsCallable callable =
+          _functions.httpsCallable('markNotificationsRead');
       await callable.call();
       _notificationsCount = 0;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
     }
   }
 
   Future<int> getSubscriptionsCount(String userId) async {
     try {
-      HttpsCallable callable = _functions.httpsCallable('getSubscriptionsCount');
+      HttpsCallable callable =
+          _functions.httpsCallable('getSubscriptionsCount');
       final response = await callable.call({
         'uid': userId,
       });
@@ -401,7 +426,7 @@ class AuthController extends GetxController {
         return 0;
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return 0;
     }
   }
@@ -412,7 +437,7 @@ class AuthController extends GetxController {
       final response = await callable.call();
       return response.data;
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return false;
     }
   }
@@ -439,15 +464,16 @@ class AuthController extends GetxController {
       final data = response.data;
 
       if (data != null && data is List) {
-        final List<U> users = data.map<U>((user) => U.fromJson(Map<String, dynamic>.from(user))).toList();
+        final List<U> users = data
+            .map<U>((user) => U.fromJson(Map<String, dynamic>.from(user)))
+            .toList();
         return users;
       } else {
         return [];
       }
     } catch (e) {
-      print(e.toString());
+      logError(e.toString());
       return [];
     }
   }
-
 }
