@@ -1,7 +1,7 @@
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
 
-class Notification {
+class HootNotification {
   final U user;
   final Feed? feed;
   final String? postId;
@@ -9,7 +9,7 @@ class Notification {
   final bool read;
   final DateTime createdAt;
 
-  Notification({
+  HootNotification({
     required this.user,
     this.feed,
     this.postId,
@@ -18,8 +18,8 @@ class Notification {
     required this.createdAt,
   });
 
-  factory Notification.fromJson(Map<String, dynamic> map) {
-    return Notification(
+  factory HootNotification.fromJson(Map<String, dynamic> map) {
+    return HootNotification(
       user: U.fromJson(map['user']),
       feed: map['feed'] != null ? Feed.fromJson(map['feed']) : null,
       postId: map['postId'],
