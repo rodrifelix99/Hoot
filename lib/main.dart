@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:hoot/util/routes/app_pages.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/routes/initial_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -50,6 +51,7 @@ Future<void> main() async {
           title: 'Hoot',
           initialBinding: InitialBinding(),
           getPages: AppPages.pages,
+          initialRoute: AppRoutes.login,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           translations: AppTranslations(),
