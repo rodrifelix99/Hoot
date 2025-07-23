@@ -1,7 +1,6 @@
 class AppRoutes {
   static const login = '/login';
   static const home = '/home';
-  static const signup = '/signup';
   static const terms = '/terms_of_service';
   static const welcome = '/welcome';
   static const username = '/username';
