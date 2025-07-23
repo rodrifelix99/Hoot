@@ -8,7 +8,6 @@ import 'package:hoot/models/notification.dart' as Notif;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:get/get.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
@@ -67,26 +66,26 @@ class _NotificationsPageState extends State<NotificationsPage> {
     String feedName = notification.feed?.title ?? 'Feed';
     switch (notification.type) {
       case 1:
-        return AppLocalizations.of(context)!.newFollower(username);
+        return 'newFollower'.trParams({'value': username});
       case 2:
-        return AppLocalizations.of(context)!.newUnfollower(username);
+        return 'newUnfollower'.trParams({'value': username});
       case 3:
-        return AppLocalizations.of(context)!.newSubscriber(feedName, username);
+        return 'newSubscriber'.trParams({'value': feedName, username});
       case 4:
-        return AppLocalizations.of(context)!.unsubscriber(feedName, username);
+        return 'unsubscriber'.trParams({'value': feedName, username});
       case 5:
-        return AppLocalizations.of(context)!
-            .privateFeedRequest(feedName, username);
+        return 'privateFeedRequest'
+            .trParams({'feedName': feedName, 'username': username});
       case 6:
-        return AppLocalizations.of(context)!
-            .privateFeedRequestAccepted(feedName, username);
+        return 'privateFeedRequestAccepted'
+            .trParams({'feedName': feedName, 'username': username});
       case 7:
-        return AppLocalizations.of(context)!
-            .privateFeedRequestRejected(feedName, username);
+        return 'privateFeedRequestRejected'
+            .trParams({'feedName': feedName, 'username': username});
       case 8:
-        return AppLocalizations.of(context)!.userLikedYourHoot(username);
+        return 'userLikedYourHoot'.trParams({'value': username});
       case 9:
-        return AppLocalizations.of(context)!.userReFeededYourHoot(username);
+        return 'userReFeededYourHoot'.trParams({'value': username});
       default:
         return "";
     }
@@ -98,25 +97,25 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case 2:
       case 3:
       case 4:
-        Get.toNamed(context, '/profile', arguments: notification.user);
+        Get.toNamed('/profile', arguments: notification.user);
         break;
       case 6:
       case 7:
-        Get.toNamed(context, '/profile',
+        Get.toNamed('/profile',
             arguments: [notification.user, notification.feed?.id]);
         break;
       case 5:
-        Get.toNamed(context, '/feed_requests',
+        Get.toNamed('/feed_requests',
             arguments: notification.feed?.id ?? '');
         break;
       case 8:
-        Get.toNamed(context, '/post', arguments: [
+        Get.toNamed('/post', arguments: [
           _authProvider.user?.uid,
           notification.feed?.id,
           notification.postId
         ]);
       case 9:
-        Get.toNamed(context, '/post', arguments: [
+        Get.toNamed('/post', arguments: [
           notification.user.uid,
           notification.feed?.id,
           notification.postId
@@ -129,7 +128,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComponent(
-        title: AppLocalizations.of(context)!.notifications,
+        title: 'notifications'.tr,
       ),
       body: _isLoading
           ? ListView.builder(
@@ -145,7 +144,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ? Center(
                   child: NothingToShowComponent(
                       icon: Icon(Icons.notifications_off_rounded),
-                      text: AppLocalizations.of(context)!.noNotifications))
+                      text: 'noNotifications'.tr))
               : SmartRefresher(
                   controller: _refreshController,
                   onRefresh: () async =>

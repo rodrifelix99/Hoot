@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/upload_service.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -56,7 +55,7 @@ class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProvid
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       TenorGifPicker.init(
         apiKey: 'AIzaSyCnfxvwEYAkFGxYmoKd03VPyXoATuMCXZw',
-        locale: AppLocalizations.of(context)!.localeName,
+        locale: 'localeName'.tr,
       );
       await _getFeeds();
     });
@@ -98,7 +97,7 @@ class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProvid
         _images.add(File(pickedFile.path));
       }
     } else if (pickedFile != null) {
-      ToastService.showToast(context, AppLocalizations.of(context)!.imageTooLarge, true);
+      ToastService.showToast(context, 'imageTooLarge'.tr, true);
     }
     setState(() {});
   }
@@ -132,7 +131,7 @@ class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProvid
         } else {
           setState(() {
             _isLoading = false;
-            ToastService.showToast(context, AppLocalizations.of(context)!.somethingWentWrong, true);
+            ToastService.showToast(context, 'somethingWentWrong'.tr, true);
           });
         }
       } on Exception catch (e) {
@@ -181,7 +180,7 @@ class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComponent(
-        title: AppLocalizations.of(context)!.createPost,
+        title: 'createPost'.tr,
         actions: [
           IconButton(
             onPressed: _isValid() ? _createPost : null,
@@ -202,7 +201,7 @@ class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProvid
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: DropdownMenu(
                 controller: _dropdownController,
-                label: Text(AppLocalizations.of(context)!.selectFeed),
+                label: Text('selectFeed'.tr),
                 width: MediaQuery.of(context).size.width - 40,
                 onSelected: (value) => _selectedFeedId = value ?? '',
                 dropdownMenuEntries: [
@@ -234,7 +233,7 @@ class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProvid
                   allowedMimeTypes: ["image/png", "image/jpeg", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/vnd.microsoft.icon"],
                 ),
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.postPlaceholder,
+                  hintText: 'postPlaceholder'.tr,
                   contentPadding: const EdgeInsets.all(20),
                 ),
                 maxLines: 5,
@@ -245,7 +244,7 @@ class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProvid
               child: SizedBox(
                 width: double.infinity,
                 child: Text(
-                  AppLocalizations.of(context)!.onlyOneUrl,
+                  'onlyOneUrl'.tr,
                   textAlign: TextAlign.left,
                   style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.red),
                 ),
@@ -342,7 +341,7 @@ class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProvid
       floatingActionButton: !_isLoading && (_images.length + _gifs.length) < 10  ? FloatingActionBubble(
         items: <Bubble>[
           Bubble(
-            title: AppLocalizations.of(context)!.addImage,
+            title: 'addImage'.tr,
             iconColor: Theme.of(context).colorScheme.onPrimaryContainer,
             bubbleColor : Theme.of(context).colorScheme.primaryContainer,
             icon: SolarIconsBold.cameraAdd,
@@ -350,7 +349,7 @@ class _CreatePostPageState extends State<CreatePostPage> with SingleTickerProvid
             onPress: _pickImage,
           ),
           Bubble(
-            title: AppLocalizations.of(context)!.addGif,
+            title: 'addGif'.tr,
             iconColor: Theme.of(context).colorScheme.onPrimaryContainer,
             bubbleColor : Theme.of(context).colorScheme.primaryContainer,
             icon: SolarIconsBold.galleryAdd,

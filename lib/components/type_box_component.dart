@@ -2,7 +2,6 @@ import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/models/feed_types.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:skeletons/skeletons.dart';
 
 class TypeBoxComponent extends StatefulWidget {
@@ -75,7 +74,7 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
               left: 15,
               child: SizedBox(
                 child: Text(
-                  widget.isLast ? AppLocalizations.of(context)!.discoverMoreFeeds : FeedTypeExtension.toTranslatedString(context, widget.type),
+                  widget.isLast ? 'discoverMoreFeeds'.tr : FeedTypeExtension.toTranslatedString(context, widget.type),
                   textAlign: TextAlign.right,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: Colors.white.withOpacity(0.9),

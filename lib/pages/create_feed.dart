@@ -2,7 +2,6 @@ import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/models/feed_types.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
@@ -67,7 +66,7 @@ FeedType _feedType = FeedType.general;
     } else {
       setState(() {
         _isLoading = false;
-        ToastService.showToast(context, AppLocalizations.of(context)!.somethingWentWrong, true);
+        ToastService.showToast(context, 'somethingWentWrong'.tr, true);
       });
     }
   }
@@ -90,7 +89,7 @@ FeedType _feedType = FeedType.general;
     } else {
       setState(() {
         _isLoading = false;
-        ToastService.showToast(context, AppLocalizations.of(context)!.somethingWentWrong, true);
+        ToastService.showToast(context, 'somethingWentWrong'.tr, true);
       });
     }
   }
@@ -99,16 +98,16 @@ FeedType _feedType = FeedType.general;
     bool confirm = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteFeed),
-        content: Text(AppLocalizations.of(context)!.deleteFeedConfirmation),
+        title: Text('deleteFeed'.tr),
+        content: Text('deleteFeedConfirmation'.tr),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text(AppLocalizations.of(context)!.deleteFeed),
+            child: Text('deleteFeed'.tr),
           ),
         ],
       ),
@@ -125,7 +124,7 @@ FeedType _feedType = FeedType.general;
       } else {
         setState(() {
           _isLoading = false;
-          ToastService.showToast(context, AppLocalizations.of(context)!.somethingWentWrong, true);
+          ToastService.showToast(context, 'somethingWentWrong'.tr, true);
         });
       }
     }
@@ -135,7 +134,7 @@ FeedType _feedType = FeedType.general;
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(!_editing ? AppLocalizations.of(context)!.createFeed : AppLocalizations.of(context)!.editFeed),
+          title: Text(!_editing ? 'createFeed'.tr : 'editFeed'.tr),
         ),
         body: _isLoading ? const Center(child: CircularProgressIndicator()) :
         SingleChildScrollView(
@@ -147,7 +146,7 @@ FeedType _feedType = FeedType.general;
                 maxLength: 20,
                 onChanged: (value) => setState(() {}),
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.title,
+                  labelText: 'title'.tr,
                 ),
               ),
               const SizedBox(height: 16),
@@ -157,7 +156,7 @@ FeedType _feedType = FeedType.general;
                 maxLines: 5,
                 onChanged: (value) => setState(() {}),
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.description,
+                  labelText: 'description'.tr,
                 ),
               ),
               const SizedBox(height: 16),
@@ -174,251 +173,251 @@ FeedType _feedType = FeedType.general;
                           if (feedType == FeedType.general) ...[
                             const LineIcon(LineIcons.globe),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.general),
+                            Text('general'.tr),
                           ] else if (feedType == FeedType.activism) ...[
                             const LineIcon(LineIcons.helpingHands),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.activism),
+                            Text('activism'.tr),
                           ] else if (feedType == FeedType.activities) ...[
                             const LineIcon(LineIcons.walking),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.activities),
+                            Text('activities'.tr),
                           ] else if (feedType == FeedType.adultContent) ...[
                             const LineIcon(LineIcons.exclamationTriangle),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.adultContent),
+                            Text('adultContent'.tr),
                           ] else if (feedType == FeedType.art) ...[
                             const LineIcon(LineIcons.paintBrush),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.art),
+                            Text('art'.tr),
                           ] else if (feedType == FeedType.beauty) ...[
                             const LineIcon(LineIcons.female),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.beauty),
+                            Text('beauty'.tr),
                           ] else if (feedType == FeedType.celebrities) ...[
                             const LineIcon(LineIcons.star),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.celebrities),
+                            Text('celebrities'.tr),
                           ] else if (feedType == FeedType.comedy) ...[
                             const LineIcon(LineIcons.laughFaceWithBeamingEyes),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.comedy),
+                            Text('comedy'.tr),
                           ] else if (feedType == FeedType.design) ...[
                             const LineIcon(LineIcons.paintRoller),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.design),
+                            Text('design'.tr),
                           ] else if (feedType == FeedType.environment) ...[
                             const LineIcon(LineIcons.leaf),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.environment),
+                            Text('environment'.tr),
                           ] else if (feedType == FeedType.family) ...[
                             const LineIcon(LineIcons.home),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.family),
+                            Text('family'.tr),
                           ] else if (feedType == FeedType.fitness) ...[
                             const LineIcon(LineIcons.dumbbell),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.fitness),
+                            Text('fitness'.tr),
                           ] else if (feedType == FeedType.gaming) ...[
                             const LineIcon(LineIcons.gamepad),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.gaming),
+                            Text('gaming'.tr),
                           ] else if (feedType == FeedType.history) ...[
                             const LineIcon(LineIcons.landmark),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.history),
+                            Text('history'.tr),
                           ] else if (feedType == FeedType.inspiration) ...[
                             const LineIcon(LineIcons.feather),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.inspiration),
+                            Text('inspiration'.tr),
                           ] else if (feedType == FeedType.jobs) ...[
                             const LineIcon(LineIcons.briefcase),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.jobs),
+                            Text('jobs'.tr),
                           ] else if (feedType == FeedType.lgbtQ) ...[
                             const LineIcon(LineIcons.venusMars),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.lgbtQ),
+                            Text('lgbtQ'.tr),
                           ] else if (feedType == FeedType.marketing) ...[
                             const LineIcon(LineIcons.bullhorn),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.marketing),
+                            Text('marketing'.tr),
                           ] else if (feedType == FeedType.movies) ...[
                             const LineIcon(LineIcons.film),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.movies),
+                            Text('movies'.tr),
                           ] else if (feedType == FeedType.music) ...[
                             const LineIcon(LineIcons.music),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.music),
+                            Text('music'.tr),
                           ] else if (feedType == FeedType.nature) ...[
                             const LineIcon(LineIcons.leaf),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.nature),
+                            Text('nature'.tr),
                           ] else if (feedType == FeedType.news) ...[
                             const LineIcon(LineIcons.newspaper),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.news),
+                            Text('news'.tr),
                           ] else if (feedType == FeedType.onlineCourses) ...[
                             const LineIcon(LineIcons.graduationCap),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.onlineCourses),
+                            Text('onlineCourses'.tr),
                           ] else if (feedType == FeedType.outdoors) ...[
                             const LineIcon(LineIcons.tree),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.outdoors),
+                            Text('outdoors'.tr),
                           ] else if (feedType == FeedType.parenting) ...[
                             const LineIcon(LineIcons.baby),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.parenting),
+                            Text('parenting'.tr),
                           ] else if (feedType == FeedType.pets) ...[
                             const LineIcon(LineIcons.dog),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.pets),
+                            Text('pets'.tr),
                           ] else if (feedType == FeedType.photography) ...[
                             const LineIcon(LineIcons.camera),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.photography),
+                            Text('photography'.tr),
                           ] else if (feedType == FeedType.quotes) ...[
                             const LineIcon(LineIcons.quoteLeft),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.quotes),
+                            Text('quotes'.tr),
                           ] else if (feedType == FeedType.relationships) ...[
                             const LineIcon(LineIcons.heart),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.relationships),
+                            Text('relationships'.tr),
                           ] else if (feedType == FeedType.recipes) ...[
                             const LineIcon(LineIcons.utensils),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.recipes),
+                            Text('recipes'.tr),
                           ] else if (feedType == FeedType.religion) ...[
                             const LineIcon(LineIcons.pray),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.religion),
+                            Text('religion'.tr),
                           ] else if (feedType == FeedType.school) ...[
                             const LineIcon(LineIcons.school),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.school),
+                            Text('school'.tr),
                           ] else if (feedType == FeedType.science) ...[
                             const LineIcon(LineIcons.microscope),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.science),
+                            Text('science'.tr),
                           ] else if (feedType == FeedType.selfImprovement) ...[
                             const LineIcon(LineIcons.lightbulb),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.selfImprovement),
+                            Text('selfImprovement'.tr),
                           ] else if (feedType == FeedType.series) ...[
                             const LineIcon(LineIcons.television),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.series),
+                            Text('series'.tr),
                           ] else if (feedType == FeedType.sports) ...[
                             const LineIcon(LineIcons.footballBall),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.sports),
+                            Text('sports'.tr),
                           ] else if (feedType == FeedType.technology) ...[
                             const LineIcon(LineIcons.mobilePhone),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.technology),
+                            Text('technology'.tr),
                           ] else if (feedType == FeedType.travel) ...[
                             const LineIcon(LineIcons.plane),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.travel),
+                            Text('travel'.tr),
                           ] else if (feedType == FeedType.tv) ...[
                             const LineIcon(LineIcons.television),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.tv),
+                            Text('tv'.tr),
                           ] else if (feedType == FeedType.university) ...[
                             const LineIcon(LineIcons.graduationCap),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.university),
+                            Text('university'.tr),
                           ] else if (feedType == FeedType.vegetarian) ...[
                             const LineIcon(LineIcons.leaf),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.vegetarian),
+                            Text('vegetarian'.tr),
                           ] else if (feedType == FeedType.wellness) ...[
                             const LineIcon(LineIcons.heart),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.wellness),
+                            Text('wellness'.tr),
                           ] else if (feedType == FeedType.writing) ...[
                             const LineIcon(LineIcons.pen),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.writing),
+                            Text('writing'.tr),
                           ] else if (feedType == FeedType.yoga) ...[
                             const LineIcon(LineIcons.heart),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.yoga),
+                            Text('yoga'.tr),
                           ] else if (feedType == FeedType.business) ...[
                             const LineIcon(LineIcons.briefcase),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.business),
+                            Text('business'.tr),
                           ] else if (feedType == FeedType.cooking) ...[
                             const LineIcon(LineIcons.pizzaSlice),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.cooking),
+                            Text('cooking'.tr),
                           ] else if (feedType == FeedType.diY) ...[
                             const LineIcon(LineIcons.toolbox),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.diY),
+                            Text('diY'.tr),
                           ] else if (feedType == FeedType.economics) ...[
                             const LineIcon(LineIcons.lineChart),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.economics),
+                            Text('economics'.tr),
                           ] else if (feedType == FeedType.education) ...[
                             const LineIcon(LineIcons.graduationCap),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.education),
+                            Text('education'.tr),
                           ] else if (feedType == FeedType.entertainment) ...[
                             const LineIcon(LineIcons.star),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.entertainment),
+                            Text('entertainment'.tr),
                           ] else if (feedType == FeedType.entrepreneurship) ...[
                             const LineIcon(LineIcons.barChartAlt),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.entrepreneurship),
+                            Text('entrepreneurship'.tr),
                           ] else if (feedType == FeedType.gardening) ...[
                             const LineIcon(LineIcons.tree),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.gardening),
+                            Text('gardening'.tr),
                           ] else if (feedType == FeedType.health) ...[
                             const LineIcon(LineIcons.heart),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.health),
+                            Text('health'.tr),
                           ] else if (feedType == FeedType.investing) ...[
                             const LineIcon(LineIcons.pieChart),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.investing),
+                            Text('investing'.tr),
                           ] else if (feedType == FeedType.journalism) ...[
                             const LineIcon(LineIcons.newspaper),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.journalism),
+                            Text('journalism'.tr),
                           ] else if (feedType == FeedType.kids) ...[
                             const LineIcon(LineIcons.child),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.kids),
+                            Text('kids'.tr),
                           ] else if (feedType == FeedType.literature) ...[
                             const LineIcon(LineIcons.book),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.literature),
+                            Text('literature'.tr),
                           ] else if (feedType == FeedType.urbanExploration) ...[
                             const LineIcon(LineIcons.city),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.urbanExploration),
+                            Text('urbanExploration'.tr),
                           ] else if (feedType == FeedType.virtualReality) ...[
                             const LineIcon(LineIcons.cardboardVr),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.virtualReality),
+                            Text('virtualReality'.tr),
                           ] else if (feedType == FeedType.zoology) ...[
                             const LineIcon(LineIcons.paw),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.zoology),
+                            Text('zoology'.tr),
                           ] else if (feedType == FeedType.other) ...[
                             const LineIcon(LineIcons.questionCircle),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.other),
+                            Text('other'.tr),
                           ] else ...[
                             const LineIcon(LineIcons.questionCircle),
                             const SizedBox(width: 8),
-                            Text(AppLocalizations.of(context)!.general),
+                            Text('general'.tr),
                           ]
                         ],
                       ),
@@ -457,7 +456,7 @@ FeedType _feedType = FeedType.general;
                     value: _private,
                     onChanged: (value) => setState(() => _private = value!),
                   ),
-                  Text(AppLocalizations.of(context)!.privateFeed),
+                  Text('privateFeed'.tr),
                   const SizedBox(width: 8),
                   _private ? const LineIcon(LineIcons.lock) : const LineIcon(LineIcons.lockOpen),
                 ],
@@ -469,7 +468,7 @@ FeedType _feedType = FeedType.general;
                     value: _nsfw || _feedType == FeedType.adultContent,
                     onChanged: (value) => setState(() => _nsfw = value!),
                   ),
-                  Text(AppLocalizations.of(context)!.nsfwFeed),
+                  Text('nsfwFeed'.tr),
                   const SizedBox(width: 8),
                   _nsfw || _feedType == FeedType.adultContent ? const LineIcon(LineIcons.exclamationTriangle) : const LineIcon(LineIcons.sun),
                 ],
@@ -477,14 +476,14 @@ FeedType _feedType = FeedType.general;
               const SizedBox(height: 26),
               !_editing ? ElevatedButton(
                 onPressed: _isValid() ? _createFeed : null,
-                child: Text(AppLocalizations.of(context)!.createFeed),
+                child: Text('createFeed'.tr),
               ) : ElevatedButton(
                 onPressed: _isValid() ? _editFeed : null,
                 style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
                   backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
                   foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onSecondary),
                 ),
-                child: Text(AppLocalizations.of(context)!.editFeed),
+                child: Text('editFeed'.tr),
               ),
               _editing ? Column(
                 children: [
@@ -495,7 +494,7 @@ FeedType _feedType = FeedType.general;
                       backgroundColor: MaterialStateProperty.all(Colors.red),
                       foregroundColor: MaterialStateProperty.all(Colors.white),
                     ),
-                    child: Text(AppLocalizations.of(context)!.deleteFeed),
+                    child: Text('deleteFeed'.tr),
                   )
                 ],
               ) : const SizedBox(),

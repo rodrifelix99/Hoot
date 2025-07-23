@@ -2,7 +2,6 @@ import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LastWelcomeScreen extends StatelessWidget {
   const LastWelcomeScreen({super.key});
@@ -11,7 +10,7 @@ class LastWelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComponent(
-        title: AppLocalizations.of(context)!.thatsIt,
+        title: 'thatsIt'.tr,
         backgroundColor: Colors.transparent,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
@@ -40,7 +39,7 @@ class LastWelcomeScreen extends StatelessWidget {
                   backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary),
                   foregroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
                 ),
-                child: Text(AppLocalizations.of(context)!.getStarted),
+                child: Text('getStarted'.tr),
               ),
             )
           ],

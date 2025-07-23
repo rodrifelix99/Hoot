@@ -6,7 +6,6 @@ import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 import '../app/utils/logger.dart';
@@ -67,13 +66,13 @@ class _PostPageState extends State<PostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComponent(
-        title: AppLocalizations.of(context)!.appName,
+        title: 'appName'.tr,
       ),
       body: widget.post == null && !_loading
           ? Center(
               child: NothingToShowComponent(
                   icon: const Icon(SolarIconsBold.eraserSquare),
-                  text: AppLocalizations.of(context)!.hootDeletedOrDoesntExist))
+                  text: 'hootDeletedOrDoesntExist'.tr))
           : SingleChildScrollView(
               child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,11 +92,11 @@ class _PostPageState extends State<PostPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(AppLocalizations.of(context)!.likes,
+                      Text('likes'.tr,
                           style: Theme.of(context).textTheme.titleLarge),
                       const SizedBox(height: 5),
                       Text(
-                        AppLocalizations.of(context)!.likes10RecentLabel,
+                        'likes10RecentLabel'.tr,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
@@ -157,7 +156,7 @@ class _PostPageState extends State<PostPage> {
                             itemCount: widget.post!.likers.length,
                             itemBuilder: (context, index) {
                               return ListTile(
-                                onTap: () => Get.toNamed(context, '/profile',
+                                onTap: () => Get.toNamed('/profile',
                                     arguments: widget.post!.likers[index]),
                                 leading: ProfileAvatarComponent(
                                     image: widget.post!.likers[index]

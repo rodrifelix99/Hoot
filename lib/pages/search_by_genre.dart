@@ -6,7 +6,6 @@ import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/subscribe_component.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/feed_types.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -47,7 +46,7 @@ class _SearchByGenrePageState extends State<SearchByGenrePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.searchForGenreFeeds(FeedTypeExtension.toTranslatedString(context, widget.type))),
+        title: Text('searchForGenreFeeds'.trParams({'value': FeedTypeExtension.toTranslatedString(context, widget.type}))),
       ),
       body: SafeArea(
         child: Column(
@@ -93,7 +92,7 @@ class _SearchByGenrePageState extends State<SearchByGenrePage> {
                   itemCount: _results.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      onTap: () => Get.toNamed(context, '/profile', arguments: [_results[index].user, _results[index].id]),
+                      onTap: () => Get.toNamed('/profile', arguments: [_results[index].user, _results[index].id]),
                       title: Text(_results[index].title),
                       subtitle: Text(_results[index].description!),
                       leading: ProfileAvatarComponent(
@@ -105,7 +104,7 @@ class _SearchByGenrePageState extends State<SearchByGenrePage> {
                   },
                 ) : !_refreshController.isLoading && !_refreshController.isRefresh ? NothingToShowComponent(
                     icon: const Icon(Icons.search_off_rounded),
-                    text: AppLocalizations.of(context)!.noResults,
+                    text: 'noResults'.tr,
                 ) : const SizedBox(),
               ),
             ),

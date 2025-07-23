@@ -1,7 +1,6 @@
 import 'package:hoot/app/routes/app_routes.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/list_item_component.dart';
@@ -74,7 +73,7 @@ class _ExplorePageState extends State<ExplorePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBarComponent(
-          title: AppLocalizations.of(context)!.explore,
+          title: 'explore'.tr,
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -96,7 +95,7 @@ class _ExplorePageState extends State<ExplorePage> {
                         horizontal: 20, vertical: 10),
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      AppLocalizations.of(context)!.searchPlaceholder,
+                      'searchPlaceholder'.tr,
                     ),
                   ),
                   openBuilder: (context, open) => const SearchPage(),
@@ -167,7 +166,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                               child: SizedBox(
                                                 width: 164,
                                                 child: Text(
-                                                  '${AppLocalizations.of(context)!.by} ${_top10Feeds[i].user!.name}',
+                                                  '${'by'.tr} ${_top10Feeds[i].user!.name}',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     color: Theme.of(context)
@@ -272,7 +271,7 @@ class _ExplorePageState extends State<ExplorePage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  AppLocalizations.of(context)!.popularTypes,
+                  'popularTypes'.tr,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
@@ -280,7 +279,7 @@ class _ExplorePageState extends State<ExplorePage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                    AppLocalizations.of(context)!.popularTypesDescription,
+                    'popularTypesDescription'.tr,
                     style: Theme.of(context).textTheme.bodySmall),
               ),
               const SizedBox(height: 20),
@@ -327,12 +326,12 @@ class _ExplorePageState extends State<ExplorePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        AppLocalizations.of(context)!.upAndComing,
+                        'upAndComing'.tr,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        AppLocalizations.of(context)!.upAndComingDescription,
+                        'upAndComingDescription'.tr,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const SizedBox(height: 20),
@@ -417,13 +416,13 @@ class _ExplorePageState extends State<ExplorePage> {
                             ),
                       const SizedBox(height: 20),
                       Text(
-                        AppLocalizations.of(context)!.noteToUser(
-                            _authProvider.user!.name!.split(' ')[0]),
+                        'noteToUser'.trParams({'value': 
+                            _authProvider.user!.name!.split(' '})[0]),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        AppLocalizations.of(context)!.noteToUserDetails,
+                        'noteToUserDetails'.tr,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const SizedBox(height: 20),

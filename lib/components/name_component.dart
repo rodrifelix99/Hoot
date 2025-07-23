@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hoot/services/error_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/models/user.dart';
 
 class NameComponent extends StatefulWidget {
@@ -19,11 +19,11 @@ class NameComponent extends StatefulWidget {
 
 class _NameComponentState extends State<NameComponent> {
   void _onTapVerified() {
-    ToastService.showToast(context, AppLocalizations.of(context)!.verifiedUser, false);
+    ToastService.showToast(context, 'verifiedUser'.tr, false);
   }
 
   void _onTapTester() {
-    ToastService.showToast(context, AppLocalizations.of(context)!.verifiedTester, false);
+    ToastService.showToast(context, 'verifiedTester'.tr, false);
   }
 
   @override

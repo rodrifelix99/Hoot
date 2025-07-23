@@ -1,7 +1,6 @@
 import 'package:hoot/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:get/get.dart';
 
@@ -45,16 +44,16 @@ class _SignUpPageState extends State<SignUpPage> {
       String errorMessage = '';
       switch (code) {
         case "invalid-email":
-          errorMessage = AppLocalizations.of(context)!.errorInvalidEmail;
+          errorMessage = 'errorInvalidEmail'.tr;
           break;
         case "email-already-in-use":
-          errorMessage = AppLocalizations.of(context)!.errorEmailAlreadyInUse;
+          errorMessage = 'errorEmailAlreadyInUse'.tr;
           break;
         case "weak-password":
-          errorMessage = AppLocalizations.of(context)!.errorWeakPassword;
+          errorMessage = 'errorWeakPassword'.tr;
           break;
         default:
-          errorMessage = AppLocalizations.of(context)!.errorUnknown;
+          errorMessage = 'errorUnknown'.tr;
       }
 
       setState(() {
@@ -70,7 +69,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(AppLocalizations.of(context)!.signUp)),
+        appBar: AppBar(title: Text('signUp'.tr)),
         body: Stack(
           children: [
             Positioned.fill(
@@ -89,12 +88,12 @@ class _SignUpPageState extends State<SignUpPage> {
                           onChanged: (value) => setState(() {}),
                           onEditingComplete: () => FocusScope.of(context).nextFocus(),
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!.email,
+                            labelText: 'email'.tr,
                           ),
                         ),
                         _emailController.text.isNotEmpty && !_emailController.text.contains('@')
                             ? Text(
-                            AppLocalizations.of(context)!.emailInvalid,
+                            'emailInvalid'.tr,
                             textAlign: TextAlign.start,
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: Theme.of(context).colorScheme.error
@@ -111,12 +110,12 @@ class _SignUpPageState extends State<SignUpPage> {
                           onChanged: (value) => setState(() {}),
                           onEditingComplete: () => FocusScope.of(context).nextFocus(),
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!.password,
+                            labelText: 'password'.tr,
                           ),
                         ),
                         _passwordController.text.isNotEmpty && _passwordController.text.length < 6
                             ? Text(
-                            AppLocalizations.of(context)!.passwordTooShort,
+                            'passwordTooShort'.tr,
                             textAlign: TextAlign.start,
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: Theme.of(context).colorScheme.error
@@ -133,12 +132,12 @@ class _SignUpPageState extends State<SignUpPage> {
                           onSubmitted: (value) => _isValid() ? _signUp() : null,
                           onChanged: (value) => setState(() {}),
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!.repeatPassword,
+                            labelText: 'repeatPassword'.tr,
                           ),
                         ),
                         _confirmPasswordController.text.isNotEmpty && _confirmPasswordController.text != _passwordController.text
                             ? Text(
-                            AppLocalizations.of(context)!.passwordsDontMatch,
+                            'passwordsDontMatch'.tr,
                             textAlign: TextAlign.start,
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: Theme.of(context).colorScheme.error
@@ -153,7 +152,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                AppLocalizations.of(context)!.bySigningUpYouAgreeToOur,
+                                'bySigningUpYouAgreeToOur'.tr,
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                     color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)
                                 ),
@@ -161,7 +160,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               TextButton(
                                   onPressed: () => Get.toNamed('/terms_of_service'),
                                   child: Text(
-                                    AppLocalizations.of(context)!.termsOfService,
+                                    'termsOfService'.tr,
                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                         color: Theme.of(context).colorScheme.primary
                                     ),
@@ -193,7 +192,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         backgroundColor: _isValid() ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                       ),
                       child: !_isLoading ? Text(
-                          AppLocalizations.of(context)!.signUp,
+                          'signUp'.tr,
                           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)
                       ) : CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary),
                     ),
