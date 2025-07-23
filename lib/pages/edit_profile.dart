@@ -35,7 +35,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
   }
 
-  _isFormValid() {
+  bool _isFormValid() {
     return _nameController.text.isNotEmpty && _bioController.text.length <= 150;
   }
 

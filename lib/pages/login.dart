@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:hoot/app/routes/app_routes.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();

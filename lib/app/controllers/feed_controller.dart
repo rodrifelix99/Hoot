@@ -65,7 +65,7 @@ class FeedController extends GetxController {
     }
   }
 
-  Future<bool> createPost(context,
+  Future<bool> createPost(BuildContext context,
       {required String feedId, String? text, List<String>? media}) async {
     try {
       AuthController authController = Get.find<AuthController>();

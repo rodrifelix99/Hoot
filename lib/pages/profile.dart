@@ -85,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     setState(() => _loadingFeeds = false);
   }
 
-  _refreshUser() async {
+  Future<void> _refreshUser() async {
     setState(() => _loadingUser = true);
     await _authProvider.getUserInfo();
     await _getFeeds(refresh: true);
@@ -442,7 +442,7 @@ class _FeedPostsState extends State<FeedPosts> {
     super.didUpdateWidget(oldWidget);
   }
 
-  _getPosts(DateTime startAfter) async {
+  Future<void> _getPosts(DateTime startAfter) async {
     setState(() => _isLoading = true);
     List<Post> posts = await _feedProvider.getPosts(startAfter, widget.user, widget.user.feeds![widget.feedIndex]);
     if (startAfter.isAfter(DateTime.now().subtract(const Duration(seconds: 5)))) {

@@ -8,13 +8,13 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
   final double? elevationDuringScroll;
 
   const AppBarComponent({
-    Key? key,
+    super.key,
     this.title,
     this.actions,
     this.backgroundColor,
     this.foregroundColor,
     this.elevationDuringScroll,
-}) : super(key: key);
+});
 
   @override
   Widget build(BuildContext context) {

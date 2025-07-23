@@ -103,12 +103,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
-  _openRadio() {
+  void _openRadio() {
     _radioController.closeRadio.value = false;
     _radioController.onInit();
   }
 
-  _closeRadio() {
+  void _closeRadio() {
     _radioController.closeRadio.value = true;
   }
 

@@ -13,7 +13,7 @@ import 'last_welcome.dart';
 
 class ContactsPage extends StatefulWidget {
   final bool skipable;
-  const ContactsPage({Key? key, this.skipable = false}) : super(key: key);
+  const ContactsPage({super.key, this.skipable = false});
 
   @override
   _ContactsPageState createState() => _ContactsPageState();
