@@ -11,6 +11,9 @@ import 'package:hoot/components/shimmer_skeletons.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import 'package:hoot/services/dialog_service.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/app/controllers/feed_controller.dart';
 
@@ -72,62 +75,43 @@ class _PostComponentState extends State<PostComponent>
 
   Future<void> _deletePost() async {
     if (widget.post.user?.uid != _authProvider.user?.uid) return;
-    await showDialog<bool>(
+    bool confirm = await DialogService.confirm(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete'),
-        content: const Text('Are you sure you want to delete this hoot?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).pop(true);
-              setState(() => _deleted = true);
-              bool res = await _feedProvider.deletePost(
-                  context, widget.post.id, widget.post.feed!.id);
-              if (!res) {
-                // TODO: Use ToastService.showError and handle error
-              } else if (widget.onDeleted != null) {
-                widget.onDeleted!();
-              }
-            },
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
+      title: 'delete'.tr,
+      message: 'Are you sure you want to delete this hoot?',
+      okLabel: 'delete'.tr,
+      cancelLabel: 'cancel'.tr,
     );
+    if (!confirm) return;
+    setState(() => _deleted = true);
+    bool res = await _feedProvider.deletePost(context, widget.post.id, widget.post.feed!.id);
+    if (!res) {
+      // TODO: Handle error and show a toast
+    } else if (widget.onDeleted != null) {
+      widget.onDeleted!();
+    }
   }
 
-  void _handleMenuTap() {
-    showModalBottomSheet(
+  Future<void> _handleMenuTap() async {
+    final result = await DialogService.showActionSheet<String>(
       context: context,
-      builder: (context) {
-        return widget.post.user?.uid == _authProvider.user?.uid
-            ? ListTile(
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                leading: const Icon(Icons.delete),
-                title: Text('delete'.tr),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _deletePost();
-                },
-              )
-            : ListTile(
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                leading: const Icon(Icons.report),
-                title: Text('reportUsername'
-                    .trParams({'value': widget.post.user?.username ?? ''})),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  // TODO: Use ToastService to show a toast
-                });
-      },
+      actions: widget.post.user?.uid == _authProvider.user?.uid
+          ? [
+              SheetAction(label: 'delete'.tr, key: 'delete', icon: Icons.delete),
+            ]
+          : [
+              SheetAction(
+                label: 'reportUsername'.trParams({'value': widget.post.user?.username ?? ''}),
+                key: 'report',
+                icon: Icons.report,
+              ),
+            ],
     );
+    if (result == 'delete') {
+      await _deletePost();
+    } else if (result == 'report') {
+      // TODO: Show a toast
+    }
   }
 
   Future refeed() async {
