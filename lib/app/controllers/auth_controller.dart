@@ -8,7 +8,7 @@ import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:hoot/models/notification.dart' as n;
-import '../utils/logger.dart';
+import '../../util/logger.dart';
 
 class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:hoot/components/shimmer_skeletons.dart';
 
 class ListItemComponent extends StatelessWidget {

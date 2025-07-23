@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/components/shimmer_skeletons.dart';
-import '../app/utils/logger.dart';
+import '../util/logger.dart';
 
 import 'package:hoot/models/user.dart';
 

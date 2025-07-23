@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hoot/models/feed_types.dart';
+import 'package:hoot/util/enums/feed_types.dart';
 import 'package:hoot/components/shimmer_skeletons.dart';
 
 class TypeBoxComponent extends StatefulWidget {

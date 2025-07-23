@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hoot/services/error_service.dart';
 import 'package:hoot/models/user.dart';
 
-class NameComponent extends StatefulWidget {
+class NameComponent extends StatelessWidget {
   final U user;
   final int size;
   final bool bold;
@@ -13,17 +11,12 @@ class NameComponent extends StatefulWidget {
   final String feedName;
   const NameComponent({super.key, required this.user, this.size = 16, this.bold = true, this.color = Colors.blue, this.showUsername = false, this.feedName = '', this.textColor});
 
-  @override
-  State<NameComponent> createState() => _NameComponentState();
-}
-
-class _NameComponentState extends State<NameComponent> {
   void _onTapVerified() {
-    ToastService.showToast(context, 'verifiedUser'.tr, false);
+    // TODO: Implement verified user tap action to show a toast indicating the user is verified
   }
 
   void _onTapTester() {
-    ToastService.showToast(context, 'verifiedTester'.tr, false);
+    // TODO: Implement tester user tap action to show a toast indicating the user is a tester
   }
 
   @override
@@ -38,58 +31,58 @@ class _NameComponentState extends State<NameComponent> {
                 maxWidth: MediaQuery.of(context).size.width * 0.4,
               ),
               child: Text(
-                widget.user.name ?? widget.user.username ?? 'User',
+                user.name ?? user.username ?? 'User',
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: widget.textColor ?? Theme.of(context).textTheme.bodyLarge!.color,
-                  fontSize: widget.size.toDouble(),
-                  fontWeight: widget.bold ? FontWeight.bold : FontWeight.normal,
+                  color: textColor ?? Theme.of(context).textTheme.bodyLarge!.color,
+                  fontSize: size.toDouble(),
+                  fontWeight: bold ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
             ),
-            if (widget.user.verified == true)
+            if (user.verified == true)
               Padding(
                 padding: const EdgeInsets.only(left: 4),
                 child: GestureDetector(
                   onTap: _onTapVerified,
-                  child: widget.color != Colors.blue ? Icon(
+                  child: color != Colors.blue ? Icon(
                     Icons.verified_rounded,
-                    color: widget.color,
-                    size: widget.size.toDouble(),
+                    color: color,
+                    size: size.toDouble(),
                   ) : Image.asset(
                     'assets/images/verified.gif',
-                    width: widget.size.toDouble(),
-                    height: widget.size.toDouble(),
+                    width: size.toDouble(),
+                    height: size.toDouble(),
                   )
                 ),
               ),
-            if (widget.user.tester == true)
+            if (user.tester == true)
               Padding(
                 padding: const EdgeInsets.only(left: 4),
                 child: GestureDetector(
                   onTap: _onTapTester,
-                  child: widget.color != Colors.blue ? Icon(
+                  child: color != Colors.blue ? Icon(
                     Icons.bug_report_rounded,
-                    color: widget.color,
-                    size: widget.size.toDouble(),
+                    color: color,
+                    size: size.toDouble(),
                   ) : Image.asset(
                     'assets/images/bug.gif',
-                    width: widget.size.toDouble(),
-                    height: widget.size.toDouble(),
+                    width: size.toDouble(),
+                    height: size.toDouble(),
                   )
                 ),
               ),
           ],
         ),
-        widget.showUsername ? Text(
-          '@${widget.user.username}',
+        showUsername ? Text(
+          '@${user.username}',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: widget.textColor ?? Theme.of(context).textTheme.bodySmall!.color,
+            color: textColor ?? Theme.of(context).textTheme.bodySmall!.color,
           )
-        ) : widget.feedName.isNotEmpty ? Text(
-          widget.feedName,
+        ) : feedName.isNotEmpty ? Text(
+          feedName,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: widget.textColor ?? Theme.of(context).textTheme.bodySmall!.color,
+            color: textColor ?? Theme.of(context).textTheme.bodySmall!.color,
           )
         ) : const SizedBox(),
       ],

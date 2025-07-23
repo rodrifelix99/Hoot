@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:hoot/models/feed_types.dart';
+import 'package:hoot/util/enums/feed_types.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 

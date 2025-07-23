@@ -6,9 +6,7 @@ import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/app/controllers/auth_controller.dart';
-import 'package:hoot/services/error_service.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:hoot/components/shimmer_skeletons.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -81,7 +79,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
               setState(() => _deleted = true);
               bool res = await _feedProvider.deletePost(context, widget.post.id, widget.post.feed!.id);
               if (!res) {
-                ToastService.showToast(context, 'Error deleting post', true);
+                // TODO: Handle error and show a toast
               } else if (widget.onDeleted != null) {
                 widget.onDeleted!();
               }
@@ -111,7 +109,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
             title: Text('reportUsername'.trParams({'value': widget.post.user?.username ?? ''})),
             onTap: () {
               Navigator.of(context).pop();
-              ToastService.showToast(context, 'Reported', false);
+              // TODO: Show a toast
             }
         );
       },
@@ -123,18 +121,18 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
       await widget.onRefeed!();
       return;
     } else if (_authProvider.user?.feeds == null || _authProvider.user!.feeds!.isEmpty) {
-      ToastService.showToast(context, 'Wait a second', false);
+      // TODO: Show a toast
       List<Feed> feeds = await _feedProvider.getFeeds(_authProvider.user!.uid);
       setState(() {
         _authProvider.user!.feeds = feeds;
       });
     } else if (widget.post.reFeeded) {
-      ToastService.showToast(context, 'deleteOnRefeededPost'.tr, false);
+      // TODO: Show a toast 'deleteOnRefeededPost'.tr
       return;
     }
 
     if (_authProvider.user?.feeds == null || _authProvider.user!.feeds!.isEmpty) {
-      ToastService.showToast(context, 'youNeedToCreateAFeedFirst'.tr, false);
+      // TODO: Show a toast 'youNeedToCreateAFeedFirst'.tr
       return;
     }
 
@@ -186,7 +184,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
         widget.post.reFeeded = false;
         widget.post.reFeeds = (widget.post.reFeeds ?? 0) - 1 < 0 ? 0 : (widget.post.reFeeds ?? 0) - 1;
       });
-      ToastService.showToast(context, 'Error refeeding post', true);
+      // TODO: Show a toast and handle error
     }
   }
 
@@ -202,7 +200,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
           widget.post.liked = true;
           widget.post.likes = (widget.post.likes ?? 0) + 1;
         });
-        ToastService.showToast(context, 'Error disliking post', true);
+        // TODO: Show a toast and handle error
       }
     } else {
       // Like the post
@@ -216,7 +214,7 @@ class _PostComponentState extends State<PostComponent> with TickerProviderStateM
           widget.post.liked = false;
           widget.post.likes = (widget.post.likes ?? 0) - 1 < 0 ? 0 : (widget.post.likes ?? 0) - 1;
         });
-        ToastService.showToast(context, 'Error liking post', true);
+        // TODO: Show a toast and handle error
       }
     }
   }

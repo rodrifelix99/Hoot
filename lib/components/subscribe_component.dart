@@ -6,7 +6,6 @@ import 'package:hoot/app/controllers/feed_controller.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 import 'package:hoot/models/user.dart';
-import 'package:hoot/services/error_service.dart';
 /// A component that allows the user to subscribe to a feed and manage requests
 class SubscribeComponent extends StatefulWidget {
   /// The feed to subscribe to
@@ -73,15 +72,14 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
     );
     if (confirm) {
       if (_requestCooldown) {
-        ToastService.showToast(
-            context, 'youAreGoingTooFast'.tr, true);
+        // TODO: Show a toast 'youAreGoingTooFast'.tr
         return;
       }
       setState(() => widget.feed.requests!.add(_authProvider.user!.uid));
       bool res = await _feedProvider.requestToJoinFeed(widget.user.uid, widget.feed.id);
       !res ? setState(() {
         widget.feed.requests!.remove(_authProvider.user!.uid);
-        ToastService.showToast(context, 'errorRequestingToJoin'.tr, true);
+        // TODO: Show a toast and handle error 'errorRequestingToJoin'.tr
       }) : null;
       setState(() => _requestCooldown = true);
       Future.delayed(const Duration(seconds: 60), () => setState(() => _requestCooldown = false));
@@ -90,8 +88,7 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
 
   Future _subscribeToFeed() async {
     if (_subscribeCooldown) {
-      ToastService.showToast(
-          context, 'youAreGoingTooFast'.tr, true);
+      // TODO: Show a toast and handle error 'youAreGoingTooFast'.tr
       return;
     }
     bool confirm = await showDialog(
@@ -116,7 +113,7 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       bool res = await _feedProvider.subscribeToFeed(widget.user.uid, widget.feed.id);
       !res ? setState(() {
         widget.feed.subscribers!.remove(_authProvider.user!.uid);
-        ToastService.showToast(context, 'errorSubscribing'.tr, true);
+        // TODO: Show a toast and handle error 'errorSubscribing'.tr
       }) : null;
       setState(() => _subscribeCooldown = true);
       Future.delayed(const Duration(seconds: 60), () => setState(() => _subscribeCooldown = false));
@@ -146,7 +143,7 @@ class _SubscribeComponentState extends State<SubscribeComponent> {
       bool res = await _feedProvider.unsubscribeFromFeed(widget.user.uid, widget.feed.id);
       !res ? setState(() {
         widget.feed.subscribers!.add(_authProvider.user!.uid);
-        ToastService.showToast(context, 'errorUnsubscribing'.tr, true);
+        // TODO: Show a toast and handle error 'errorUnsubscribing'.tr
       }) : null;
     }
   }
