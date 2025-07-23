@@ -80,8 +80,6 @@ dependencies:
   url_launcher: ^6.1.12
   get: ^4.6.5
   shake: ^2.2.0
-  google_mobile_ads: ^6.0.0
-  app_tracking_transparency: ^2.0.4
   solar_icons: ^0.0.5
   flutter_contacts: ^1.1.7+1
 

@@ -3,7 +3,6 @@ import 'package:hoot/app/routes/app_routes.dart';
 import 'dart:async';
 
 import 'package:animations/animations.dart';
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -47,13 +46,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
-  Future _checkTrackingStatus() async {
-    if (await AppTrackingTransparency.trackingAuthorizationStatus ==
-        TrackingStatus.notDetermined) {
-      await AppTrackingTransparency.requestTrackingAuthorization();
-    }
-  }
-
   Future isNewUser() async {
     U? user = _authProvider.user;
     if (user != null) {
@@ -63,7 +55,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         await _countUnreadNotifications();
       }
       await _setFCMToken();
-      await _checkTrackingStatus();
     } else {
       Get.offAllNamed(AppRoutes.login);
     }
