@@ -80,6 +80,8 @@ dependencies:
   shake: ^2.2.0
   solar_icons: ^0.0.5
   flutter_contacts: ^1.1.7+1
+  toastification: ^3.0.3
+  adaptive_dialog: ^2.4.2
 
   page_transition: any
 dev_dependencies:

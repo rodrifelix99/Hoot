@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hoot/theme/theme.dart';
+import 'package:toastification/toastification.dart';
 import 'firebase_options.dart';
 import 'app/translations/app_translations.dart';
 
@@ -44,13 +45,15 @@ Future<void> main() async {
 
   runZonedGuarded(() {
     runApp(
-      GetMaterialApp(
-        title: 'Hoot',
-        initialBinding: InitialBinding(),
-        getPages: AppPages.pages,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        translations: AppTranslations(),
+      ToastificationWrapper(
+        child: GetMaterialApp(
+          title: 'Hoot',
+          initialBinding: InitialBinding(),
+          getPages: AppPages.pages,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          translations: AppTranslations(),
+        ),
       ),
     );
   }, (error, stack) {
