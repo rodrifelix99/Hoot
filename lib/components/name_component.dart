@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/services/toast_service.dart';
 
 class NameComponent extends StatelessWidget {
   final U user;
@@ -12,11 +14,11 @@ class NameComponent extends StatelessWidget {
   const NameComponent({super.key, required this.user, this.size = 16, this.bold = true, this.color = Colors.blue, this.showUsername = false, this.feedName = '', this.textColor});
 
   void _onTapVerified() {
-    // TODO: Implement verified user tap action to show a toast indicating the user is verified
+    ToastService.showInfo('verifiedUser'.tr);
   }
 
   void _onTapTester() {
-    // TODO: Implement tester user tap action to show a toast indicating the user is a tester
+    ToastService.showInfo('verifiedTester'.tr);
   }
 
   @override
