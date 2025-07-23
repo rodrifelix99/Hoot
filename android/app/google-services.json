@@ -1,61 +1,37 @@
 {
   "project_info": {
-    "project_number": "1038917266721",
-    "project_id": "hoot-1cd96",
-    "storage_bucket": "hoot-1cd96.appspot.com"
+    "project_number": "889498016095",
+    "project_id": "hoot-9f14f",
+    "storage_bucket": "hoot-9f14f.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1038917266721:android:4b1fad63323d27c2a46260",
+        "mobilesdk_app_id": "1:889498016095:android:1834e0186fcfa438967eea",
         "android_client_info": {
           "package_name": "com.hoot.app.nonic"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1038917266721-bvg3ampgnemb9f6lu0f7qlg71mnenrtv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.hoot.app.nonic",
-            "certificate_hash": "9111071a1e29fea8b1ecc7df022c413f0ce36730"
-          }
-        },
-        {
-          "client_id": "1038917266721-iqpjn5v9hi7tmn6tnio9a8l6u4tb0skb.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.hoot.app.nonic",
-            "certificate_hash": "b9b7a81a34d142586eeeaa1ca8218aec715b67a5"
-          }
-        },
-        {
-          "client_id": "1038917266721-mdpilp2uoumdff4qo8rlgkqsurcbvvt4.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.hoot.app.nonic",
-            "certificate_hash": "3f1a3d5ef743d69d839a8fa3de9bd08be6f80cb8"
-          }
-        },
-        {
-          "client_id": "1038917266721-a68jbpa85uja88hd7tdt981r96dal44m.apps.googleusercontent.com",
+          "client_id": "889498016095-ppuqaao8s0n8sdrldj1ctbbqh4fcnbbv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBKuNJ1wll_uJZQStZoqVoNtMpguLXqBbQ"
+          "current_key": "AIzaSyB2SbYUCJ_hNQLWLQbE8uFcUk_5PkpHCV4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1038917266721-a68jbpa85uja88hd7tdt981r96dal44m.apps.googleusercontent.com",
+              "client_id": "889498016095-ppuqaao8s0n8sdrldj1ctbbqh4fcnbbv.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "1038917266721-bt8q5uhgll2tv5ksju28rdbjb0ksvcnn.apps.googleusercontent.com",
+              "client_id": "889498016095-t9qt1bl16fj3qrb4hq3ps1jngn3utkmr.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.hoot.app.hoot"
@@ -63,8 +39,7 @@
             }
           ]
         }
-      },
-      "admob_app_id": "ca-app-pub-2440287554514413~9425267833"
+      }
     }
   ],
   "configuration_version": "1"

@@ -47,31 +47,31 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAGAkp4zZZm_9EQYt-AZ8GSfsALJRwKkuA',
-    appId: '1:1038917266721:web:8327e8923c58e861a46260',
-    messagingSenderId: '1038917266721',
-    projectId: 'hoot-1cd96',
-    authDomain: 'hoot-1cd96.firebaseapp.com',
-    storageBucket: 'hoot-1cd96.appspot.com',
-    measurementId: 'G-SC5PPSSLKY',
+    apiKey: 'AIzaSyC52jHDXzDDKbHH1Pp0ZcOQgvJxbKNu1T4',
+    appId: '1:889498016095:web:56085f96881d72d0967eea',
+    messagingSenderId: '889498016095',
+    projectId: 'hoot-9f14f',
+    authDomain: 'hoot-9f14f.firebaseapp.com',
+    storageBucket: 'hoot-9f14f.firebasestorage.app',
+    measurementId: 'G-83CZ020RGH',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBKuNJ1wll_uJZQStZoqVoNtMpguLXqBbQ',
-    appId: '1:1038917266721:android:4b1fad63323d27c2a46260',
-    messagingSenderId: '1038917266721',
-    projectId: 'hoot-1cd96',
-    storageBucket: 'hoot-1cd96.appspot.com',
+    apiKey: 'AIzaSyB2SbYUCJ_hNQLWLQbE8uFcUk_5PkpHCV4',
+    appId: '1:889498016095:android:1834e0186fcfa438967eea',
+    messagingSenderId: '889498016095',
+    projectId: 'hoot-9f14f',
+    storageBucket: 'hoot-9f14f.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCnfxvwEYAkFGxYmoKd03VPyXoATuMCXZw',
-    appId: '1:1038917266721:ios:32487bd3410dec21a46260',
-    messagingSenderId: '1038917266721',
-    projectId: 'hoot-1cd96',
-    storageBucket: 'hoot-1cd96.appspot.com',
-    androidClientId: '1038917266721-0m2p11r7kmcqf7hibcambi3kfe3rjaia.apps.googleusercontent.com',
-    iosClientId: '1038917266721-bt8q5uhgll2tv5ksju28rdbjb0ksvcnn.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCgT_ZOnvk5-WcbQcIT9KY1YJ-Sn0iPM-Y',
+    appId: '1:889498016095:ios:e768c47952ab3420967eea',
+    messagingSenderId: '889498016095',
+    projectId: 'hoot-9f14f',
+    storageBucket: 'hoot-9f14f.firebasestorage.app',
+    iosClientId: '889498016095-t9qt1bl16fj3qrb4hq3ps1jngn3utkmr.apps.googleusercontent.com',
     iosBundleId: 'com.hoot.app.hoot',
   );
+
 }
