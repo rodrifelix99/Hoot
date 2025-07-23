@@ -14,3 +14,13 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Running Tests
+
+To execute the widget tests run:
+
+```bash
+flutter test
+```
+
+Make sure all dependencies have been fetched with `flutter pub get` before running the tests.
