@@ -47,7 +47,7 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
                     color: Theme.of(context)
                         .colorScheme
                         .secondary
-                        .withValues(alpha: 0.5)),
+                        .withOpacity(0.5)),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -91,14 +91,14 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
                     color: Theme.of(context)
                         .colorScheme
                         .secondary
-                        .withValues(alpha: 0.1)),
+                        .withOpacity(0.1)),
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
                     color: Theme.of(context)
                         .colorScheme
                         .secondary
-                        .withValues(alpha: 0.1),
+                        .withOpacity(0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 5),
                   ),
@@ -151,7 +151,7 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
                                     color: Theme.of(context)
                                         .colorScheme
                                         .secondary
-                                        .withValues(alpha: 0.5),
+                                        .withOpacity(0.5),
                                   )),
                         ],
                       ),

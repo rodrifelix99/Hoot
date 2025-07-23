@@ -35,7 +35,7 @@ class ListItemComponent extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: backgroundColor ?? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
+                  color: backgroundColor ?? Theme.of(context).colorScheme.secondary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
@@ -47,9 +47,9 @@ class ListItemComponent extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: small ? Theme.of(context).textTheme.titleSmall!.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: foregroundColor ?? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8)
+                          color: foregroundColor ?? Theme.of(context).colorScheme.onSurface.withOpacity(0.8)
                       ) : Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: foregroundColor ?? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8)
+                        color: foregroundColor ?? Theme.of(context).colorScheme.onSurface.withOpacity(0.8)
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -58,7 +58,7 @@ class ListItemComponent extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.75)
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.75)
                       ),
                     ),
                   ],

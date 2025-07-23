@@ -122,7 +122,7 @@ class AppTheme {
       borderRadius: BorderRadius.all(Radius.circular(100)),
     ),
     side: BorderSide.none,
-    backgroundColor: lightColorScheme.primary.withValues(alpha: 0.25),
+    backgroundColor: lightColorScheme.primary.withOpacity(0.25),
     labelStyle: TextStyle(
       fontSize: 12,
       color: lightColorScheme.primary,
