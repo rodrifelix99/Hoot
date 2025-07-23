@@ -1,6 +1,9 @@
-import { functions, db, admin, info, error } from '../common';
+import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { db, admin, info, error } from '../common';
 import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const onCreatePost = functions.region("europe-west1").firestore.document("users/{userId}/feeds/{feedId}/posts/{postId}").onCreate(async (snap, context) => {
+export const onCreatePost = onDocumentCreated({ document: "users/{userId}/feeds/{feedId}/posts/{postId}", region: "europe-west1" }, async (event) => {
+  const snap = event.data;
+  const context = event;
   try {
     const { userId, feedId, postId } = context.params;
     const feedSubscribers = await db.collection("users").doc(userId).collection("feeds").doc(feedId).collection("subscribers").get();

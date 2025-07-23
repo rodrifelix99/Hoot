@@ -1,6 +1,9 @@
-import { functions, db, admin, info, error } from '../common';
+import { onCall } from 'firebase-functions/v2/https';
+import { db, admin, info, error } from '../common';
 import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const recentlyAddedFeeds = functions.region("europe-west1").https.onCall(async (data, context) => {
+export const recentlyAddedFeeds = onCall({ region: 'europe-west1' }, async (request) => {
+  const data = request.data;
+  const context = request;
   try {
     const feeds = await db.collectionGroup("feeds").get();
     feeds.docs.sort((a, b) => b.data().createdAt - a.data().createdAt);

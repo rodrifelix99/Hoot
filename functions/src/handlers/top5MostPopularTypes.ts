@@ -1,6 +1,7 @@
-import { functions, db, admin, info, error } from '../common';
+import { onCall } from 'firebase-functions/v2/https';
+import { db, admin, info, error } from '../common';
 import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const top5MostPopularTypes = functions.region("europe-west1").https.onCall(async () => {
+export const top5MostPopularTypes = onCall({ region: 'europe-west1' }, async (request) => {
   try {
     const feeds = await db.collectionGroup("feeds").get();
     const feedTypes = {};

@@ -1,6 +1,7 @@
-import { functions, db, admin, info, error } from '../common';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { db, admin, info, error } from '../common';
 import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const notifyUpInactiveUsers = functions.region("europe-west1").pubsub.schedule("every 24 hours").onRun(async (context) => {
+export const notifyUpInactiveUsers = onSchedule({ schedule: "every 24 hours", region: "europe-west1" }, async (event) => {
   try {
     const users = await db.collection("users").where("lastOnline", "<", admin.firestore.Timestamp.fromDate(new Date(Date.now() - 48 * 60 * 60 * 1000))).get();
     const tokens = [];

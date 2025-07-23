@@ -1,6 +1,8 @@
-import { functions, db, admin, info, error } from '../common';
+import { onCall } from 'firebase-functions/v2/https';
+import { db, admin, info, error } from '../common';
 import { getUser, getFeedObject, getHootObj, sendPush, sendDatabaseNotification } from '../utils';
-export const isUsernameAvailable = functions.region("europe-west1").https.onCall(async (data) => {
+export const isUsernameAvailable = onCall({ region: 'europe-west1' }, async (request) => {
+  const data = request.data;
   try {
     const username = data;
     const user = await db.collection("users").where("username", "==", username).get();
