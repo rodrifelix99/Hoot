@@ -437,9 +437,6 @@ class _ThirdScreenState extends State<ThirdScreen> {
       CroppedFile? croppedImage = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-        ],
         uiSettings: [
           AndroidUiSettings(
               toolbarTitle: 'Crop avatar',
@@ -449,9 +446,6 @@ class _ThirdScreenState extends State<ThirdScreen> {
               lockAspectRatio: false),
           IOSUiSettings(
             title: 'Crop avatar',
-          ),
-          WebUiSettings(
-            context: context,
           ),
         ],
       );

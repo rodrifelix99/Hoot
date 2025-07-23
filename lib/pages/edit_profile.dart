@@ -55,7 +55,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
       CroppedFile? croppedImage = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
         aspectRatio: CropAspectRatio(ratioX: ratioX, ratioY: ratioY),
-        aspectRatioPresets: [preset],
         uiSettings: [
           AndroidUiSettings(
               toolbarTitle: 'Crop avatar',
@@ -65,9 +64,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
               lockAspectRatio: false),
           IOSUiSettings(
             title: 'Crop avatar',
-          ),
-          WebUiSettings(
-            context: context,
           ),
         ],
       );
