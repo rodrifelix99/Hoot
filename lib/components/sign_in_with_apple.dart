@@ -1,3 +1,4 @@
+import 'package:hoot/app/controllers/auth_controller.dart';
 import 'package:hoot/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'dart:io';

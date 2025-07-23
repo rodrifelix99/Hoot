@@ -34,7 +34,7 @@ class LastWelcomeScreen extends StatelessWidget {
               right: 20,
               child: ElevatedButton(
                 onPressed: () {
-                  Get.offAllNamed(context, '/home', (route) => false);
+                  Get.offAllNamed('/home', predicate: (route) => false);
                 },
                 style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
                   backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary),

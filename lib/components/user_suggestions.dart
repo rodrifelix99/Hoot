@@ -34,7 +34,7 @@ class _UserSuggestionsState extends State<UserSuggestions> {
         _authProvider.userSuggestions = users;
       }
     } catch (e) {
-      logError(e);
+      logError(e.toString());
     } finally {
       setState(() => _isLoading = false);
     }

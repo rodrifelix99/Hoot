@@ -303,8 +303,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             ),
                           const SizedBox(width: 10),
                           GestureDetector(
-                              onTap: () => Get.toNamed(
-                                  context, '/search_by_genre',
+                              onTap: () => Get.toNamed('/search_by_genre',
                                   arguments: FeedType.general),
                               child: const TypeBoxComponent(
                                   type: FeedType.other, isLast: true)),

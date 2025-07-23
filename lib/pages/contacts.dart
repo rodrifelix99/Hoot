@@ -142,7 +142,7 @@ class _ContactsPageState extends State<ContactsPage> {
           itemBuilder: (context, index) {
             U contact = friends[index];
             return ListTile(
-              onTap: () => Get.toNamed(context, '/profile', arguments: contact),
+              onTap: () => Get.toNamed('/profile', arguments: contact),
               leading: Avatar(
                 image: contact.smallProfilePictureUrl ?? '',
                 size: 40,

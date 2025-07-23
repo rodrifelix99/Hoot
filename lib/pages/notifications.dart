@@ -51,7 +51,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       });
       _authProvider.markNotificationsAsRead();
     } catch (e) {
-      logError(e);
+      logError(e.toString());
       ToastService.showToast(context, e.toString(), true);
     } finally {
       _refreshController.loadComplete();

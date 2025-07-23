@@ -37,7 +37,7 @@ class _NativeAdComponentState extends State<NativeAdComponent> {
             // Dispose the ad here to free resources.
             FirebaseCrashlytics.instance
                 .log('$NativeAd failed to load: $error');
-            logError(error);
+            logError(error.toString());
             ad.dispose();
           },
         ),

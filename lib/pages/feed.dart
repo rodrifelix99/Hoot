@@ -39,7 +39,7 @@ class _FeedPageState extends State<FeedPage> {
       }
       await _feedProvider.getMainFeed(startAfter, refresh);
     } catch (e) {
-      logError(e);
+      logError(e.toString());
       ToastService.showToast(context, e.toString(), true);
     } finally {
       _refreshController.refreshCompleted();
