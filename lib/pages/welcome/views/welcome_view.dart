@@ -249,9 +249,7 @@ class _WelcomeViewState extends State<WelcomeView> {
             ],
             const Spacer(),
             ElevatedButton(
-              onPressed: () async {
-                await onPressed();
-              },
+              onPressed: onPressed,
               child: Text('continueButton'.tr),
             ),
           ],
