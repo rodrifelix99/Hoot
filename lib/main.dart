@@ -27,7 +27,6 @@ Future<void> main() async {
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  // Request permission for notifications
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
@@ -51,7 +50,7 @@ Future<void> main() async {
           title: 'Hoot',
           initialBinding: InitialBinding(),
           getPages: AppPages.pages,
-          initialRoute: AppRoutes.login,
+          initialRoute: AppRoutes.home,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           translations: AppTranslations(),
