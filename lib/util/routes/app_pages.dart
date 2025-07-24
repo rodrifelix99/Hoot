@@ -40,111 +40,130 @@ import 'package:hoot/pages/contacts/views/contacts_view.dart';
 import 'package:hoot/pages/terms.dart';
 import 'package:hoot/pages/about_us.dart';
 import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/middleware/auth_middleware.dart';
 
 class AppPages {
   static final List<GetPage> pages = [
-    GetPage(
-      name: AppRoutes.login,
-      page: () => LoginView(),
-      binding: LoginBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.welcome,
-      page: () => const WelcomeView(),
-      binding: WelcomeBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.username,
-      page: () => const UsernameView(),
-      binding: UsernameBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.avatar,
-      page: () => const AvatarView(),
-      binding: AvatarBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.home,
-      page: () => const HomeView(),
-      binding: HomeBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.createPost,
-      page: () => const CreatePostView(),
-      binding: CreatePostBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.settings,
-      page: () => const SettingsView(),
-      binding: SettingsBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.profile,
-      page: () => const ProfileView(),
-      binding: ProfileBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.editProfile,
-      page: () => const EditProfileView(),
-      binding: EditProfileBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.search,
-      page: () => const SearchView(),
-      binding: SearchBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.searchByGenre,
-      page: () => const SearchByGenreView(),
-      binding: SearchByGenreBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.createFeed,
-      page: () => const CreateFeedView(),
-      binding: CreateFeedBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.editFeed,
-      page: () => const EditFeedView(),
-      binding: EditFeedBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.feedRequests,
-      page: () => const FeedRequestsView(),
-      binding: FeedRequestsBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.subscriptions,
-      page: () => const SubscriptionsView(),
-      binding: SubscriptionsBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.subscribers,
-      page: () => const SubscribersView(),
-      binding: SubscribersBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.post,
-      page: () => const PostView(),
-      binding: PostBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.report,
-      page: () => const ReportView(),
-      binding: ReportBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.terms,
-      page: () => const TermsOfService(),
-    ),
-    GetPage(
-      name: AppRoutes.aboutUs,
-      page: () => const AboutUsPage(),
-    ),
-    GetPage(
-      name: AppRoutes.contacts,
-      page: () => const ContactsView(),
-      binding: ContactsBinding(),
-    ),
+      GetPage(
+        name: AppRoutes.login,
+        page: () => LoginView(),
+        binding: LoginBinding(),
+      ),
+      GetPage(
+        name: AppRoutes.welcome,
+        page: () => const WelcomeView(),
+        binding: WelcomeBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.username,
+        page: () => const UsernameView(),
+        binding: UsernameBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.avatar,
+        page: () => const AvatarView(),
+        binding: AvatarBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.home,
+        page: () => const HomeView(),
+        binding: HomeBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.createPost,
+        page: () => const CreatePostView(),
+        binding: CreatePostBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.settings,
+        page: () => const SettingsView(),
+        binding: SettingsBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.profile,
+        page: () => const ProfileView(),
+        binding: ProfileBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.editProfile,
+        page: () => const EditProfileView(),
+        binding: EditProfileBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.search,
+        page: () => const SearchView(),
+        binding: SearchBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.searchByGenre,
+        page: () => const SearchByGenreView(),
+        binding: SearchByGenreBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.createFeed,
+        page: () => const CreateFeedView(),
+        binding: CreateFeedBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.editFeed,
+        page: () => const EditFeedView(),
+        binding: EditFeedBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.feedRequests,
+        page: () => const FeedRequestsView(),
+        binding: FeedRequestsBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.subscriptions,
+        page: () => const SubscriptionsView(),
+        binding: SubscriptionsBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.subscribers,
+        page: () => const SubscribersView(),
+        binding: SubscribersBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.post,
+        page: () => const PostView(),
+        binding: PostBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.report,
+        page: () => const ReportView(),
+        binding: ReportBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.terms,
+        page: () => const TermsOfService(),
+      ),
+      GetPage(
+        name: AppRoutes.aboutUs,
+        page: () => const AboutUsPage(),
+      ),
+      GetPage(
+        name: AppRoutes.contacts,
+        page: () => const ContactsView(),
+        binding: ContactsBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
   ];
 }
