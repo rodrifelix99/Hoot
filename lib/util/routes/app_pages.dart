@@ -4,9 +4,7 @@ import 'package:hoot/pages/login/views/login_view.dart';
 import 'package:hoot/pages/welcome/bindings/welcome_binding.dart';
 import 'package:hoot/pages/welcome/views/welcome_view.dart';
 import 'package:hoot/pages/username/bindings/username_binding.dart';
-import 'package:hoot/pages/username/views/username_view.dart';
 import 'package:hoot/pages/avatar/bindings/avatar_binding.dart';
-import 'package:hoot/pages/avatar/views/avatar_view.dart';
 import 'package:hoot/pages/home/bindings/home_binding.dart';
 import 'package:hoot/pages/home/views/home_view.dart';
 import 'package:hoot/pages/create_post/bindings/create_post_binding.dart';
@@ -57,13 +55,13 @@ class AppPages {
       ),
       GetPage(
         name: AppRoutes.username,
-        page: () => const UsernameView(),
+        page: () => const WelcomeView(initialIndex: 1),
         binding: UsernameBinding(),
         middlewares: [AuthMiddleware()],
       ),
       GetPage(
         name: AppRoutes.avatar,
-        page: () => const AvatarView(),
+        page: () => const WelcomeView(initialIndex: 2),
         binding: AvatarBinding(),
         middlewares: [AuthMiddleware()],
       ),
