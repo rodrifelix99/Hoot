@@ -36,8 +36,8 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  color.withOpacity(0.6),
-                  color.withOpacity(0.9),
+                  color.withValues(alpha: 0.6),
+                  color.withValues(alpha: 0.9),
                 ],
               ),
             ),
@@ -51,8 +51,8 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              color.withOpacity(0.6),
-              color.withOpacity(0.9),
+              color.withValues(alpha: 0.6),
+              color.withValues(alpha: 0.9),
             ],
           ),
         ),
@@ -63,7 +63,7 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
               left: -25,
               child: Icon(
                 widget.isLast ? Icons.more_vert_rounded : FeedTypeExtension.toIcon(widget.type),
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 size: 150,
               ),
             ),
@@ -76,7 +76,7 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
                   widget.isLast ? 'discoverMoreFeeds'.tr : FeedTypeExtension.toTranslatedString(context, widget.type),
                   textAlign: TextAlign.right,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     fontSize: MediaQuery.of(context).size.width * 0.06,
                     fontWeight: FontWeight.w400,
                   ),

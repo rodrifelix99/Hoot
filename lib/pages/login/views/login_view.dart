@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart' as buttons;
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:get/get.dart';
 
 import '../controllers/login_controller.dart';
@@ -11,20 +10,36 @@ class LoginView extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            buttons.SignInButton(
-              buttons.Buttons.Google,
-              onPressed: controller.signInWithGoogle,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/login/bg.jpg',
+              fit: BoxFit.cover,
             ),
-            const SizedBox(height: 16),
-            SignInWithAppleButton(
-              onPressed: controller.signInWithApple,
+          ),
+          Positioned(
+            bottom: 16,
+            left: 16,
+            right: 16,
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  buttons.SignInButton(
+                    buttons.Buttons.Google,
+                    onPressed: controller.signInWithGoogle,
+                  ),
+                  buttons.SignInButton(
+                    buttons.Buttons.Apple,
+                    onPressed: controller.signInWithApple,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -17,14 +17,14 @@ class NothingToShowComponent extends StatelessWidget {
           Icon(
             icon.icon,
             size: 100.0,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
           ),
           const SizedBox(height: 10.0),
           Text(
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
             ),
           ),
           const SizedBox(height: 20.0),
