@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:hoot/util/routes/app_pages.dart';
 import 'package:hoot/util/routes/app_routes.dart';
@@ -20,7 +21,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -61,6 +64,7 @@ Future<void> main() async {
         ),
       ),
     );
+    FlutterNativeSplash.remove();
   }, (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack);
   });
