@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 import '../../create_post/views/create_post_view.dart';
 import '../../explore/views/explore_view.dart';
@@ -28,17 +29,41 @@ class HomeView extends GetView<HomeController> {
         bottomNavigationBar: NavigationBar(
           selectedIndex: index,
           onDestinationSelected: controller.changeIndex,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+          indicatorColor: Colors.transparent,
+          indicatorShape: const CircleBorder(),
           destinations: [
             NavigationDestination(
-                icon: Icon(Icons.dynamic_feed), label: 'feed'.tr),
+              icon: Icon(SolarIconsOutline.feed),
+              selectedIcon: Icon(SolarIconsBold.feed),
+              label: 'feed'.tr,
+            ),
             NavigationDestination(
-                icon: Icon(Icons.explore), label: 'explore'.tr),
+              icon: Icon(SolarIconsOutline.compass),
+              selectedIcon: Icon(SolarIconsBold.compass),
+              label: 'explore'.tr,
+            ),
             NavigationDestination(
-                icon: Icon(Icons.add), label: 'createPost'.tr),
+              icon: Icon(
+                SolarIconsOutline.addSquare,
+                size: 42,
+              ),
+              selectedIcon: Icon(
+                SolarIconsBold.addSquare,
+                size: 42,
+              ),
+              label: 'createPost'.tr,
+            ),
             NavigationDestination(
-                icon: Icon(Icons.notifications), label: 'notifications'.tr),
+              icon: Icon(SolarIconsOutline.bell),
+              selectedIcon: Icon(SolarIconsBold.bell),
+              label: 'notifications'.tr,
+            ),
             NavigationDestination(
-                icon: Icon(Icons.person), label: 'profile'.tr),
+              icon: Icon(SolarIconsOutline.user),
+              selectedIcon: Icon(SolarIconsBold.user),
+              label: 'profile'.tr,
+            ),
           ],
         ),
       );
