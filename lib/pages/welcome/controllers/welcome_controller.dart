@@ -25,7 +25,19 @@ class WelcomeController extends GetxController {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return false;
 
-    await _firestore.collection('users').doc(uid).update({'displayName': name});
+    final user = _auth.currentUser;
+    if (user != null) {
+      user.name = name;
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .set(user.toCache(), SetOptions(merge: true));
+    } else {
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .set({'displayName': name}, SetOptions(merge: true));
+    }
     _auth.currentUser?.name = name;
     return true;
   }
@@ -55,10 +67,19 @@ class WelcomeController extends GetxController {
 
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return false;
-    await _firestore
-        .collection('users')
-        .doc(uid)
-        .update({'username': username});
+    final user = _auth.currentUser;
+    if (user != null) {
+      user.username = username;
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .set(user.toCache(), SetOptions(merge: true));
+    } else {
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .set({'username': username}, SetOptions(merge: true));
+    }
     _auth.currentUser?.username = username;
     return true;
   }
