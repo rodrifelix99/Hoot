@@ -3,7 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:hoot/util/routes/app_pages.dart';
 import 'package:hoot/util/routes/app_routes.dart';
-import 'package:hoot/util/routes/initial_binding.dart';
+import 'package:hoot/dependency_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,7 +12,6 @@ import 'package:hoot/theme/theme.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 import 'package:toastification/toastification.dart';
 import 'firebase_options.dart';
-import 'package:hoot/services/auth_service.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -27,7 +26,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await AuthService.fetchUser();
+  await DependencyInjector.init();
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
@@ -53,7 +52,6 @@ Future<void> main() async {
       ToastificationWrapper(
         child: GetMaterialApp(
           title: 'Hoot',
-          initialBinding: InitialBinding(),
           getPages: AppPages.pages,
           initialRoute: AppRoutes.home,
           theme: AppTheme.lightTheme,
