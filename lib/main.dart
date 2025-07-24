@@ -55,6 +55,8 @@ Future<void> main() async {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           translations: AppTranslations(),
+          locale: Get.deviceLocale,
+          fallbackLocale: const Locale('en', 'US'),
         ),
       ),
     );
