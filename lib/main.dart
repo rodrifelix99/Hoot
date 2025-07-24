@@ -11,6 +11,7 @@ import 'package:hoot/theme/theme.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 import 'package:toastification/toastification.dart';
 import 'firebase_options.dart';
+import 'package:hoot/services/auth_service.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -23,6 +24,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await AuthService.fetchUser();
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 

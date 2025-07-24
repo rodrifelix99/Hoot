@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/error_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../util/routes/app_routes.dart';
 
@@ -28,11 +27,8 @@ class LoginController extends GetxController {
   }
 
   Future<void> _handleUserCredential(UserCredential credential) async {
-    final uid = credential.user?.uid;
-    if (uid == null) return;
-    final doc =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    if (doc.exists) {
+    await AuthService.fetchUser();
+    if (AuthService.currentUser != null) {
       Get.offAllNamed(AppRoutes.home);
     } else {
       Get.offAllNamed(AppRoutes.welcome);

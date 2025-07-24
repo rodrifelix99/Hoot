@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import '../models/user.dart';
 
 /// Provides authentication helpers for the application.
 class AuthService {
@@ -9,6 +10,31 @@ class AuthService {
 
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  static U? _currentUser;
+  static bool _fetched = false;
+
+  /// Returns the cached [U] if available or fetches it from Firestore.
+  static Future<U?> fetchUser() async {
+    if (_fetched) return _currentUser;
+    _fetched = true;
+    final firebaseUser = _auth.currentUser;
+    if (firebaseUser == null) {
+      _currentUser = null;
+      return null;
+    }
+
+    final doc =
+        await _firestore.collection('users').doc(firebaseUser.uid).get();
+    if (doc.exists) {
+      _currentUser = U.fromJson(doc.data()!);
+    } else {
+      _currentUser = null;
+    }
+    return _currentUser;
+  }
+
+  static U? get currentUser => _currentUser;
 
   /// Creates a Firestore document for [user] if none exists.
   static Future<void> _createUserDocumentIfNeeded(User user) async {
@@ -22,8 +48,12 @@ class AuthService {
     });
   }
 
-  /// Signs out the current user.
-  static Future<void> signOut() => _auth.signOut();
+  /// Signs out the current user and clears cached data.
+  static Future<void> signOut() async {
+    _currentUser = null;
+    _fetched = false;
+    await _auth.signOut();
+  }
 
   /// Signs in the user using Google authentication.
   static Future<UserCredential> signInWithGoogle() async {
@@ -47,6 +77,8 @@ class AuthService {
         await _createUserDocumentIfNeeded(firebaseUser);
       }
     }
+    _fetched = false;
+    await fetchUser();
     return result;
   }
 
@@ -70,6 +102,8 @@ class AuthService {
         await _createUserDocumentIfNeeded(firebaseUser);
       }
     }
+    _fetched = false;
+    await fetchUser();
     return result;
   }
 }
