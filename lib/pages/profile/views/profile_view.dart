@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/components/appbar_component.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -7,8 +8,13 @@ class ProfileView extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('profile'.tr),
+    return Scaffold(
+      appBar: AppBarComponent(
+        title: 'profile'.tr,
+      ),
+      body: Center(
+        child: Text('profile'.tr),
+      ),
     );
   }
 }

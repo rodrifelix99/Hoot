@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/components/appbar_component.dart';
 import '../controllers/explore_controller.dart';
 
 class ExploreView extends GetView<ExploreController> {
@@ -7,8 +8,13 @@ class ExploreView extends GetView<ExploreController> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('explore'.tr),
+    return Scaffold(
+      appBar: AppBarComponent(
+        title: 'explore'.tr,
+      ),
+      body: Center(
+        child: Text('explore'.tr),
+      ),
     );
   }
 }

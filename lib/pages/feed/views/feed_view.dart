@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/components/appbar_component.dart';
 import '../controllers/feed_controller.dart';
 
 class FeedView extends GetView<FeedController> {
@@ -7,8 +8,13 @@ class FeedView extends GetView<FeedController> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('feed'.tr),
+    return Scaffold(
+      appBar: AppBarComponent(
+        title: 'feed'.tr,
+      ),
+      body: Center(
+        child: Text('feed'.tr),
+      ),
     );
   }
 }
