@@ -12,7 +12,10 @@ class SettingsView extends GetView<SettingsController> {
         title: Text('settings'.tr),
       ),
       body: Center(
-        child: Text('settings'.tr),
+        child: ElevatedButton(
+          onPressed: () => controller.signOut(context),
+          child: Text('signOut'.tr),
+        ),
       ),
     );
   }
