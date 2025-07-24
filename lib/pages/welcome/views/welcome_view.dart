@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:card_swiper/card_swiper.dart';
 
 import '../../avatar/controllers/avatar_controller.dart';
+import '../controllers/welcome_controller.dart';
 
 class WelcomeView extends StatefulWidget {
   const WelcomeView({super.key, this.initialIndex = 0});
@@ -18,12 +19,14 @@ class _WelcomeViewState extends State<WelcomeView> {
   late int _index;
 
   late final AvatarController _avatarController;
+  late final WelcomeController _welcomeController;
 
   @override
   void initState() {
     super.initState();
     _index = widget.initialIndex;
     _avatarController = Get.put(AvatarController());
+    _welcomeController = Get.find<WelcomeController>();
   }
 
   @override
@@ -172,13 +175,35 @@ class _WelcomeViewState extends State<WelcomeView> {
                       return _buildCard(
                         titles[i],
                         'displayNameDescription'.tr,
-                        () => _controller.next(),
+                        () async {
+                          if (await _welcomeController.saveDisplayName()) {
+                            _controller.next();
+                          }
+                        },
+                        input: TextField(
+                          controller: _welcomeController.displayNameController,
+                          decoration: InputDecoration(
+                            labelText: 'displayName'.tr,
+                            hintText: 'displayNameExample'.tr,
+                          ),
+                        ),
                       );
                     case 1:
                       return _buildCard(
                         titles[i],
                         'usernameDescription'.tr,
-                        () => _controller.next(),
+                        () async {
+                          if (await _welcomeController.saveUsername()) {
+                            _controller.next();
+                          }
+                        },
+                        input: TextField(
+                          controller: _welcomeController.usernameController,
+                          decoration: InputDecoration(
+                            labelText: 'username'.tr,
+                            hintText: 'usernameExample'.tr,
+                          ),
+                        ),
                       );
                     default:
                       return _buildCard(
@@ -196,7 +221,12 @@ class _WelcomeViewState extends State<WelcomeView> {
     );
   }
 
-  Widget _buildCard(String title, String text, VoidCallback onPressed) {
+  Widget _buildCard(
+    String title,
+    String text,
+    Future<void> Function() onPressed, {
+    Widget? input,
+  }) {
     return SafeArea(
       top: false,
       child: Padding(
@@ -213,9 +243,15 @@ class _WelcomeViewState extends State<WelcomeView> {
             ),
             const SizedBox(height: 20),
             Text(text),
+            if (input != null) ...[
+              const SizedBox(height: 20),
+              input,
+            ],
             const Spacer(),
             ElevatedButton(
-              onPressed: onPressed,
+              onPressed: () async {
+                await onPressed();
+              },
               child: Text('continueButton'.tr),
             ),
           ],
