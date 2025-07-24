@@ -6,16 +6,14 @@ import '../models/user.dart';
 
 /// Provides authentication helpers for the application.
 class AuthService {
-  AuthService._();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  static final FirebaseAuth _auth = FirebaseAuth.instance;
-  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  static U? _currentUser;
-  static bool _fetched = false;
+  U? _currentUser;
+  bool _fetched = false;
 
   /// Returns the cached [U] if available or fetches it from Firestore.
-  static Future<U?> fetchUser() async {
+  Future<U?> fetchUser() async {
     if (_fetched) return _currentUser;
     _fetched = true;
     final firebaseUser = _auth.currentUser;
@@ -34,10 +32,10 @@ class AuthService {
     return _currentUser;
   }
 
-  static U? get currentUser => _currentUser;
+  U? get currentUser => _currentUser;
 
   /// Creates a Firestore document for [user] if none exists.
-  static Future<void> _createUserDocumentIfNeeded(User user) async {
+  Future<void> _createUserDocumentIfNeeded(User user) async {
     final docRef = _firestore.collection('users').doc(user.uid);
     final doc = await docRef.get();
     if (doc.exists) return;
@@ -49,14 +47,14 @@ class AuthService {
   }
 
   /// Signs out the current user and clears cached data.
-  static Future<void> signOut() async {
+  Future<void> signOut() async {
     _currentUser = null;
     _fetched = false;
     await _auth.signOut();
   }
 
   /// Signs in the user using Google authentication.
-  static Future<UserCredential> signInWithGoogle() async {
+  Future<UserCredential> signInWithGoogle() async {
     final user = await GoogleSignIn().signIn();
     if (user == null) {
       throw FirebaseAuthException(
@@ -83,7 +81,7 @@ class AuthService {
   }
 
   /// Signs in the user using Apple authentication.
-  static Future<UserCredential> signInWithApple() async {
+  Future<UserCredential> signInWithApple() async {
     final appleIDCredential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,

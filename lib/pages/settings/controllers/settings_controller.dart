@@ -7,6 +7,8 @@ import '../../../services/error_service.dart';
 import '../../../util/routes/app_routes.dart';
 
 class SettingsController extends GetxController {
+  final _auth = Get.find<AuthService>();
+
   /// Signs out the user after confirmation.
   Future<void> signOut(BuildContext context) async {
     final confirmed = await DialogService.confirm(
@@ -18,7 +20,7 @@ class SettingsController extends GetxController {
     );
     if (!confirmed) return;
     try {
-      await AuthService.signOut();
+      await _auth.signOut();
       Get.offAllNamed(AppRoutes.login);
     } catch (e, s) {
       await ErrorService.reportError(e, stack: s);

@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../services/auth_service.dart';
 
 import '../util/routes/app_routes.dart';
 
@@ -22,11 +21,6 @@ class AuthMiddleware extends GetMiddleware {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       return GetNavConfig.fromRoute(AppRoutes.login);
-    }
-
-    final u = await AuthService.fetchUser();
-    if (u == null) {
-      return GetNavConfig.fromRoute(AppRoutes.welcome);
     }
 
     return route;
