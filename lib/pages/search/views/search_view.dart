@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchController;
 import 'package:get/get.dart';
-import '../controllers/search_controller.dart';
+import 'package:hoot/pages/search/controllers/search_controller.dart';
 
 class SearchView extends GetView<SearchController> {
   const SearchView({super.key});
