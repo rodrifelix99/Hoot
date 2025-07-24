@@ -22,6 +22,9 @@ class AuthService {
     });
   }
 
+  /// Signs out the current user.
+  static Future<void> signOut() => _auth.signOut();
+
   /// Signs in the user using Google authentication.
   static Future<UserCredential> signInWithGoogle() async {
     final user = await GoogleSignIn().signIn();
