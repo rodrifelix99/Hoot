@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../util/routes/app_routes.dart';
 import '../controllers/avatar_controller.dart';
 
 class AvatarView extends GetView<AvatarController> {
@@ -18,7 +17,7 @@ class AvatarView extends GetView<AvatarController> {
             Text('profilePictureDescription'.tr),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => Get.offAllNamed(AppRoutes.home),
+              onPressed: controller.finishOnboarding,
               child: Text('continueButton'.tr),
             ),
           ],
