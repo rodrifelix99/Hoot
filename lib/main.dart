@@ -52,6 +52,7 @@ Future<void> main() async {
       ToastificationWrapper(
         child: GetMaterialApp(
           title: 'Hoot',
+          debugShowCheckedModeBanner: false,
           getPages: AppPages.pages,
           initialRoute: AppRoutes.home,
           theme: AppTheme.lightTheme,
