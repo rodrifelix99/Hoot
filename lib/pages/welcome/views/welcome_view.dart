@@ -16,7 +16,6 @@ class WelcomeView extends StatefulWidget {
 
 class _WelcomeViewState extends State<WelcomeView> {
   final SwiperController _controller = SwiperController();
-  late int _index;
 
   late final AvatarController _avatarController;
   late final WelcomeController _welcomeController;
@@ -24,7 +23,6 @@ class _WelcomeViewState extends State<WelcomeView> {
   @override
   void initState() {
     super.initState();
-    _index = widget.initialIndex;
     _avatarController = Get.put(AvatarController());
     _welcomeController = Get.find<WelcomeController>();
   }
@@ -143,7 +141,6 @@ class _WelcomeViewState extends State<WelcomeView> {
             right: 0,
             child: Container(
               height: MediaQuery.of(context).size.height * 0.6,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.background,
                 borderRadius: const BorderRadius.only(
@@ -154,8 +151,8 @@ class _WelcomeViewState extends State<WelcomeView> {
                   BoxShadow(
                     color: Theme.of(context)
                         .colorScheme
-                        .onBackground
-                        .withOpacity(0.15),
+                        .onSurface
+                        .withValues(alpha: 0.15),
                     spreadRadius: 2,
                     blurRadius: 20,
                     offset: const Offset(0, -5), // changes position of shadow
@@ -166,9 +163,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                 controller: _controller,
                 index: widget.initialIndex,
                 loop: false,
-                onIndexChanged: (i) => setState(() => _index = i),
                 itemCount: 3,
-                physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, i) {
                   switch (i) {
                     case 0:
@@ -209,6 +204,36 @@ class _WelcomeViewState extends State<WelcomeView> {
                       return _buildCard(
                         titles[i],
                         'profilePictureDescription'.tr,
+                        useSpacer: false,
+                        input: Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  child: CircleAvatar(
+                                    radius: 64,
+                                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(64),
+                                      child: Image.asset(
+                                        'assets/images/avatar.png',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'avatarDescription'.tr,
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                              ],
+                            ),
+                          ),
+                        ),
                         _avatarController.finishOnboarding,
                       );
                   }
@@ -226,11 +251,12 @@ class _WelcomeViewState extends State<WelcomeView> {
     String text,
     Future<void> Function() onPressed, {
     Widget? input,
+        bool useSpacer = true,
   }) {
     return SafeArea(
       top: false,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -247,7 +273,8 @@ class _WelcomeViewState extends State<WelcomeView> {
               const SizedBox(height: 20),
               input,
             ],
-            const Spacer(),
+            if (useSpacer)
+              const Spacer(),
             ElevatedButton(
               onPressed: onPressed,
               child: Text('continueButton'.tr),
