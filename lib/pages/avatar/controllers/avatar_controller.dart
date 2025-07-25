@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:get/get.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -71,12 +70,7 @@ class AvatarController extends GetxController {
         }
       }
 
-      final token = await FirebaseMessaging.instance.getToken();
-      if (token != null) {
-        final callable =
-            FirebaseFunctions.instance.httpsCallable('sendWelcomeNotification');
-        await callable.call({'fcmToken': token});
-      }
+      // Push notification logic removed temporarily
     } catch (e, s) {
       await ErrorService.reportError(e, stack: s);
     } finally {
