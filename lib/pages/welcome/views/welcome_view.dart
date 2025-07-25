@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../avatar/controllers/avatar_controller.dart';
 import '../controllers/welcome_controller.dart';
@@ -201,41 +204,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                         ),
                       );
                     default:
-                      return _buildCard(
-                        titles[i],
-                        'profilePictureDescription'.tr,
-                        useSpacer: false,
-                        input: Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                GestureDetector(
-                                  child: CircleAvatar(
-                                    radius: 64,
-                                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(64),
-                                      child: Image.asset(
-                                        'assets/images/avatar.png',
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  'avatarDescription'.tr,
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                              ],
-                            ),
-                          ),
-                        ),
-                        _avatarController.finishOnboarding,
-                      );
+                      return _buildAvatarCard(titles[i]);
                   }
                 },
               ),
@@ -251,7 +220,7 @@ class _WelcomeViewState extends State<WelcomeView> {
     String text,
     Future<void> Function() onPressed, {
     Widget? input,
-        bool useSpacer = true,
+    bool useSpacer = true,
   }) {
     return SafeArea(
       top: false,
@@ -273,14 +242,96 @@ class _WelcomeViewState extends State<WelcomeView> {
               const SizedBox(height: 20),
               input,
             ],
-            if (useSpacer)
-              const Spacer(),
+            if (useSpacer) const Spacer(),
             ElevatedButton(
               onPressed: onPressed,
               child: Text('continueButton'.tr),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAvatarCard(String title) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Obx(() {
+          final file = _avatarController.avatarFile.value;
+          final uploading = _avatarController.uploading.value;
+          final message = _avatarController.avatarMessage.value;
+          final buttonLabel =
+              file == null ? 'skipForNow'.tr : 'continueButton'.tr;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              const SizedBox(height: 20),
+              Text('profilePictureDescription'.tr),
+              const SizedBox(height: 20),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: _avatarController.pickAvatar,
+                        child: CircleAvatar(
+                          radius: 64,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primaryContainer,
+                          backgroundImage:
+                              file != null ? FileImage(file) : null,
+                          child: file == null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(64),
+                                  child: Image.asset(
+                                    'assets/images/avatar.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : null,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        message,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                            ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Opacity(
+                opacity: uploading ? 0.5 : 1,
+                child: ElevatedButton(
+                  onPressed:
+                      uploading ? null : _avatarController.finishOnboarding,
+                  child: uploading
+                      ? LoadingAnimationWidget.threeArchedCircle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          size: 20,
+                        )
+                      : Text(buttonLabel),
+                ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
