@@ -29,6 +29,7 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
         preferredSize: preferredSize,
         child: Text(
           title!,
+          overflow: TextOverflow.fade,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
             color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w900,

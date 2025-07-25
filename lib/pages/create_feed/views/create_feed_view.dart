@@ -1,6 +1,7 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/components/appbar_component.dart';
 import '../controllers/create_feed_controller.dart';
 import '../../../util/enums/feed_types.dart';
 
@@ -10,21 +11,23 @@ class CreateFeedView extends GetView<CreateFeedController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('createFeed'.tr),
+      appBar: AppBarComponent(
+        title: 'createFeed'.tr,
         actions: [
-          Obx(() => controller.creating.value
-              ? const Padding(
-                  padding: EdgeInsets.all(12),
-                  child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2)),
-                )
-              : TextButton(
-                  onPressed: controller.createFeed,
-                  child: Text('done'.tr),
-                ))
+          Obx(
+            () => controller.creating.value
+                ? const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2)),
+                  )
+                : TextButton(
+                    onPressed: controller.createFeed,
+                    child: Text('done'.tr),
+                  ),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -55,7 +58,7 @@ class CreateFeedView extends GetView<CreateFeedController> {
                           barrierDismissible: true,
                         );
                         controller.selectedColor.value = color;
-                                            },
+                      },
                       child: ColorIndicator(
                         color: controller.selectedColor.value,
                         width: 40,
