@@ -27,6 +27,12 @@ class LoginView extends GetView<LoginController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Text(
+                    'welcomeDescription'.tr,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: 16),
                   buttons.SignInButton(
                     buttons.Buttons.Google,
                     onPressed: controller.signInWithGoogle,
