@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/list_item_component.dart';
 import 'package:hoot/components/type_box_component.dart';
+import 'package:hoot/components/avatar_component.dart';
 import '../../../util/routes/app_routes.dart';
 import '../controllers/explore_controller.dart';
 
@@ -31,6 +32,11 @@ class ExploreView extends GetView<ExploreController> {
             ),
             ...controller.feedSuggestions.map(
               (f) => ListTile(
+                leading: ProfileAvatarComponent(
+                  image: f.imageUrl ?? '',
+                  size: 40,
+                  radius: 20,
+                ),
                 title: Text(f.title),
                 subtitle: Text('feed'.tr),
               ),
@@ -68,17 +74,20 @@ class ExploreView extends GetView<ExploreController> {
               const SizedBox(height: 8),
               Obx(() => Column(
                     children: controller.topFeeds
-                        .map(
-                          (f) => ListItemComponent(
-                            title: f.title,
-                            subtitle:
-                                '${f.subscriberCount ?? 0} ${'followers'.tr}',
+                        .map((f) => ListItemComponent(
+                              leading: ProfileAvatarComponent(
+                                image: f.imageUrl ?? '',
+                                size: 100,
+                                radius: 25,
+                              ),
+                              title: f.title,
+                              subtitle:
+                                  '${f.subscriberCount ?? 0} ${'followers'.tr}',
                             backgroundColor: f.color,
                             foregroundColor: f.color!.computeLuminance() > 0.5
                                 ? Colors.black
                                 : Colors.white,
-                          ),
-                        )
+                            ))
                         .toList(),
                   )),
               const SizedBox(height: 16),

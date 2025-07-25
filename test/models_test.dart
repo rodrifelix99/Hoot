@@ -10,9 +10,11 @@ void main() {
     test('fromJson and toJson round trip', () {
       final feedJson = {
         'id': 'feed1',
+        'userId': 'u1',
         'title': 'Feed',
         'description': 'desc',
         'icon': 'i',
+        'imageUrl': 's.png',
         'color': '123',
         'userId': 'u1',
         'type': 'general',
@@ -55,9 +57,11 @@ void main() {
       final color = const Color(0xff0000ff);
       final json = {
         'id': 'f1',
+        'userId': 'u1',
         'title': 'T',
         'description': 'D',
         'icon': 'i',
+        'imageUrl': 'avatar.png',
         'color': color.value.toString(),
         'userId': 'u1',
         'type': 'music',
