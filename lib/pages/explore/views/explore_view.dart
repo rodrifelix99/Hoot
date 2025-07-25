@@ -44,11 +44,14 @@ class ExploreView extends GetView<ExploreController> {
       appBar: AppBarComponent(
         title: 'explore'.tr,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: RefreshIndicator(
+        onRefresh: controller.refreshExplore,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             TextField(
               controller: controller.searchController,
               decoration: InputDecoration(
@@ -95,6 +98,7 @@ class ExploreView extends GetView<ExploreController> {
                   )),
             ),
           ],
+        ),
         ),
       ),
     );
