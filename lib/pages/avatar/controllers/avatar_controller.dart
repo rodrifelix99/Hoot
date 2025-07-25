@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:get/get.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
 
 import '../../../services/error_service.dart';
 import '../../../services/auth_service.dart';
@@ -53,21 +55,39 @@ class AvatarController extends GetxController {
       final uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid != null && avatarFile.value != null) {
         final file = avatarFile.value!;
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('avatars')
-            .child(uid)
-            .child('avatar.jpg');
-        await ref.putFile(file);
-        final url = await ref.getDownloadURL();
-        await FirebaseFirestore.instance.collection('users').doc(uid).set({
-          'smallAvatar': url,
-          'bigAvatar': url,
-        }, SetOptions(merge: true));
-        final user = _auth.currentUser;
-        if (user != null) {
-          user.smallProfilePictureUrl = url;
-          user.largeProfilePictureUrl = url;
+        final bytes = await file.readAsBytes();
+        final decoded = img.decodeImage(bytes);
+        if (decoded != null) {
+          final small = img.copyResize(decoded, width: 32, height: 32);
+          final big = img.copyResize(decoded, width: 128, height: 128);
+
+          final smallData = Uint8List.fromList(img.encodeJpg(small));
+          final bigData = Uint8List.fromList(img.encodeJpg(big));
+
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('avatars')
+              .child(uid);
+
+          final smallRef = storageRef.child('small_avatar.jpg');
+          final bigRef = storageRef.child('big_avatar.jpg');
+
+          await smallRef.putData(smallData, SettableMetadata(contentType: 'image/jpeg'));
+          await bigRef.putData(bigData, SettableMetadata(contentType: 'image/jpeg'));
+
+          final smallUrl = await smallRef.getDownloadURL();
+          final bigUrl = await bigRef.getDownloadURL();
+
+          await FirebaseFirestore.instance.collection('users').doc(uid).set({
+            'smallAvatar': smallUrl,
+            'bigAvatar': bigUrl,
+          }, SetOptions(merge: true));
+
+          final user = _auth.currentUser;
+          if (user != null) {
+            user.smallProfilePictureUrl = smallUrl;
+            user.largeProfilePictureUrl = bigUrl;
+          }
         }
       }
 
