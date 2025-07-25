@@ -12,6 +12,30 @@ import '../controllers/profile_controller.dart';
 class ProfileView extends GetView<ProfileController> {
   const ProfileView({super.key});
 
+  void reportUser(BuildContext context) {
+    final user = controller.user.value;
+    if (user == null) return;
+    showAdaptiveDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(
+          'reportUsername'
+              .trParams({'username': user.username ?? ''}),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('cancel'.tr),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('done'.tr),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget buildPostItem(int index) {
     final feed = controller.feeds[controller.selectedFeedIndex.value];
     final post = feed.posts?[index];
@@ -62,40 +86,58 @@ class ProfileView extends GetView<ProfileController> {
 
   Widget buildFeedChips(BuildContext context) {
     return Obx(() {
-      return Row(
-        children: [
-          ChoiceChip(
-            label: Row(
-              children: [
-                const Icon(Icons.add, size: 16),
-                const SizedBox(width: 4),
-                Text('createFeed'.tr),
-              ],
-            ),
-            selected: false,
-            onSelected: (_) => Get.toNamed(AppRoutes.createFeed),
+      final List<Widget> chips = [];
+      if (controller.isCurrentUser) {
+        chips.add(ChoiceChip(
+          label: Row(
+            children: [
+              const Icon(Icons.add, size: 16),
+              const SizedBox(width: 4),
+              Text('createFeed'.tr),
+            ],
           ),
-          ...List.generate(controller.feeds.length, (i) {
-            final feed = controller.feeds[i];
-            final color = feed.color ?? Theme.of(context).colorScheme.primary;
-            final textColor = foregroundForBackground(color);
-            return Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: ChoiceChip(
-                label: Text(
-                  feed.title,
-                  style: TextStyle(color: textColor),
-                ),
-                checkmarkColor: textColor,
-                selected: controller.selectedFeedIndex.value == i,
-                onSelected: (_) => controller.selectedFeedIndex.value = i,
-                selectedColor: color,
-                backgroundColor: color.withValues(alpha: 0.2),
+          selected: false,
+          onSelected: (_) => Get.toNamed(AppRoutes.createFeed),
+        ));
+      }
+
+      chips.addAll(List.generate(controller.feeds.length, (i) {
+        final feed = controller.feeds[i];
+        final color = feed.color ?? Theme.of(context).colorScheme.primary;
+        final textColor = foregroundForBackground(color);
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ChoiceChip(
+              label: Text(
+                feed.title,
+                style: TextStyle(color: textColor),
               ),
-            );
-          }),
-        ],
-      );
+              checkmarkColor: textColor,
+              selected: controller.selectedFeedIndex.value == i,
+              onSelected: (_) => controller.selectedFeedIndex.value = i,
+              selectedColor: color,
+              backgroundColor: color.withValues(alpha: 0.2),
+            ),
+            const SizedBox(width: 4),
+            controller.isCurrentUser
+                ? IconButton(
+                    icon: const Icon(Icons.edit, size: 16),
+                    onPressed: () =>
+                        Get.toNamed(AppRoutes.editFeed, arguments: feed),
+                  )
+                : TextButton(
+                    child: Text(controller.isSubscribed(feed.id)
+                        ? 'unsubscribe'.tr
+                        : 'subscribe'.tr),
+                    onPressed: () =>
+                        controller.toggleSubscription(feed.id),
+                  ),
+          ],
+        );
+      }));
+
+      return Wrap(spacing: 8, children: chips);
     });
   }
 
@@ -166,12 +208,19 @@ class ProfileView extends GetView<ProfileController> {
             ),
             const Divider(height: 32),
             if (controller.feeds.isEmpty)
-              NothingToShowComponent(
-                icon: const Icon(Icons.feed_outlined),
-                text: 'whatIsAFeed'.tr,
-                buttonText: 'createFeed'.tr,
-                buttonAction: () => Get.toNamed(AppRoutes.createFeed),
-              )
+              controller.isCurrentUser
+                  ? NothingToShowComponent(
+                      icon: const Icon(Icons.feed_outlined),
+                      text: 'whatIsAFeed'.tr,
+                      buttonText: 'createFeed'.tr,
+                      buttonAction: () => Get.toNamed(AppRoutes.createFeed),
+                    )
+                  : NothingToShowComponent(
+                      icon: const Icon(Icons.feed_outlined),
+                      text: 'noFeeds'.trParams({
+                        'username': controller.user.value?.username ?? '',
+                      }),
+                    )
             else ...[
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -199,10 +248,15 @@ class ProfileView extends GetView<ProfileController> {
       appBar: AppBarComponent(
         title: 'profile'.tr,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => Get.toNamed(AppRoutes.settings),
-          ),
+          controller.isCurrentUser
+              ? IconButton(
+                  icon: const Icon(Icons.settings),
+                  onPressed: () => Get.toNamed(AppRoutes.settings),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.flag_outlined),
+                  onPressed: () => reportUser(context),
+                ),
         ],
       ),
       body: buildBody(context),

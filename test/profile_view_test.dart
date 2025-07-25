@@ -20,6 +20,9 @@ class FakeAuthService extends GetxService implements AuthService {
   Future<U?> fetchUser() async => _user;
 
   @override
+  Future<U?> fetchUserById(String uid) async => _user;
+
+  @override
   Future<void> signOut() async {}
 
   @override
