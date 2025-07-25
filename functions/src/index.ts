@@ -8,9 +8,8 @@
  */
 
 import {setGlobalOptions} from "firebase-functions";
-import {onCall, HttpsError} from "firebase-functions/v2/https";
+
 import {initializeApp} from "firebase-admin/app";
-import {getMessaging} from "firebase-admin/messaging";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -28,23 +27,3 @@ import {getMessaging} from "firebase-admin/messaging";
 setGlobalOptions({ maxInstances: 10 });
 initializeApp();
 
-export const sendWelcomeNotification = onCall(async (request) => {
-  if (!request.auth) {
-    throw new HttpsError("unauthenticated", "Authentication required.");
-  }
-
-  const token = request.data?.fcmToken as string | undefined;
-  if (!token) {
-    throw new HttpsError("invalid-argument", "fcmToken is required");
-  }
-
-  await getMessaging().send({
-    token,
-    notification: {
-      title: "Welcome to Hoot!",
-      body: "Thanks for joining the community.",
-    },
-  });
-
-  return {success: true};
-});

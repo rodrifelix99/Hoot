@@ -49,7 +49,6 @@ dependencies:
   image_picker: ^1.0.0
   firebase_storage: ^12.4.10
   image: ^4.5.4
-  firebase_messaging: ^15.2.10
   firebase_crashlytics: ^4.3.10
   full_screen_image_null_safe: ^2.0.0
   cloud_firestore: ^5.6.12
