@@ -47,6 +47,27 @@ class AuthService {
     return _currentUser;
   }
 
+  /// Fetches a user by [uid] from Firestore.
+  Future<U?> fetchUserById(String uid) async {
+    final doc = await _firestore.collection('users').doc(uid).get();
+    if (!doc.exists) return null;
+    final user = U.fromJson(doc.data()!);
+    final subs = await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('subscriptions')
+        .get();
+    user.subscriptionCount = subs.docs.length;
+    final feedsSnapshot = await _firestore
+        .collection('feeds')
+        .where('userId', isEqualTo: uid)
+        .get();
+    user.feeds = feedsSnapshot.docs
+        .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
+        .toList();
+    return user;
+  }
+
   U? get currentUser => _currentUser;
 
   /// Creates a Firestore document for [user] if none exists.

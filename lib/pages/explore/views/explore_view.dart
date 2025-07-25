@@ -83,6 +83,10 @@ class ExploreView extends GetView<ExploreController> {
                               title: f.title,
                               subtitle:
                                   '${f.subscriberCount ?? 0} ${'followers'.tr}',
+                            backgroundColor: f.color,
+                            foregroundColor: f.color!.computeLuminance() > 0.5
+                                ? Colors.black
+                                : Colors.white,
                             ))
                         .toList(),
                   )),

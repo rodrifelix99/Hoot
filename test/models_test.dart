@@ -16,6 +16,7 @@ void main() {
         'icon': 'i',
         'imageUrl': 's.png',
         'color': '123',
+        'userId': 'u1',
         'type': 'general',
       };
       final userJson = {
@@ -62,6 +63,7 @@ void main() {
         'icon': 'i',
         'imageUrl': 'avatar.png',
         'color': color.value.toString(),
+        'userId': 'u1',
         'type': 'music',
         'private': true,
         'nsfw': false,
