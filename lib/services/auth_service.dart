@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../models/user.dart';
+import '../models/feed.dart';
 
 /// Provides authentication helpers for the application.
 class AuthService {
@@ -32,6 +33,14 @@ class AuthService {
           .collection('subscriptions')
           .get();
       _currentUser!.subscriptionCount = subs.docs.length;
+
+      final feedsSnapshot = await _firestore
+          .collection('feeds')
+          .where('userId', isEqualTo: firebaseUser.uid)
+          .get();
+      _currentUser!.feeds = feedsSnapshot.docs
+          .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
+          .toList();
     } else {
       _currentUser = null;
     }
