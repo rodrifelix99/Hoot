@@ -2,9 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:toastification/toastification.dart';
+import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:hoot/pages/create_feed/controllers/create_feed_controller.dart';
 import 'package:hoot/util/enums/feed_types.dart';
+import 'package:hoot/pages/profile/controllers/profile_controller.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/models/user.dart';
+
+class FakeAuthService extends GetxService implements AuthService {
+  final U _user;
+  FakeAuthService(this._user);
+
+  @override
+  U? get currentUser => _user;
+
+  @override
+  Future<U?> fetchUser() async => _user;
+
+  @override
+  Future<void> signOut() async {}
+
+  @override
+  Future<UserCredential> signInWithGoogle() async => throw UnimplementedError();
+
+  @override
+  Future<UserCredential> signInWithApple() async => throw UnimplementedError();
+
+  @override
+  Future<void> deleteAccount() async {}
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -15,8 +43,9 @@ void main() {
     ));
 
     final firestore = FakeFirebaseFirestore();
-    final controller =
-        CreateFeedController(firestore: firestore, userId: 'u1');
+    final auth = FakeAuthService(U(uid: 'u1'));
+    final controller = CreateFeedController(
+        firestore: firestore, userId: 'u1', authService: auth);
     controller.titleController.text = 'My Feed';
     controller.descriptionController.text = 'Desc';
     controller.selectedType.value = FeedType.music;
@@ -30,5 +59,76 @@ void main() {
     expect(feeds.docs.length, 1);
     expect(feeds.docs.first.get('title'), 'My Feed');
     expect(feeds.docs.first.get('type'), 'music');
+  });
+
+  testWidgets('create fails without title', (tester) async {
+    await tester.pumpWidget(const ToastificationWrapper(
+      child: MaterialApp(home: Scaffold(body: SizedBox())),
+    ));
+
+    final firestore = FakeFirebaseFirestore();
+    final auth = FakeAuthService(U(uid: 'u1'));
+    final controller = CreateFeedController(
+        firestore: firestore, userId: 'u1', authService: auth);
+    controller.selectedType.value = FeedType.music;
+
+    final result = await controller.createFeed();
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pumpAndSettle();
+
+    expect(result, isFalse);
+    final feeds = await firestore.collection('feeds').get();
+    expect(feeds.docs.length, 0);
+  });
+
+  testWidgets('create fails without genre', (tester) async {
+    await tester.pumpWidget(const ToastificationWrapper(
+      child: MaterialApp(home: Scaffold(body: SizedBox())),
+    ));
+
+    final firestore = FakeFirebaseFirestore();
+    final auth = FakeAuthService(U(uid: 'u1'));
+    final controller = CreateFeedController(
+        firestore: firestore, userId: 'u1', authService: auth);
+    controller.titleController.text = 'Feed';
+
+    final result = await controller.createFeed();
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pumpAndSettle();
+
+    expect(result, isFalse);
+    final feeds = await firestore.collection('feeds').get();
+    expect(feeds.docs.length, 0);
+  });
+
+  testWidgets('profile controller is updated on success', (tester) async {
+    await tester.pumpWidget(const ToastificationWrapper(
+      child: MaterialApp(home: Scaffold(body: SizedBox())),
+    ));
+
+    final firestore = FakeFirebaseFirestore();
+    final user = U(uid: 'u1', feeds: []);
+    final auth = FakeAuthService(user);
+    final profile = ProfileController(authService: auth);
+    Get.put<AuthService>(auth);
+    Get.put<ProfileController>(profile);
+
+    final controller = CreateFeedController(
+        firestore: firestore,
+        userId: 'u1',
+        authService: auth,
+        profileController: profile);
+    controller.titleController.text = 'My Feed';
+    controller.selectedType.value = FeedType.music;
+
+    final result = await controller.createFeed();
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pumpAndSettle();
+
+    expect(result, isTrue);
+    expect(profile.feeds.length, 1);
+    expect(profile.feeds.first.title, 'My Feed');
+
+    Get.reset();
   });
 }

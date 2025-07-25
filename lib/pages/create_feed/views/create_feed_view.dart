@@ -25,7 +25,10 @@ class CreateFeedView extends GetView<CreateFeedController> {
                         child: CircularProgressIndicator(strokeWidth: 2)),
                   )
                 : TextButton(
-                    onPressed: controller.createFeed,
+                    onPressed: () async {
+                      final result = await controller.createFeed();
+                      if (result) Get.back();
+                    },
                     child: Text('done'.tr),
                   ),
           ),
