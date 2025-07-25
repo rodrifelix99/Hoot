@@ -60,11 +60,11 @@ class EditFeedController extends GetxController {
     final type = selectedType.value;
 
     if (title.isEmpty) {
-      ToastService.showError('title'.tr);
+      ToastService.showError('titleRequired'.tr);
       return false;
     }
     if (type == null) {
-      ToastService.showError('genre'.tr);
+      ToastService.showError('genreRequired'.tr);
       return false;
     }
 
