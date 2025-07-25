@@ -57,3 +57,7 @@ flutter test
 ```
 
 Make sure all dependencies have been fetched with `flutter pub get` before running the tests.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
