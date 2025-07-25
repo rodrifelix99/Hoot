@@ -48,16 +48,26 @@ Hoot operates like a streamlined community platform:
 
 - This structure delivers a classic social-network experience—connecting people through posts and feeds—with an emphasis on simplicity and user privacy.
 
+## Installing Flutter
+
+1. Download the [Flutter SDK](https://docs.flutter.dev/get-started/install) for your platform and extract it.
+2. Add the `flutter/bin` directory to your `PATH`.
+3. Verify installation with:
+
+   ```bash
+   flutter --version
+   ```
+
 ## Running Tests
 
-Widget and model tests are located under the `test/` directory. To execute them
-run:
+Widget and model tests are located under the `test/` directory. Fetch all
+dependencies and run the tests with:
 
 ```bash
+flutter pub get
 flutter test
 ```
 
-Make sure all dependencies have been fetched with `flutter pub get` before running the tests.
 
 ## License
 
