@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/settings_controller.dart';
+import 'package:hoot/components/appbar_component.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 
 class SettingsView extends GetView<SettingsController> {
   const SettingsView({super.key});
@@ -8,14 +10,48 @@ class SettingsView extends GetView<SettingsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('settings'.tr),
+      appBar: AppBarComponent(
+        title: 'settings'.tr,
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => controller.signOut(context),
-          child: Text('signOut'.tr),
-        ),
+      body: ListView(
+        children: [
+          Obx(() => SwitchListTile(
+                title: Text('darkMode'.tr),
+                value: controller.isDarkMode,
+                onChanged: controller.toggleDarkMode,
+              )),
+          ListTile(
+            title: Text('editProfile'.tr),
+            onTap: controller.goToEditProfile,
+          ),
+          ListTile(
+            title: Text('findFriends'.tr),
+            subtitle: Text('findFriendsFromContacts'.tr),
+            onTap: controller.findFriends,
+          ),
+          ListTile(
+            title: Text('termsOfService'.tr),
+            onTap: () => Get.toNamed(AppRoutes.terms),
+          ),
+          ListTile(
+            title: Text('deleteAccount'.tr),
+            subtitle: Text('deleteAccountDescription'.tr),
+            onTap: () => controller.deleteAccount(context),
+          ),
+          ListTile(
+            title: Text('signOut'.tr),
+            onTap: () => controller.signOut(context),
+          ),
+          const Divider(),
+          ListTile(
+            title: Text('messageFromCreator'.tr),
+            subtitle: Text('hootMightBeBuggy'.tr),
+          ),
+          Obx(() => ListTile(
+                title: Text('version'.tr),
+                subtitle: Text(controller.version.value),
+              )),
+        ],
       ),
     );
   }
