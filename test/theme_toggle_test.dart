@@ -35,7 +35,7 @@ class FakeAuthService extends GetxService implements AuthService {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Toggling dark mode updates theme', (tester) async {
+  testWidgets('Selecting dark mode updates theme', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final themeService = ThemeService();
     await themeService.loadThemeMode();
@@ -55,16 +55,17 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(
-        Theme.of(tester.element(find.byType(SettingsView))).brightness,
+    expect(themeService.themeMode.value, ThemeMode.system);
+    expect(Theme.of(tester.element(find.byType(SettingsView))).brightness,
         Brightness.light);
 
-    await tester.tap(find.byType(SwitchListTile));
+    await tester.tap(find.byKey(const Key('themeModeDropdown')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Dark').last);
     await tester.pumpAndSettle();
 
     expect(themeService.themeMode.value, ThemeMode.dark);
-    expect(
-        Theme.of(tester.element(find.byType(SettingsView))).brightness,
+    expect(Theme.of(tester.element(find.byType(SettingsView))).brightness,
         Brightness.dark);
   });
 }

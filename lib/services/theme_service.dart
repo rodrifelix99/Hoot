@@ -4,21 +4,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Service that manages theme mode and persists the user's preference.
 class ThemeService extends GetxService {
-  static const _prefKey = 'darkMode';
+  static const _prefKey = 'themeMode';
 
-  final themeMode = ThemeMode.light.obs;
+  /// Current theme mode. Defaults to [ThemeMode.system].
+  final themeMode = ThemeMode.system.obs;
 
   /// Loads the saved theme mode from [SharedPreferences].
   Future<void> loadThemeMode() async {
     final prefs = await SharedPreferences.getInstance();
-    final isDark = prefs.getBool(_prefKey) ?? false;
-    themeMode.value = isDark ? ThemeMode.dark : ThemeMode.light;
+    final index = prefs.getInt(_prefKey);
+    themeMode.value =
+        index != null ? ThemeMode.values[index] : ThemeMode.system;
   }
 
-  /// Toggles between light and dark mode and saves the preference.
-  Future<void> toggleDarkMode(bool isDark) async {
+  /// Persists and applies the selected [mode].
+  Future<void> updateThemeMode(ThemeMode mode) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_prefKey, isDark);
-    themeMode.value = isDark ? ThemeMode.dark : ThemeMode.light;
+    await prefs.setInt(_prefKey, mode.index);
+    themeMode.value = mode;
   }
 }

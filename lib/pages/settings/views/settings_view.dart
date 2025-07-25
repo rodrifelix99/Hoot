@@ -15,11 +15,30 @@ class SettingsView extends GetView<SettingsController> {
       ),
       body: ListView(
         children: [
-          Obx(() => SwitchListTile(
-                title: Text('darkMode'.tr),
-                value: controller.isDarkMode,
-                onChanged: controller.toggleDarkMode,
-              )),
+          Obx(
+            () => ListTile(
+              title: Text('darkMode'.tr),
+              trailing: DropdownButton<ThemeMode>(
+                key: const Key('themeModeDropdown'),
+                value: controller.themeMode,
+                onChanged: controller.updateThemeMode,
+                items: [
+                  DropdownMenuItem(
+                    value: ThemeMode.system,
+                    child: Text('syncedWithSystem'.tr),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.light,
+                    child: Text('light'.tr),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.dark,
+                    child: Text('dark'.tr),
+                  ),
+                ],
+              ),
+            ),
+          ),
           ListTile(
             title: Text('editProfile'.tr),
             onTap: controller.goToEditProfile,
