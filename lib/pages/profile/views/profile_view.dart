@@ -4,21 +4,58 @@ import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
+import 'package:hoot/components/empty_message.dart';
 import '../../../util/routes/app_routes.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
   const ProfileView({super.key});
 
-  Widget buildFeedItem(int index) {
-    final feed = controller.feeds[index];
-    return ListTile(
-      leading: feed.icon != null
-          ? Image.network(feed.icon!,
-          width: 40, height: 40, fit: BoxFit.cover)
-          : const Icon(Icons.feed_outlined),
-      title: Text(feed.title),
-      subtitle: feed.description != null ? Text(feed.description!) : null,
+  Widget buildPostItem(int index) {
+    final feed = controller.feeds[controller.selectedFeedIndex.value];
+    final post = feed.posts?[index];
+    if (post == null) return const SizedBox.shrink();
+    return Card(
+      margin: const EdgeInsets.all(8),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                ProfileAvatarComponent(
+                  image: post.user?.smallProfilePictureUrl ?? '',
+                  size: 40,
+                  radius: 20,
+                ),
+                const SizedBox(width: 8),
+                if (post.user != null)
+                  NameComponent(
+                    user: post.user!,
+                    showUsername: true,
+                    size: 16,
+                    feedName: post.feed?.title ?? '',
+                  ),
+              ],
+            ),
+            if (post.text != null && post.text!.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(post.text!),
+            ],
+            if (post.media != null && post.media!.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              ImageComponent(
+                url: post.media!.first,
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                radius: 10,
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 
@@ -63,6 +100,18 @@ class ProfileView extends GetView<ProfileController> {
                         showUsername: true,
                         size: 20,
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          'numberOfSubscribers'.trParams({
+                            'count': controller.feeds
+                                .fold<int>(
+                                    0, (p, f) => p + (f.subscriberCount ?? 0))
+                                .toString()
+                          }),
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ),
                       if (user.bio != null && user.bio!.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 8),
@@ -99,19 +148,54 @@ class ProfileView extends GetView<ProfileController> {
             ),
           ),
           const Divider(height: 32),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              'myFeeds'.tr,
-              style: Theme.of(context).textTheme.titleMedium,
+          if (controller.feeds.isEmpty)
+            NothingToShowComponent(
+              icon: const Icon(Icons.feed_outlined),
+              text: 'whatIsAFeed'.tr,
+              buttonText: 'createFeed'.tr,
+              buttonAction: () => Get.toNamed(AppRoutes.createFeed),
+            )
+          else ...[
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  ChoiceChip(
+                    label: Row(
+                      children: [
+                        const Icon(Icons.add, size: 16),
+                        const SizedBox(width: 4),
+                        Text('createFeed'.tr),
+                      ],
+                    ),
+                    selected: false,
+                    onSelected: (_) => Get.toNamed(AppRoutes.createFeed),
+                  ),
+                  ...List.generate(controller.feeds.length, (i) {
+                    final feed = controller.feeds[i];
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Obx(() => ChoiceChip(
+                            label: Text(feed.title),
+                            selected: controller.selectedFeedIndex.value == i,
+                            onSelected: (_) =>
+                                controller.selectedFeedIndex.value = i,
+                          )),
+                    );
+                  }),
+                ],
+              ),
             ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: controller.feeds.length,
-            itemBuilder: (_, i) => buildFeedItem(i),
-          ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: controller.feeds[controller.selectedFeedIndex.value]
+                      .posts?.length ??
+                  0,
+              itemBuilder: (_, i) => buildPostItem(i),
+            ),
+          ],
         ],
       ),
     );

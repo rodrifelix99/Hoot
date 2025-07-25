@@ -14,6 +14,7 @@ class ProfileController extends GetxController {
   final Rxn<U> user = Rxn<U>();
   final RxList<Feed> feeds = <Feed>[].obs;
   final RxBool isLoading = false.obs;
+  final RxInt selectedFeedIndex = 0.obs;
 
   @override
   void onInit() {
