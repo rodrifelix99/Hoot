@@ -49,7 +49,7 @@ class CreateFeedView extends GetView<CreateFeedController> {
             const SizedBox(height: 16),
             Obx(() => Row(
                   children: [
-                    Text('Color:'),
+                    Text('${'color'.tr}:'),
                     const SizedBox(width: 8),
                     GestureDetector(
                       onTap: () async {
@@ -73,7 +73,7 @@ class CreateFeedView extends GetView<CreateFeedController> {
             Obx(
               () => DropdownButton2<FeedType>(
                 value: controller.selectedType.value,
-                hint: const Text('Genre'),
+                hint: Text('genre'.tr),
                 isExpanded: true,
                 onChanged: (value) => controller.selectedType.value = value,
                 items: FeedType.values
@@ -94,9 +94,9 @@ class CreateFeedView extends GetView<CreateFeedController> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       controller: controller.typeSearchController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         isDense: true,
-                        hintText: 'Search...',
+                        hintText: 'searchEllipsis'.tr,
                         border: OutlineInputBorder(),
                       ),
                     ),

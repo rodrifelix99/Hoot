@@ -53,7 +53,7 @@ class CreateFeedController extends GetxController {
       return false;
     }
     if (type == null) {
-      ToastService.showError('genre');
+      ToastService.showError('genre'.tr);
       return false;
     }
 
