@@ -8,14 +8,28 @@ import 'package:get/get.dart';
 import '../../../services/toast_service.dart';
 import '../../../services/error_service.dart';
 import '../../../util/enums/feed_types.dart';
+import '../../../services/auth_service.dart';
+import '../../profile/controllers/profile_controller.dart';
+import '../../../models/feed.dart';
 
 /// Controller handling the create feed form.
 class CreateFeedController extends GetxController {
   final FirebaseFirestore _firestore;
   final String _userId;
+  final AuthService _authService;
+  final ProfileController? _profileController;
 
-  CreateFeedController({FirebaseFirestore? firestore, String? userId})
-      : _firestore = firestore ?? FirebaseFirestore.instance,
+  CreateFeedController({
+    FirebaseFirestore? firestore,
+    AuthService? authService,
+    ProfileController? profileController,
+    String? userId,
+  })  : _firestore = firestore ?? FirebaseFirestore.instance,
+        _authService = authService ?? Get.find<AuthService>(),
+        _profileController = profileController ??
+            (Get.isRegistered<ProfileController>()
+                ? Get.find<ProfileController>()
+                : null),
         _userId = userId ?? FirebaseAuth.instance.currentUser?.uid ?? '';
 
   /// Controllers for title and description fields.
@@ -59,7 +73,7 @@ class CreateFeedController extends GetxController {
 
     creating.value = true;
     try {
-      await _firestore.collection('feeds').add({
+      final doc = await _firestore.collection('feeds').add({
         'title': title,
         'description': description,
         'color': selectedColor.value.value.toString(),
@@ -70,6 +84,21 @@ class CreateFeedController extends GetxController {
         'subscriberCount': 0,
         'createdAt': FieldValue.serverTimestamp(),
       });
+      final feed = Feed(
+        id: doc.id,
+        title: title,
+        description: description,
+        color: selectedColor.value,
+        type: type,
+        private: isPrivate.value,
+        nsfw: isNsfw.value,
+        subscriberCount: 0,
+      );
+      final user = _authService.currentUser;
+      if (user != null) {
+        user.feeds = (user.feeds ?? [])..add(feed);
+      }
+      _profileController?.feeds.add(feed);
       ToastService.showSuccess('createFeed'.tr);
       titleController.clear();
       descriptionController.clear();
