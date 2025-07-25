@@ -6,6 +6,7 @@ import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import '../../../util/routes/app_routes.dart';
+import '../../../util/color_utils.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -152,12 +153,22 @@ class ProfileView extends GetView<ProfileController> {
                     final feed = controller.feeds[i];
                     return Padding(
                       padding: const EdgeInsets.only(left: 8),
-                      child: Obx(() => ChoiceChip(
-                            label: Text(feed.title),
-                            selected: controller.selectedFeedIndex.value == i,
-                            onSelected: (_) =>
-                                controller.selectedFeedIndex.value = i,
-                          )),
+                      child: Obx(() {
+                        final color =
+                            feed.color ?? Theme.of(context).colorScheme.primary;
+                        final textColor = foregroundForBackground(color);
+                        return ChoiceChip(
+                          label: Text(
+                            feed.title,
+                            style: TextStyle(color: textColor),
+                          ),
+                          selected: controller.selectedFeedIndex.value == i,
+                          onSelected: (_) =>
+                              controller.selectedFeedIndex.value = i,
+                          selectedColor: color,
+                          backgroundColor: color,
+                        );
+                      }),
                     );
                   }),
                 ],
