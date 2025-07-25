@@ -62,9 +62,13 @@ class SettingsView extends GetView<SettingsController> {
             onTap: () => controller.signOut(context),
           ),
           const Divider(),
-          ListTile(
+          ExpansionTile(
             title: Text('messageFromCreator'.tr),
-            subtitle: Text('hootMightBeBuggy'.tr),
+            childrenPadding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            children: [
+              Text('hootMightBeBuggy'.tr),
+            ],
           ),
           Obx(() => ListTile(
                 title: Text('version'.tr),
