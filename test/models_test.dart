@@ -14,6 +14,7 @@ void main() {
         'description': 'desc',
         'icon': 'i',
         'color': '123',
+        'userId': 'u1',
         'type': 'general',
       };
       final userJson = {
@@ -58,6 +59,7 @@ void main() {
         'description': 'D',
         'icon': 'i',
         'color': color.value.toString(),
+        'userId': 'u1',
         'type': 'music',
         'private': true,
         'nsfw': false,

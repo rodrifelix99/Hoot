@@ -20,6 +20,7 @@ void main() {
       'description': 'D',
       'color': '0',
       'type': 'music',
+      'userId': 'u1',
       'subscriberCount': 1,
       'createdAt': DateTime.now(),
     });
