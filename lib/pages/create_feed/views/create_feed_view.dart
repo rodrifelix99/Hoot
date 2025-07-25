@@ -1,6 +1,8 @@
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/create_feed_controller.dart';
+import '../../../util/enums/feed_types.dart';
 
 class CreateFeedView extends GetView<CreateFeedController> {
   const CreateFeedView({super.key});
@@ -10,9 +12,88 @@ class CreateFeedView extends GetView<CreateFeedController> {
     return Scaffold(
       appBar: AppBar(
         title: Text('createFeed'.tr),
+        actions: [
+          Obx(() => controller.creating.value
+              ? const Padding(
+                  padding: EdgeInsets.all(12),
+                  child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2)),
+                )
+              : TextButton(
+                  onPressed: controller.createFeed,
+                  child: Text('done'.tr),
+                ))
+        ],
       ),
-      body: Center(
-        child: Text('createFeed'.tr),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: controller.titleController,
+              decoration: InputDecoration(labelText: 'title'.tr),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller.descriptionController,
+              decoration: InputDecoration(labelText: 'description'.tr),
+              maxLines: 3,
+            ),
+            const SizedBox(height: 16),
+            Obx(() => Row(
+                  children: [
+                    Text('Color:'),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () async {
+                        final color = await showColorPickerDialog(
+                          context,
+                          controller.selectedColor.value,
+                          barrierDismissible: true,
+                        );
+                        if (color != null) {
+                          controller.selectedColor.value = color;
+                        }
+                      },
+                      child: ColorIndicator(
+                        color: controller.selectedColor.value,
+                        width: 40,
+                        height: 40,
+                        borderRadius: 20,
+                      ),
+                    ),
+                  ],
+                )),
+            const SizedBox(height: 16),
+            Obx(() => DropdownButton<FeedType>(
+                  value: controller.selectedType.value,
+                  hint: const Text('Genre'),
+                  isExpanded: true,
+                  onChanged: (value) => controller.selectedType.value = value,
+                  items: FeedType.values
+                      .map((t) => DropdownMenuItem(
+                            value: t,
+                            child: Text(FeedTypeExtension.toTranslatedString(
+                                context, t)),
+                          ))
+                      .toList(),
+                )),
+            const SizedBox(height: 16),
+            Obx(() => SwitchListTile(
+                  value: controller.isPrivate.value,
+                  onChanged: (v) => controller.isPrivate.value = v,
+                  title: Text('privateFeed'.tr),
+                )),
+            Obx(() => SwitchListTile(
+                  value: controller.isNsfw.value,
+                  onChanged: (v) => controller.isNsfw.value = v,
+                  title: Text('nsfwFeed'.tr),
+                )),
+          ],
+        ),
       ),
     );
   }
