@@ -202,6 +202,133 @@ extension FeedTypeExtension on FeedType {
     }
   }
 
+  static String toEmoji(FeedType type) {
+    switch (type) {
+      case FeedType.activism:
+        return '✊';
+      case FeedType.activities:
+        return '🏐';
+      case FeedType.adultContent:
+        return '🔥';
+      case FeedType.art:
+        return '🎨';
+      case FeedType.beauty:
+        return '💄';
+      case FeedType.celebrities:
+        return '⭐';
+      case FeedType.comedy:
+        return '🎭';
+      case FeedType.design:
+        return '✏️';
+      case FeedType.environment:
+        return '🌿';
+      case FeedType.family:
+        return '👪';
+      case FeedType.fitness:
+        return '💪';
+      case FeedType.general:
+        return '🌍';
+      case FeedType.gaming:
+        return '🎮';
+      case FeedType.history:
+        return '📜';
+      case FeedType.inspiration:
+        return '💡';
+      case FeedType.jobs:
+        return '💼';
+      case FeedType.lgbtQ:
+        return '🏳️‍🌈';
+      case FeedType.marketing:
+        return '📈';
+      case FeedType.movies:
+        return '🎬';
+      case FeedType.music:
+        return '🎵';
+      case FeedType.nature:
+        return '🌳';
+      case FeedType.news:
+        return '📰';
+      case FeedType.onlineCourses:
+        return '🎓';
+      case FeedType.outdoors:
+        return '🏕️';
+      case FeedType.parenting:
+        return '🤱';
+      case FeedType.pets:
+        return '🐾';
+      case FeedType.photography:
+        return '📷';
+      case FeedType.quotes:
+        return '💬';
+      case FeedType.relationships:
+        return '💑';
+      case FeedType.recipes:
+        return '👩‍🍳';
+      case FeedType.religion:
+        return '🙏';
+      case FeedType.school:
+        return '🏫';
+      case FeedType.science:
+        return '🔬';
+      case FeedType.selfImprovement:
+        return '🌱';
+      case FeedType.series:
+        return '📺';
+      case FeedType.sports:
+        return '🏀';
+      case FeedType.technology:
+        return '💻';
+      case FeedType.travel:
+        return '✈️';
+      case FeedType.tv:
+        return '📺';
+      case FeedType.university:
+        return '🎓';
+      case FeedType.vegetarian:
+        return '🥗';
+      case FeedType.wellness:
+        return '🧘';
+      case FeedType.writing:
+        return '✍️';
+      case FeedType.yoga:
+        return '🧘';
+      case FeedType.business:
+        return '📊';
+      case FeedType.cooking:
+        return '🍳';
+      case FeedType.diY:
+        return '🔧';
+      case FeedType.economics:
+        return '💰';
+      case FeedType.education:
+        return '📚';
+      case FeedType.entertainment:
+        return '🎉';
+      case FeedType.entrepreneurship:
+        return '🚀';
+      case FeedType.gardening:
+        return '🪴';
+      case FeedType.health:
+        return '🩺';
+      case FeedType.investing:
+        return '📈';
+      case FeedType.journalism:
+        return '📝';
+      case FeedType.kids:
+        return '👶';
+      case FeedType.literature:
+        return '📚';
+      case FeedType.urbanExploration:
+        return '🏙️';
+      case FeedType.virtualReality:
+        return '🕶️';
+      case FeedType.zoology:
+        return '🦁';
+      default:
+        return '❓';
+    }
+  }
+
   static IconData toIcon(FeedType type) {
     switch (type) {
       case FeedType.activism:
@@ -328,7 +455,6 @@ extension FeedTypeExtension on FeedType {
         return SolarIconsBold.planet;
     }
   }
-
 
   static FeedType fromString(String type) {
     switch (type) {

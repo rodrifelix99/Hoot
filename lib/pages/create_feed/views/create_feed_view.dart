@@ -77,8 +77,9 @@ class CreateFeedView extends GetView<CreateFeedController> {
                   items: FeedType.values
                       .map((t) => DropdownMenuItem(
                             value: t,
-                            child: Text(FeedTypeExtension.toTranslatedString(
-                                context, t)),
+                            child: Text('${FeedTypeExtension.toEmoji(t)} ' +
+                                FeedTypeExtension.toTranslatedString(
+                                    context, t)),
                           ))
                       .toList(),
                 )),
