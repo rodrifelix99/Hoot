@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'services/auth_service.dart';
+import 'services/feed_service.dart';
 
 /// Registers global dependencies for the application.
 class DependencyInjector {
@@ -9,5 +10,6 @@ class DependencyInjector {
   static Future<void> init() async {
     final auth = Get.put(AuthService(), permanent: true);
     await auth.fetchUser();
+    Get.put<BaseFeedService>(FeedService(), permanent: true);
   }
 }
