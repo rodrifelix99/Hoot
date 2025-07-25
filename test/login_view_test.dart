@@ -25,6 +25,9 @@ class FakeAuthService extends GetxService implements AuthService {
 
   @override
   Future<UserCredential> signInWithApple() async => throw UnimplementedError();
+
+  @override
+  Future<void> deleteAccount() async {}
 }
 
 void main() {

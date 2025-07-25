@@ -110,4 +110,14 @@ class AuthService {
     await fetchUser();
     return result;
   }
+
+  /// Deletes the current user's account and Firestore data.
+  Future<void> deleteAccount() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    await _firestore.collection('users').doc(user.uid).delete();
+    await user.delete();
+    _currentUser = null;
+    _fetched = false;
+  }
 }

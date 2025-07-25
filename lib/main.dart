@@ -10,6 +10,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hoot/theme/theme.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 import 'package:toastification/toastification.dart';
+import 'services/theme_service.dart';
 import 'firebase_options.dart';
 
 
@@ -25,20 +26,23 @@ Future<void> main() async {
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
 
+  final themeService = Get.find<ThemeService>();
+
   runZonedGuarded(() {
     runApp(
       ToastificationWrapper(
-        child: GetMaterialApp(
+        child: Obx(() => GetMaterialApp(
           title: 'Hoot',
           debugShowCheckedModeBanner: false,
           getPages: AppPages.pages,
           initialRoute: AppRoutes.home,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
+          themeMode: themeService.themeMode.value,
           translations: AppTranslations(),
           locale: Get.deviceLocale,
           fallbackLocale: const Locale('en', 'US'),
-        ),
+        )),
       ),
     );
     FlutterNativeSplash.remove();
