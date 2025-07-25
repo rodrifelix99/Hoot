@@ -206,6 +206,22 @@ class ProfileView extends GetView<ProfileController> {
         ],
       ),
       body: buildBody(context),
+      floatingActionButton: buildEditButton(),
     );
+  }
+
+  Widget buildEditButton() {
+    return Obx(() {
+      final feeds = controller.feeds;
+      final user = controller.user.value;
+      if (feeds.isEmpty || user == null) return const SizedBox.shrink();
+      final feed = feeds[controller.selectedFeedIndex.value];
+      if (feed.user?.uid != user.uid) return const SizedBox.shrink();
+      return FloatingActionButton(
+        onPressed: () => Get.toNamed(AppRoutes.editFeed, arguments: feed),
+        tooltip: 'editFeed'.tr,
+        child: const Icon(Icons.edit),
+      );
+    });
   }
 }
