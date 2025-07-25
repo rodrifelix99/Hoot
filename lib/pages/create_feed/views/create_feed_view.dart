@@ -54,10 +54,8 @@ class CreateFeedView extends GetView<CreateFeedController> {
                           controller.selectedColor.value,
                           barrierDismissible: true,
                         );
-                        if (color != null) {
-                          controller.selectedColor.value = color;
-                        }
-                      },
+                        controller.selectedColor.value = color;
+                                            },
                       child: ColorIndicator(
                         color: controller.selectedColor.value,
                         width: 40,

@@ -13,36 +13,33 @@ import 'package:toastification/toastification.dart';
 import 'services/theme_service.dart';
 import 'firebase_options.dart';
 
+void main() {
+  runZonedGuarded(() async {
+    WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+    FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-Future<void> main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    await DependencyInjector.init();
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  await DependencyInjector.init();
-  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-
-
-  final themeService = Get.find<ThemeService>();
-
-  runZonedGuarded(() {
+    final themeService = Get.find<ThemeService>();
     runApp(
       ToastificationWrapper(
         child: Obx(() => GetMaterialApp(
-          title: 'Hoot',
-          debugShowCheckedModeBanner: false,
-          getPages: AppPages.pages,
-          initialRoute: AppRoutes.home,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: themeService.themeMode.value,
-          translations: AppTranslations(),
-          locale: Get.deviceLocale,
-          fallbackLocale: const Locale('en', 'US'),
-        )),
+              title: 'Hoot',
+              debugShowCheckedModeBanner: false,
+              getPages: AppPages.pages,
+              initialRoute: AppRoutes.home,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: themeService.themeMode.value,
+              translations: AppTranslations(),
+              locale: Get.deviceLocale,
+              fallbackLocale: const Locale('en', 'US'),
+            )),
       ),
     );
     FlutterNativeSplash.remove();
