@@ -37,34 +37,60 @@ class HomeView extends GetView<HomeController> {
           indicatorShape: const CircleBorder(),
           destinations: [
             NavigationDestination(
-              icon: Icon(SolarIconsOutline.feed),
-              selectedIcon: Icon(SolarIconsBold.feed),
+              icon: Icon(
+                SolarIconsOutline.feed,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              selectedIcon: Icon(
+                SolarIconsBold.feed,
+                color: Theme.of(context).colorScheme.primary,
+              ),
               label: 'feed'.tr,
             ),
             NavigationDestination(
-              icon: Icon(SolarIconsOutline.compass),
-              selectedIcon: Icon(SolarIconsBold.compass),
+              icon: Icon(
+                SolarIconsOutline.compass,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              selectedIcon: Icon(
+                SolarIconsBold.compass,
+                color: Theme.of(context).colorScheme.primary,
+              ),
               label: 'explore'.tr,
             ),
             NavigationDestination(
               icon: Icon(
                 SolarIconsOutline.addSquare,
+                color: Theme.of(context).colorScheme.primary,
                 size: 42,
               ),
               selectedIcon: Icon(
                 SolarIconsBold.addSquare,
+                color: Theme.of(context).colorScheme.primary,
                 size: 42,
               ),
               label: 'createPost'.tr,
             ),
             NavigationDestination(
-              icon: Icon(SolarIconsOutline.bell),
-              selectedIcon: Icon(SolarIconsBold.bell),
+              icon: Icon(
+                SolarIconsOutline.bell,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              selectedIcon: Icon(
+                SolarIconsBold.bell,
+                color: Theme.of(context).colorScheme.primary,
+              ),
               label: 'notifications'.tr,
             ),
             NavigationDestination(
-              icon: Icon(SolarIconsOutline.user),
-              selectedIcon: Icon(SolarIconsBold.user),
+              icon: Icon(
+                SolarIconsOutline.user,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              selectedIcon: Icon(
+                SolarIconsBold.user,
+                color: Theme.of(context).colorScheme.primary,
+              ),
               label: 'profile'.tr,
             ),
           ],

@@ -162,11 +162,14 @@ class ProfileView extends GetView<ProfileController> {
                             feed.title,
                             style: TextStyle(color: textColor),
                           ),
+                          checkmarkColor: textColor,
                           selected: controller.selectedFeedIndex.value == i,
                           onSelected: (_) =>
                               controller.selectedFeedIndex.value = i,
                           selectedColor: color,
-                          backgroundColor: color,
+                          backgroundColor: color.withValues(
+                            alpha: 0.2,
+                          ),
                         );
                       }),
                     );
