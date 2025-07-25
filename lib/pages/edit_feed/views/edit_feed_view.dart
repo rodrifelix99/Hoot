@@ -12,7 +12,7 @@ class EditFeedView extends GetView<EditFeedController> {
         title: Text('editFeed'.tr),
       ),
       body: Center(
-        child: Text('editFeed'.tr),
+        child: Text(controller.feed.title),
       ),
     );
   }
