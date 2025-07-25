@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'feed.dart';
 
 class U {
@@ -69,8 +67,8 @@ class U {
     );
   }
 
-  String toJson() {
-    String json = jsonEncode({
+  Map<String, dynamic> toJson() {
+    return {
       'displayName': name,
       'username': username,
       'smallAvatar': smallProfilePictureUrl,
@@ -84,8 +82,7 @@ class U {
       'website': website,
       'phoneNumber': phoneNumber,
       'birthday': birthday,
-    });
-    return json;
+    };
   }
 
   Map<String, dynamic> toCache() => {
