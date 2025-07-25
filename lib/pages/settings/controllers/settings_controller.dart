@@ -28,9 +28,12 @@ class SettingsController extends GetxController {
     version.value = info.version;
   }
 
-  bool get isDarkMode => _theme.themeMode.value == ThemeMode.dark;
+  ThemeMode get themeMode => _theme.themeMode.value;
 
-  Future<void> toggleDarkMode(bool val) => _theme.toggleDarkMode(val);
+  void updateThemeMode(ThemeMode? mode) {
+    if (mode == null) return;
+    _theme.updateThemeMode(mode);
+  }
 
   /// Signs out the user after confirmation.
   Future<void> signOut(BuildContext context) async {
@@ -77,7 +80,8 @@ class SettingsController extends GetxController {
       ToastService.showSuccess('deleteAccountSuccess'.tr);
       Get.offAllNamed(AppRoutes.login);
     } catch (e, s) {
-      await ErrorService.reportError(e, message: 'deleteAccountFailed'.tr, stack: s);
+      await ErrorService.reportError(e,
+          message: 'deleteAccountFailed'.tr, stack: s);
     }
   }
 }
