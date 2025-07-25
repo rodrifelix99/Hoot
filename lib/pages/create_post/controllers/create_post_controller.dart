@@ -2,22 +2,23 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 
 import '../../../models/feed.dart';
 import '../../../services/error_service.dart';
 import '../../../services/toast_service.dart';
+import '../../../services/post_service.dart';
 
 /// Manages state for creating a new post.
 class CreatePostController extends GetxController {
-  final FirebaseFirestore _firestore;
+  final BasePostService _postService;
   final String _userId;
 
-  CreatePostController({FirebaseFirestore? firestore, String? userId})
-      : _firestore = firestore ?? FirebaseFirestore.instance,
+  CreatePostController({BasePostService? postService, String? userId})
+      : _postService = postService ?? PostService(),
         _userId = userId ?? FirebaseAuth.instance.currentUser?.uid ?? '';
 
   /// Text entered by the user.
@@ -90,7 +91,7 @@ class CreatePostController extends GetxController {
 
     publishing.value = true;
     try {
-      await _firestore.collection('posts').add({
+      await _postService.createPost({
         'text': text,
         'feedId': feed.id,
         if (imageFile.value != null) 'images': [imageFile.value!.path],

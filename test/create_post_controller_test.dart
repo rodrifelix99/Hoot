@@ -4,6 +4,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:toastification/toastification.dart';
 
 import 'package:hoot/pages/create_post/controllers/create_post_controller.dart';
+import 'package:hoot/services/post_service.dart';
 import 'package:hoot/models/feed.dart';
 
 void main() {
@@ -15,8 +16,9 @@ void main() {
         child: MaterialApp(home: Scaffold(body: SizedBox())),
       ));
       final firestore = FakeFirebaseFirestore();
+      final postService = PostService(firestore: firestore);
       final controller =
-          CreatePostController(firestore: firestore, userId: 'u1');
+          CreatePostController(postService: postService, userId: 'u1');
       controller.textController.text = 'Hello';
       expect(await controller.publish(), isFalse);
       await tester.pump(const Duration(seconds: 4));
@@ -28,8 +30,9 @@ void main() {
         child: MaterialApp(home: Scaffold(body: SizedBox())),
       ));
       final firestore = FakeFirebaseFirestore();
+      final postService = PostService(firestore: firestore);
       final controller =
-          CreatePostController(firestore: firestore, userId: 'u1');
+          CreatePostController(postService: postService, userId: 'u1');
       controller.textController.text = 'a' * 281;
       controller.selectedFeed.value =
           Feed(id: 'f1', title: 't', description: 'd');
@@ -43,8 +46,9 @@ void main() {
         child: MaterialApp(home: Scaffold(body: SizedBox())),
       ));
       final firestore = FakeFirebaseFirestore();
+      final postService = PostService(firestore: firestore);
       final controller =
-          CreatePostController(firestore: firestore, userId: 'u1');
+          CreatePostController(postService: postService, userId: 'u1');
       controller.selectedFeed.value =
           Feed(id: 'f1', title: 't', description: 'd');
       controller.textController.text = 'Hi';

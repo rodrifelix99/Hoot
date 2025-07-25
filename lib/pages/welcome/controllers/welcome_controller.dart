@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../services/auth_service.dart';
 import '../../../services/toast_service.dart';
+import '../../../services/user_service.dart';
 
 /// Manages the state of the welcome flow including form controllers
 /// and Firestore updates.
@@ -13,7 +13,10 @@ class WelcomeController extends GetxController {
   final usernameController = TextEditingController();
 
   final _auth = Get.find<AuthService>();
-  final _firestore = FirebaseFirestore.instance;
+  final BaseUserService _userService;
+
+  WelcomeController({BaseUserService? userService})
+      : _userService = userService ?? UserService();
 
   /// Validates and saves the display name to Firestore.
   Future<bool> saveDisplayName() async {
@@ -28,15 +31,12 @@ class WelcomeController extends GetxController {
     final user = _auth.currentUser;
     if (user != null) {
       user.name = name;
-      await _firestore
-          .collection('users')
-          .doc(uid)
-          .set(user.toCache(), SetOptions(merge: true));
+      await _userService.updateUserData(uid, user.toCache());
     } else {
-      await _firestore.collection('users').doc(uid).set({
+      await _userService.updateUserData(uid, {
         'uid': uid,
         'displayName': name,
-      }, SetOptions(merge: true));
+      });
     }
     _auth.currentUser?.name = name;
     return true;
@@ -55,12 +55,8 @@ class WelcomeController extends GetxController {
       return false;
     }
 
-    final existing = await _firestore
-        .collection('users')
-        .where('username', isEqualTo: username)
-        .limit(1)
-        .get();
-    if (existing.docs.isNotEmpty) {
+    final available = await _userService.isUsernameAvailable(username);
+    if (!available) {
       ToastService.showError('usernameTaken'.tr);
       return false;
     }
@@ -70,15 +66,12 @@ class WelcomeController extends GetxController {
     final user = _auth.currentUser;
     if (user != null) {
       user.username = username;
-      await _firestore
-          .collection('users')
-          .doc(uid)
-          .set(user.toCache(), SetOptions(merge: true));
+      await _userService.updateUserData(uid, user.toCache());
     } else {
-      await _firestore.collection('users').doc(uid).set({
+      await _userService.updateUserData(uid, {
         'uid': uid,
         'username': username,
-      }, SetOptions(merge: true));
+      });
     }
     _auth.currentUser?.username = username;
     return true;
