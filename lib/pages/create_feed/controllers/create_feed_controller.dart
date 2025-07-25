@@ -81,6 +81,7 @@ class CreateFeedController extends GetxController {
         'private': isPrivate.value,
         'nsfw': isNsfw.value,
         'userId': _userId,
+        'imageUrl': _authService.currentUser?.smallProfilePictureUrl,
         'subscriberCount': 0,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -93,6 +94,7 @@ class CreateFeedController extends GetxController {
       final feed = Feed(
         id: doc.id,
         userId: _userId,
+        imageUrl: _authService.currentUser?.smallProfilePictureUrl,
         title: title,
         description: description,
         color: selectedColor.value,
