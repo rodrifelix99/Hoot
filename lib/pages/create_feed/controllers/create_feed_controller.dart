@@ -23,7 +23,7 @@ class CreateFeedController extends GetxController {
   final TextEditingController descriptionController = TextEditingController();
 
   /// Selected feed color.
-  final Rx<Color> selectedColor = Colors.blue.obs;
+  final Rx<Color> selectedColor = Rx<Color>(Colors.blue);
 
   /// Chosen feed genre.
   final Rx<FeedType?> selectedType = Rx<FeedType?>(null);
