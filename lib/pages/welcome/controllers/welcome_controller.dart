@@ -33,10 +33,10 @@ class WelcomeController extends GetxController {
           .doc(uid)
           .set(user.toCache(), SetOptions(merge: true));
     } else {
-      await _firestore
-          .collection('users')
-          .doc(uid)
-          .set({'displayName': name}, SetOptions(merge: true));
+      await _firestore.collection('users').doc(uid).set({
+        'uid': uid,
+        'displayName': name,
+      }, SetOptions(merge: true));
     }
     _auth.currentUser?.name = name;
     return true;
@@ -75,10 +75,10 @@ class WelcomeController extends GetxController {
           .doc(uid)
           .set(user.toCache(), SetOptions(merge: true));
     } else {
-      await _firestore
-          .collection('users')
-          .doc(uid)
-          .set({'username': username}, SetOptions(merge: true));
+      await _firestore.collection('users').doc(uid).set({
+        'uid': uid,
+        'username': username,
+      }, SetOptions(merge: true));
     }
     _auth.currentUser?.username = username;
     return true;

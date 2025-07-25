@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -315,7 +314,6 @@ class _WelcomeViewState extends State<WelcomeView> {
                   ),
                 ),
               ),
-              const Spacer(),
               Opacity(
                 opacity: uploading ? 0.5 : 1,
                 child: ElevatedButton(
