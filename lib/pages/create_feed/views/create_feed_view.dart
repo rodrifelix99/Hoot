@@ -2,6 +2,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import '../controllers/create_feed_controller.dart';
 import '../../../util/enums/feed_types.dart';
 
@@ -69,20 +70,50 @@ class CreateFeedView extends GetView<CreateFeedController> {
                   ],
                 )),
             const SizedBox(height: 16),
-            Obx(() => DropdownButton<FeedType>(
-                  value: controller.selectedType.value,
-                  hint: const Text('Genre'),
-                  isExpanded: true,
-                  onChanged: (value) => controller.selectedType.value = value,
-                  items: FeedType.values
-                      .map((t) => DropdownMenuItem(
-                            value: t,
-                            child: Text('${FeedTypeExtension.toEmoji(t)} ' +
-                                FeedTypeExtension.toTranslatedString(
-                                    context, t)),
-                          ))
-                      .toList(),
-                )),
+            Obx(
+              () => DropdownButton2<FeedType>(
+                value: controller.selectedType.value,
+                hint: const Text('Genre'),
+                isExpanded: true,
+                onChanged: (value) => controller.selectedType.value = value,
+                items: FeedType.values
+                    .map((t) => DropdownMenuItem(
+                          value: t,
+                          child: Text('${FeedTypeExtension.toEmoji(t)} '
+                              '${FeedTypeExtension.toTranslatedString(context, t)}'),
+                        ))
+                    .toList(),
+                dropdownStyleData: DropdownStyleData(
+                  width: MediaQuery.of(context).size.width - 32,
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                ),
+                dropdownSearchData: DropdownSearchData(
+                  searchController: controller.typeSearchController,
+                  searchInnerWidgetHeight: 50,
+                  searchInnerWidget: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: controller.typeSearchController,
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        hintText: 'Search...',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  searchMatchFn: (item, searchValue) {
+                    final value = FeedTypeExtension.toTranslatedString(
+                        context, item.value!);
+                    return value
+                        .toLowerCase()
+                        .contains(searchValue.toLowerCase());
+                  },
+                ),
+                onMenuStateChange: (isOpen) {
+                  if (!isOpen) controller.typeSearchController.clear();
+                },
+              ),
+            ),
             const SizedBox(height: 16),
             Obx(() => SwitchListTile(
                   value: controller.isPrivate.value,
