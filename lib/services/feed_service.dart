@@ -19,6 +19,7 @@ class FeedService implements BaseFeedService {
         _authService = authService ?? Get.find<AuthService>();
 
   /// Returns the latest posts from the user's subscriptions ordered by creation.
+  @override
   Future<List<Post>> fetchSubscribedPosts() async {
     final user = _authService.currentUser;
     if (user == null) return [];

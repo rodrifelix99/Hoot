@@ -169,7 +169,7 @@ class ProfileView extends GetView<ProfileController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ProfileAvatarComponent(
-                    image: user.smallProfilePictureUrl ?? '',
+                    image: user.largeProfilePictureUrl ?? '',
                     size: 80,
                     radius: 40,
                   ),
