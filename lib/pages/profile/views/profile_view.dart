@@ -123,33 +123,6 @@ class ProfileView extends GetView<ProfileController> {
               ],
             ),
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () => Get.toNamed(AppRoutes.editFeed),
-                    icon: const Icon(Icons.edit),
-                    label: Text('editFeed'.tr),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton.icon(
-                    onPressed: () => Get.toNamed(AppRoutes.subscribers),
-                    icon: const Icon(Icons.group),
-                    label: Text('subscribers'.tr),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton.icon(
-                    onPressed: () => Get.toNamed(AppRoutes.createPost),
-                    icon: const Icon(Icons.add),
-                    label: Text('createPost'.tr),
-                  ),
-                ],
-              ),
-            ),
-          ),
           const Divider(height: 32),
           if (controller.feeds.isEmpty)
             NothingToShowComponent(
