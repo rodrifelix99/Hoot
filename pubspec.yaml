@@ -80,6 +80,7 @@ dependencies:
   flutter_native_splash: ^2.4.6
 
   page_transition: any
+  dropdown_button2: ^2.3.9
 dev_dependencies:
   flutter_test:
     sdk: flutter

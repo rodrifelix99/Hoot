@@ -28,6 +28,9 @@ class CreateFeedController extends GetxController {
   /// Chosen feed genre.
   final Rx<FeedType?> selectedType = Rx<FeedType?>(null);
 
+  /// Search controller for genre dropdown.
+  final TextEditingController typeSearchController = TextEditingController();
+
   /// Whether the feed is private.
   final RxBool isPrivate = false.obs;
 
@@ -86,6 +89,7 @@ class CreateFeedController extends GetxController {
   void onClose() {
     titleController.dispose();
     descriptionController.dispose();
+    typeSearchController.dispose();
     super.onClose();
   }
 }
