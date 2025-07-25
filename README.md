@@ -50,7 +50,8 @@ Hoot operates like a streamlined community platform:
 
 ## Running Tests
 
-To execute the widget tests run:
+Widget and model tests are located under the `test/` directory. To execute them
+run:
 
 ```bash
 flutter test
