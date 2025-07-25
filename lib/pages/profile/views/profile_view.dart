@@ -60,135 +60,137 @@ class ProfileView extends GetView<ProfileController> {
     );
   }
 
-  Widget buildBody(BuildContext context) {
-    if (controller.isLoading.value) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    final user = controller.user.value;
-    if (user == null) {
-      return const SizedBox.shrink();
-    }
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget buildFeedChips(BuildContext context) {
+    return Obx(() {
+      return Row(
         children: [
-          if (user.bannerPictureUrl != null &&
-              user.bannerPictureUrl!.isNotEmpty)
-            ImageComponent(
-              url: user.bannerPictureUrl!,
-              height: 150,
-              fit: BoxFit.cover,
-            ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          ChoiceChip(
+            label: Row(
               children: [
-                ProfileAvatarComponent(
-                  image: user.smallProfilePictureUrl ?? '',
-                  size: 80,
-                  radius: 40,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      NameComponent(
-                        user: user,
-                        showUsername: true,
-                        size: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: Text(
-                          'numberOfSubscribers'.trParams({
-                            'count': controller.feeds
-                                .fold<int>(
-                                    0, (p, f) => p + (f.subscriberCount ?? 0))
-                                .toString()
-                          }),
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-                      if (user.bio != null && user.bio!.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Text(user.bio!),
-                        ),
-                    ],
-                  ),
-                ),
+                const Icon(Icons.add, size: 16),
+                const SizedBox(width: 4),
+                Text('createFeed'.tr),
               ],
             ),
+            selected: false,
+            onSelected: (_) => Get.toNamed(AppRoutes.createFeed),
           ),
-          const Divider(height: 32),
-          if (controller.feeds.isEmpty)
-            NothingToShowComponent(
-              icon: const Icon(Icons.feed_outlined),
-              text: 'whatIsAFeed'.tr,
-              buttonText: 'createFeed'.tr,
-              buttonAction: () => Get.toNamed(AppRoutes.createFeed),
-            )
-          else ...[
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+          ...List.generate(controller.feeds.length, (i) {
+            final feed = controller.feeds[i];
+            final color = feed.color ?? Theme.of(context).colorScheme.primary;
+            final textColor = foregroundForBackground(color);
+            return Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: ChoiceChip(
+                label: Text(
+                  feed.title,
+                  style: TextStyle(color: textColor),
+                ),
+                checkmarkColor: textColor,
+                selected: controller.selectedFeedIndex.value == i,
+                onSelected: (_) => controller.selectedFeedIndex.value = i,
+                selectedColor: color,
+                backgroundColor: color.withValues(alpha: 0.2),
+              ),
+            );
+          }),
+        ],
+      );
+    });
+  }
+
+  Widget buildBody(BuildContext context) {
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      final user = controller.user.value;
+      if (user == null) {
+        return const SizedBox.shrink();
+      }
+
+      return SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (user.bannerPictureUrl != null &&
+                user.bannerPictureUrl!.isNotEmpty)
+              ImageComponent(
+                url: user.bannerPictureUrl!,
+                height: 150,
+                fit: BoxFit.cover,
+              ),
+            Padding(
+              padding: const EdgeInsets.all(16),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ChoiceChip(
-                    label: Row(
+                  ProfileAvatarComponent(
+                    image: user.smallProfilePictureUrl ?? '',
+                    size: 80,
+                    radius: 40,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.add, size: 16),
-                        const SizedBox(width: 4),
-                        Text('createFeed'.tr),
+                        NameComponent(
+                          user: user,
+                          showUsername: true,
+                          size: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            'numberOfSubscribers'.trParams({
+                              'count': controller.feeds
+                                  .fold<int>(
+                                      0, (p, f) => p + (f.subscriberCount ?? 0))
+                                  .toString()
+                            }),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                        if (user.bio != null && user.bio!.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(user.bio!),
+                          ),
                       ],
                     ),
-                    selected: false,
-                    onSelected: (_) => Get.toNamed(AppRoutes.createFeed),
                   ),
-                  ...List.generate(controller.feeds.length, (i) {
-                    final feed = controller.feeds[i];
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: Obx(() {
-                        final color =
-                            feed.color ?? Theme.of(context).colorScheme.primary;
-                        final textColor = foregroundForBackground(color);
-                        return ChoiceChip(
-                          label: Text(
-                            feed.title,
-                            style: TextStyle(color: textColor),
-                          ),
-                          checkmarkColor: textColor,
-                          selected: controller.selectedFeedIndex.value == i,
-                          onSelected: (_) =>
-                              controller.selectedFeedIndex.value = i,
-                          selectedColor: color,
-                          backgroundColor: color.withValues(
-                            alpha: 0.2,
-                          ),
-                        );
-                      }),
-                    );
-                  }),
                 ],
               ),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: controller.feeds[controller.selectedFeedIndex.value]
-                      .posts?.length ??
-                  0,
-              itemBuilder: (_, i) => buildPostItem(i),
-            ),
+            const Divider(height: 32),
+            if (controller.feeds.isEmpty)
+              NothingToShowComponent(
+                icon: const Icon(Icons.feed_outlined),
+                text: 'whatIsAFeed'.tr,
+                buttonText: 'createFeed'.tr,
+                buttonAction: () => Get.toNamed(AppRoutes.createFeed),
+              )
+            else ...[
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: buildFeedChips(context),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: controller.feeds[controller.selectedFeedIndex.value]
+                        .posts?.length ??
+                    0,
+                itemBuilder: (_, i) => buildPostItem(i),
+              ),
+            ],
           ],
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 
   @override
@@ -203,7 +205,7 @@ class ProfileView extends GetView<ProfileController> {
           ),
         ],
       ),
-      body: Obx(() => buildBody(context)),
+      body: buildBody(context),
     );
   }
 }
