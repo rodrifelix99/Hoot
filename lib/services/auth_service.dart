@@ -26,6 +26,12 @@ class AuthService {
         await _firestore.collection('users').doc(firebaseUser.uid).get();
     if (doc.exists) {
       _currentUser = U.fromJson(doc.data()!);
+      final subs = await _firestore
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .collection('subscriptions')
+          .get();
+      _currentUser!.subscriptionCount = subs.docs.length;
     } else {
       _currentUser = null;
     }

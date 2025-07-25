@@ -20,7 +20,7 @@ class U {
   bool? verified;
   bool? tester;
   DateTime? birthday;
-  List<String?> subscriptions = [];
+  int? subscriptionCount;
   List<Feed>? feeds;
 
   U({
@@ -37,7 +37,7 @@ class U {
     this.verified = false,
     this.tester = false,
     this.birthday,
-    this.subscriptions = const [],
+    this.subscriptionCount,
     this.feeds,
   });
 
@@ -64,7 +64,7 @@ class U {
       verified: json['verified'],
       tester: json['tester'],
       birthday: json['birthday'],
-      subscriptions: json['subscriptions'] != null ? List<String>.from(json['subscriptions'].map((x) => x)) : [],
+      subscriptionCount: json['subscriptionCount'],
       feeds: json['feeds'] != null ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x))) : [],
     );
   }
@@ -105,7 +105,7 @@ class U {
     'birthday': birthday,
     'verified': verified,
     'tester': tester,
-    'subscriptions': subscriptions,
+    'subscriptionCount': subscriptionCount,
     'feeds': feeds?.map((e) => e.toCache()).toList(),
   };
 }

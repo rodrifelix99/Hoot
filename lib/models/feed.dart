@@ -15,8 +15,8 @@ class Feed {
   bool? nsfw;
   bool? verified;
   FeedType? type;
-  final List<String>? subscribers;
-  final List<String>? requests;
+  final int? subscriberCount;
+  final int? requestCount;
   List<Post>? posts;
 
   Feed({
@@ -30,8 +30,8 @@ class Feed {
     this.nsfw,
     this.verified,
     this.type,
-    this.subscribers,
-    this.requests,
+    this.subscriberCount,
+    this.requestCount,
     this.posts
   });
 
@@ -47,8 +47,8 @@ class Feed {
       private: json['private'],
       nsfw: json['nsfw'],
       verified: json['verified'],
-      subscribers: json['subscribers'] != null ? List<String>.from(json['subscribers']) : null,
-      requests: json['requests'] != null ? List<String>.from(json['requests']) : null,
+      subscriberCount: json['subscriberCount'],
+      requestCount: json['requestCount'],
       posts: json['posts'] != null ? (json['posts'] as List).map((i) => Post.fromJson(i)).toList() : null,
     );
   }
@@ -73,7 +73,7 @@ class Feed {
     'private': private,
     'nsfw': nsfw,
     'verified': verified,
-    'subscribers': subscribers,
-    'requests': requests
+    'subscriberCount': subscriberCount,
+    'requestCount': requestCount
   };
 }
