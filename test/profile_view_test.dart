@@ -42,7 +42,7 @@ void main() {
       name: 'Tester',
       username: 'tester',
       bio: 'Hello',
-      feeds: [Feed(id: 'f1', title: 'Feed 1', description: 'desc')],
+      feeds: [Feed(id: 'f1', userId: 't', title: 'Feed 1', description: 'desc')],
     );
     final service = FakeAuthService(user);
     final controller = ProfileController(authService: service);

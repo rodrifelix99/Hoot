@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-
   static Color primaryColor = Colors.blue;
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
     colorSchemeSeed: primaryColor,
+    appBarTheme: AppBarTheme(
+      centerTitle: false,
+    ),
     fontFamily: 'Inter',
     textTheme: const TextTheme(
       titleLarge: TextStyle(
@@ -19,49 +21,47 @@ class AppTheme {
     elevatedButtonTheme: elevatedButtonTheme,
     inputDecorationTheme: inputDecorationTheme,
     dropdownMenuTheme: DropdownMenuThemeData(
-        inputDecorationTheme: inputDecorationTheme,
+      inputDecorationTheme: inputDecorationTheme,
     ),
     chipTheme: chipTheme,
   );
 
   static ThemeData darkTheme = ThemeData(
-    useMaterial3: true,
-    brightness: Brightness.dark,
-    colorSchemeSeed: primaryColor,
-    fontFamily: 'Inter',
-    textTheme:  const TextTheme(
-      titleLarge: TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.w900,
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorSchemeSeed: primaryColor,
+      appBarTheme: AppBarTheme(
+        centerTitle: false,
       ),
-    ),
-    snackBarTheme: snackBarTheme,
-    elevatedButtonTheme: elevatedButtonTheme,
-    inputDecorationTheme: inputDecorationTheme.copyWith(
-      labelStyle: const TextStyle(color: Colors.white),
-      fillColor: Colors.grey.shade800,
-    ),
-    dropdownMenuTheme: DropdownMenuThemeData(
-      inputDecorationTheme: inputDecorationTheme
-    ),
-    chipTheme: chipTheme.copyWith(
-      backgroundColor: darkColorScheme.onPrimary,
-      labelStyle: TextStyle(
-        fontSize: 12,
-        color: darkColorScheme.primary,
+      fontFamily: 'Inter',
+      textTheme: const TextTheme(
+        titleLarge: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w900,
+        ),
       ),
-      iconTheme: IconThemeData(
-        size: 16,
-        color: darkColorScheme.primary
+      snackBarTheme: snackBarTheme,
+      elevatedButtonTheme: elevatedButtonTheme,
+      inputDecorationTheme: inputDecorationTheme.copyWith(
+        labelStyle: const TextStyle(color: Colors.white),
+        fillColor: Colors.grey.shade800,
       ),
-    )
-  );
-  
+      dropdownMenuTheme:
+          DropdownMenuThemeData(inputDecorationTheme: inputDecorationTheme),
+      chipTheme: chipTheme.copyWith(
+        backgroundColor: darkColorScheme.onPrimary,
+        labelStyle: TextStyle(
+          fontSize: 12,
+          color: darkColorScheme.primary,
+        ),
+        iconTheme: IconThemeData(size: 16, color: darkColorScheme.primary),
+      ));
+
   static ColorScheme lightColorScheme = ColorScheme.fromSeed(
     seedColor: primaryColor,
     brightness: Brightness.light,
   );
-  
+
   static ColorScheme darkColorScheme = ColorScheme.fromSeed(
     seedColor: primaryColor,
     brightness: Brightness.dark,
@@ -77,10 +77,7 @@ class AppTheme {
   static ElevatedButtonThemeData elevatedButtonTheme = ElevatedButtonThemeData(
     style: ButtonStyle(
       textStyle: WidgetStateProperty.all(
-        const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold
-        ),
+        const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       elevation: WidgetStateProperty.all(0),
       shape: WidgetStateProperty.all(

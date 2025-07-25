@@ -92,6 +92,7 @@ class CreateFeedController extends GetxController {
           .set({'createdAt': FieldValue.serverTimestamp()});
       final feed = Feed(
         id: doc.id,
+        userId: _userId,
         title: title,
         description: description,
         color: selectedColor.value,

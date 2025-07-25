@@ -2,11 +2,10 @@ import 'dart:ui';
 
 import 'package:hoot/util/enums/feed_types.dart';
 import 'package:hoot/models/post.dart';
-import 'package:hoot/models/user.dart';
 
 class Feed {
   final String id;
-  U? user;
+  String userId;
   String title;
   String? description;
   String? icon;
@@ -21,7 +20,7 @@ class Feed {
 
   Feed({
     required this.id,
-    this.user,
+    required this.userId,
     required this.title,
     required this.description,
     this.icon,
@@ -38,7 +37,7 @@ class Feed {
   factory Feed.fromJson(Map<String, dynamic> json) {
     return Feed(
       id: json['id'],
-      user: json['user'] != null ? U.fromJson(json['user']) : null,
+      userId: json['userId'],
       title: json['title'],
       description: json['description'],
       icon: json['icon'],
@@ -65,6 +64,7 @@ class Feed {
 
   Map<String, dynamic> toCache() => {
     'id': id,
+    'userId': userId,
     'title': title,
     'description': description,
     'icon': icon,

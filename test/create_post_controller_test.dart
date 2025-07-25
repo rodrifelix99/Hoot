@@ -35,7 +35,7 @@ void main() {
           CreatePostController(postService: postService, userId: 'u1');
       controller.textController.text = 'a' * 281;
       controller.selectedFeed.value =
-          Feed(id: 'f1', title: 't', description: 'd');
+          Feed(id: 'f1', userId: 't', title: 't', description: 'd');
       expect(await controller.publish(), isFalse);
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
@@ -50,7 +50,7 @@ void main() {
       final controller =
           CreatePostController(postService: postService, userId: 'u1');
       controller.selectedFeed.value =
-          Feed(id: 'f1', title: 't', description: 'd');
+          Feed(id: 'f1', userId: 't', title: 't', description: 'd');
       controller.textController.text = 'Hi';
       final result = await controller.publish();
       await tester.pump(const Duration(seconds: 4));

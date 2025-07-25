@@ -216,7 +216,7 @@ class ProfileView extends GetView<ProfileController> {
       final user = controller.user.value;
       if (feeds.isEmpty || user == null) return const SizedBox.shrink();
       final feed = feeds[controller.selectedFeedIndex.value];
-      if (feed.user?.uid != user.uid) return const SizedBox.shrink();
+      if (feed.userId != user.uid) return const SizedBox.shrink();
       return FloatingActionButton(
         onPressed: () => Get.toNamed(AppRoutes.editFeed, arguments: feed),
         tooltip: 'editFeed'.tr,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/components/appbar_component.dart';
 import '../controllers/edit_feed_controller.dart';
 
 class EditFeedView extends GetView<EditFeedController> {
@@ -8,8 +9,8 @@ class EditFeedView extends GetView<EditFeedController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('editFeed'.tr),
+      appBar: AppBarComponent(
+        title: 'editFeed'.tr,
       ),
       body: Center(
         child: Text(controller.feed.title),
