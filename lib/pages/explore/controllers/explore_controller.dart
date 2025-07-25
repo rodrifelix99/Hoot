@@ -108,8 +108,8 @@ class ExploreController extends GetxController {
             .get(),
       ]);
 
-      final userSnap = futures[0] as QuerySnapshot<Map<String, dynamic>>;
-      final feedSnap = futures[1] as QuerySnapshot<Map<String, dynamic>>;
+      final userSnap = futures[0];
+      final feedSnap = futures[1];
 
       userSuggestions.assignAll(
         userSnap.docs.map((d) => U.fromJson(d.data())).toList(),

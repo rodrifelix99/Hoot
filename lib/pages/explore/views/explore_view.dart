@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/list_item_component.dart';
 import 'package:hoot/components/type_box_component.dart';
-import '../../../util/enums/feed_types.dart';
 import '../../../util/routes/app_routes.dart';
 import '../controllers/explore_controller.dart';
 
@@ -12,7 +11,7 @@ class ExploreView extends GetView<ExploreController> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _buildSuggestions() {
+    Widget buildSuggestions() {
       return Obx(() {
         if (controller.query.value.isEmpty) return const SizedBox();
         if (controller.searching.value) {
@@ -59,7 +58,7 @@ class ExploreView extends GetView<ExploreController> {
               onChanged: controller.search,
             ),
             const SizedBox(height: 16),
-            _buildSuggestions(),
+            buildSuggestions(),
             const SizedBox(height: 16),
             Text('top10MostSubscribed'.tr,
                 style: Theme.of(context).textTheme.titleMedium),

@@ -36,6 +36,7 @@ class CreatePostView extends GetView<CreatePostController> {
             TextField(
               controller: controller.textController,
               maxLength: 280,
+              minLines: 3,
               maxLines: null,
               decoration:
                   InputDecoration(hintText: 'createPost'.tr),
@@ -63,7 +64,7 @@ class CreatePostView extends GetView<CreatePostController> {
                 ),
               ],
             ),
-            Obx(() {
+            Builder(builder: (_) {
               final url = controller.linkUrl;
               if (url != null) {
                 return Padding(

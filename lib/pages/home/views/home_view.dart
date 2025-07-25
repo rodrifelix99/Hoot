@@ -25,7 +25,10 @@ class HomeView extends GetView<HomeController> {
     return Obx(() {
       final index = controller.selectedIndex.value;
       return Scaffold(
-        body: _pages[index],
+        body: IndexedStack(
+          index: index,
+          children: _pages,
+        ),
         bottomNavigationBar: NavigationBar(
           selectedIndex: index,
           onDestinationSelected: controller.changeIndex,
