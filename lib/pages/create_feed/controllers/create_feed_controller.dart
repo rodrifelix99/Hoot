@@ -84,6 +84,12 @@ class CreateFeedController extends GetxController {
         'subscriberCount': 0,
         'createdAt': FieldValue.serverTimestamp(),
       });
+      await _firestore
+          .collection('users')
+          .doc(_userId)
+          .collection('subscriptions')
+          .doc(doc.id)
+          .set({'createdAt': FieldValue.serverTimestamp()});
       final feed = Feed(
         id: doc.id,
         title: title,

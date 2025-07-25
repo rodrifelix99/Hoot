@@ -131,4 +131,32 @@ void main() {
 
     Get.reset();
   });
+
+  testWidgets('creator is subscribed to new feed', (tester) async {
+    await tester.pumpWidget(const ToastificationWrapper(
+      child: MaterialApp(home: Scaffold(body: SizedBox())),
+    ));
+
+    final firestore = FakeFirebaseFirestore();
+    final auth = FakeAuthService(U(uid: 'u1'));
+    final controller =
+        CreateFeedController(firestore: firestore, userId: 'u1', authService: auth);
+    controller.titleController.text = 'My Feed';
+    controller.selectedType.value = FeedType.music;
+
+    final result = await controller.createFeed();
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pumpAndSettle();
+
+    expect(result, isTrue);
+    final feeds = await firestore.collection('feeds').get();
+    final feedId = feeds.docs.first.id;
+    final subs = await firestore
+        .collection('users')
+        .doc('u1')
+        .collection('subscriptions')
+        .get();
+    expect(subs.docs.length, 1);
+    expect(subs.docs.first.id, feedId);
+  });
 }
