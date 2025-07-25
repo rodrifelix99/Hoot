@@ -37,6 +37,14 @@ class ExploreController extends GetxController {
     _loadExploreData();
   }
 
+  /// Reloads explore data and search suggestions.
+  Future<void> refreshExplore() async {
+    await _loadExploreData();
+    if (query.value.isNotEmpty) {
+      await search(query.value);
+    }
+  }
+
   /// Loads initial explore data.
   Future<void> _loadExploreData() async {
     await Future.wait([

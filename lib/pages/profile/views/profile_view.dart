@@ -6,6 +6,7 @@ import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import '../../../util/routes/app_routes.dart';
+import '../../../util/color_utils.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -123,33 +124,6 @@ class ProfileView extends GetView<ProfileController> {
               ],
             ),
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () => Get.toNamed(AppRoutes.editFeed),
-                    icon: const Icon(Icons.edit),
-                    label: Text('editFeed'.tr),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton.icon(
-                    onPressed: () => Get.toNamed(AppRoutes.subscribers),
-                    icon: const Icon(Icons.group),
-                    label: Text('subscribers'.tr),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton.icon(
-                    onPressed: () => Get.toNamed(AppRoutes.createPost),
-                    icon: const Icon(Icons.add),
-                    label: Text('createPost'.tr),
-                  ),
-                ],
-              ),
-            ),
-          ),
           const Divider(height: 32),
           if (controller.feeds.isEmpty)
             NothingToShowComponent(
@@ -179,12 +153,25 @@ class ProfileView extends GetView<ProfileController> {
                     final feed = controller.feeds[i];
                     return Padding(
                       padding: const EdgeInsets.only(left: 8),
-                      child: Obx(() => ChoiceChip(
-                            label: Text(feed.title),
-                            selected: controller.selectedFeedIndex.value == i,
-                            onSelected: (_) =>
-                                controller.selectedFeedIndex.value = i,
-                          )),
+                      child: Obx(() {
+                        final color =
+                            feed.color ?? Theme.of(context).colorScheme.primary;
+                        final textColor = foregroundForBackground(color);
+                        return ChoiceChip(
+                          label: Text(
+                            feed.title,
+                            style: TextStyle(color: textColor),
+                          ),
+                          checkmarkColor: textColor,
+                          selected: controller.selectedFeedIndex.value == i,
+                          onSelected: (_) =>
+                              controller.selectedFeedIndex.value = i,
+                          selectedColor: color,
+                          backgroundColor: color.withValues(
+                            alpha: 0.2,
+                          ),
+                        );
+                      }),
                     );
                   }),
                 ],
