@@ -77,13 +77,32 @@ class _ProfileViewState extends State<ProfileView> {
             ],
             if (post.media != null && post.media!.isNotEmpty) ...[
               const SizedBox(height: 8),
-              ImageComponent(
-                url: post.media!.first,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                radius: 10,
-              ),
+              if (post.media!.length == 1)
+                ImageComponent(
+                  url: post.media!.first,
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  radius: 10,
+                )
+              else
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 4,
+                    mainAxisSpacing: 4,
+                  ),
+                  itemCount: post.media!.length,
+                  itemBuilder: (context, i) {
+                    return ImageComponent(
+                      url: post.media![i],
+                      fit: BoxFit.cover,
+                      radius: 8,
+                    );
+                  },
+                ),
             ],
           ],
         ),

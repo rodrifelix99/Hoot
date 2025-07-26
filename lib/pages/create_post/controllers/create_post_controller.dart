@@ -29,8 +29,8 @@ class CreatePostController extends GetxController {
   /// Text entered by the user.
   final textController = TextEditingController();
 
-  /// Picked image file.
-  final Rx<File?> imageFile = Rx<File?>(null);
+  /// Picked image files, up to 4.
+  final RxList<File> imageFiles = <File>[].obs;
 
   /// Selected GIF url from Tenor.
   final Rx<String?> gifUrl = Rx<String?>(null);
@@ -59,9 +59,10 @@ class CreatePostController extends GetxController {
 
   /// Picks an image from the gallery.
   Future<void> pickImage() async {
-    final picked = await _picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      imageFile.value = File(picked.path);
+    final picked = await _picker.pickMultiImage();
+    if (picked != null && picked.isNotEmpty) {
+      final remaining = 4 - imageFiles.length;
+      imageFiles.addAll(picked.take(remaining).map((e) => File(e.path)));
       gifUrl.value = null;
     }
   }
@@ -69,7 +70,14 @@ class CreatePostController extends GetxController {
   /// Picks a GIF using the Tenor API.
   void pickGif(String url) async {
     gifUrl.value = url;
-    imageFile.value = null;
+    imageFiles.clear();
+  }
+
+  /// Removes the image at [index].
+  void removeImage(int index) {
+    if (index >= 0 && index < imageFiles.length) {
+      imageFiles.removeAt(index);
+    }
   }
 
   /// Extracts the first url from [text].
@@ -92,7 +100,7 @@ class CreatePostController extends GetxController {
       ToastService.showError('selectFeed'.tr);
       return false;
     }
-    if (text.isEmpty && imageFile.value == null && gifUrl.value == null) {
+    if (text.isEmpty && imageFiles.isEmpty && gifUrl.value == null) {
       ToastService.showError('writeSomething'.tr);
       return false;
     }
@@ -117,7 +125,8 @@ class CreatePostController extends GetxController {
         'text': text,
         'feedId': feed.id,
         'feed': feedData,
-        if (imageFile.value != null) 'images': [imageFile.value!.path],
+        if (imageFiles.isNotEmpty)
+          'images': imageFiles.map((f) => f.path).toList(),
         if (gifUrl.value != null) 'gifs': [gifUrl.value],
         'userId': _userId,
         if (userData != null) 'user': userData,
@@ -125,7 +134,7 @@ class CreatePostController extends GetxController {
         'createdAt': FieldValue.serverTimestamp(),
       }..removeWhere((key, value) => value == null));
       textController.clear();
-      imageFile.value = null;
+      imageFiles.clear();
       gifUrl.value = null;
       return true;
     } catch (e, s) {
