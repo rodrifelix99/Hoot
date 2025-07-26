@@ -155,20 +155,28 @@ class CreatePostView extends GetView<CreatePostController> {
               }
               return const SizedBox.shrink();
             }),
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.image),
-                  onPressed: controller.pickImage,
-                  tooltip: 'addImage'.tr,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.gif_box),
-                  onPressed: () => pickGif(context),
-                  tooltip: 'addGif'.tr,
-                ),
-              ],
-            ),
+            Obx(() {
+              final disableImages =
+                  controller.gifUrl.value != null ||
+                      controller.imageFiles.length >= 4;
+              final disableGif = controller.imageFiles.isNotEmpty;
+              return Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.image),
+                    onPressed:
+                        disableImages ? null : controller.pickImage,
+                    tooltip: 'addImage'.tr,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.gif_box),
+                    onPressed:
+                        disableGif ? null : () => pickGif(context),
+                    tooltip: 'addGif'.tr,
+                  ),
+                ],
+              );
+            }),
             Builder(builder: (_) {
               final url = controller.linkUrl;
               if (url != null) {
