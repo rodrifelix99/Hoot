@@ -64,7 +64,7 @@ class CreatePostController extends GetxController {
   /// Picks an image from the gallery.
   Future<void> pickImage() async {
     final picked = await _picker.pickMultiImage();
-    if (picked != null && picked.isNotEmpty) {
+    if (picked.isNotEmpty) {
       final remaining = 4 - imageFiles.length;
       imageFiles.addAll(picked.take(remaining).map((e) => File(e.path)));
       gifUrl.value = null;
@@ -147,6 +147,7 @@ class CreatePostController extends GetxController {
       textController.clear();
       imageFiles.clear();
       gifUrl.value = null;
+      selectedFeed.value = null;
       return true;
     } catch (e, s) {
       await ErrorService.reportError(e, stack: s);

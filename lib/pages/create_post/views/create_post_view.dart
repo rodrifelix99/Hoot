@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:get/get.dart';

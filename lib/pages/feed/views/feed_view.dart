@@ -40,7 +40,6 @@ class _FeedViewState extends State<FeedView> {
                 if (post.user != null)
                   NameComponent(
                     user: post.user!,
-                    showUsername: true,
                     size: 16,
                     feedName: post.feed?.title ?? '',
                   ),
