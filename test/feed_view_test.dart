@@ -6,18 +6,28 @@ import 'package:hoot/models/user.dart';
 import 'package:hoot/pages/feed/controllers/feed_controller.dart';
 import 'package:hoot/pages/feed/views/feed_view.dart';
 import 'package:hoot/services/feed_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FakeFeedService implements BaseFeedService {
   @override
-  Future<List<Post>> fetchSubscribedPosts() async {
-    return [
+  Future<PostPage> fetchSubscribedPosts({
+    DocumentSnapshot? startAfter,
+    int limit = 10,
+  }) async {
+    return PostPage(posts: [
       Post(
         id: '1',
         text: 'Hello world',
         user: U(uid: 'u1', name: 'Tester'),
         media: [],
       ),
-    ];
+    ]);
+  }
+
+  @override
+  Future<PostPage> fetchFeedPosts(String feedId,
+      {DocumentSnapshot? startAfter, int limit = 10}) async {
+    throw UnimplementedError();
   }
 }
 

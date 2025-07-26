@@ -8,8 +8,35 @@ import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/shimmer_skeletons.dart';
 import '../controllers/feed_controller.dart';
 
-class FeedView extends GetView<FeedController> {
+class FeedView extends StatefulWidget {
   const FeedView({super.key});
+
+  @override
+  State<FeedView> createState() => _FeedViewState();
+}
+
+class _FeedViewState extends State<FeedView> {
+  final FeedController controller = Get.find();
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      controller.loadMorePosts();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   Widget _buildPost(BuildContext context, int index) {
     final post = controller.posts[index];
@@ -60,6 +87,7 @@ class FeedView extends GetView<FeedController> {
   Widget _buildBody(BuildContext context) {
     if (controller.isLoading.value) {
       return ListView.builder(
+        controller: _scrollController,
         itemCount: 3,
         itemBuilder: (_, __) => const ShimmerListTile(hasSubtitle: true),
       );
@@ -80,8 +108,18 @@ class FeedView extends GetView<FeedController> {
     }
 
     return ListView.builder(
-      itemCount: controller.posts.length,
-      itemBuilder: _buildPost,
+      controller: _scrollController,
+      itemCount:
+          controller.posts.length + (controller.isLoadingMore.value ? 1 : 0),
+      itemBuilder: (context, index) {
+        if (index >= controller.posts.length) {
+          return const Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        return _buildPost(context, index);
+      },
     );
   }
 
@@ -91,7 +129,10 @@ class FeedView extends GetView<FeedController> {
       appBar: AppBarComponent(
         title: 'feed'.tr,
       ),
-      body: Obx(() => _buildBody(context)),
+      body: RefreshIndicator(
+        onRefresh: controller.refreshPosts,
+        child: Obx(() => _buildBody(context)),
+      ),
     );
   }
 }
