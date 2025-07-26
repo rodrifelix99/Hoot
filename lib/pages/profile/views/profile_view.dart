@@ -9,8 +9,35 @@ import '../../../util/routes/app_routes.dart';
 import '../../../util/color_utils.dart';
 import '../controllers/profile_controller.dart';
 
-class ProfileView extends GetView<ProfileController> {
+class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
+
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  final ProfileController controller = Get.find();
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      controller.loadMoreSelectedFeed();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   void reportUser(BuildContext context) {
     final user = controller.user.value;
@@ -19,8 +46,7 @@ class ProfileView extends GetView<ProfileController> {
       context: context,
       builder: (_) => AlertDialog(
         title: Text(
-          'reportUsername'
-              .trParams({'username': user.username ?? ''}),
+          'reportUsername'.trParams({'username': user.username ?? ''}),
         ),
         actions: [
           TextButton(
@@ -130,8 +156,7 @@ class ProfileView extends GetView<ProfileController> {
                     child: Text(controller.isSubscribed(feed.id)
                         ? 'unsubscribe'.tr
                         : 'subscribe'.tr),
-                    onPressed: () =>
-                        controller.toggleSubscription(feed.id),
+                    onPressed: () => controller.toggleSubscription(feed.id),
                   ),
           ],
         );
@@ -151,90 +176,109 @@ class ProfileView extends GetView<ProfileController> {
         return const SizedBox.shrink();
       }
 
-      return SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16).copyWith(
-                top: 0,
-              ),
-              child: Column(
-                children: [
-                  if (user.bannerPictureUrl != null &&
-                      user.bannerPictureUrl!.isNotEmpty)
-                    ImageComponent(
-                      url: user.bannerPictureUrl!,
-                      height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      radius: 8,
-                    ),
-                  const SizedBox(height: 16),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ProfileAvatarComponent(
-                        image: user.largeProfilePictureUrl ?? '',
-                        size: 80,
-                        radius: 40,
+      return RefreshIndicator(
+        onRefresh: controller.refreshSelectedFeed,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16).copyWith(
+                  top: 0,
+                ),
+                child: Column(
+                  children: [
+                    if (user.bannerPictureUrl != null &&
+                        user.bannerPictureUrl!.isNotEmpty)
+                      ImageComponent(
+                        url: user.bannerPictureUrl!,
+                        height: 150,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        radius: 8,
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            NameComponent(
-                              user: user,
-                              showUsername: true,
-                              size: 20,
-                            ),
-                            if (user.bio != null && user.bio!.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: Text(user.bio!),
-                              ),
-                          ],
+                    const SizedBox(height: 16),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ProfileAvatarComponent(
+                          image: user.largeProfilePictureUrl ?? '',
+                          size: 80,
+                          radius: 40,
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              NameComponent(
+                                user: user,
+                                showUsername: true,
+                                size: 20,
+                              ),
+                              if (user.bio != null && user.bio!.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Text(user.bio!),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const Divider(height: 32),
-            if (controller.feeds.isEmpty)
-              controller.isCurrentUser
-                  ? NothingToShowComponent(
-                      icon: const Icon(Icons.feed_outlined),
-                      text: 'whatIsAFeed'.tr,
-                      buttonText: 'createFeed'.tr,
-                      buttonAction: () => Get.toNamed(AppRoutes.createFeed),
-                    )
-                  : NothingToShowComponent(
-                      icon: const Icon(Icons.feed_outlined),
-                      text: 'noFeeds'.trParams({
-                        'username': controller.user.value?.username ?? '',
-                      }),
-                    )
-            else ...[
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: buildFeedChips(context),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: controller.feeds[controller.selectedFeedIndex.value]
-                        .posts?.length ??
-                    0,
-                itemBuilder: (_, i) => buildPostItem(i),
-              ),
+              const Divider(height: 32),
+              if (controller.feeds.isEmpty)
+                controller.isCurrentUser
+                    ? NothingToShowComponent(
+                        icon: const Icon(Icons.feed_outlined),
+                        text: 'whatIsAFeed'.tr,
+                        buttonText: 'createFeed'.tr,
+                        buttonAction: () => Get.toNamed(AppRoutes.createFeed),
+                      )
+                    : NothingToShowComponent(
+                        icon: const Icon(Icons.feed_outlined),
+                        text: 'noFeeds'.trParams({
+                          'username': controller.user.value?.username ?? '',
+                        }),
+                      )
+              else ...[
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: buildFeedChips(context),
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: (controller
+                              .feeds[controller.selectedFeedIndex.value]
+                              .posts
+                              ?.length ??
+                          0) +
+                      (controller.isLoadingMore.value ? 1 : 0),
+                  itemBuilder: (_, i) {
+                    final posts = controller
+                            .feeds[controller.selectedFeedIndex.value].posts ??
+                        [];
+                    if (i >= posts.length) {
+                      return const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+                    return buildPostItem(i);
+                  },
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       );
     });

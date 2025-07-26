@@ -8,6 +8,8 @@ import 'package:hoot/models/feed.dart';
 import 'package:hoot/pages/profile/controllers/profile_controller.dart';
 import 'package:hoot/pages/profile/views/profile_view.dart';
 import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/feed_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
   final U _user;
@@ -38,6 +40,22 @@ class FakeAuthService extends GetxService implements AuthService {
   }
 }
 
+class FakeFeedService implements BaseFeedService {
+  @override
+  Future<PostPage> fetchSubscribedPosts({
+    DocumentSnapshot? startAfter,
+    int limit = 10,
+  }) async {
+    return PostPage(posts: []);
+  }
+
+  @override
+  Future<PostPage> fetchFeedPosts(String feedId,
+      {DocumentSnapshot? startAfter, int limit = 10}) async {
+    return PostPage(posts: []);
+  }
+}
+
 void main() {
   testWidgets('ProfileView shows profile information', (tester) async {
     final user = U(
@@ -45,10 +63,15 @@ void main() {
       name: 'Tester',
       username: 'tester',
       bio: 'Hello',
-      feeds: [Feed(id: 'f1', userId: 't', title: 'Feed 1', description: 'desc')],
+      feeds: [
+        Feed(id: 'f1', userId: 't', title: 'Feed 1', description: 'desc')
+      ],
     );
     final service = FakeAuthService(user);
-    final controller = ProfileController(authService: service);
+    final controller = ProfileController(
+      authService: service,
+      feedService: FakeFeedService(),
+    );
     Get.put<AuthService>(service);
     Get.put<ProfileController>(controller);
 

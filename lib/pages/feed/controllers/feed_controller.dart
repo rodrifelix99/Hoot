@@ -1,5 +1,6 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../models/post.dart';
 import '../../../services/feed_service.dart';
@@ -13,7 +14,10 @@ class FeedController extends GetxController {
 
   final RxList<Post> posts = <Post>[].obs;
   final RxBool isLoading = false.obs;
+  final RxBool isLoadingMore = false.obs;
   final RxnString error = RxnString();
+  DocumentSnapshot? _lastDoc;
+  bool _hasMore = true;
 
   @override
   void onInit() {
@@ -25,9 +29,13 @@ class FeedController extends GetxController {
   Future<void> loadPosts() async {
     isLoading.value = true;
     error.value = null;
+    _lastDoc = null;
+    _hasMore = true;
     try {
-      final result = await _feedService.fetchSubscribedPosts();
-      posts.assignAll(result);
+      final page = await _feedService.fetchSubscribedPosts();
+      posts.assignAll(page.posts);
+      _lastDoc = page.lastDoc;
+      _hasMore = page.hasMore;
     } catch (e) {
       error.value = 'somethingWentWrong'.tr;
       FirebaseCrashlytics.instance.recordError(
@@ -37,6 +45,27 @@ class FeedController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> refreshPosts() async {
+    final page = await _feedService.fetchSubscribedPosts();
+    posts.assignAll(page.posts);
+    _lastDoc = page.lastDoc;
+    _hasMore = page.hasMore;
+  }
+
+  Future<void> loadMorePosts() async {
+    if (isLoadingMore.value || !_hasMore) return;
+    isLoadingMore.value = true;
+    try {
+      final page =
+          await _feedService.fetchSubscribedPosts(startAfter: _lastDoc);
+      posts.addAll(page.posts);
+      _lastDoc = page.lastDoc;
+      _hasMore = page.hasMore;
+    } finally {
+      isLoadingMore.value = false;
     }
   }
 }
