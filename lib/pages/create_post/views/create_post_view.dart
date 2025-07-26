@@ -1,7 +1,9 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
+import 'package:hoot/components/image_component.dart';
 import 'package:photo_view/photo_view.dart';
 import '../controllers/create_post_controller.dart';
 import '../../../components/url_preview_component.dart';
@@ -63,6 +65,21 @@ class CreatePostView extends GetView<CreatePostController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Obx(() {
+              return DropdownButton2<Feed>(
+                value: controller.selectedFeed.value,
+                hint: Text('selectFeed'.tr),
+                onChanged: (f) => controller.selectedFeed.value = f,
+                isExpanded: true,
+                items: controller.availableFeeds
+                    .map((feed) => DropdownMenuItem(
+                  value: feed,
+                  child: Text(feed.title),
+                ))
+                    .toList(),
+              );
+            }),
+            const SizedBox(height: 8),
             TextField(
               controller: controller.textController,
               maxLength: 280,
@@ -70,7 +87,7 @@ class CreatePostView extends GetView<CreatePostController> {
               maxLines: null,
               decoration: InputDecoration(hintText: 'createPost'.tr),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             Obx(() {
               if (controller.imageFiles.isNotEmpty) {
                 return SizedBox(
@@ -80,77 +97,82 @@ class CreatePostView extends GetView<CreatePostController> {
                     itemCount: controller.imageFiles.length,
                     itemBuilder: (context, i) {
                       final file = controller.imageFiles[i];
-                      return Stack(
-                        children: [
-                          GestureDetector(
-                            onTap: () => _openViewer(context, FileImage(file)),
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 8),
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                image: DecorationImage(
-                                  image: FileImage(file),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 4,
-                            right: 4,
-                            child: GestureDetector(
-                              onTap: () => controller.removeImage(i),
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Stack(
+                          children: [
+                            GestureDetector(
+                              onTap: () => _openViewer(context, FileImage(file)),
                               child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.black54,
-                                  shape: BoxShape.circle,
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  image: DecorationImage(
+                                    image: FileImage(file),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                                child: const Icon(Icons.close,
-                                    size: 16, color: Colors.white),
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              top: 4,
+                              right: 4,
+                              child: GestureDetector(
+                                onTap: () => controller.removeImage(i),
+                                child: Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.black54,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.close,
+                                      size: 16, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     },
                   ),
                 );
               } else if (controller.gifUrl.value != null) {
-                return Stack(
-                  children: [
-                    GestureDetector(
-                      onTap: () => _openViewer(
-                          context, NetworkImage(controller.gifUrl.value!)),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          image: DecorationImage(
-                            image: NetworkImage(controller.gifUrl.value!),
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                    height: 100,
+                    width: 100,
+                    child: Stack(
+                      children: [
+                        ImageComponent(
+                            url: controller.gifUrl.value!,
+                            width: 100,
+                            height: 100,
                             fit: BoxFit.cover,
+                            radius: 8,
+                          ),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: GestureDetector(
+                            onTap: () => controller.gifUrl.value = null,
+                            child: Container(
+                              width: 24,
+                              height: 24,
+                              decoration: const BoxDecoration(
+                                color: Colors.black54,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.close,
+                                  size: 16, color: Colors.white),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                    Positioned(
-                      top: 4,
-                      right: 4,
-                      child: GestureDetector(
-                        onTap: () => controller.gifUrl.value = null,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.black54,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.close,
-                              size: 16, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 );
               }
               return const SizedBox.shrink();
@@ -186,21 +208,6 @@ class CreatePostView extends GetView<CreatePostController> {
                 );
               }
               return const SizedBox.shrink();
-            }),
-            const SizedBox(height: 16),
-            Obx(() {
-              return DropdownButton<Feed>(
-                value: controller.selectedFeed.value,
-                hint: Text('selectFeed'.tr),
-                onChanged: (f) => controller.selectedFeed.value = f,
-                isExpanded: true,
-                items: controller.availableFeeds
-                    .map((feed) => DropdownMenuItem(
-                          value: feed,
-                          child: Text(feed.title),
-                        ))
-                    .toList(),
-              );
             }),
           ],
         ),
