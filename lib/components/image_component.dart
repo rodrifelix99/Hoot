@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:photo_view/photo_view.dart';
 
 class ImageComponent extends StatefulWidget {
   final String url;
@@ -26,39 +26,49 @@ class ImageComponent extends StatefulWidget {
 }
 
 class _ImageComponentState extends State<ImageComponent> {
+  void _openViewer(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => Scaffold(
+          backgroundColor: Colors.black,
+          body: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: PhotoView(
+              imageProvider: CachedNetworkImageProvider(widget.url),
+              backgroundDecoration: const BoxDecoration(color: Colors.black),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FullScreenWidget(
-      backgroundColor: Colors.black,
-      child: Center(
-        child: Hero(
-          tag: widget.url +
-              widget.width.toString() +
-              widget.height.toString() +
-              DateTime.now().toString(),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(widget.radius),
-            child: CachedNetworkImage(
-              imageUrl: widget.url,
-              width: widget.width,
-              height: widget.height,
-              fit: widget.fit,
-              alignment: widget.alignment ?? Alignment.center,
-              repeat: widget.repeat ?? ImageRepeat.noRepeat,
-              placeholder: (context, url) => Container(
-                color: Theme.of(context).colorScheme.secondaryContainer,
-                child: Center(
-                  child: LoadingAnimationWidget.inkDrop(
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                    size: 50,
-                  ),
-                ),
-              ),
-              errorWidget: (context, url, error) => Container(
-                color: Colors.grey.shade800,
-                child: const Icon(Icons.error, color: Colors.white),
+    return GestureDetector(
+      onTap: () => _openViewer(context),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(widget.radius),
+        child: CachedNetworkImage(
+          imageUrl: widget.url,
+          width: widget.width,
+          height: widget.height,
+          fit: widget.fit,
+          alignment: widget.alignment ?? Alignment.center,
+          repeat: widget.repeat ?? ImageRepeat.noRepeat,
+          placeholder: (context, url) => Container(
+            color: Theme.of(context).colorScheme.secondaryContainer,
+            child: Center(
+              child: LoadingAnimationWidget.inkDrop(
+                color: Theme.of(context).colorScheme.onSecondaryContainer,
+                size: 50,
               ),
             ),
+          ),
+          errorWidget: (context, url, error) => Container(
+            color: Colors.grey.shade800,
+            child: const Icon(Icons.error, color: Colors.white),
           ),
         ),
       ),

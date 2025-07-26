@@ -43,7 +43,11 @@ class Post {
     return Post(
       id: json['id'],
       text: json['text'],
-      media: json['images'] != null ? List<String>.from(json['images']) : null,
+      media: json['images'] != null
+          ? List<String>.from(json['images'])
+          : json['gifs'] != null
+              ? List<String>.from(json['gifs'])
+              : null,
       feedId: json['feedId'],
       feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
       user: json['user'] != null ? U.fromJson(json['user']) : null,
@@ -51,17 +55,22 @@ class Post {
       likes: json['likes'],
       reFeeded: json['reFeeded'] ?? false,
       reFeeds: json['reFeeds'],
-      reFeededFrom: json['reFeededFrom'] != null && json['reFeededFrom'].runtimeType != String ? Post.fromJson(json['reFeededFrom']) : null,
+      reFeededFrom: json['reFeededFrom'] != null &&
+              json['reFeededFrom'].runtimeType != String
+          ? Post.fromJson(json['reFeededFrom'])
+          : null,
       comments: json['comments'],
       createdAt: json['createdAt'] != null
           ? json['createdAt'] is Timestamp
               ? (json['createdAt'] as Timestamp).toDate()
-              : DateTime.fromMillisecondsSinceEpoch(json['createdAt']['_seconds'] * 1000)
+              : DateTime.fromMillisecondsSinceEpoch(
+                  json['createdAt']['_seconds'] * 1000)
           : null,
       updatedAt: json['updatedAt'] != null
           ? json['updatedAt'] is Timestamp
               ? (json['updatedAt'] as Timestamp).toDate()
-              : DateTime.fromMillisecondsSinceEpoch(json['updatedAt']['_seconds'] * 1000)
+              : DateTime.fromMillisecondsSinceEpoch(
+                  json['updatedAt']['_seconds'] * 1000)
           : null,
     );
   }
@@ -124,10 +133,17 @@ class Post {
       likes: json['likes'],
       reFeeded: json['reFeeded'] ?? false,
       reFeeds: json['reFeeds'],
-      reFeededFrom: json['reFeededFrom'] != null && json['reFeededFrom'].runtimeType != String ? Post.fromCache(json['reFeededFrom']) : null,
+      reFeededFrom: json['reFeededFrom'] != null &&
+              json['reFeededFrom'].runtimeType != String
+          ? Post.fromCache(json['reFeededFrom'])
+          : null,
       comments: json['comments'],
-      createdAt: json['createdAt'] != null ? DateTime.fromMillisecondsSinceEpoch(int.parse(json['createdAt'])) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.fromMillisecondsSinceEpoch(int.parse(json['updatedAt'])) : null,
+      createdAt: json['createdAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(int.parse(json['createdAt']))
+          : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(int.parse(json['updatedAt']))
+          : null,
     );
   }
 }
