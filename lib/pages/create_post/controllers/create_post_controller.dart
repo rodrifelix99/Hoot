@@ -10,14 +10,20 @@ import '../../../models/feed.dart';
 import '../../../services/error_service.dart';
 import '../../../services/toast_service.dart';
 import '../../../services/post_service.dart';
+import '../../../services/auth_service.dart';
 
 /// Manages state for creating a new post.
 class CreatePostController extends GetxController {
   final BasePostService _postService;
+  final AuthService _authService;
   final String _userId;
 
-  CreatePostController({BasePostService? postService, String? userId})
-      : _postService = postService ?? PostService(),
+  CreatePostController({
+    BasePostService? postService,
+    AuthService? authService,
+    String? userId,
+  })  : _postService = postService ?? PostService(),
+        _authService = authService ?? Get.find<AuthService>(),
         _userId = userId ?? FirebaseAuth.instance.currentUser?.uid ?? '';
 
   /// Text entered by the user.
@@ -39,6 +45,17 @@ class CreatePostController extends GetxController {
   final RxBool publishing = false.obs;
 
   final _picker = ImagePicker();
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadFeeds();
+  }
+
+  Future<void> _loadFeeds() async {
+    final user = await _authService.fetchUser();
+    availableFeeds.assignAll(user?.feeds ?? []);
+  }
 
   /// Picks an image from the gallery.
   Future<void> pickImage() async {
