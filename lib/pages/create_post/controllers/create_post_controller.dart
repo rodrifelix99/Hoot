@@ -11,19 +11,23 @@ import '../../../services/error_service.dart';
 import '../../../services/toast_service.dart';
 import '../../../services/post_service.dart';
 import '../../../services/auth_service.dart';
+import '../../../services/storage_service.dart';
 
 /// Manages state for creating a new post.
 class CreatePostController extends GetxController {
   final BasePostService _postService;
   final AuthService _authService;
+  final BaseStorageService _storageService;
   final String _userId;
 
   CreatePostController({
     BasePostService? postService,
     AuthService? authService,
     String? userId,
+    BaseStorageService? storageService,
   })  : _postService = postService ?? PostService(),
         _authService = authService ?? Get.find<AuthService>(),
+        _storageService = storageService ?? StorageService(),
         _userId = userId ?? FirebaseAuth.instance.currentUser?.uid ?? '';
 
   /// Text entered by the user.
@@ -121,18 +125,25 @@ class CreatePostController extends GetxController {
         userData['uid'] = user!.uid;
       }
 
-      await _postService.createPost({
-        'text': text,
-        'feedId': feed.id,
-        'feed': feedData,
-        if (imageFiles.isNotEmpty)
-          'images': imageFiles.map((f) => f.path).toList(),
-        if (gifUrl.value != null) 'gifs': [gifUrl.value],
-        'userId': _userId,
-        if (userData != null) 'user': userData,
-        'url': _firstUrl(text),
-        'createdAt': FieldValue.serverTimestamp(),
-      }..removeWhere((key, value) => value == null));
+      final postId = _postService.newPostId();
+      List<String>? imageUrls;
+      if (imageFiles.isNotEmpty) {
+        imageUrls = await _storageService.uploadPostImages(postId, imageFiles);
+      }
+
+      await _postService.createPost(
+          {
+            'text': text,
+            'feedId': feed.id,
+            'feed': feedData,
+            if (imageUrls != null) 'images': imageUrls,
+            if (gifUrl.value != null) 'gifs': [gifUrl.value],
+            'userId': _userId,
+            if (userData != null) 'user': userData,
+            'url': _firstUrl(text),
+            'createdAt': FieldValue.serverTimestamp(),
+          }..removeWhere((key, value) => value == null),
+          id: postId);
       textController.clear();
       imageFiles.clear();
       gifUrl.value = null;
