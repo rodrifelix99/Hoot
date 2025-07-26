@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:hoot/util/routes/app_pages.dart';
 import 'package:hoot/util/routes/app_routes.dart';
@@ -10,12 +11,15 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hoot/theme/theme.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 import 'package:toastification/toastification.dart';
+import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'services/theme_service.dart';
 import 'firebase_options.dart';
 
 void main() {
   runZonedGuarded(() async {
     WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+    await dotenv.load(fileName: '.env');
+    TenorGifPicker.init(apiKey: dotenv.env['TENOR_API_KEY'] ?? '');
     FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
     await Firebase.initializeApp(
