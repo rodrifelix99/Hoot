@@ -4,29 +4,18 @@ import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/image_component.dart';
-import 'package:photo_view/photo_view.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 import '../controllers/create_post_controller.dart';
-import '../../../components/url_preview_component.dart';
-import '../../../models/feed.dart';
+import 'package:hoot/components/url_preview_component.dart';
+import 'package:hoot/models/feed.dart';
 
 class CreatePostView extends GetView<CreatePostController> {
   const CreatePostView({super.key});
 
-  void _openViewer(BuildContext context, ImageProvider provider) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => Scaffold(
-          backgroundColor: Colors.black,
-          body: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: PhotoView(
-              imageProvider: provider,
-              backgroundDecoration: const BoxDecoration(color: Colors.black),
-            ),
-          ),
-        ),
-      ),
+  void _openViewer(String url) {
+    Get.toNamed(
+      AppRoutes.photoViewer,
+      arguments: {'imageUrl': url},
     );
   }
 
@@ -102,7 +91,7 @@ class CreatePostView extends GetView<CreatePostController> {
                         child: Stack(
                           children: [
                             GestureDetector(
-                              onTap: () => _openViewer(context, FileImage(file)),
+                              onTap: () => _openViewer(file.path),
                               child: Container(
                                 width: 100,
                                 height: 100,

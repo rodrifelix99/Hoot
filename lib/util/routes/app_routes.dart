@@ -20,4 +20,5 @@ class AppRoutes {
   static const report = '/report';
   static const aboutUs = '/about_us';
   static const contacts = '/contacts';
+  static const photoViewer = '/photo_view';
 }

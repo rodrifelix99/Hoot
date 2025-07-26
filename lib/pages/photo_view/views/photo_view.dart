@@ -1,0 +1,37 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hoot/pages/photo_view/controllers/photo_view_controller.dart';
+import 'package:photo_view/photo_view.dart';
+
+class PhotoZoomView extends GetView<PhotoZoomViewController> {
+  const PhotoZoomView({super.key});
+
+  ImageProvider get provider {
+    final imageUrl = controller.imageUrl;
+    if (imageUrl.startsWith('http')) {
+      return CachedNetworkImageProvider(imageUrl);
+    } else {
+      return AssetImage(imageUrl);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+      ),
+      extendBodyBehindAppBar: true,
+      body: GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: PhotoView(
+          heroAttributes: PhotoViewHeroAttributes(tag: controller.imageUrl),
+          imageProvider: provider,
+          backgroundDecoration: const BoxDecoration(color: Colors.black),
+        ),
+      ),
+    );
+  }
+}

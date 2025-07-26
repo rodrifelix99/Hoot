@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:hoot/pages/login/bindings/login_binding.dart';
 import 'package:hoot/pages/login/views/login_view.dart';
+import 'package:hoot/pages/photo_view/bindings/photo_view_binding.dart';
+import 'package:hoot/pages/photo_view/views/photo_view.dart';
 import 'package:hoot/pages/welcome/bindings/welcome_binding.dart';
 import 'package:hoot/pages/welcome/views/welcome_view.dart';
 import 'package:hoot/pages/username/bindings/username_binding.dart';
@@ -163,5 +165,11 @@ class AppPages {
         binding: ContactsBinding(),
         middlewares: [AuthMiddleware()],
       ),
+    GetPage(
+      name: AppRoutes.photoViewer,
+      page: () => const PhotoZoomView(),
+      binding: PhotoViewBinding(),
+      middlewares: [AuthMiddleware()],
+    ),
   ];
 }

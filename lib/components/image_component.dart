@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:photo_view/photo_view.dart';
 
 class ImageComponent extends StatefulWidget {
   final String url;
@@ -26,28 +27,18 @@ class ImageComponent extends StatefulWidget {
 }
 
 class _ImageComponentState extends State<ImageComponent> {
-  void _openViewer(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => Scaffold(
-          backgroundColor: Colors.black,
-          body: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: PhotoView(
-              imageProvider: CachedNetworkImageProvider(widget.url),
-              backgroundDecoration: const BoxDecoration(color: Colors.black),
-            ),
-          ),
-        ),
-      ),
+  void _openViewer() {
+    Get.toNamed(
+      AppRoutes.photoViewer,
+      arguments: {'imageUrl': widget.url},
+      preventDuplicates: false,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _openViewer(context),
+      onTap: _openViewer,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(widget.radius),
         child: CachedNetworkImage(
