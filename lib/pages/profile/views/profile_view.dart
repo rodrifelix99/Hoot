@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../models/post.dart';
+import '../../../models/user.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
@@ -18,26 +22,6 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   final ProfileController controller = Get.find();
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      controller.loadMoreSelectedFeed();
-    }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
 
   void reportUser(BuildContext context) {
     final user = controller.user.value;
@@ -62,10 +46,7 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  Widget buildPostItem(int index) {
-    final feed = controller.feeds[controller.selectedFeedIndex.value];
-    final post = feed.posts?[index];
-    if (post == null) return const SizedBox.shrink();
+  Widget buildPostItem(Post post) {
     return Card(
       margin: const EdgeInsets.all(8),
       child: Padding(
@@ -106,6 +87,55 @@ class _ProfileViewState extends State<ProfileView> {
             ],
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildHeader(U user) {
+    return Padding(
+      padding: const EdgeInsets.all(16).copyWith(top: 0),
+      child: Column(
+        children: [
+          if (user.bannerPictureUrl != null &&
+              user.bannerPictureUrl!.isNotEmpty)
+            ImageComponent(
+              url: user.bannerPictureUrl!,
+              height: 150,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              radius: 8,
+            ),
+          const SizedBox(height: 16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ProfileAvatarComponent(
+                image: user.largeProfilePictureUrl ?? '',
+                size: 80,
+                radius: 40,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    NameComponent(
+                      user: user,
+                      showUsername: true,
+                      size: 20,
+                    ),
+                    if (user.bio != null && user.bio!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(user.bio!),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -176,66 +206,23 @@ class _ProfileViewState extends State<ProfileView> {
         return const SizedBox.shrink();
       }
 
+      final feedId = controller.feeds.isNotEmpty
+          ? controller.feeds[controller.selectedFeedIndex.value].id
+          : null;
+      final state = feedId != null
+          ? controller.feedStates[feedId] ??
+              PagingState<DocumentSnapshot?, Post>()
+          : PagingState<DocumentSnapshot?, Post>();
+
       return RefreshIndicator(
         onRefresh: controller.refreshSelectedFeed,
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16).copyWith(
-                  top: 0,
-                ),
-                child: Column(
-                  children: [
-                    if (user.bannerPictureUrl != null &&
-                        user.bannerPictureUrl!.isNotEmpty)
-                      ImageComponent(
-                        url: user.bannerPictureUrl!,
-                        height: 150,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        radius: 8,
-                      ),
-                    const SizedBox(height: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ProfileAvatarComponent(
-                          image: user.largeProfilePictureUrl ?? '',
-                          size: 80,
-                          radius: 40,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              NameComponent(
-                                user: user,
-                                showUsername: true,
-                                size: 20,
-                              ),
-                              if (user.bio != null && user.bio!.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Text(user.bio!),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(height: 32),
-              if (controller.feeds.isEmpty)
-                controller.isCurrentUser
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(child: buildHeader(user)),
+            const SliverToBoxAdapter(child: Divider(height: 32)),
+            if (controller.feeds.isEmpty)
+              SliverToBoxAdapter(
+                child: controller.isCurrentUser
                     ? NothingToShowComponent(
                         icon: const Icon(Icons.feed_outlined),
                         text: 'whatIsAFeed'.tr,
@@ -247,38 +234,41 @@ class _ProfileViewState extends State<ProfileView> {
                         text: 'noFeeds'.trParams({
                           'username': controller.user.value?.username ?? '',
                         }),
-                      )
-              else ...[
-                SingleChildScrollView(
+                      ),
+              )
+            else ...[
+              SliverToBoxAdapter(
+                child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: buildFeedChips(context),
                 ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: (controller
-                              .feeds[controller.selectedFeedIndex.value]
-                              .posts
-                              ?.length ??
-                          0) +
-                      (controller.isLoadingMore.value ? 1 : 0),
-                  itemBuilder: (_, i) {
-                    final posts = controller
-                            .feeds[controller.selectedFeedIndex.value].posts ??
-                        [];
-                    if (i >= posts.length) {
-                      return const Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                    return buildPostItem(i);
-                  },
+              ),
+              PagedSliverList<DocumentSnapshot?, Post>(
+                state: state,
+                fetchNextPage: controller.loadMoreSelectedFeed,
+                builderDelegate: PagedChildBuilderDelegate<Post>(
+                  itemBuilder: (context, item, index) => buildPostItem(item),
+                  firstPageProgressIndicatorBuilder: (_) => const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                  newPageProgressIndicatorBuilder: (_) => const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                  firstPageErrorIndicatorBuilder: (_) => NothingToShowComponent(
+                    icon: const Icon(Icons.error_outline),
+                    text: 'somethingWentWrong'.tr,
+                  ),
+                  noItemsFoundIndicatorBuilder: (_) => NothingToShowComponent(
+                    icon: const Icon(Icons.feed_outlined),
+                    text: 'noPosts'.tr,
+                  ),
                 ),
-              ],
+              ),
             ],
-          ),
+          ],
         ),
       );
     });
