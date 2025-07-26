@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/feed.dart';
+import '../../../models/post.dart';
 import '../../../models/user.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/feed_service.dart';
@@ -18,11 +20,9 @@ class ProfileController extends GetxController {
   final Rxn<U> user = Rxn<U>();
   final RxList<Feed> feeds = <Feed>[].obs;
   final RxBool isLoading = false.obs;
-  final RxBool isLoadingMore = false.obs;
   final RxInt selectedFeedIndex = 0.obs;
   final RxSet<String> subscribedFeedIds = <String>{}.obs;
-  final Map<String, DocumentSnapshot?> _feedLastDocs = {};
-  final Map<String, bool> _feedHasMore = {};
+  final Map<String, PagingState<DocumentSnapshot?, Post>> feedStates = {};
   String? uid;
   bool get isCurrentUser => uid == null || uid == _authService.currentUser?.uid;
 
@@ -48,6 +48,9 @@ class ProfileController extends GetxController {
       if (u != null) {
         user.value = u;
         feeds.assignAll(u.feeds ?? []);
+        for (final feed in feeds) {
+          feedStates[feed.id] = PagingState<DocumentSnapshot?, Post>();
+        }
       }
       if (feeds.isNotEmpty) {
         await loadFeedPosts(feeds.first.id, refresh: true);
@@ -68,24 +71,30 @@ class ProfileController extends GetxController {
     bool refresh = false,
   }) async {
     final feed = feeds.firstWhere((f) => f.id == feedId);
+    feedStates.putIfAbsent(
+        feedId, () => PagingState<DocumentSnapshot?, Post>());
+    var state = feedStates[feedId]!;
     if (refresh) {
-      _feedLastDocs[feedId] = null;
-      _feedHasMore[feedId] = true;
-      feed.posts = [];
+      state = state.reset();
     }
-    if (_feedHasMore[feedId] == false) return;
-    isLoadingMore.value = true;
+    if (!state.hasNextPage && !refresh) return;
+    feedStates[feedId] = state.copyWith(isLoading: true, error: null);
     try {
       final page = await _feedService.fetchFeedPosts(
         feedId,
-        startAfter: _feedLastDocs[feedId],
+        startAfter: state.keys?.last,
+      );
+      state = feedStates[feedId]!;
+      feedStates[feedId] = state.copyWith(
+        pages: [...?state.pages, page.posts],
+        keys: [...?state.keys, page.lastDoc],
+        hasNextPage: page.hasMore,
+        isLoading: false,
       );
       feed.posts = [...(feed.posts ?? []), ...page.posts];
       feeds.refresh();
-      _feedLastDocs[feedId] = page.lastDoc;
-      _feedHasMore[feedId] = page.hasMore;
     } finally {
-      isLoadingMore.value = false;
+      feedStates[feedId] = feedStates[feedId]!.copyWith(isLoading: false);
     }
   }
 

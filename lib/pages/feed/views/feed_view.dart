@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/shimmer_skeletons.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../models/post.dart';
 import '../controllers/feed_controller.dart';
 
 class FeedView extends StatefulWidget {
@@ -17,29 +20,8 @@ class FeedView extends StatefulWidget {
 
 class _FeedViewState extends State<FeedView> {
   final FeedController controller = Get.find();
-  final ScrollController _scrollController = ScrollController();
 
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      controller.loadMorePosts();
-    }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  Widget _buildPost(BuildContext context, int index) {
-    final post = controller.posts[index];
+  Widget _buildPost(BuildContext context, Post post) {
     return Card(
       margin: const EdgeInsets.all(8),
       child: Padding(
@@ -85,42 +67,30 @@ class _FeedViewState extends State<FeedView> {
   }
 
   Widget _buildBody(BuildContext context) {
-    if (controller.isLoading.value) {
-      return ListView.builder(
-        controller: _scrollController,
-        itemCount: 3,
-        itemBuilder: (_, __) => const ShimmerListTile(hasSubtitle: true),
-      );
-    }
-
-    if (controller.error.value != null) {
-      return NothingToShowComponent(
-        icon: const Icon(Icons.error_outline),
-        text: controller.error.value!,
-      );
-    }
-
-    if (controller.posts.isEmpty) {
-      return NothingToShowComponent(
-        icon: const Icon(Icons.feed_outlined),
-        text: 'subscribeToSeeHoots'.tr,
-      );
-    }
-
-    return ListView.builder(
-      controller: _scrollController,
-      itemCount:
-          controller.posts.length + (controller.isLoadingMore.value ? 1 : 0),
-      itemBuilder: (context, index) {
-        if (index >= controller.posts.length) {
-          return const Padding(
+    return Obx(() {
+      final state = controller.state.value;
+      return PagedListView<DocumentSnapshot?, Post>(
+        state: state,
+        fetchNextPage: controller.fetchNextPage,
+        builderDelegate: PagedChildBuilderDelegate<Post>(
+          itemBuilder: (context, item, index) => _buildPost(context, item),
+          firstPageProgressIndicatorBuilder: (_) =>
+              const ShimmerListTile(hasSubtitle: true),
+          newPageProgressIndicatorBuilder: (_) => const Padding(
             padding: EdgeInsets.all(16),
             child: Center(child: CircularProgressIndicator()),
-          );
-        }
-        return _buildPost(context, index);
-      },
-    );
+          ),
+          firstPageErrorIndicatorBuilder: (_) => NothingToShowComponent(
+            icon: const Icon(Icons.error_outline),
+            text: 'somethingWentWrong'.tr,
+          ),
+          noItemsFoundIndicatorBuilder: (_) => NothingToShowComponent(
+            icon: const Icon(Icons.feed_outlined),
+            text: 'subscribeToSeeHoots'.tr,
+          ),
+        ),
+      );
+    });
   }
 
   @override
@@ -130,8 +100,8 @@ class _FeedViewState extends State<FeedView> {
         title: 'feed'.tr,
       ),
       body: RefreshIndicator(
-        onRefresh: controller.refreshPosts,
-        child: Obx(() => _buildBody(context)),
+        onRefresh: () => Future.sync(() => controller.refresh()),
+        child: _buildBody(context),
       ),
     );
   }

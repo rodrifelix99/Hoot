@@ -1,6 +1,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/post.dart';
 import '../../../services/feed_service.dart';
@@ -12,60 +13,44 @@ class FeedController extends GetxController {
 
   final BaseFeedService _feedService;
 
-  final RxList<Post> posts = <Post>[].obs;
-  final RxBool isLoading = false.obs;
-  final RxBool isLoadingMore = false.obs;
-  final RxnString error = RxnString();
-  DocumentSnapshot? _lastDoc;
-  bool _hasMore = true;
+  final Rx<PagingState<DocumentSnapshot?, Post>> state =
+      PagingState<DocumentSnapshot?, Post>().obs;
 
   @override
   void onInit() {
     super.onInit();
-    loadPosts();
+    fetchNextPage();
   }
 
-  /// Loads posts from the service and updates the observable list.
-  Future<void> loadPosts() async {
-    isLoading.value = true;
-    error.value = null;
-    _lastDoc = null;
-    _hasMore = true;
+  void fetchNextPage() async {
+    final current = state.value;
+    if (current.isLoading) return;
+
+    state.value = current.copyWith(isLoading: true, error: null);
+
     try {
-      final page = await _feedService.fetchSubscribedPosts();
-      posts.assignAll(page.posts);
-      _lastDoc = page.lastDoc;
-      _hasMore = page.hasMore;
+      final page = await _feedService.fetchSubscribedPosts(
+        startAfter: current.keys?.last,
+      );
+
+      state.value = state.value.copyWith(
+        pages: [...?current.pages, page.posts],
+        keys: [...?current.keys, page.lastDoc],
+        hasNextPage: page.hasMore,
+        isLoading: false,
+      );
     } catch (e) {
-      error.value = 'somethingWentWrong'.tr;
+      state.value = state.value.copyWith(error: e, isLoading: false);
       FirebaseCrashlytics.instance.recordError(
         e,
         null,
         reason: 'Failed to load feed posts',
       );
-    } finally {
-      isLoading.value = false;
     }
   }
 
-  Future<void> refreshPosts() async {
-    final page = await _feedService.fetchSubscribedPosts();
-    posts.assignAll(page.posts);
-    _lastDoc = page.lastDoc;
-    _hasMore = page.hasMore;
-  }
-
-  Future<void> loadMorePosts() async {
-    if (isLoadingMore.value || !_hasMore) return;
-    isLoadingMore.value = true;
-    try {
-      final page =
-          await _feedService.fetchSubscribedPosts(startAfter: _lastDoc);
-      posts.addAll(page.posts);
-      _lastDoc = page.lastDoc;
-      _hasMore = page.hasMore;
-    } finally {
-      isLoadingMore.value = false;
-    }
+  void refresh() {
+    state.value = state.value.reset();
+    fetchNextPage();
   }
 }
