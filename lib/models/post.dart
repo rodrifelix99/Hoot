@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
 
@@ -52,8 +53,16 @@ class Post {
       reFeeds: json['reFeeds'],
       reFeededFrom: json['reFeededFrom'] != null && json['reFeededFrom'].runtimeType != String ? Post.fromJson(json['reFeededFrom']) : null,
       comments: json['comments'],
-      createdAt: json['createdAt'] != null ? DateTime.fromMillisecondsSinceEpoch(json['createdAt']['_seconds'] * 1000) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.fromMillisecondsSinceEpoch(json['updatedAt']['_seconds'] * 1000) : null,
+      createdAt: json['createdAt'] != null
+          ? json['createdAt'] is Timestamp
+              ? (json['createdAt'] as Timestamp).toDate()
+              : DateTime.fromMillisecondsSinceEpoch(json['createdAt']['_seconds'] * 1000)
+          : null,
+      updatedAt: json['updatedAt'] != null
+          ? json['updatedAt'] is Timestamp
+              ? (json['updatedAt'] as Timestamp).toDate()
+              : DateTime.fromMillisecondsSinceEpoch(json['updatedAt']['_seconds'] * 1000)
+          : null,
     );
   }
 
