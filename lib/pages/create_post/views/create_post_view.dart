@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
-import 'package:hoot/components/image_component.dart';
+import 'package:hoot/components/post_media_preview.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import '../controllers/create_post_controller.dart';
 import 'package:hoot/components/url_preview_component.dart';
@@ -62,9 +62,9 @@ class CreatePostView extends GetView<CreatePostController> {
                 isExpanded: true,
                 items: controller.availableFeeds
                     .map((feed) => DropdownMenuItem(
-                  value: feed,
-                  child: Text(feed.title),
-                ))
+                          value: feed,
+                          child: Text(feed.title),
+                        ))
                     .toList(),
               );
             }),
@@ -77,112 +77,27 @@ class CreatePostView extends GetView<CreatePostController> {
               decoration: InputDecoration(hintText: 'createPost'.tr),
             ),
             const SizedBox(height: 16),
+            Obx(() => PostMediaPreview(
+                  imageFiles: controller.imageFiles,
+                  gifUrl: controller.gifUrl.value,
+                  onOpenViewer: _openViewer,
+                  onRemoveImage: controller.removeImage,
+                  onRemoveGif: () => controller.gifUrl.value = null,
+                )),
             Obx(() {
-              if (controller.imageFiles.isNotEmpty) {
-                return SizedBox(
-                  height: 100,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: controller.imageFiles.length,
-                    itemBuilder: (context, i) {
-                      final file = controller.imageFiles[i];
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Stack(
-                          children: [
-                            GestureDetector(
-                              onTap: () => _openViewer(file.path),
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  image: DecorationImage(
-                                    image: FileImage(file),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              top: 4,
-                              right: 4,
-                              child: GestureDetector(
-                                onTap: () => controller.removeImage(i),
-                                child: Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.black54,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(Icons.close,
-                                      size: 16, color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                );
-              } else if (controller.gifUrl.value != null) {
-                return Align(
-                  alignment: Alignment.centerLeft,
-                  child: SizedBox(
-                    height: 100,
-                    width: 100,
-                    child: Stack(
-                      children: [
-                        ImageComponent(
-                            url: controller.gifUrl.value!,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                            radius: 8,
-                          ),
-                        Positioned(
-                          top: 4,
-                          right: 4,
-                          child: GestureDetector(
-                            onTap: () => controller.gifUrl.value = null,
-                            child: Container(
-                              width: 24,
-                              height: 24,
-                              decoration: const BoxDecoration(
-                                color: Colors.black54,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(Icons.close,
-                                  size: 16, color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-              return const SizedBox.shrink();
-            }),
-            Obx(() {
-              final disableImages =
-                  controller.gifUrl.value != null ||
-                      controller.imageFiles.length >= 4;
+              final disableImages = controller.gifUrl.value != null ||
+                  controller.imageFiles.length >= 4;
               final disableGif = controller.imageFiles.isNotEmpty;
               return Row(
                 children: [
                   IconButton(
                     icon: const Icon(Icons.image),
-                    onPressed:
-                        disableImages ? null : controller.pickImage,
+                    onPressed: disableImages ? null : controller.pickImage,
                     tooltip: 'addImage'.tr,
                   ),
                   IconButton(
                     icon: const Icon(Icons.gif_box),
-                    onPressed:
-                        disableGif ? null : () => pickGif(context),
+                    onPressed: disableGif ? null : () => pickGif(context),
                     tooltip: 'addGif'.tr,
                   ),
                 ],
