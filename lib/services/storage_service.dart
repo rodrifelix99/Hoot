@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image/image.dart' as img;
 
 /// Interface for uploading post media to Firebase Storage.
 abstract class BaseStorageService {
@@ -20,7 +22,19 @@ class StorageService implements BaseStorageService {
     for (var i = 0; i < files.length; i++) {
       final file = files[i];
       final ref = _storage.ref().child('posts').child(postId).child('$i.jpg');
-      await ref.putFile(file);
+
+      Uint8List data = await file.readAsBytes();
+      final decoded = img.decodeImage(data);
+      if (decoded != null) {
+        img.Image processed = decoded;
+        // Resize if the image is larger than 1080px on either side.
+        if (processed.width > 1080 || processed.height > 1080) {
+          processed = img.copyResize(processed, width: 1080);
+        }
+        data = Uint8List.fromList(img.encodeJpg(processed, quality: 85));
+      }
+
+      await ref.putData(data, SettableMetadata(contentType: 'image/jpeg'));
       final url = await ref.getDownloadURL();
       urls.add(url);
     }
