@@ -58,6 +58,11 @@ Hoot operates like a streamlined community platform:
    flutter --version
    ```
 
+## Environment configuration
+
+Create a `.env` file based on `.env.example` and supply your own API keys. The
+app loads this file at startup to configure services like Tenor.
+
 ## Running Tests
 
 Widget and model tests are located under the `test/` directory. Fetch all
