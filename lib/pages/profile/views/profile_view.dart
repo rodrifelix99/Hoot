@@ -156,52 +156,50 @@ class ProfileView extends GetView<ProfileController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (user.bannerPictureUrl != null &&
-                user.bannerPictureUrl!.isNotEmpty)
-              ImageComponent(
-                url: user.bannerPictureUrl!,
-                height: 150,
-                fit: BoxFit.cover,
-              ),
             Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.all(16).copyWith(
+                top: 0,
+              ),
+              child: Column(
                 children: [
-                  ProfileAvatarComponent(
-                    image: user.largeProfilePictureUrl ?? '',
-                    size: 80,
-                    radius: 40,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        NameComponent(
-                          user: user,
-                          showUsername: true,
-                          size: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Text(
-                            'numberOfSubscribers'.trParams({
-                              'count': controller.feeds
-                                  .fold<int>(
-                                      0, (p, f) => p + (f.subscriberCount ?? 0))
-                                  .toString()
-                            }),
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                        if (user.bio != null && user.bio!.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: Text(user.bio!),
-                          ),
-                      ],
+                  if (user.bannerPictureUrl != null &&
+                      user.bannerPictureUrl!.isNotEmpty)
+                    ImageComponent(
+                      url: user.bannerPictureUrl!,
+                      height: 150,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      radius: 8,
                     ),
+                  const SizedBox(height: 16),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ProfileAvatarComponent(
+                        image: user.largeProfilePictureUrl ?? '',
+                        size: 80,
+                        radius: 40,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            NameComponent(
+                              user: user,
+                              showUsername: true,
+                              size: 20,
+                            ),
+                            if (user.bio != null && user.bio!.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Text(user.bio!),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -260,22 +258,6 @@ class ProfileView extends GetView<ProfileController> {
         ],
       ),
       body: buildBody(context),
-      floatingActionButton: buildEditButton(),
     );
-  }
-
-  Widget buildEditButton() {
-    return Obx(() {
-      final feeds = controller.feeds;
-      final user = controller.user.value;
-      if (feeds.isEmpty || user == null) return const SizedBox.shrink();
-      final feed = feeds[controller.selectedFeedIndex.value];
-      if (feed.userId != user.uid) return const SizedBox.shrink();
-      return FloatingActionButton(
-        onPressed: () => Get.toNamed(AppRoutes.editFeed, arguments: feed),
-        tooltip: 'editFeed'.tr,
-        child: const Icon(Icons.edit),
-      );
-    });
   }
 }

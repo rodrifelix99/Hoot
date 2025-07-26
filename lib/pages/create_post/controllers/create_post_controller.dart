@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 
 import '../../../models/feed.dart';
 import '../../../services/error_service.dart';
@@ -50,14 +49,10 @@ class CreatePostController extends GetxController {
     }
   }
 
-  /// Opens the Tenor GIF picker bottom sheet.
-  Future<void> pickGif(BuildContext context) async {
-    final tenor = await TenorGifPickerPage.showAsBottomSheet(context);
-    if (tenor != null) {
-      gifUrl.value =
-          tenor.mediaFormats['gif']?.url ?? tenor.mediaFormats.values.first.url;
-      imageFile.value = null;
-    }
+  /// Picks a GIF using the Tenor API.
+  void pickGif(String url) async {
+    gifUrl.value = url;
+    imageFile.value = null;
   }
 
   /// Extracts the first url from [text].

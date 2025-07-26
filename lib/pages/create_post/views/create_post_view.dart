@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import '../controllers/create_post_controller.dart';
@@ -7,6 +8,16 @@ import '../../../models/feed.dart';
 
 class CreatePostView extends GetView<CreatePostController> {
   const CreatePostView({super.key});
+
+  Future<void> pickGif(BuildContext context) async {
+    final tenor = await TenorGifPickerPage.openAsPage(
+      context,
+    );
+    if (tenor != null) {
+      controller.pickGif(tenor.mediaFormats['gif']?.url ??
+          tenor.mediaFormats.values.first.url);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +49,7 @@ class CreatePostView extends GetView<CreatePostController> {
               maxLength: 280,
               minLines: 3,
               maxLines: null,
-              decoration:
-                  InputDecoration(hintText: 'createPost'.tr),
+              decoration: InputDecoration(hintText: 'createPost'.tr),
             ),
             const SizedBox(height: 8),
             Obx(() {
@@ -59,7 +69,7 @@ class CreatePostView extends GetView<CreatePostController> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.gif_box),
-                  onPressed: () => controller.pickGif(context),
+                  onPressed: () => pickGif(context),
                   tooltip: 'addGif'.tr,
                 ),
               ],

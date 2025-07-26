@@ -18,8 +18,7 @@ import 'firebase_options.dart';
 void main() {
   runZonedGuarded(() async {
     WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-    await dotenv.load(fileName: '.env');
-    TenorGifPicker.init(apiKey: dotenv.env['TENOR_API_KEY'] ?? '');
+    await dotenv.load(fileName: 'assets/.env');
     FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
     await Firebase.initializeApp(
@@ -28,6 +27,12 @@ void main() {
     await DependencyInjector.init();
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+    TenorGifPicker.init(
+      apiKey: dotenv.env['TENOR_API_KEY'] ?? '',
+      locale: Get.locale?.toLanguageTag() ?? 'en',
+      country: Get.deviceLocale?.countryCode ?? 'US',
+    );
 
     final themeService = Get.find<ThemeService>();
     runApp(

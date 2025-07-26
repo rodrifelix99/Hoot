@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:get/get.dart';
 
 import '../../../models/post.dart';
@@ -29,6 +30,11 @@ class FeedController extends GetxController {
       posts.assignAll(result);
     } catch (e) {
       error.value = 'somethingWentWrong'.tr;
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        null,
+        reason: 'Failed to load feed posts',
+      );
     } finally {
       isLoading.value = false;
     }

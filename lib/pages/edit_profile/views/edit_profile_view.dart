@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -49,6 +48,7 @@ class EditProfileView extends GetView<EditProfileController> {
                   url: user.bannerPictureUrl!,
                   fit: BoxFit.cover,
                   height: 120,
+                  width: double.infinity,
                 );
               } else {
                 imageWidget = Container(
@@ -70,11 +70,6 @@ class EditProfileView extends GetView<EditProfileController> {
             TextField(
               controller: controller.nameController,
               decoration: InputDecoration(labelText: 'displayName'.tr),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: controller.usernameController,
-              decoration: InputDecoration(labelText: 'username'.tr),
             ),
             const SizedBox(height: 16),
             TextField(

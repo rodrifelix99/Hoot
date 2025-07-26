@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -24,7 +25,6 @@ class EditProfileController extends GetxController {
         _userService = userService ?? UserService();
 
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController usernameController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
 
   final Rx<File?> bannerFile = Rx<File?>(null);
@@ -38,7 +38,6 @@ class EditProfileController extends GetxController {
     final u = user;
     if (u != null) {
       nameController.text = u.name ?? '';
-      usernameController.text = u.username ?? '';
       bioController.text = u.bio ?? '';
     }
   }
@@ -58,19 +57,10 @@ class EditProfileController extends GetxController {
     if (saving.value) return false;
 
     final name = nameController.text.trim();
-    final username = usernameController.text.trim();
     final bio = bioController.text.trim();
 
     if (name.length < 3) {
       ToastService.showError('displayNameTooShort'.tr);
-      return false;
-    }
-    if (username.length < 6) {
-      ToastService.showError('usernameTooShort'.tr);
-      return false;
-    }
-    if (!RegExp(r'^[a-zA-Z0-9_]+\$').hasMatch(username)) {
-      ToastService.showError('usernameInvalid'.tr);
       return false;
     }
 
@@ -100,7 +90,6 @@ class EditProfileController extends GetxController {
 
       await _userService.updateUserData(uid, {
         'displayName': name,
-        'username': username,
         'bio': bio,
         if (bannerUrl != null) 'banner': bannerUrl,
       });
@@ -108,7 +97,6 @@ class EditProfileController extends GetxController {
       final u = user;
       if (u != null) {
         u.name = name;
-        u.username = username;
         u.bio = bio;
         if (bannerUrl != null) u.bannerPictureUrl = bannerUrl;
       }
@@ -126,7 +114,6 @@ class EditProfileController extends GetxController {
   @override
   void onClose() {
     nameController.dispose();
-    usernameController.dispose();
     bioController.dispose();
     super.onClose();
   }
