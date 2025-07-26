@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
 
@@ -25,7 +26,9 @@ class HootNotification {
       postId: map['postId'],
       type: map['type'],
       read: map['read'],
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']['_seconds'] * 1000),
+      createdAt: map['createdAt'] is Timestamp
+          ? (map['createdAt'] as Timestamp).toDate()
+          : DateTime.fromMillisecondsSinceEpoch(map['createdAt']['_seconds'] * 1000),
     );
   }
 }
