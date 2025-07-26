@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/components/post_component.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../models/post.dart';
@@ -42,70 +43,6 @@ class _ProfileViewState extends State<ProfileView> {
             child: Text('done'.tr),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget buildPostItem(Post post) {
-    return Card(
-      margin: const EdgeInsets.all(8),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                ProfileAvatarComponent(
-                  image: post.user?.smallProfilePictureUrl ?? '',
-                  size: 40,
-                  radius: 20,
-                ),
-                const SizedBox(width: 8),
-                if (post.user != null)
-                  NameComponent(
-                    user: post.user!,
-                    showUsername: true,
-                    size: 16,
-                    feedName: post.feed?.title ?? '',
-                  ),
-              ],
-            ),
-            if (post.text != null && post.text!.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Text(post.text!),
-            ],
-            if (post.media != null && post.media!.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              if (post.media!.length == 1)
-                ImageComponent(
-                  url: post.media!.first,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  radius: 10,
-                )
-              else
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 4,
-                  ),
-                  itemCount: post.media!.length,
-                  itemBuilder: (context, i) {
-                    return ImageComponent(
-                      url: post.media![i],
-                      fit: BoxFit.cover,
-                      radius: 8,
-                    );
-                  },
-                ),
-            ],
-          ],
-        ),
       ),
     );
   }
@@ -267,7 +204,9 @@ class _ProfileViewState extends State<ProfileView> {
                 state: state,
                 fetchNextPage: controller.loadMoreSelectedFeed,
                 builderDelegate: PagedChildBuilderDelegate<Post>(
-                  itemBuilder: (context, item, index) => buildPostItem(item),
+                  itemBuilder: (context, item, index) => PostComponent(
+                    post: item,
+                  ),
                   firstPageProgressIndicatorBuilder: (_) => const Padding(
                     padding: EdgeInsets.all(16),
                     child: Center(child: CircularProgressIndicator()),

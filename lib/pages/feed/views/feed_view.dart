@@ -9,15 +9,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../models/post.dart';
 import '../controllers/feed_controller.dart';
 
-class FeedView extends StatefulWidget {
+class FeedView extends GetView<FeedController> {
   const FeedView({super.key});
-
-  @override
-  State<FeedView> createState() => _FeedViewState();
-}
-
-class _FeedViewState extends State<FeedView> {
-  final FeedController controller = Get.find();
 
   Widget _buildBody(BuildContext context) {
     return Obx(() {
