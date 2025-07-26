@@ -94,6 +94,22 @@ class ProfileController extends GetxController {
     await loadFeedPosts(feedId, refresh: true);
   }
 
+  Future<void> refreshProfile() async {
+    final u = isCurrentUser
+        ? await _authService.fetchUser()
+        : await _authService.fetchUserById(uid!);
+    if (u != null) {
+      user.value = u;
+      feeds.assignAll(u.feeds ?? []);
+    }
+    if (feeds.isNotEmpty) {
+      if (selectedFeedIndex.value >= feeds.length) {
+        selectedFeedIndex.value = 0;
+      }
+      await loadFeedPosts(feeds[selectedFeedIndex.value].id, refresh: true);
+    }
+  }
+
   Future<void> loadMoreSelectedFeed() async {
     final feedId = feeds[selectedFeedIndex.value].id;
     await loadFeedPosts(feedId);

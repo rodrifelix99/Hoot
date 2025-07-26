@@ -88,27 +88,41 @@ class _FeedViewState extends State<FeedView> {
     if (controller.isLoading.value) {
       return ListView.builder(
         controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
         itemCount: 3,
         itemBuilder: (_, __) => const ShimmerListTile(hasSubtitle: true),
       );
     }
 
     if (controller.error.value != null) {
-      return NothingToShowComponent(
-        icon: const Icon(Icons.error_outline),
-        text: controller.error.value!,
+      return ListView(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          NothingToShowComponent(
+            icon: const Icon(Icons.error_outline),
+            text: controller.error.value!,
+          ),
+        ],
       );
     }
 
     if (controller.posts.isEmpty) {
-      return NothingToShowComponent(
-        icon: const Icon(Icons.feed_outlined),
-        text: 'subscribeToSeeHoots'.tr,
+      return ListView(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          NothingToShowComponent(
+            icon: const Icon(Icons.feed_outlined),
+            text: 'subscribeToSeeHoots'.tr,
+          ),
+        ],
       );
     }
 
     return ListView.builder(
       controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
       itemCount:
           controller.posts.length + (controller.isLoadingMore.value ? 1 : 0),
       itemBuilder: (context, index) {

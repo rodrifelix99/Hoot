@@ -177,7 +177,7 @@ class _ProfileViewState extends State<ProfileView> {
       }
 
       return RefreshIndicator(
-        onRefresh: controller.refreshSelectedFeed,
+        onRefresh: controller.refreshProfile,
         child: SingleChildScrollView(
           controller: _scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
