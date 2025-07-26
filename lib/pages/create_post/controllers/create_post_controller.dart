@@ -103,15 +103,27 @@ class CreatePostController extends GetxController {
 
     publishing.value = true;
     try {
+      final user = _authService.currentUser;
+      final feedData = feed.toJson();
+      feedData['id'] = feed.id;
+      feedData['userId'] = feed.userId;
+
+      final userData = user?.toJson();
+      if (userData != null) {
+        userData['uid'] = user!.uid;
+      }
+
       await _postService.createPost({
         'text': text,
         'feedId': feed.id,
+        'feed': feedData,
         if (imageFile.value != null) 'images': [imageFile.value!.path],
         if (gifUrl.value != null) 'gifs': [gifUrl.value],
         'userId': _userId,
+        if (userData != null) 'user': userData,
         'url': _firstUrl(text),
         'createdAt': FieldValue.serverTimestamp(),
-      });
+      }..removeWhere((key, value) => value == null));
       textController.clear();
       imageFile.value = null;
       gifUrl.value = null;

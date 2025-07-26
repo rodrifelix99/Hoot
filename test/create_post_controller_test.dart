@@ -47,8 +47,12 @@ void main() {
       ));
       final firestore = FakeFirebaseFirestore();
       final postService = PostService(firestore: firestore);
-      final auth = FakeAuthService(
-          U(uid: 'u1', feeds: [Feed(id: 'f1', userId: 'u1', title: 't', description: 'd')]));
+      final auth = FakeAuthService(U(
+          uid: 'u1',
+          name: 'Tester',
+          username: 'tester',
+          smallProfilePictureUrl: 'a.png',
+          feeds: [Feed(id: 'f1', userId: 'u1', title: 't', description: 'd', color: Colors.blue)]));
       final controller = CreatePostController(
           postService: postService, authService: auth, userId: 'u1');
       controller.textController.text = 'Hello';
@@ -63,13 +67,17 @@ void main() {
       ));
       final firestore = FakeFirebaseFirestore();
       final postService = PostService(firestore: firestore);
-      final auth = FakeAuthService(
-          U(uid: 'u1', feeds: [Feed(id: 'f1', userId: 'u1', title: 't', description: 'd')]));
+      final auth = FakeAuthService(U(
+          uid: 'u1',
+          name: 'Tester',
+          username: 'tester',
+          smallProfilePictureUrl: 'a.png',
+          feeds: [Feed(id: 'f1', userId: 'u1', title: 't', description: 'd', color: Colors.blue)]));
       final controller = CreatePostController(
           postService: postService, authService: auth, userId: 'u1');
       controller.textController.text = 'a' * 281;
       controller.selectedFeed.value =
-          Feed(id: 'f1', userId: 't', title: 't', description: 'd');
+          Feed(id: 'f1', userId: 't', title: 't', description: 'd', color: Colors.blue);
       expect(await controller.publish(), isFalse);
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
@@ -81,12 +89,16 @@ void main() {
       ));
       final firestore = FakeFirebaseFirestore();
       final postService = PostService(firestore: firestore);
-      final auth = FakeAuthService(
-          U(uid: 'u1', feeds: [Feed(id: 'f1', userId: 'u1', title: 't', description: 'd')]));
+      final auth = FakeAuthService(U(
+          uid: 'u1',
+          name: 'Tester',
+          username: 'tester',
+          smallProfilePictureUrl: 'a.png',
+          feeds: [Feed(id: 'f1', userId: 'u1', title: 't', description: 'd', color: Colors.blue)]));
       final controller = CreatePostController(
           postService: postService, authService: auth, userId: 'u1');
       controller.selectedFeed.value =
-          Feed(id: 'f1', userId: 't', title: 't', description: 'd');
+          Feed(id: 'f1', userId: 't', title: 't', description: 'd', color: Colors.blue);
       controller.textController.text = 'Hi';
       final result = await controller.publish();
       await tester.pump(const Duration(seconds: 4));
@@ -94,14 +106,24 @@ void main() {
       expect(result, isTrue);
       final posts = await firestore.collection('posts').get();
       expect(posts.docs.length, 1);
-      expect(posts.docs.first.get('text'), 'Hi');
+      final data = posts.docs.first.data();
+      expect(data['text'], 'Hi');
+      expect(data['user']['displayName'], 'Tester');
+      expect(data['user']['username'], 'tester');
+      expect(data['user']['smallAvatar'], 'a.png');
+      expect(data['feed']['title'], 't');
     });
 
     testWidgets('available feeds loaded on init', (tester) async {
       final firestore = FakeFirebaseFirestore();
       final postService = PostService(firestore: firestore);
-      final feed = Feed(id: 'f1', userId: 'u1', title: 't', description: 'd');
-      final auth = FakeAuthService(U(uid: 'u1', feeds: [feed]));
+      final feed = Feed(id: 'f1', userId: 'u1', title: 't', description: 'd', color: Colors.blue);
+      final auth = FakeAuthService(U(
+          uid: 'u1',
+          name: 'Tester',
+          username: 'tester',
+          smallProfilePictureUrl: 'a.png',
+          feeds: [feed]));
       final controller = CreatePostController(
           postService: postService, authService: auth, userId: 'u1');
       Get.put(controller);
