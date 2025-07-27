@@ -111,3 +111,17 @@ lane :deploy_ios do
         precheck_include_in_app_purchases: false,
     )
 end
+
+desc "Deploy to TestFlight"
+lane :deploy_testflight do
+    build_ios
+    upload_to_testflight(
+        api_key_path: "./fastlane/apple_api_key.json",
+        app_identifier: "com.hoot.app.hoot",
+        ipa: "./build/ios/ipa/hoot.ipa",
+        team_id: "125395078",
+        skip_waiting_for_build_processing: true,
+        distribute_external: false,
+        groups: "Internal"
+    )
+end
