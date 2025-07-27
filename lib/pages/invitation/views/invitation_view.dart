@@ -29,43 +29,49 @@ class InvitationView extends GetView<InvitationController> {
                   children: [
                     const Spacer(),
                     Text(
-                      'Welcome to Hoot',
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      'welcome'.tr,
+                      style:
+                          Theme.of(context).textTheme.headlineLarge?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
                     Obx(() {
-                        return AnimatedCrossFade(
-                          duration: const Duration(milliseconds: 300),
-                          crossFadeState: !controller.isCrossFade.value
-                              ? CrossFadeState.showFirst
-                              : CrossFadeState.showSecond,
-                          firstChild: Text(
-                            'Hoot is a highly exclusive, invitation-only community',
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          secondChild: Text(
-                            'Hoot is a curated, invite-only experience for selected users',
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        );
-                      }
-                    ),
+                      return AnimatedCrossFade(
+                        duration: const Duration(milliseconds: 300),
+                        crossFadeState: !controller.isCrossFade.value
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        firstChild: Text(
+                          'invitationExclusiveCommunity'.tr,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                color: Colors.white,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                        secondChild: Text(
+                          'invitationCuratedExperience'.tr,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                color: Colors.white,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }),
                     const Spacer(),
                     Text(
-                      'Access is limited. Entry requires a personal invite.',
+                      'invitationAccessLimited'.tr,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.white,
-                      ),
+                            color: Colors.white,
+                          ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
@@ -96,7 +102,7 @@ class InvitationView extends GetView<InvitationController> {
                                   color: Colors.black,
                                 ),
                               )
-                            : Text('Step inside'),
+                            : Text('stepInside'.tr),
                       ),
                     ),
                   ],
