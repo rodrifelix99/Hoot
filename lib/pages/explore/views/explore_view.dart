@@ -55,23 +55,34 @@ class ExploreView extends GetView<ExploreController> {
         onRefresh: controller.refreshExplore,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextField(
-                controller: controller.searchController,
-                decoration: InputDecoration(
-                  hintText: 'searchPlaceholder'.tr,
-                  prefixIcon: const Icon(Icons.search),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  controller: controller.searchController,
+                  decoration: InputDecoration(
+                    hintText: 'searchPlaceholder'.tr,
+                    prefixIcon: const Icon(Icons.search),
+                  ),
+                  onChanged: controller.search,
                 ),
-                onChanged: controller.search,
               ),
               const SizedBox(height: 16),
-              buildSuggestions(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: buildSuggestions(),
+              ),
               const SizedBox(height: 16),
-              Text('top10MostSubscribed'.tr,
-                  style: Theme.of(context).textTheme.titleMedium),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'top10MostSubscribed'.tr,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
               const SizedBox(height: 8),
               SizedBox(
                 height: 200,
@@ -101,8 +112,13 @@ class ExploreView extends GetView<ExploreController> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text('popularTypes'.tr,
-                  style: Theme.of(context).textTheme.titleMedium),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'popularTypes'.tr,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
               const SizedBox(height: 8),
               SizedBox(
                 height: 100,
