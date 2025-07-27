@@ -121,7 +121,5 @@ lane :deploy_testflight do
         ipa: "./build/ios/ipa/hoot.ipa",
         team_id: "125395078",
         skip_waiting_for_build_processing: true,
-        distribute_external: false,
-        groups: "Internal"
     )
 end
