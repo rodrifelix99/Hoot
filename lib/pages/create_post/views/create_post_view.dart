@@ -76,16 +76,16 @@ class CreatePostView extends GetView<CreatePostController> {
               );
             }),
             const SizedBox(height: 8),
-            Obx(() => MentionTextField(
-                  mentionKey: controller.mentionKey,
-                  suggestions: controller.mentionSuggestions,
-                  maxLength: 280,
-                  minLines: 5,
-                  maxLines: 10,
-                  hintText: 'postPlaceholder'.tr,
-                  onSearchChanged: controller.searchUsers,
-                  onChanged: (v) => controller.textController.text = v,
-                )),
+            MentionTextField(
+              mentionKey: controller.mentionKey,
+              suggestions: controller.mentionSuggestions,
+              maxLength: 280,
+              minLines: 5,
+              maxLines: 10,
+              hintText: 'postPlaceholder'.tr,
+              onSearchChanged: controller.searchUsers,
+              onChanged: (v) => controller.textController.text = v,
+            ),
             const SizedBox(height: 16),
             Obx(() => PostMediaPreview(
                   imageFiles: controller.imageFiles,

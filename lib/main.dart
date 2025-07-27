@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
@@ -11,7 +12,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hoot/theme/theme.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 import 'package:toastification/toastification.dart';
-import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'services/theme_service.dart';
 import 'firebase_options.dart';

@@ -58,15 +58,14 @@ class PostView extends GetView<PostController> {
               child: Row(
                 children: [
                   Expanded(
-                    child: Obx(() => MentionTextField(
-                          mentionKey: controller.commentKey,
-                          suggestions: controller.mentionSuggestions,
-                          hintText: 'writeSomething'.tr,
-                          onSearchChanged: controller.searchUsers,
-                          onChanged: (v) =>
-                              controller.commentController.text = v,
-                          maxLines: 5,
-                        )),
+                    child: MentionTextField(
+                      mentionKey: controller.commentKey,
+                      suggestions: controller.mentionSuggestions,
+                      hintText: 'writeSomething'.tr,
+                      onSearchChanged: controller.searchUsers,
+                      onChanged: (v) => controller.commentController.text = v,
+                      maxLines: 5,
+                    ),
                   ),
                   Obx(() => controller.postingComment.value
                       ? const SizedBox(

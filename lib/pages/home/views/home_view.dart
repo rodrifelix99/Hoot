@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 import '../../create_post/views/create_post_view.dart';
@@ -30,6 +31,91 @@ class HomeView extends GetView<HomeController> {
           children: _pages,
         ),
         extendBody: true,
+        bottomNavigationBar: Padding(
+          // padding according to safe area
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).padding.bottom + 8,
+            left: MediaQuery.of(context).padding.left + 16,
+            right: MediaQuery.of(context).padding.right + 16,
+          ),
+          child: LiquidGlassLayer(
+            settings: LiquidGlassSettings(
+              blur: 4,
+              glassColor:
+              Theme.of(context).colorScheme.surface.withAlpha(50),
+            ),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              child: Row(
+                children: [
+                  LiquidGlass.inLayer(
+                    shape: LiquidRoundedRectangle(
+                      borderRadius: Radius.circular(30),
+                    ),
+                    glassContainsChild: false,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            SolarIconsOutline.feed,
+                            color: index == 0
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.onSurface,
+                          ),
+                          onPressed: () => controller.changeIndex(0),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            SolarIconsOutline.compass,
+                            color: index == 1
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.onSurface,
+                          ),
+                          onPressed: () => controller.changeIndex(1),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            SolarIconsOutline.bell,
+                            color: index == 3
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.onSurface,
+                          ),
+                          onPressed: () => controller.changeIndex(3),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            SolarIconsOutline.user,
+                            color: index == 4
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.onSurface,
+                          ),
+                          onPressed: () => controller.changeIndex(4),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  LiquidGlass.inLayer(
+                      shape: LiquidRoundedRectangle(
+                        borderRadius: Radius.circular(30),
+                      ),
+                      glassContainsChild: false,
+                      child: IconButton(
+                        icon: Icon(
+                          SolarIconsOutline.pen,
+                          color: index == 2
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurface,
+                        ),
+                        onPressed: () => controller.changeIndex(2),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        /* Old code:
         bottomNavigationBar: NavigationBar(
           selectedIndex: index,
           onDestinationSelected: controller.changeIndex,
@@ -96,7 +182,7 @@ class HomeView extends GetView<HomeController> {
               label: 'profile'.tr,
             ),
           ],
-        ),
+        ),*/
       );
     });
   }

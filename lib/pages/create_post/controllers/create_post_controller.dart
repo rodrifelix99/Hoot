@@ -16,7 +16,6 @@ import '../../../services/post_service.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/storage_service.dart';
 import '../../../services/user_service.dart';
-import '../../../models/user.dart';
 
 /// Manages state for creating a new post.
 class CreatePostController extends GetxController {
