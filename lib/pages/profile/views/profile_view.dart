@@ -159,19 +159,15 @@ class _ProfileViewState extends State<ProfileView> {
               selectedColor: color,
               backgroundColor: color.withValues(alpha: 0.2),
             ),
-            const SizedBox(width: 4),
-            controller.isCurrentUser
-                ? IconButton(
-                    icon: const Icon(Icons.edit, size: 16),
-                    onPressed: () =>
-                        Get.toNamed(AppRoutes.editFeed, arguments: feed),
-                  )
-                : TextButton(
-                    child: Text(controller.isSubscribed(feed.id)
-                        ? 'unsubscribe'.tr
-                        : 'subscribe'.tr),
-                    onPressed: () => controller.toggleSubscription(feed.id),
-                  ),
+            if (!controller.isCurrentUser) ...[
+              const SizedBox(width: 4),
+              TextButton(
+                child: Text(controller.isSubscribed(feed.id)
+                    ? 'unsubscribe'.tr
+                    : 'subscribe'.tr),
+                onPressed: () => controller.toggleSubscription(feed.id),
+              ),
+            ],
           ],
         );
       }));
@@ -262,7 +258,7 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+      return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -294,8 +290,21 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
         ],
       ),
-      extendBodyBehindAppBar: true,
-      body: buildBody(context),
-    );
+        extendBodyBehindAppBar: true,
+        floatingActionButton: controller.isCurrentUser &&
+                controller.feeds.isNotEmpty
+            ? FloatingActionButton.extended(
+                heroTag: 'edit_feed_fab',
+                onPressed: () => Get.toNamed(
+                  AppRoutes.editFeed,
+                  arguments:
+                      controller.feeds[controller.selectedFeedIndex.value],
+                ),
+                icon: const Icon(Icons.edit),
+                label: Text('editFeed'.tr),
+              )
+            : null,
+        body: buildBody(context),
+      );
   }
 }
