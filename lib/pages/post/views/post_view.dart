@@ -52,28 +52,30 @@ class PostView extends GetView<PostController> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: controller.commentController,
-                    decoration: InputDecoration(
-                      hintText: 'writeSomething'.tr,
+            padding: const EdgeInsets.all(16.0),
+            child: SafeArea(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: controller.commentController,
+                      decoration: InputDecoration(
+                        hintText: 'writeSomething'.tr,
+                      ),
                     ),
                   ),
-                ),
-                Obx(() => controller.postingComment.value
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: controller.publishComment,
-                      )),
-              ],
+                  Obx(() => controller.postingComment.value
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : IconButton(
+                          icon: const Icon(Icons.send),
+                          onPressed: controller.publishComment,
+                        )),
+                ],
+              ),
             ),
           ),
         ],
