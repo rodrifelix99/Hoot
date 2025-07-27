@@ -3,6 +3,7 @@ import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/models/comment.dart';
 import '../util/mention_utils.dart';
+import '../util/extensions/datetime_extension.dart';
 
 class CommentComponent extends StatelessWidget {
   final Comment comment;
@@ -25,6 +26,12 @@ class CommentComponent extends StatelessWidget {
           children: parseMentions(comment.text),
         ),
       ),
+      trailing: comment.createdAt != null
+          ? Text(
+              comment.createdAt!.timeAgo(),
+              style: Theme.of(context).textTheme.bodySmall,
+            )
+          : null,
     );
   }
 }

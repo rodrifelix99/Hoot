@@ -13,6 +13,7 @@ import '../services/auth_service.dart';
 import '../services/dialog_service.dart';
 import '../services/toast_service.dart';
 import '../util/mention_utils.dart';
+import '../util/extensions/datetime_extension.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
@@ -115,6 +116,12 @@ class _PostComponentState extends State<PostComponent> {
                     user: _post.user!,
                     size: 16,
                     feedName: _post.feed?.title ?? '',
+                  ),
+                const Spacer(),
+                if (_post.createdAt != null)
+                  Text(
+                    _post.createdAt!.timeAgo(),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
               ],
             ),

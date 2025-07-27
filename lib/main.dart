@@ -13,6 +13,7 @@ import 'package:hoot/theme/theme.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'services/theme_service.dart';
 import 'firebase_options.dart';
 
@@ -34,6 +35,10 @@ void main() {
       locale: Get.locale?.toLanguageTag() ?? 'en',
       country: Get.deviceLocale?.countryCode ?? 'US',
     );
+
+    timeago.setLocaleMessages('es', timeago.EsMessages());
+    timeago.setLocaleMessages('pt', timeago.PtBrMessages());
+    timeago.setLocaleMessages('pt_BR', timeago.PtBrMessages());
 
     final themeService = Get.find<ThemeService>();
     runApp(
