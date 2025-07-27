@@ -2,6 +2,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../models/post.dart';
 import '../../../models/comment.dart';

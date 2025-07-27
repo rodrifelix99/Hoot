@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
+import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
 import 'package:get/get.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -76,7 +77,7 @@ class _PostComponentState extends State<PostComponent> {
       title: 'selectAFeedToRefeedTo'.tr,
       actions: [
         for (final f in feeds)
-          SheetAction(value: f, label: f.title),
+          SheetAction(label: f.title),
       ],
     );
     if (feed == null) return;

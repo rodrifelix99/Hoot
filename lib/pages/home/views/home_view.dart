@@ -29,12 +29,14 @@ class HomeView extends GetView<HomeController> {
           index: index,
           children: _pages,
         ),
+        extendBody: true,
         bottomNavigationBar: NavigationBar(
           selectedIndex: index,
           onDestinationSelected: controller.changeIndex,
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           indicatorColor: Colors.transparent,
           indicatorShape: const CircleBorder(),
+          backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(250),
           destinations: [
             NavigationDestination(
               icon: Icon(
