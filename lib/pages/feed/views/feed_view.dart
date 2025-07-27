@@ -43,7 +43,7 @@ class FeedView extends GetView<FeedController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComponent(
-        title: 'feed'.tr,
+        title: 'myFeeds'.tr,
       ),
       body: RefreshIndicator(
         onRefresh: () => Future.sync(() => controller.refresh()),

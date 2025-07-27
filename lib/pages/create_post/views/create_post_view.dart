@@ -72,9 +72,9 @@ class CreatePostView extends GetView<CreatePostController> {
             TextField(
               controller: controller.textController,
               maxLength: 280,
-              minLines: 3,
+              minLines: 5,
               maxLines: null,
-              decoration: InputDecoration(hintText: 'createPost'.tr),
+              decoration: InputDecoration(hintText: 'postPlaceholder'.tr),
             ),
             const SizedBox(height: 16),
             Obx(() => PostMediaPreview(

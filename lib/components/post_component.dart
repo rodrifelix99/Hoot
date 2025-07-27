@@ -45,12 +45,14 @@ class PostComponent extends StatelessWidget {
           if (post.media != null && post.media!.isNotEmpty) ...[
             const SizedBox(height: 16),
             if (post.media!.length == 1)
-              ImageComponent(
-                url: post.media!.first,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                radius: 16,
+              AspectRatio(
+                aspectRatio: 1,
+                child: ImageComponent(
+                  url: post.media!.first,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  radius: 16,
+                ),
               )
             else
               GridView.builder(
@@ -66,7 +68,7 @@ class PostComponent extends StatelessWidget {
                   return ImageComponent(
                     url: post.media![i],
                     fit: BoxFit.cover,
-                    radius: 16,
+                    radius: 8,
                   );
                 },
               ),
