@@ -69,6 +69,14 @@ Setup App Metadata
 
 Deploy iOS 
 
+### deploy_testflight
+
+```sh
+[bundle exec] fastlane deploy_testflight
+```
+
+Deploy to TestFlight
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
