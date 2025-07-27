@@ -70,12 +70,14 @@ class EditProfileView extends GetView<EditProfileController> {
             TextField(
               controller: controller.nameController,
               decoration: InputDecoration(labelText: 'displayName'.tr),
+              maxLength: 50,
             ),
             const SizedBox(height: 16),
             TextField(
               controller: controller.bioController,
               decoration: InputDecoration(labelText: 'bio'.tr),
               maxLines: 3,
+              maxLength: 160,
             ),
           ],
         ),

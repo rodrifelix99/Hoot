@@ -110,6 +110,7 @@ class AppTheme {
     filled: true,
     fillColor: Colors.grey.shade200,
     contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+    alignLabelWithHint: true,
   );
 
   static ChipThemeData chipTheme = ChipThemeData(

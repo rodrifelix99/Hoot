@@ -137,22 +137,28 @@ class _PostComponentState extends State<PostComponent> {
                   ),
                 )
               else
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 4,
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: Get.width - 32,
                   ),
-                  itemCount: _post.media!.length,
-                  itemBuilder: (context, i) {
-                    return ImageComponent(
-                      url: _post.media![i],
-                      fit: BoxFit.cover,
-                      radius: 8,
-                    );
-                  },
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 4,
+                      mainAxisSpacing: 4,
+                      childAspectRatio: 1,
+                    ),
+                    itemCount: _post.media!.length,
+                    itemBuilder: (context, i) {
+                      return ImageComponent(
+                        url: _post.media![i],
+                        fit: BoxFit.cover,
+                        radius: 8,
+                      );
+                    },
+                  ),
                 ),
             ],
             const SizedBox(height: 8),
