@@ -55,6 +55,7 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
           : Container(
               width: 200,
               height: 100,
+              clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,

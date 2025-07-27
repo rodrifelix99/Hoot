@@ -18,6 +18,15 @@ class InvitationController extends GetxController {
 
   final TextEditingController codeController = TextEditingController();
   final RxBool verifying = false.obs;
+  final RxBool isCrossFade = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    Future.delayed(Duration(seconds: 20), () {
+      isCrossFade.value = true;
+    });
+  }
 
   Future<void> verifyCode() async {
     if (verifying.value) return;

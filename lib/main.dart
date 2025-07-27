@@ -39,18 +39,20 @@ void main() {
     runApp(
       Portal(
         child: ToastificationWrapper(
-          child: Obx(() => GetMaterialApp(
-                title: 'Hoot',
-                debugShowCheckedModeBanner: false,
-                getPages: AppPages.pages,
-                initialRoute: AppRoutes.home,
-                theme: AppTheme.lightTheme,
-                darkTheme: AppTheme.darkTheme,
-                themeMode: themeService.themeMode.value,
-                translations: AppTranslations(),
-                locale: Get.deviceLocale,
-                fallbackLocale: const Locale('en', 'US'),
-              )),
+          child: Obx(
+            () => GetMaterialApp(
+              title: 'Hoot',
+              debugShowCheckedModeBanner: false,
+              getPages: AppPages.pages,
+              initialRoute: AppRoutes.home,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: themeService.themeMode.value,
+              translations: AppTranslations(),
+              locale: Get.deviceLocale,
+              fallbackLocale: const Locale('en', 'US'),
+            ),
+          ),
         ),
       ),
     );

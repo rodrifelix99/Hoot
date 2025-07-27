@@ -27,6 +27,10 @@ class InvitationService {
           'invitationLastReset': FieldValue.serverTimestamp(),
         });
       }
+    } else {
+      await doc.reference.update({
+        'invitationLastReset': FieldValue.serverTimestamp(),
+      });
     }
     if (uses >= 5) return false;
     await doc.reference.update({
