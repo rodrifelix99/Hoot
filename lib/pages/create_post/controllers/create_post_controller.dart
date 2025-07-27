@@ -92,6 +92,7 @@ class CreatePostController extends GetxController {
     final cropped = await ImageCropper().cropImage(sourcePath: file.path);
     if (cropped != null) {
       imageFiles[index] = File(cropped.path);
+      imageFiles.refresh();
     }
   }
 
