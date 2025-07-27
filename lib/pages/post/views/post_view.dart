@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../../components/post_component.dart';
 import '../../../components/comment_component.dart';
 import '../controllers/post_controller.dart';
@@ -26,7 +27,7 @@ class PostView extends GetView<PostController> {
                   const SizedBox(height: 16),
                   Obx(() {
                     final state = controller.commentsState.value;
-                    final comments = state.itemList ?? [];
+                    final comments = state.items ?? [];
                     if (state.isLoading && comments.isEmpty) {
                       return const Center(child: CircularProgressIndicator());
                     }
