@@ -2,10 +2,155 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/image_component.dart';
+import 'package:hoot/components/avatar_component.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../controllers/edit_profile_controller.dart';
 
 class EditProfileView extends GetView<EditProfileController> {
   const EditProfileView({super.key});
+
+  Widget _buildHeader(BuildContext context) {
+    return Obx(() {
+      final bannerFile = controller.bannerFile.value;
+      final avatarFile = controller.avatarFile.value;
+      final user = controller.user;
+
+      Widget bannerWidget;
+      final hasBanner = bannerFile != null ||
+          (user?.bannerPictureUrl != null &&
+              user!.bannerPictureUrl!.isNotEmpty);
+      if (bannerFile != null) {
+        bannerWidget = Image.file(
+          bannerFile,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: 300,
+        );
+      } else if (user?.bannerPictureUrl != null &&
+          user!.bannerPictureUrl!.isNotEmpty) {
+        bannerWidget = ImageComponent(
+          url: user.bannerPictureUrl!,
+          fit: BoxFit.cover,
+          height: 300,
+          width: double.infinity,
+        );
+      } else {
+        bannerWidget = Container(
+          height: 300,
+          width: double.infinity,
+          color: Theme.of(context).colorScheme.primaryContainer,
+          child: Icon(Icons.photo,
+              color: Theme.of(context).colorScheme.onPrimaryContainer),
+        );
+      }
+
+      Widget avatarWidget;
+      final hasAvatar = avatarFile != null ||
+          (user?.largeProfilePictureUrl != null &&
+              user!.largeProfilePictureUrl!.isNotEmpty);
+      if (avatarFile != null) {
+        avatarWidget = ClipRRect(
+          borderRadius: BorderRadius.circular(32),
+          child: Image.file(
+            avatarFile,
+            fit: BoxFit.cover,
+            width: 120,
+            height: 120,
+          ),
+        );
+      } else {
+        avatarWidget = ProfileAvatarComponent(
+          image: user?.largeProfilePictureUrl ?? '',
+          size: 120,
+          radius: 32,
+        );
+      }
+
+      return SizedBox(
+        height: 400,
+        child: Stack(
+          children: [
+            GestureDetector(
+              onTap: controller.pickBanner,
+              child: Stack(
+                children: [
+                  Container(
+                    height: 300,
+                    width: double.infinity,
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: bannerWidget,
+                  ),
+                  if (hasBanner)
+                    Positioned.fill(
+                      child: Container(
+                        height: 300,
+                        decoration: BoxDecoration(
+                          color: Colors.black26,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            SolarIconsBold.cameraAdd,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            Positioned(
+              top: 264,
+              left: 16,
+              right: 16,
+              child: Center(
+                child: GestureDetector(
+                  onTap: controller.pickAvatar,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(32),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 8,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        avatarWidget,
+                        if (hasAvatar)
+                          Positioned.fill(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black26,
+                                borderRadius: BorderRadius.circular(32),
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  SolarIconsBold.cameraAdd,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,66 +180,7 @@ class EditProfileView extends GetView<EditProfileController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Obx(() {
-              final file = controller.bannerFile.value;
-              final user = controller.user;
-              Widget imageWidget;
-              final hasImage = file != null ||
-                  (user?.bannerPictureUrl != null &&
-                      user!.bannerPictureUrl!.isNotEmpty);
-
-              if (file != null) {
-                imageWidget = Image.file(
-                  file,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 300,
-                );
-              } else if (user?.bannerPictureUrl != null &&
-                  user!.bannerPictureUrl!.isNotEmpty) {
-                imageWidget = ImageComponent(
-                  url: user.bannerPictureUrl!,
-                  fit: BoxFit.cover,
-                  height: 300,
-                  width: double.infinity,
-                );
-              } else {
-                imageWidget = Container(
-                  height: 300,
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  child: Icon(Icons.photo,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer),
-                );
-              }
-
-              return GestureDetector(
-                onTap: controller.pickBanner,
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: SizedBox(height: 300, child: imageWidget),
-                    ),
-                    if (hasImage)
-                      Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black26,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              );
-            }),
+            _buildHeader(context),
             const SizedBox(height: 16),
             TextField(
               controller: controller.nameController,

@@ -55,23 +55,34 @@ class ExploreView extends GetView<ExploreController> {
         onRefresh: controller.refreshExplore,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextField(
-                controller: controller.searchController,
-                decoration: InputDecoration(
-                  hintText: 'searchPlaceholder'.tr,
-                  prefixIcon: const Icon(Icons.search),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  controller: controller.searchController,
+                  decoration: InputDecoration(
+                    hintText: 'searchPlaceholder'.tr,
+                    prefixIcon: const Icon(Icons.search),
+                  ),
+                  onChanged: controller.search,
                 ),
-                onChanged: controller.search,
               ),
               const SizedBox(height: 16),
-              buildSuggestions(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: buildSuggestions(),
+              ),
               const SizedBox(height: 16),
-              Text('top10MostSubscribed'.tr,
-                  style: Theme.of(context).textTheme.titleMedium),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'top10MostSubscribed'.tr,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
               const SizedBox(height: 8),
               SizedBox(
                 height: 200,
@@ -79,6 +90,7 @@ class ExploreView extends GetView<ExploreController> {
                   () => ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: controller.topFeeds.length,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     itemBuilder: (context, index) {
                       final f = controller.topFeeds[index];
                       return SizedBox(
@@ -100,13 +112,19 @@ class ExploreView extends GetView<ExploreController> {
                   ),
                 ),
               ),
+              const SizedBox(height: 32),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'popularTypes'.tr,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
               const SizedBox(height: 16),
-              Text('popularTypes'.tr,
-                  style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
               SizedBox(
                 height: 100,
                 child: Obx(() => ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                       scrollDirection: Axis.horizontal,
                       itemCount: controller.genres.length,
                       separatorBuilder: (_, __) => const SizedBox(width: 12),

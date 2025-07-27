@@ -46,7 +46,12 @@ class CreatePostView extends GetView<CreatePostController> {
                       child: CircularProgressIndicator(strokeWidth: 2)),
                 )
               : TextButton(
-                  onPressed: controller.publish,
+                  onPressed: () async {
+                    final post = await controller.publish();
+                    if (post != null) {
+                      Get.toNamed(AppRoutes.post, arguments: post);
+                    }
+                  },
                   child: Text('publish'.tr),
                 ))
         ],

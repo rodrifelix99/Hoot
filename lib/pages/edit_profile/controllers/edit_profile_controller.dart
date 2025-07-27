@@ -28,6 +28,7 @@ class EditProfileController extends GetxController {
   final TextEditingController bioController = TextEditingController();
 
   final Rx<File?> bannerFile = Rx<File?>(null);
+  final Rx<File?> avatarFile = Rx<File?>(null);
   final RxBool saving = false.obs;
 
   U? get user => _authService.currentUser;
@@ -47,6 +48,17 @@ class EditProfileController extends GetxController {
       final picked = await _picker.pickImage(source: ImageSource.gallery);
       if (picked != null) {
         bannerFile.value = File(picked.path);
+      }
+    } catch (e, s) {
+      await ErrorService.reportError(e, stack: s);
+    }
+  }
+
+  Future<void> pickAvatar() async {
+    try {
+      final picked = await _picker.pickImage(source: ImageSource.gallery);
+      if (picked != null) {
+        avatarFile.value = File(picked.path);
       }
     } catch (e, s) {
       await ErrorService.reportError(e, stack: s);
@@ -88,10 +100,36 @@ class EditProfileController extends GetxController {
         bannerUrl = await ref.getDownloadURL();
       }
 
+      String? smallAvatarUrl;
+      String? bigAvatarUrl;
+      if (avatarFile.value != null) {
+        final file = avatarFile.value!;
+        final bytes = await file.readAsBytes();
+        final decoded = img.decodeImage(bytes);
+        if (decoded != null) {
+          final small = img.copyResizeCropSquare(decoded, size: 32);
+          final big = img.copyResizeCropSquare(decoded, size: 128);
+          final smallData = Uint8List.fromList(img.encodeJpg(small));
+          final bigData = Uint8List.fromList(img.encodeJpg(big));
+          final storageRef =
+              FirebaseStorage.instance.ref().child('avatars').child(uid);
+          final smallRef = storageRef.child('small_avatar.jpg');
+          final bigRef = storageRef.child('big_avatar.jpg');
+          await smallRef.putData(
+              smallData, SettableMetadata(contentType: 'image/jpeg'));
+          await bigRef.putData(
+              bigData, SettableMetadata(contentType: 'image/jpeg'));
+          smallAvatarUrl = await smallRef.getDownloadURL();
+          bigAvatarUrl = await bigRef.getDownloadURL();
+        }
+      }
+
       await _userService.updateUserData(uid, {
         'displayName': name,
         'bio': bio,
         if (bannerUrl != null) 'banner': bannerUrl,
+        if (smallAvatarUrl != null) 'smallAvatar': smallAvatarUrl,
+        if (bigAvatarUrl != null) 'bigAvatar': bigAvatarUrl,
       });
 
       final u = user;
@@ -99,6 +137,8 @@ class EditProfileController extends GetxController {
         u.name = name;
         u.bio = bio;
         if (bannerUrl != null) u.bannerPictureUrl = bannerUrl;
+        if (smallAvatarUrl != null) u.smallProfilePictureUrl = smallAvatarUrl;
+        if (bigAvatarUrl != null) u.largeProfilePictureUrl = bigAvatarUrl;
       }
 
       ToastService.showSuccess('editProfile'.tr);
