@@ -83,6 +83,7 @@ class CreatePostView extends GetView<CreatePostController> {
                   gifUrl: controller.gifUrl.value,
                   onOpenViewer: _openViewer,
                   onRemoveImage: controller.removeImage,
+                  onCropImage: controller.cropImage,
                   onRemoveGif: () => controller.gifUrl.value = null,
                 )),
             Obx(() {
