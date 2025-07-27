@@ -76,10 +76,9 @@ class ExploreView extends GetView<ExploreController> {
               SizedBox(
                 height: 200,
                 child: Obx(
-                  () => ListView.separated(
+                  () => ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: controller.topFeeds.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 12),
                     itemBuilder: (context, index) {
                       final f = controller.topFeeds[index];
                       return SizedBox(
