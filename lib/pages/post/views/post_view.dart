@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../../../components/post_component.dart';
 import '../../../components/comment_component.dart';
+import '../../../components/empty_message.dart';
 import '../../../components/mention_text_field.dart';
+import '../../../components/post_component.dart';
 import '../controllers/post_controller.dart';
 
 class PostView extends GetView<PostController> {
@@ -21,37 +23,44 @@ class PostView extends GetView<PostController> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  PostComponent(post: controller.post),
-                  Obx(() {
-                    final state = controller.commentsState.value;
-                    final comments = state.items ?? [];
-                    if (state.isLoading && comments.isEmpty) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    return ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: comments.length + (state.hasNextPage ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index == comments.length) {
-                          controller.fetchNextComments();
-                          return const Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Center(child: CircularProgressIndicator()),
-                          );
-                        }
-                        return CommentComponent(comment: comments[index]);
-                      },
-                    );
-                  }),
-                  SafeArea(child: const SizedBox(height: 32)),
-                ],
-              ),
+            child: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.all(8),
+                  sliver: SliverToBoxAdapter(
+                    child: PostComponent(post: controller.post),
+                  ),
+                ),
+                Obx(() {
+                  final state = controller.commentsState.value;
+                  return PagedSliverList<DocumentSnapshot?, Comment>(
+                    state: state,
+                    fetchNextPage: controller.fetchNextComments,
+                    builderDelegate: PagedChildBuilderDelegate<Comment>(
+                      itemBuilder: (context, item, index) =>
+                          CommentComponent(comment: item),
+                      firstPageProgressIndicatorBuilder: (_) => const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                      newPageProgressIndicatorBuilder: (_) => const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                      firstPageErrorIndicatorBuilder: (_) =>
+                          NothingToShowComponent(
+                        icon: const Icon(Icons.error_outline),
+                        text: 'somethingWentWrong'.tr,
+                      ),
+                      noItemsFoundIndicatorBuilder: (_) =>
+                          const SizedBox.shrink(),
+                    ),
+                  );
+                }),
+                SliverToBoxAdapter(
+                  child: SafeArea(child: const SizedBox(height: 32)),
+                ),
+              ],
             ),
           ),
           Positioned(
@@ -94,15 +103,16 @@ class PostView extends GetView<PostController> {
                             offset: !controller.showSendButton.value
                                 ? const Offset(2, 0)
                                 : Offset.zero,
-                          child: LiquidGlass.inLayer(
+                            child: LiquidGlass.inLayer(
                               shape: LiquidOval(),
                               glassContainsChild: false,
                               child: IconButton(
-                                icon: const Icon(SolarIconsBold.uploadMinimalistic),
+                                icon: const Icon(
+                                    SolarIconsBold.uploadMinimalistic),
                                 onPressed: controller.publishComment,
                               ),
                             ),
-                        )),
+                          )),
                   ],
                 ),
               ),
