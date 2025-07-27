@@ -16,6 +16,10 @@ class HomeController extends GetxController {
     final user = await _auth.fetchUser();
     if (user == null) {
       Get.offAllNamed(AppRoutes.welcome);
+      return;
+    }
+    if (user.invitedBy == null) {
+      Get.offAllNamed(AppRoutes.invitation);
     }
   }
 

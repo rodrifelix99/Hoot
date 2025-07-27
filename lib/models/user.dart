@@ -1,4 +1,5 @@
 import 'feed.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class U {
   final String uid;
@@ -13,6 +14,11 @@ class U {
   String? bio;
   String? location;
   String? website;
+
+  String? invitationCode;
+  String? invitedBy;
+  int? invitationUses;
+  DateTime? invitationLastReset;
 
   String? phoneNumber;
   bool? verified;
@@ -31,6 +37,10 @@ class U {
     this.color, this.musicUrl,
     this.bio, this.location,
     this.website,
+    this.invitationCode,
+    this.invitedBy,
+    this.invitationUses,
+    this.invitationLastReset,
     this.phoneNumber,
     this.verified = false,
     this.tester = false,
@@ -58,6 +68,12 @@ class U {
       bio: json['bio'],
       location: json['location'],
       website: json['website'],
+      invitationCode: json['invitationCode'],
+      invitedBy: json['invitedBy'],
+      invitationUses: json['invitationUses'],
+      invitationLastReset: json['invitationLastReset'] is Timestamp
+          ? (json['invitationLastReset'] as Timestamp).toDate()
+          : json['invitationLastReset'],
       phoneNumber: json['phoneNumber'],
       verified: json['verified'],
       tester: json['tester'],
@@ -80,6 +96,10 @@ class U {
       'bio': bio,
       'location': location,
       'website': website,
+      'invitationCode': invitationCode,
+      'invitationUses': invitationUses,
+      'invitationLastReset': invitationLastReset,
+      'invitedBy': invitedBy,
       'phoneNumber': phoneNumber,
       'birthday': birthday,
     };
@@ -98,6 +118,10 @@ class U {
     'bio': bio,
     'location': location,
     'website': website,
+    'invitationCode': invitationCode,
+    'invitationUses': invitationUses,
+    'invitationLastReset': invitationLastReset,
+    'invitedBy': invitedBy,
     'phoneNumber': phoneNumber,
     'birthday': birthday,
     'verified': verified,

@@ -94,7 +94,7 @@ class AvatarController extends GetxController {
       await ErrorService.reportError(e, stack: s);
     } finally {
       uploading.value = false;
-      Get.offAllNamed(AppRoutes.home);
+      Get.offAllNamed(AppRoutes.invitation);
     }
   }
 }

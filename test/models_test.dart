@@ -32,6 +32,10 @@ void main() {
         'bio': 'bio',
         'location': 'loc',
         'website': 'w',
+        'invitationCode': 'ABCDEF',
+        'invitationUses': 1,
+        'invitationLastReset': DateTime(2020, 1, 1),
+        'invitedBy': 'u0',
         'phoneNumber': '123',
         'verified': true,
         'tester': false,
@@ -44,11 +48,15 @@ void main() {
       expect(user.uid, 'u1');
       expect(user.name, 'John');
       expect(user.feeds?.first.title, 'Feed');
+      expect(user.invitationCode, 'ABCDEF');
+      expect(user.invitedBy, 'u0');
+      expect(user.invitationUses, 1);
 
       final json = user.toJson();
       expect(json['displayName'], 'John');
       expect(json['username'], 'john');
       expect(json.containsKey('uid'), isFalse);
+      expect(json['invitationCode'], 'ABCDEF');
     });
   });
 
