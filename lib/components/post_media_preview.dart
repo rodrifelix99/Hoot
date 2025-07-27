@@ -9,6 +9,7 @@ class PostMediaPreview extends StatelessWidget {
   final String? gifUrl;
   final void Function(String path) onOpenViewer;
   final void Function(int index) onRemoveImage;
+  final Future<void> Function(int index) onCropImage;
   final VoidCallback onRemoveGif;
 
   const PostMediaPreview({
@@ -17,6 +18,7 @@ class PostMediaPreview extends StatelessWidget {
     required this.gifUrl,
     required this.onOpenViewer,
     required this.onRemoveImage,
+    required this.onCropImage,
     required this.onRemoveGif,
   });
 
@@ -69,7 +71,7 @@ class PostMediaPreview extends StatelessWidget {
                     bottom: 4,
                     right: 4,
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () => onCropImage(i),
                       child: Container(
                         width: 24,
                         height: 24,

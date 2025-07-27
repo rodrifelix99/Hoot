@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 import '../../../models/feed.dart';
 import '../../../services/error_service.dart';
@@ -81,6 +82,16 @@ class CreatePostController extends GetxController {
   void removeImage(int index) {
     if (index >= 0 && index < imageFiles.length) {
       imageFiles.removeAt(index);
+    }
+  }
+
+  /// Crops the image at [index] using the `image_cropper` package.
+  Future<void> cropImage(int index) async {
+    if (index < 0 || index >= imageFiles.length) return;
+    final file = imageFiles[index];
+    final cropped = await ImageCropper().cropImage(sourcePath: file.path);
+    if (cropped != null) {
+      imageFiles[index] = File(cropped.path);
     }
   }
 
