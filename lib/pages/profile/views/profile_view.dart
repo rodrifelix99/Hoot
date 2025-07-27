@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import '../../../models/post.dart';
 import '../../../models/user.dart';
 import 'package:hoot/components/avatar_component.dart';
@@ -258,7 +259,7 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-      return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -277,34 +278,45 @@ class _ProfileViewState extends State<ProfileView> {
           ),
         ),
         actions: [
-          controller.isCurrentUser
-              ? IconButton(
-                  icon: const Icon(Icons.settings),
-                  color: Colors.white,
-                  onPressed: () => Get.toNamed(AppRoutes.settings),
-                )
-              : IconButton(
-                  icon: const Icon(Icons.flag_outlined),
-                  color: Colors.white,
-                  onPressed: () => reportUser(context),
-                ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: LiquidGlass(
+              settings: LiquidGlassSettings(
+                blur: 4,
+                glassColor:
+                Theme.of(context).colorScheme.surface.withAlpha(50),
+              ),
+              shape: LiquidOval(),
+              glassContainsChild: false,
+              child: controller.isCurrentUser
+                  ? IconButton(
+                      icon: const Icon(Icons.settings),
+                      color: Colors.white,
+                      onPressed: () => Get.toNamed(AppRoutes.settings),
+                    )
+                  : IconButton(
+                      icon: const Icon(Icons.flag_outlined),
+                      color: Colors.white,
+                      onPressed: () => reportUser(context),
+                    ),
+            ),
+          ),
         ],
       ),
-        extendBodyBehindAppBar: true,
-        floatingActionButton: controller.isCurrentUser &&
-                controller.feeds.isNotEmpty
-            ? FloatingActionButton.extended(
-                heroTag: 'edit_feed_fab',
-                onPressed: () => Get.toNamed(
-                  AppRoutes.editFeed,
-                  arguments:
-                      controller.feeds[controller.selectedFeedIndex.value],
-                ),
-                icon: const Icon(Icons.edit),
-                label: Text('editFeed'.tr),
-              )
-            : null,
-        body: buildBody(context),
-      );
+      extendBodyBehindAppBar: true,
+      floatingActionButton: controller.isCurrentUser &&
+              controller.feeds.isNotEmpty
+          ? FloatingActionButton.extended(
+              heroTag: 'edit_feed_fab',
+              onPressed: () => Get.toNamed(
+                AppRoutes.editFeed,
+                arguments: controller.feeds[controller.selectedFeedIndex.value],
+              ),
+              icon: const Icon(Icons.edit),
+              label: Text('editFeed'.tr),
+            )
+          : null,
+      body: buildBody(context),
+    );
   }
 }
