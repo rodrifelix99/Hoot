@@ -30,6 +30,7 @@ class PostController extends GetxController {
   final GlobalKey<FlutterMentionsState> commentKey = GlobalKey<FlutterMentionsState>();
   final RxList<Map<String, dynamic>> mentionSuggestions = <Map<String, dynamic>>[].obs;
   final RxBool postingComment = false.obs;
+  final RxBool showSendButton = false.obs;
 
   @override
   void onInit() {
@@ -42,6 +43,9 @@ class PostController extends GetxController {
     } else {
       post = Post.empty();
     }
+    commentController.addListener(() {
+      showSendButton.value = commentController.text.trim().isNotEmpty;
+    });
     fetchNextComments();
   }
 
