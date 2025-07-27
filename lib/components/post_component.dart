@@ -12,6 +12,7 @@ import '../services/post_service.dart';
 import '../services/auth_service.dart';
 import '../services/dialog_service.dart';
 import '../services/toast_service.dart';
+import '../util/mention_utils.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
@@ -35,12 +36,13 @@ class _PostComponentState extends State<PostComponent> {
   @override
   void initState() {
     _post = widget.post;
-    _postService =
-        widget.postService ?? (Get.isRegistered<BasePostService>()
+    _postService = widget.postService ??
+        (Get.isRegistered<BasePostService>()
             ? Get.find<BasePostService>()
             : PostService());
-    _authService =
-        Get.isRegistered<AuthService>() ? Get.find<AuthService>() : AuthService();
+    _authService = Get.isRegistered<AuthService>()
+        ? Get.find<AuthService>()
+        : AuthService();
     super.initState();
   }
 
@@ -76,8 +78,7 @@ class _PostComponentState extends State<PostComponent> {
       context: context,
       title: 'selectAFeedToRefeedTo'.tr,
       actions: [
-        for (final f in feeds)
-          SheetAction(label: f.title),
+        for (final f in feeds) SheetAction(label: f.title),
       ],
     );
     if (feed == null) return;
@@ -119,9 +120,11 @@ class _PostComponentState extends State<PostComponent> {
             ),
             if (_post.text != null && _post.text!.isNotEmpty) ...[
               const SizedBox(height: 16),
-              Text(
-                _post.text!,
-                style: Theme.of(context).textTheme.headlineSmall,
+              RichText(
+                text: TextSpan(
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  children: parseMentions(_post.text!),
+                ),
               ),
             ],
             if (_post.media != null && _post.media!.isNotEmpty) ...[
@@ -144,7 +147,8 @@ class _PostComponentState extends State<PostComponent> {
                   child: GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 4,
                       mainAxisSpacing: 4,
@@ -172,9 +176,12 @@ class _PostComponentState extends State<PostComponent> {
                 IconButton(
                   visualDensity: VisualDensity.compact,
                   icon: Icon(
-                    _post.liked ? SolarIconsBold.heart : SolarIconsOutline.heart,
-                    color:
-                        _post.liked ? Colors.red : Theme.of(context).iconTheme.color,
+                    _post.liked
+                        ? SolarIconsBold.heart
+                        : SolarIconsOutline.heart,
+                    color: _post.liked
+                        ? Colors.red
+                        : Theme.of(context).iconTheme.color,
                   ),
                   onPressed: _toggleLike,
                 ),
