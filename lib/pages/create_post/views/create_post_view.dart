@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/post_media_preview.dart';
 import 'package:hoot/util/routes/app_routes.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../controllers/create_post_controller.dart';
 import 'package:hoot/components/url_preview_component.dart';
 import 'package:hoot/models/feed.dart';
@@ -91,12 +92,12 @@ class CreatePostView extends GetView<CreatePostController> {
               return Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.image),
+                    icon: Icon(SolarIconsBold.gallery),
                     onPressed: disableImages ? null : controller.pickImage,
                     tooltip: 'addImage'.tr,
                   ),
                   IconButton(
-                    icon: const Icon(Icons.gif_box),
+                    icon: const Icon(Icons.gif_box_rounded),
                     onPressed: disableGif ? null : () => pickGif(context),
                     tooltip: 'addGif'.tr,
                   ),

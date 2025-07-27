@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hoot/components/image_component.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 class PostMediaPreview extends StatelessWidget {
   final List<File> imageFiles;
@@ -61,6 +62,23 @@ class PostMediaPreview extends StatelessWidget {
                         ),
                         child: const Icon(Icons.close,
                             size: 16, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 4,
+                    right: 4,
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        decoration: const BoxDecoration(
+                          color: Colors.black54,
+                          shape: BoxShape.circle,
+                        ),
+                        child:
+                        const Icon(SolarIconsOutline.cropMinimalistic, size: 16, color: Colors.white),
                       ),
                     ),
                   ),
