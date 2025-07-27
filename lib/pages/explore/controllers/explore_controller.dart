@@ -78,16 +78,29 @@ class ExploreController extends GetxController {
         .toList());
   }
 
-  /// Retrieves the most popular feed genres from Firestore.
+  /// Retrieves the most common feed genres from the most popular feeds.
   Future<void> loadGenres() async {
     final snapshot = await _firestore
-        .collection('feed_types')
-        .orderBy('count', descending: true)
-        .limit(10)
+        .collection('feeds')
+        .orderBy('subscriberCount', descending: true)
+        .limit(20)
         .get();
-    genres.assignAll(snapshot.docs
-        .map((d) => FeedTypeExtension.fromString(d.id))
-        .toList());
+
+    final types = snapshot.docs
+        .map((d) => d.data()['type'] as String?)
+        .whereType<String>()
+        .map(FeedTypeExtension.fromString)
+        .toList();
+
+    // Keep unique types while preserving order.
+    final seen = <FeedType>{};
+    final uniqueTypes = <FeedType>[];
+    for (final t in types) {
+      if (seen.add(t)) uniqueTypes.add(t);
+      if (uniqueTypes.length == 10) break;
+    }
+
+    genres.assignAll(uniqueTypes);
   }
 
   /// Searches for users and feeds matching [query].

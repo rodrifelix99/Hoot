@@ -24,7 +24,6 @@ void main() {
       'subscriberCount': 1,
       'createdAt': DateTime.now(),
     });
-    await firestore.collection('feed_types').doc('music').set({'count': 1});
 
     Get.put(ExploreController(firestore: firestore));
 
