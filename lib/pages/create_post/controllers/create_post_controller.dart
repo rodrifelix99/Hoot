@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 
 import '../../../models/feed.dart';
+import '../../../models/post.dart';
 import '../../../services/error_service.dart';
 import '../../../services/toast_service.dart';
 import '../../../services/post_service.dart';
@@ -106,23 +107,26 @@ class CreatePostController extends GetxController {
   String? get linkUrl => _firstUrl(textController.text);
 
   /// Publishes the post to Firestore after validating the form.
-  Future<bool> publish() async {
-    if (publishing.value) return false;
+  ///
+  /// Returns the newly created [Post] on success or `null` if the post
+  /// couldn't be created.
+  Future<Post?> publish() async {
+    if (publishing.value) return null;
 
     final feed = selectedFeed.value;
     final text = textController.text.trim();
 
     if (feed == null) {
       ToastService.showError('selectFeed'.tr);
-      return false;
+      return null;
     }
     if (text.isEmpty && imageFiles.isEmpty && gifUrl.value == null) {
       ToastService.showError('writeSomething'.tr);
-      return false;
+      return null;
     }
     if (text.length > 280) {
       ToastService.showError('youAreGoingTooFast'.tr);
-      return false;
+      return null;
     }
 
     publishing.value = true;
@@ -156,14 +160,31 @@ class CreatePostController extends GetxController {
             'createdAt': FieldValue.serverTimestamp(),
           }..removeWhere((key, value) => value == null),
           id: postId);
+
+      final post = Post(
+        id: postId,
+        text: text.isEmpty ? null : text,
+        media: imageUrls ??
+            (gifUrl.value != null ? [gifUrl.value!] : null),
+        feedId: feed.id,
+        feed: feed,
+        user: user,
+        liked: false,
+        likes: 0,
+        reFeeded: false,
+        reFeeds: 0,
+        comments: 0,
+        createdAt: DateTime.now(),
+      );
+
       textController.clear();
       imageFiles.clear();
       gifUrl.value = null;
       selectedFeed.value = null;
-      return true;
+      return post;
     } catch (e, s) {
       await ErrorService.reportError(e, stack: s);
-      return false;
+      return null;
     } finally {
       publishing.value = false;
     }
