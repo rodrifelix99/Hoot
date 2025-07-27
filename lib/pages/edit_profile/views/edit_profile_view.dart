@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
@@ -40,6 +39,10 @@ class EditProfileView extends GetView<EditProfileController> {
               final file = controller.bannerFile.value;
               final user = controller.user;
               Widget imageWidget;
+              final hasImage = file != null ||
+                  (user?.bannerPictureUrl != null &&
+                      user!.bannerPictureUrl!.isNotEmpty);
+
               if (file != null) {
                 imageWidget = Image.file(file, fit: BoxFit.cover);
               } else if (user?.bannerPictureUrl != null &&
@@ -58,11 +61,29 @@ class EditProfileView extends GetView<EditProfileController> {
                       color: Theme.of(context).colorScheme.onPrimaryContainer),
                 );
               }
+
               return GestureDetector(
                 onTap: controller.pickBanner,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: SizedBox(height: 120, child: imageWidget),
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: SizedBox(height: 120, child: imageWidget),
+                    ),
+                    if (hasImage)
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black26,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Center(
+                            child: Icon(Icons.camera_alt,
+                                color: Colors.white, size: 30),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               );
             }),
