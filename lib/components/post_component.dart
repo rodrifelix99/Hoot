@@ -3,14 +3,47 @@ import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/models/post.dart';
+import 'package:get/get.dart';
+import '../util/routes/app_routes.dart';
 
-class PostComponent extends StatelessWidget {
+class PostComponent extends StatefulWidget {
   final Post post;
 
   const PostComponent({
     required this.post,
     super.key,
   });
+
+  @override
+  State<PostComponent> createState() => _PostComponentState();
+}
+
+class _PostComponentState extends State<PostComponent> {
+  late Post _post;
+
+  @override
+  void initState() {
+    _post = widget.post;
+    super.initState();
+  }
+
+  void _toggleLike() {
+    setState(() {
+      if (_post.liked) {
+        _post
+          ..liked = false
+          ..likes = (_post.likes ?? 1) - 1;
+      } else {
+        _post
+          ..liked = true
+          ..likes = (_post.likes ?? 0) + 1;
+      }
+    });
+  }
+
+  void _openComments() {
+    Get.toNamed(AppRoutes.post, arguments: _post);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,33 +55,33 @@ class PostComponent extends StatelessWidget {
           Row(
             children: [
               ProfileAvatarComponent(
-                image: post.user?.smallProfilePictureUrl ?? '',
+                image: _post.user?.smallProfilePictureUrl ?? '',
                 size: 40,
                 radius: 12,
               ),
               const SizedBox(width: 8),
-              if (post.user != null)
+              if (_post.user != null)
                 NameComponent(
-                  user: post.user!,
+                  user: _post.user!,
                   size: 16,
-                  feedName: post.feed?.title ?? '',
+                  feedName: _post.feed?.title ?? '',
                 ),
             ],
           ),
-          if (post.text != null && post.text!.isNotEmpty) ...[
+          if (_post.text != null && _post.text!.isNotEmpty) ...[
             const SizedBox(height: 16),
             Text(
-              post.text!,
+              _post.text!,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
           ],
-          if (post.media != null && post.media!.isNotEmpty) ...[
+          if (_post.media != null && _post.media!.isNotEmpty) ...[
             const SizedBox(height: 16),
-            if (post.media!.length == 1)
+            if (_post.media!.length == 1)
               AspectRatio(
                 aspectRatio: 1,
                 child: ImageComponent(
-                  url: post.media!.first,
+                  url: _post.media!.first,
                   width: double.infinity,
                   fit: BoxFit.cover,
                   radius: 16,
@@ -63,16 +96,47 @@ class PostComponent extends StatelessWidget {
                   crossAxisSpacing: 4,
                   mainAxisSpacing: 4,
                 ),
-                itemCount: post.media!.length,
+                itemCount: _post.media!.length,
                 itemBuilder: (context, i) {
                   return ImageComponent(
-                    url: post.media![i],
+                    url: _post.media![i],
                     fit: BoxFit.cover,
                     radius: 8,
                   );
                 },
               ),
           ],
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                icon: Icon(
+                  _post.liked ? Icons.favorite : Icons.favorite_border,
+                  color:
+                      _post.liked ? Colors.red : Theme.of(context).iconTheme.color,
+                ),
+                onPressed: _toggleLike,
+              ),
+              if ((_post.likes ?? 0) > 0)
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Text('${_post.likes ?? 0}'),
+                ),
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                icon: const Icon(Icons.repeat),
+                onPressed: () {},
+              ),
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                icon: const Icon(Icons.mode_comment_outlined),
+                onPressed: _openComments,
+              ),
+              if ((_post.comments ?? 0) > 0)
+                Text('${_post.comments ?? 0}'),
+            ],
+          )
         ],
       ),
     );
