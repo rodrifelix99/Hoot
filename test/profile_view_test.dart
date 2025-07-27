@@ -25,6 +25,12 @@ class FakeAuthService extends GetxService implements AuthService {
   Future<U?> fetchUserById(String uid) async => _user;
 
   @override
+  Future<U?> fetchUserByUsername(String username) async => _user;
+
+  @override
+  Future<List<U>> searchUsers(String query, {int limit = 5}) async => [];
+
+  @override
   Future<void> signOut() async {}
 
   @override
@@ -50,8 +56,7 @@ class FakeFeedService implements BaseFeedService {
   }
 
   @override
-  Future<PostPage> fetchFeedPosts(String feedId,
-      {DocumentSnapshot? startAfter, int limit = 10}) async {
+  Future<PostPage> fetchFeedPosts(String feedId, {DocumentSnapshot? startAfter, int limit = 10}) async {
     return PostPage(posts: []);
   }
 }
@@ -63,9 +68,7 @@ void main() {
       name: 'Tester',
       username: 'tester',
       bio: 'Hello',
-      feeds: [
-        Feed(id: 'f1', userId: 't', title: 'Feed 1', description: 'desc')
-      ],
+      feeds: [Feed(id: 'f1', userId: 't', title: 'Feed 1', description: 'desc')],
     );
     final service = FakeAuthService(user);
     final controller = ProfileController(

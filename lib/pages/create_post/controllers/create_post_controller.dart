@@ -41,12 +41,10 @@ class CreatePostController extends GetxController {
   final textController = TextEditingController();
 
   /// Controller for mention text field.
-  final GlobalKey<FlutterMentionsState> mentionKey =
-      GlobalKey<FlutterMentionsState>();
+  final GlobalKey<FlutterMentionsState> mentionKey = GlobalKey<FlutterMentionsState>();
 
   /// Mention suggestions for the text field.
-  final RxList<Map<String, dynamic>> mentionSuggestions =
-      <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> mentionSuggestions = <Map<String, dynamic>>[].obs;
 
   /// Picked image files, up to 4.
   final RxList<File> imageFiles = <File>[].obs;
@@ -79,7 +77,7 @@ class CreatePostController extends GetxController {
   /// Searches users for the mention field.
   Future<void> searchUsers(String query) async {
     _userService ??= UserService();
-    final users = await _userService!.searchUsers(query);
+    final users = await _authService.searchUsers(query);
     mentionSuggestions.assignAll(users.map((u) => {
           'id': u.uid,
           'display': u.username ?? '',
@@ -188,8 +186,7 @@ class CreatePostController extends GetxController {
       final post = Post(
         id: postId,
         text: text.isEmpty ? null : text,
-        media: imageUrls ??
-            (gifUrl.value != null ? [gifUrl.value!] : null),
+        media: imageUrls ?? (gifUrl.value != null ? [gifUrl.value!] : null),
         feedId: feed.id,
         feed: feed,
         user: user,

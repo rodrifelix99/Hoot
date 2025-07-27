@@ -23,24 +23,14 @@ class AuthService {
       return null;
     }
 
-    final doc =
-        await _firestore.collection('users').doc(firebaseUser.uid).get();
+    final doc = await _firestore.collection('users').doc(firebaseUser.uid).get();
     if (doc.exists) {
       _currentUser = U.fromJson(doc.data()!);
-      final subs = await _firestore
-          .collection('users')
-          .doc(firebaseUser.uid)
-          .collection('subscriptions')
-          .get();
+      final subs = await _firestore.collection('users').doc(firebaseUser.uid).collection('subscriptions').get();
       _currentUser!.subscriptionCount = subs.docs.length;
 
-      final feedsSnapshot = await _firestore
-          .collection('feeds')
-          .where('userId', isEqualTo: firebaseUser.uid)
-          .get();
-      _currentUser!.feeds = feedsSnapshot.docs
-          .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
-          .toList();
+      final feedsSnapshot = await _firestore.collection('feeds').where('userId', isEqualTo: firebaseUser.uid).get();
+      _currentUser!.feeds = feedsSnapshot.docs.map((d) => Feed.fromJson({'id': d.id, ...d.data()})).toList();
     } else {
       _currentUser = null;
     }
@@ -52,20 +42,35 @@ class AuthService {
     final doc = await _firestore.collection('users').doc(uid).get();
     if (!doc.exists) return null;
     final user = U.fromJson(doc.data()!);
-    final subs = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('subscriptions')
-        .get();
+    final subs = await _firestore.collection('users').doc(uid).collection('subscriptions').get();
     user.subscriptionCount = subs.docs.length;
-    final feedsSnapshot = await _firestore
-        .collection('feeds')
-        .where('userId', isEqualTo: uid)
-        .get();
-    user.feeds = feedsSnapshot.docs
-        .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
-        .toList();
+    final feedsSnapshot = await _firestore.collection('feeds').where('userId', isEqualTo: uid).get();
+    user.feeds = feedsSnapshot.docs.map((d) => Feed.fromJson({'id': d.id, ...d.data()})).toList();
     return user;
+  }
+
+  /// Fetches a user document by their [username].
+  Future<U?> fetchUserByUsername(String username) async {
+    final query = await _firestore.collection('users').where('username', isEqualTo: username).limit(1).get();
+    if (query.docs.isEmpty) return null;
+    final doc = query.docs.first;
+    final user = U.fromJson(doc.data());
+    final subs = await _firestore.collection('users').doc(doc.id).collection('subscriptions').get();
+    user.subscriptionCount = subs.docs.length;
+    final feedsSnapshot = await _firestore.collection('feeds').where('userId', isEqualTo: doc.id).get();
+    user.feeds = feedsSnapshot.docs.map((d) => Feed.fromJson({'id': d.id, ...d.data()})).toList();
+    return user;
+  }
+
+  /// Returns users whose username starts with [query].
+  Future<List<U>> searchUsers(String query, {int limit = 5}) async {
+    final snapshot = await _firestore
+        .collection('users')
+        .where('username', isGreaterThanOrEqualTo: query)
+        .where('username', isLessThanOrEqualTo: '$query\uf8ff')
+        .limit(limit)
+        .get();
+    return snapshot.docs.map((d) => U.fromJson(d.data())).toList();
   }
 
   U? get currentUser => _currentUser;

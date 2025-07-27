@@ -25,13 +25,10 @@ class PostController extends GetxController {
         _authService = authService ?? Get.find<AuthService>(),
         _userService = userService;
 
-  final Rx<PagingState<DocumentSnapshot?, Comment>> commentsState =
-      PagingState<DocumentSnapshot?, Comment>().obs;
+  final Rx<PagingState<DocumentSnapshot?, Comment>> commentsState = PagingState<DocumentSnapshot?, Comment>().obs;
   final TextEditingController commentController = TextEditingController();
-  final GlobalKey<FlutterMentionsState> commentKey =
-      GlobalKey<FlutterMentionsState>();
-  final RxList<Map<String, dynamic>> mentionSuggestions =
-      <Map<String, dynamic>>[].obs;
+  final GlobalKey<FlutterMentionsState> commentKey = GlobalKey<FlutterMentionsState>();
+  final RxList<Map<String, dynamic>> mentionSuggestions = <Map<String, dynamic>>[].obs;
   final RxBool postingComment = false.obs;
 
   @override
@@ -65,8 +62,7 @@ class PostController extends GetxController {
         isLoading: false,
       );
     } catch (e) {
-      commentsState.value =
-          commentsState.value.copyWith(error: e, isLoading: false);
+      commentsState.value = commentsState.value.copyWith(error: e, isLoading: false);
       FirebaseCrashlytics.instance.recordError(
         e,
         null,
@@ -78,7 +74,7 @@ class PostController extends GetxController {
   /// Searches users for mentions in comments.
   Future<void> searchUsers(String query) async {
     _userService ??= UserService();
-    final users = await _userService!.searchUsers(query);
+    final users = await _authService.searchUsers(query);
     mentionSuggestions.assignAll(users.map((u) => {
           'id': u.uid,
           'display': u.username ?? '',
@@ -129,8 +125,7 @@ class PostController extends GetxController {
       } else {
         final first = List<Comment>.from(pages.first);
         first.insert(0, newComment);
-        commentsState.value =
-            commentsState.value.copyWith(pages: [first, ...pages.skip(1)]);
+        commentsState.value = commentsState.value.copyWith(pages: [first, ...pages.skip(1)]);
       }
       post.comments = (post.comments ?? 0) + 1;
     } catch (e) {

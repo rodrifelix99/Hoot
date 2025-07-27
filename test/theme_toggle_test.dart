@@ -23,6 +23,12 @@ class FakeAuthService extends GetxService implements AuthService {
   Future<U?> fetchUserById(String uid) async => null;
 
   @override
+  Future<U?> fetchUserByUsername(String username) async => null;
+
+  @override
+  Future<List<U>> searchUsers(String query, {int limit = 5}) async => [];
+
+  @override
   Future<void> signOut() async {}
 
   @override
@@ -59,8 +65,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(themeService.themeMode.value, ThemeMode.system);
-    expect(Theme.of(tester.element(find.byType(SettingsView))).brightness,
-        Brightness.light);
+    expect(Theme.of(tester.element(find.byType(SettingsView))).brightness, Brightness.light);
 
     await tester.tap(find.byKey(const Key('themeModeDropdown')));
     await tester.pumpAndSettle();
@@ -68,7 +73,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(themeService.themeMode.value, ThemeMode.dark);
-    expect(Theme.of(tester.element(find.byType(SettingsView))).brightness,
-        Brightness.dark);
+    expect(Theme.of(tester.element(find.byType(SettingsView))).brightness, Brightness.dark);
   });
 }

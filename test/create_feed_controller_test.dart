@@ -27,6 +27,12 @@ class FakeAuthService extends GetxService implements AuthService {
   Future<U?> fetchUserById(String uid) async => _user;
 
   @override
+  Future<U?> fetchUserByUsername(String username) async => _user;
+
+  @override
+  Future<List<U>> searchUsers(String query, {int limit = 5}) async => [];
+
+  @override
   Future<void> signOut() async {}
 
   @override
@@ -49,8 +55,7 @@ class FakeFeedService implements BaseFeedService {
   }
 
   @override
-  Future<PostPage> fetchFeedPosts(String feedId,
-      {DocumentSnapshot? startAfter, int limit = 10}) async {
+  Future<PostPage> fetchFeedPosts(String feedId, {DocumentSnapshot? startAfter, int limit = 10}) async {
     return PostPage(posts: []);
   }
 }
@@ -65,8 +70,7 @@ void main() {
 
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
-    final controller = CreateFeedController(
-        firestore: firestore, userId: 'u1', authService: auth);
+    final controller = CreateFeedController(firestore: firestore, userId: 'u1', authService: auth);
     controller.titleController.text = 'My Feed';
     controller.descriptionController.text = 'Desc';
     controller.selectedType.value = FeedType.music;
@@ -89,8 +93,7 @@ void main() {
 
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
-    final controller = CreateFeedController(
-        firestore: firestore, userId: 'u1', authService: auth);
+    final controller = CreateFeedController(firestore: firestore, userId: 'u1', authService: auth);
     controller.selectedType.value = FeedType.music;
 
     final result = await controller.createFeed();
@@ -109,8 +112,7 @@ void main() {
 
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
-    final controller = CreateFeedController(
-        firestore: firestore, userId: 'u1', authService: auth);
+    final controller = CreateFeedController(firestore: firestore, userId: 'u1', authService: auth);
     controller.titleController.text = 'Feed';
 
     final result = await controller.createFeed();
@@ -137,11 +139,8 @@ void main() {
     Get.put<AuthService>(auth);
     Get.put<ProfileController>(profile);
 
-    final controller = CreateFeedController(
-        firestore: firestore,
-        userId: 'u1',
-        authService: auth,
-        profileController: profile);
+    final controller =
+        CreateFeedController(firestore: firestore, userId: 'u1', authService: auth, profileController: profile);
     controller.titleController.text = 'My Feed';
     controller.selectedType.value = FeedType.music;
 
@@ -163,8 +162,7 @@ void main() {
 
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
-    final controller = CreateFeedController(
-        firestore: firestore, userId: 'u1', authService: auth);
+    final controller = CreateFeedController(firestore: firestore, userId: 'u1', authService: auth);
     controller.titleController.text = 'My Feed';
     controller.selectedType.value = FeedType.music;
 
@@ -175,11 +173,7 @@ void main() {
     expect(result, isTrue);
     final feeds = await firestore.collection('feeds').get();
     final feedId = feeds.docs.first.id;
-    final subs = await firestore
-        .collection('users')
-        .doc('u1')
-        .collection('subscriptions')
-        .get();
+    final subs = await firestore.collection('users').doc('u1').collection('subscriptions').get();
     expect(subs.docs.length, 1);
     expect(subs.docs.first.id, feedId);
   });
