@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
 
 class InvitationService {
   final FirebaseFirestore _firestore;
@@ -36,10 +37,16 @@ class InvitationService {
     await doc.reference.update({
       'invitationUses': FieldValue.increment(1),
     });
-    await _firestore
-        .collection('users')
-        .doc(newUserId)
-        .set({'invitedBy': doc.id}, SetOptions(merge: true));
+    final userRef = _firestore.collection('users').doc(newUserId);
+    await userRef.set({'invitedBy': doc.id}, SetOptions(merge: true));
+    final newUserDoc = await userRef.get();
+    if (!(newUserDoc.data()?.containsKey('invitationCode') ?? false)) {
+      await userRef.set({
+        'invitationCode': const Uuid().v4().substring(0, 8).toUpperCase(),
+        'invitationUses': 0,
+        'invitationLastReset': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    }
     return true;
   }
 }
