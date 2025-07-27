@@ -3,24 +3,35 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 
 import '../../../models/post.dart';
 import '../../../models/comment.dart';
 import '../../../services/comment_service.dart';
 import '../../../services/auth_service.dart';
+import '../../../services/user_service.dart';
 
 class PostController extends GetxController {
   late Post post;
   final BaseCommentService _commentService;
   final AuthService _authService;
+  BaseUserService? _userService;
 
-  PostController({BaseCommentService? commentService, AuthService? authService})
-      : _commentService = commentService ?? CommentService(),
-        _authService = authService ?? Get.find<AuthService>();
+  PostController({
+    BaseCommentService? commentService,
+    AuthService? authService,
+    BaseUserService? userService,
+  })  : _commentService = commentService ?? CommentService(),
+        _authService = authService ?? Get.find<AuthService>(),
+        _userService = userService;
 
   final Rx<PagingState<DocumentSnapshot?, Comment>> commentsState =
       PagingState<DocumentSnapshot?, Comment>().obs;
   final TextEditingController commentController = TextEditingController();
+  final GlobalKey<FlutterMentionsState> commentKey =
+      GlobalKey<FlutterMentionsState>();
+  final RxList<Map<String, dynamic>> mentionSuggestions =
+      <Map<String, dynamic>>[].obs;
   final RxBool postingComment = false.obs;
 
   @override
@@ -54,13 +65,25 @@ class PostController extends GetxController {
         isLoading: false,
       );
     } catch (e) {
-      commentsState.value = commentsState.value.copyWith(error: e, isLoading: false);
+      commentsState.value =
+          commentsState.value.copyWith(error: e, isLoading: false);
       FirebaseCrashlytics.instance.recordError(
         e,
         null,
         reason: 'Failed to load comments',
       );
     }
+  }
+
+  /// Searches users for mentions in comments.
+  Future<void> searchUsers(String query) async {
+    _userService ??= UserService();
+    final users = await _userService!.searchUsers(query);
+    mentionSuggestions.assignAll(users.map((u) => {
+          'id': u.uid,
+          'display': u.username ?? '',
+          'photo': u.smallProfilePictureUrl,
+        }));
   }
 
   Future<void> publishComment() async {
@@ -77,15 +100,19 @@ class PostController extends GetxController {
       final userData = user.toJson();
       userData['uid'] = user.uid;
       final id = _commentService.newCommentId(post.id);
-      await _commentService.createComment(post.id, {
-        'text': text,
-        'postId': post.id,
-        'userId': user.uid,
-        'user': userData,
-        'createdAt': FieldValue.serverTimestamp(),
-      }, id: id);
+      await _commentService.createComment(
+          post.id,
+          {
+            'text': text,
+            'postId': post.id,
+            'userId': user.uid,
+            'user': userData,
+            'createdAt': FieldValue.serverTimestamp(),
+          },
+          id: id);
 
       commentController.clear();
+      commentKey.currentState?.controller?.clear();
 
       final newComment = Comment(
         id: id,
@@ -96,11 +123,14 @@ class PostController extends GetxController {
       );
       final pages = commentsState.value.pages;
       if (pages == null || pages.isEmpty) {
-        commentsState.value = commentsState.value.copyWith(pages: [[newComment]]);
+        commentsState.value = commentsState.value.copyWith(pages: [
+          [newComment]
+        ]);
       } else {
         final first = List<Comment>.from(pages.first);
         first.insert(0, newComment);
-        commentsState.value = commentsState.value.copyWith(pages: [first, ...pages.skip(1)]);
+        commentsState.value =
+            commentsState.value.copyWith(pages: [first, ...pages.skip(1)]);
       }
       post.comments = (post.comments ?? 0) + 1;
     } catch (e) {
