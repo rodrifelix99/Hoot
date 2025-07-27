@@ -48,49 +48,48 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget buildHeader(U user) {
-    return SizedBox(
-      height: 300,
-      child: Stack(
+    return Padding(
+      padding: const EdgeInsets.all(16).copyWith(top: 0),
+      child: Column(
         children: [
           if (user.bannerPictureUrl != null &&
               user.bannerPictureUrl!.isNotEmpty)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              height: 200,
-              child: ImageComponent(
-                url: user.bannerPictureUrl!,
-                width: double.infinity,
-                fit: BoxFit.cover,
+            ImageComponent(
+              url: user.bannerPictureUrl!,
+              height: 150,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              radius: 8,
+            ),
+          const SizedBox(height: 16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ProfileAvatarComponent(
+                image: user.largeProfilePictureUrl ?? '',
+                size: 80,
+                radius: 40,
               ),
-            ),
-          Positioned(
-            top: 160,
-            left: 16,
-            right: 16,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ProfileAvatarComponent(
-                  image: user.largeProfilePictureUrl ?? '',
-                  size: 80,
-                  radius: 40,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    NameComponent(
+                      user: user,
+                      showUsername: true,
+                      size: 20,
+                    ),
+                    if (user.bio != null && user.bio!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(user.bio!),
+                      ),
+                  ],
                 ),
-                const SizedBox(height: 12),
-                NameComponent(
-                  user: user,
-                  showUsername: true,
-                  size: 20,
-                ),
-                if (user.bio != null && user.bio!.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(user.bio!),
-                  ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
