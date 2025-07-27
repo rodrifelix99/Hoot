@@ -80,7 +80,7 @@ class ExploreView extends GetView<ExploreController> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   'top10MostSubscribed'.tr,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               const SizedBox(height: 8),
@@ -112,15 +112,15 @@ class ExploreView extends GetView<ExploreController> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 32),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   'popularTypes'.tr,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               SizedBox(
                 height: 100,
                 child: Obx(() => ListView.separated(
