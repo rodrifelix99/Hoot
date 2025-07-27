@@ -198,8 +198,7 @@ class _PostComponentState extends State<PostComponent> {
                   icon: const Icon(SolarIconsOutline.chatRoundLine),
                   onPressed: _openPostDetails,
                 ),
-                if ((_post.comments ?? 0) > 0)
-                  Text('${_post.comments ?? 0}'),
+                Text('${_post.comments ?? 0}'),
                 const Spacer(),
               ],
             )

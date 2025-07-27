@@ -67,11 +67,14 @@ class CommentService implements BaseCommentService {
       .id;
 
   @override
-  Future<void> createComment(String postId, Map<String, dynamic> data, {String? id}) {
-    final ref = _firestore.collection('posts').doc(postId).collection('comments');
-    if (id != null) {
-      return ref.doc(id).set(data);
-    }
-    return ref.add(data);
+  Future<void> createComment(String postId, Map<String, dynamic> data, {String? id}) async {
+    final postRef = _firestore.collection('posts').doc(postId);
+    final commentsRef = postRef.collection('comments');
+
+    await _firestore.runTransaction((txn) async {
+      final doc = id != null ? commentsRef.doc(id) : commentsRef.doc();
+      txn.set(doc, data);
+      txn.update(postRef, {'comments': FieldValue.increment(1)});
+    });
   }
 }
