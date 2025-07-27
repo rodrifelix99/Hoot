@@ -44,18 +44,23 @@ class EditProfileView extends GetView<EditProfileController> {
                       user!.bannerPictureUrl!.isNotEmpty);
 
               if (file != null) {
-                imageWidget = Image.file(file, fit: BoxFit.cover);
+                imageWidget = Image.file(
+                  file,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: 300,
+                );
               } else if (user?.bannerPictureUrl != null &&
                   user!.bannerPictureUrl!.isNotEmpty) {
                 imageWidget = ImageComponent(
                   url: user.bannerPictureUrl!,
                   fit: BoxFit.cover,
-                  height: 120,
+                  height: 300,
                   width: double.infinity,
                 );
               } else {
                 imageWidget = Container(
-                  height: 120,
+                  height: 300,
                   color: Theme.of(context).colorScheme.primaryContainer,
                   child: Icon(Icons.photo,
                       color: Theme.of(context).colorScheme.onPrimaryContainer),
@@ -68,7 +73,7 @@ class EditProfileView extends GetView<EditProfileController> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: SizedBox(height: 120, child: imageWidget),
+                      child: SizedBox(height: 300, child: imageWidget),
                     ),
                     if (hasImage)
                       Positioned.fill(
@@ -78,8 +83,11 @@ class EditProfileView extends GetView<EditProfileController> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Center(
-                            child: Icon(Icons.camera_alt,
-                                color: Colors.white, size: 30),
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: Colors.white,
+                              size: 30,
+                            ),
                           ),
                         ),
                       ),

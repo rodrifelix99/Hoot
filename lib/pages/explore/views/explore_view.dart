@@ -111,6 +111,7 @@ class ExploreView extends GetView<ExploreController> {
                       },
                     )),
               ),
+              SafeArea(child: const SizedBox(height: 16)),
             ],
           ),
         ),

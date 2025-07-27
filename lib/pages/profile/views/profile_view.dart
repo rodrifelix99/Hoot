@@ -5,7 +5,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../models/post.dart';
 import '../../../models/user.dart';
-import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
@@ -48,51 +47,80 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget buildHeader(U user) {
-    return Padding(
-      padding: const EdgeInsets.all(16).copyWith(top: 0),
-      child: Column(
-        children: [
-          if (user.bannerPictureUrl != null &&
-              user.bannerPictureUrl!.isNotEmpty)
-            ImageComponent(
-              url: user.bannerPictureUrl!,
-              height: 150,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              radius: 8,
-            ),
-          const SizedBox(height: 16),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
+      children: [
+        SizedBox(
+          height: 400,
+          child: Stack(
             children: [
-              ProfileAvatarComponent(
-                image: user.largeProfilePictureUrl ?? '',
-                size: 80,
-                radius: 40,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    NameComponent(
-                      user: user,
-                      showUsername: true,
-                      size: 20,
+              if (user.bannerPictureUrl != null &&
+                  user.bannerPictureUrl!.isNotEmpty)
+                ImageComponent(
+                  url: user.bannerPictureUrl!,
+                  height: 300,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                )
+              else
+                Container(
+                  height: 300,
+                  width: double.infinity,
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                ),
+              Positioned(
+                top: 264,
+                left: 16,
+                right: 16,
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(32),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                    if (user.bio != null && user.bio!.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(user.bio!),
-                      ),
-                  ],
+                    child: ProfileAvatarComponent(
+                      image: user.largeProfilePictureUrl ?? '',
+                      size: 120,
+                      radius: 32,
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-        ],
-      ),
+        ),
+        Container(
+          padding: const EdgeInsets.all(16),
+          constraints: const BoxConstraints(maxWidth: 360),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              NameComponent(
+                user: user,
+                size: 24,
+                showUsername: true,
+              ),
+              if (user.bio != null && user.bio!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text(
+                    user.bio!,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -235,20 +263,38 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarComponent(
-        title: 'profile'.tr,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.black,
+                Colors.black.withAlpha(0),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
         actions: [
           controller.isCurrentUser
               ? IconButton(
                   icon: const Icon(Icons.settings),
+                  color: Colors.white,
                   onPressed: () => Get.toNamed(AppRoutes.settings),
                 )
               : IconButton(
                   icon: const Icon(Icons.flag_outlined),
+                  color: Colors.white,
                   onPressed: () => reportUser(context),
                 ),
         ],
       ),
+      extendBodyBehindAppBar: true,
       body: buildBody(context),
     );
   }
