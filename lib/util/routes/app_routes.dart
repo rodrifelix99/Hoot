@@ -5,6 +5,7 @@ class AppRoutes {
   static const welcome = '/welcome';
   static const username = '/username';
   static const avatar = '/avatar';
+  static const invitation = '/invitation';
   static const createPost = '/create_post';
   static const settings = '/settings';
   static const profile = '/profile';

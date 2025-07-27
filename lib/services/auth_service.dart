@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:uuid/uuid.dart';
 import '../models/user.dart';
 import '../models/feed.dart';
 
@@ -83,6 +84,9 @@ class AuthService {
     await docRef.set({
       'uid': user.uid,
       'displayName': user.displayName,
+      'invitationCode': const Uuid().v4().substring(0, 8).toUpperCase(),
+      'invitationUses': 0,
+      'invitationLastReset': FieldValue.serverTimestamp(),
       'createdAt': FieldValue.serverTimestamp(),
     });
   }

@@ -1,0 +1,48 @@
+import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../../services/auth_service.dart';
+import '../../../services/invitation_service.dart';
+import '../../../services/toast_service.dart';
+import '../../../services/error_service.dart';
+import '../../../util/routes/app_routes.dart';
+
+class InvitationController extends GetxController {
+  final InvitationService _invitationService;
+  final AuthService _authService;
+
+  InvitationController({InvitationService? invitationService, AuthService? authService})
+      : _invitationService = invitationService ?? InvitationService(),
+        _authService = authService ?? Get.find<AuthService>();
+
+  final TextEditingController codeController = TextEditingController();
+  final RxBool verifying = false.obs;
+
+  Future<void> verifyCode() async {
+    if (verifying.value) return;
+    final code = codeController.text.trim();
+    if (code.isEmpty) return;
+    verifying.value = true;
+    try {
+      final uid = _authService.currentUser?.uid ?? FirebaseAuth.instance.currentUser?.uid;
+      if (uid == null) return;
+      final success = await _invitationService.useInvitationCode(uid, code);
+      if (success) {
+        Get.offAllNamed(AppRoutes.home);
+      } else {
+        ToastService.showError('invalidInvitationCode'.tr);
+      }
+    } catch (e, s) {
+      await ErrorService.reportError(e, stack: s);
+    } finally {
+      verifying.value = false;
+    }
+  }
+
+  @override
+  void onClose() {
+    codeController.dispose();
+    super.onClose();
+  }
+}
