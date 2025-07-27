@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/components/appbar_component.dart';
 import '../controllers/post_controller.dart';
 import '../../../components/post_component.dart';
 
@@ -9,8 +10,8 @@ class PostView extends GetView<PostController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('post'.tr),
+      appBar: AppBarComponent(
+        title: 'appName'.tr,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(8),
