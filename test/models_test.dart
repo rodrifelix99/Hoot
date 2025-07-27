@@ -5,6 +5,7 @@ import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/util/enums/feed_types.dart';
 
+import 'package:hoot/models/comment.dart';
 void main() {
   group('U JSON', () {
     test('fromJson and toJson round trip', () {
@@ -108,6 +109,31 @@ void main() {
       final toJson = post.toJson();
       expect(toJson['text'], 'hello');
       expect(toJson['feedId'], 'f1');
+      expect(toJson.containsKey('id'), isFalse);
+    });
+  });
+
+  group('Comment JSON', () {
+    test('fromJson and toJson round trip', () {
+      final json = {
+        'id': 'c1',
+        'postId': 'p1',
+        'text': 'Nice!',
+        'user': {'uid': 'u1'},
+        'createdAt': {'_seconds': 5},
+        'updatedAt': {'_seconds': 6},
+      };
+
+      final comment = Comment.fromJson(json);
+      expect(comment.id, 'c1');
+      expect(comment.postId, 'p1');
+      expect(comment.text, 'Nice!');
+      expect(comment.createdAt, DateTime.fromMillisecondsSinceEpoch(5000));
+      expect(comment.updatedAt, DateTime.fromMillisecondsSinceEpoch(6000));
+
+      final toJson = comment.toJson();
+      expect(toJson['text'], 'Nice!');
+      expect(toJson['postId'], 'p1');
       expect(toJson.containsKey('id'), isFalse);
     });
   });

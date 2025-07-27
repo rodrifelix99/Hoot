@@ -1,8 +1,26 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../../models/post.dart';
+import '../../../models/comment.dart';
+import '../../../services/comment_service.dart';
+import '../../../services/auth_service.dart';
 
 class PostController extends GetxController {
   late Post post;
+  final BaseCommentService _commentService;
+  final AuthService _authService;
+
+  PostController({BaseCommentService? commentService, AuthService? authService})
+      : _commentService = commentService ?? CommentService(),
+        _authService = authService ?? Get.find<AuthService>();
+
+  final Rx<PagingState<DocumentSnapshot?, Comment>> commentsState =
+      PagingState<DocumentSnapshot?, Comment>().obs;
+  final TextEditingController commentController = TextEditingController();
+  final RxBool postingComment = false.obs;
 
   @override
   void onInit() {
@@ -15,5 +33,89 @@ class PostController extends GetxController {
     } else {
       post = Post.empty();
     }
+    fetchNextComments();
+  }
+
+  void fetchNextComments() async {
+    final current = commentsState.value;
+    if (current.isLoading) return;
+
+    commentsState.value = current.copyWith(isLoading: true, error: null);
+    try {
+      final page = await _commentService.fetchComments(
+        post.id,
+        startAfter: current.keys?.last,
+      );
+      commentsState.value = commentsState.value.copyWith(
+        pages: [...?current.pages, page.comments],
+        keys: [...?current.keys, page.lastDoc],
+        hasNextPage: page.hasMore,
+        isLoading: false,
+      );
+    } catch (e) {
+      commentsState.value = commentsState.value.copyWith(error: e, isLoading: false);
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        null,
+        reason: 'Failed to load comments',
+      );
+    }
+  }
+
+  Future<void> publishComment() async {
+    if (postingComment.value) return;
+    final text = commentController.text.trim();
+    if (text.isEmpty) {
+      return;
+    }
+    final user = _authService.currentUser;
+    if (user == null) return;
+
+    postingComment.value = true;
+    try {
+      final userData = user.toJson();
+      userData['uid'] = user.uid;
+      final id = _commentService.newCommentId(post.id);
+      await _commentService.createComment(post.id, {
+        'text': text,
+        'postId': post.id,
+        'userId': user.uid,
+        'user': userData,
+        'createdAt': FieldValue.serverTimestamp(),
+      }, id: id);
+
+      commentController.clear();
+
+      final newComment = Comment(
+        id: id,
+        postId: post.id,
+        text: text,
+        user: user,
+        createdAt: DateTime.now(),
+      );
+      final pages = commentsState.value.pages;
+      if (pages == null || pages.isEmpty) {
+        commentsState.value = commentsState.value.copyWith(pages: [[newComment]]);
+      } else {
+        final first = List<Comment>.from(pages.first);
+        first.insert(0, newComment);
+        commentsState.value = commentsState.value.copyWith(pages: [first, ...pages.skip(1)]);
+      }
+      post.comments = (post.comments ?? 0) + 1;
+    } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        null,
+        reason: 'Failed to publish comment',
+      );
+    } finally {
+      postingComment.value = false;
+    }
+  }
+
+  @override
+  void onClose() {
+    commentController.dispose();
+    super.onClose();
   }
 }
