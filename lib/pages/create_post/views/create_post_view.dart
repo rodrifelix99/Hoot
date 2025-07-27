@@ -4,6 +4,7 @@ import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/post_media_preview.dart';
+import 'package:hoot/components/mention_text_field.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../controllers/create_post_controller.dart';
@@ -75,13 +76,16 @@ class CreatePostView extends GetView<CreatePostController> {
               );
             }),
             const SizedBox(height: 8),
-            TextField(
-              controller: controller.textController,
-              maxLength: 280,
-              minLines: 5,
-              maxLines: null,
-              decoration: InputDecoration(hintText: 'postPlaceholder'.tr),
-            ),
+            Obx(() => MentionTextField(
+                  mentionKey: controller.mentionKey,
+                  suggestions: controller.mentionSuggestions,
+                  maxLength: 280,
+                  minLines: 5,
+                  maxLines: 10,
+                  hintText: 'postPlaceholder'.tr,
+                  onSearchChanged: controller.searchUsers,
+                  onChanged: (v) => controller.textController.text = v,
+                )),
             const SizedBox(height: 16),
             Obx(() => PostMediaPreview(
                   imageFiles: controller.imageFiles,

@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 
 import '../../../models/feed.dart';
 import '../../../models/post.dart';
@@ -14,12 +15,15 @@ import '../../../services/toast_service.dart';
 import '../../../services/post_service.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/storage_service.dart';
+import '../../../services/user_service.dart';
+import '../../../models/user.dart';
 
 /// Manages state for creating a new post.
 class CreatePostController extends GetxController {
   final BasePostService _postService;
   final AuthService _authService;
   final BaseStorageService _storageService;
+  BaseUserService? _userService;
   final String _userId;
 
   CreatePostController({
@@ -27,13 +31,23 @@ class CreatePostController extends GetxController {
     AuthService? authService,
     String? userId,
     BaseStorageService? storageService,
+    BaseUserService? userService,
   })  : _postService = postService ?? PostService(),
         _authService = authService ?? Get.find<AuthService>(),
         _storageService = storageService ?? StorageService(),
+        _userService = userService,
         _userId = userId ?? FirebaseAuth.instance.currentUser?.uid ?? '';
 
   /// Text entered by the user.
   final textController = TextEditingController();
+
+  /// Controller for mention text field.
+  final GlobalKey<FlutterMentionsState> mentionKey =
+      GlobalKey<FlutterMentionsState>();
+
+  /// Mention suggestions for the text field.
+  final RxList<Map<String, dynamic>> mentionSuggestions =
+      <Map<String, dynamic>>[].obs;
 
   /// Picked image files, up to 4.
   final RxList<File> imageFiles = <File>[].obs;
@@ -61,6 +75,17 @@ class CreatePostController extends GetxController {
   Future<void> _loadFeeds() async {
     final user = await _authService.fetchUser();
     availableFeeds.assignAll(user?.feeds ?? []);
+  }
+
+  /// Searches users for the mention field.
+  Future<void> searchUsers(String query) async {
+    _userService ??= UserService();
+    final users = await _userService!.searchUsers(query);
+    mentionSuggestions.assignAll(users.map((u) => {
+          'id': u.uid,
+          'display': u.username ?? '',
+          'photo': u.smallProfilePictureUrl,
+        }));
   }
 
   /// Picks an image from the gallery.
@@ -178,6 +203,7 @@ class CreatePostController extends GetxController {
       );
 
       textController.clear();
+      mentionKey.currentState?.controller?.clear();
       imageFiles.clear();
       gifUrl.value = null;
       selectedFeed.value = null;

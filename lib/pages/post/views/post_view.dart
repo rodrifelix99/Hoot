@@ -4,6 +4,7 @@ import 'package:hoot/components/appbar_component.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../../components/post_component.dart';
 import '../../../components/comment_component.dart';
+import '../../../components/mention_text_field.dart';
 import '../controllers/post_controller.dart';
 
 class PostView extends GetView<PostController> {
@@ -57,12 +58,15 @@ class PostView extends GetView<PostController> {
               child: Row(
                 children: [
                   Expanded(
-                    child: TextField(
-                      controller: controller.commentController,
-                      decoration: InputDecoration(
-                        hintText: 'writeSomething'.tr,
-                      ),
-                    ),
+                    child: Obx(() => MentionTextField(
+                          mentionKey: controller.commentKey,
+                          suggestions: controller.mentionSuggestions,
+                          hintText: 'writeSomething'.tr,
+                          onSearchChanged: controller.searchUsers,
+                          onChanged: (v) =>
+                              controller.commentController.text = v,
+                          maxLines: 5,
+                        )),
                   ),
                   Obx(() => controller.postingComment.value
                       ? const SizedBox(
