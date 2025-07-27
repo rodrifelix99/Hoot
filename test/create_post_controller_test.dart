@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:hoot/services/post_service.dart';
 import 'package:hoot/services/storage_service.dart';
 import 'package:hoot/models/feed.dart';
+import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -82,7 +83,7 @@ void main() {
           userId: 'u1',
           storageService: storage);
       controller.textController.text = 'Hello';
-      expect(await controller.publish(), isFalse);
+      expect(await controller.publish(), isNull);
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
     });
@@ -119,7 +120,7 @@ void main() {
           title: 't',
           description: 'd',
           color: Colors.blue);
-      expect(await controller.publish(), isFalse);
+      expect(await controller.publish(), isNull);
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
     });
@@ -159,7 +160,7 @@ void main() {
       final result = await controller.publish();
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
-      expect(result, isTrue);
+      expect(result, isA<Post>());
       final posts = await firestore.collection('posts').get();
       expect(posts.docs.length, 1);
       final data = posts.docs.first.data();
@@ -210,7 +211,7 @@ void main() {
       final result = await controller.publish();
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
-      expect(result, isTrue);
+      expect(result, isA<Post>());
       expect(storage.calls.length, 1);
       final posts = await firestore.collection('posts').get();
       expect(
