@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/avatar_component.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../controllers/edit_profile_controller.dart';
 
 class EditProfileView extends GetView<EditProfileController> {
@@ -73,18 +74,26 @@ class EditProfileView extends GetView<EditProfileController> {
               onTap: controller.pickBanner,
               child: Stack(
                 children: [
-                  SizedBox(
-                      height: 300, width: double.infinity, child: bannerWidget),
+                  Container(
+                    height: 300,
+                    width: double.infinity,
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: bannerWidget,
+                  ),
                   if (hasBanner)
                     Positioned.fill(
                       child: Container(
                         height: 300,
                         decoration: BoxDecoration(
                           color: Colors.black26,
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         child: const Center(
                           child: Icon(
-                            Icons.camera_alt,
+                            SolarIconsBold.cameraAdd,
                             color: Colors.white,
                             size: 30,
                           ),
@@ -124,7 +133,7 @@ class EditProfileView extends GetView<EditProfileController> {
                               ),
                               child: const Center(
                                 child: Icon(
-                                  Icons.camera_alt,
+                                  SolarIconsBold.cameraAdd,
                                   color: Colors.white,
                                   size: 30,
                                 ),
