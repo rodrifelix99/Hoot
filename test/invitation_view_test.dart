@@ -65,7 +65,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('invitationCodePrompt'.tr), findsOneWidget);
+    expect(find.text('Access is limited. Entry requires a personal invite.'),
+        findsOneWidget);
     addTearDown(Get.reset);
   });
 }
