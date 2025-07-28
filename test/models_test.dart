@@ -76,7 +76,6 @@ void main() {
         'nsfw': false,
         'verified': true,
         'subscriberCount': 5,
-        'requestCount': 1,
         'posts': [
           {'id': 'p1'}
         ]

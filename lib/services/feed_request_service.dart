@@ -20,10 +20,8 @@ class FeedRequestService {
         .doc(feedId)
         .collection('requests')
         .doc(userId);
-    final feedRef = _firestore.collection('feeds').doc(feedId);
     await _firestore.runTransaction((txn) async {
       txn.set(requestRef, {'createdAt': FieldValue.serverTimestamp()});
-      txn.update(feedRef, {'requestCount': FieldValue.increment(1)});
     });
   }
 
@@ -34,10 +32,8 @@ class FeedRequestService {
         .doc(feedId)
         .collection('requests')
         .doc(userId);
-    final feedRef = _firestore.collection('feeds').doc(feedId);
     await _firestore.runTransaction((txn) async {
       txn.delete(requestRef);
-      txn.update(feedRef, {'requestCount': FieldValue.increment(-1)});
     });
   }
 
@@ -47,10 +43,8 @@ class FeedRequestService {
         .doc(feedId)
         .collection('requests')
         .doc(userId);
-    final feedRef = _firestore.collection('feeds').doc(feedId);
     await _firestore.runTransaction((txn) async {
       txn.delete(requestRef);
-      txn.update(feedRef, {'requestCount': FieldValue.increment(-1)});
     });
   }
 
