@@ -31,6 +31,11 @@ class NotificationsController extends GetxController {
     _loadRequestCount();
   }
 
+  Future<void> refreshNotifications() async {
+    await _loadNotifications();
+    await _loadRequestCount();
+  }
+
   Future<void> _loadNotifications() async {
     final uid = _authService.currentUser?.uid;
     if (uid == null) return;

@@ -77,7 +77,12 @@ class NotificationsView extends GetView<NotificationsController> {
                   child: Text('subscriberRequests'.tr),
                 ),
               ),
-            Expanded(child: list),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: controller.refreshNotifications,
+                child: list,
+              ),
+            ),
           ],
         );
       }),
