@@ -14,6 +14,6 @@ class HomeBinding extends Bindings {
     Get.lazyPut(() => ExploreController());
     Get.lazyPut(() => CreatePostController());
     Get.lazyPut(() => NotificationsController());
-    Get.lazyPut(() => ProfileController());
+    Get.lazyPut(() => ProfileController(), tag: 'current');
   }
 }

@@ -27,8 +27,8 @@ class CreateFeedController extends GetxController {
   })  : _firestore = firestore ?? FirebaseFirestore.instance,
         _authService = authService ?? Get.find<AuthService>(),
         _profileController = profileController ??
-            (Get.isRegistered<ProfileController>()
-                ? Get.find<ProfileController>()
+            (Get.isRegistered<ProfileController>(tag: 'current')
+                ? Get.find<ProfileController>(tag: 'current')
                 : null),
         _userId = userId ?? FirebaseAuth.instance.currentUser?.uid ?? '';
 

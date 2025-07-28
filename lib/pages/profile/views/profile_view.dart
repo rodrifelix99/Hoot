@@ -22,7 +22,20 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  final ProfileController controller = Get.find();
+  late final ProfileController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    final args = Get.arguments;
+    String? uid;
+    if (args is String) {
+      uid = args;
+    } else if (args is Map && args['uid'] is String) {
+      uid = args['uid'] as String;
+    }
+    controller = Get.find<ProfileController>(tag: uid ?? 'current');
+  }
 
   void reportUser(BuildContext context) {
     final user = controller.user.value;
@@ -284,8 +297,7 @@ class _ProfileViewState extends State<ProfileView> {
             child: LiquidGlass(
               settings: LiquidGlassSettings(
                 blur: 4,
-                glassColor:
-                Theme.of(context).colorScheme.surface.withAlpha(50),
+                glassColor: Theme.of(context).colorScheme.surface.withAlpha(50),
               ),
               shape: LiquidOval(),
               glassContainsChild: false,
