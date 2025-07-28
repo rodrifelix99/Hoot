@@ -1,13 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 import '../models/feed.dart';
 import '../models/user.dart';
+import 'notification_service.dart';
 
 class SubscriptionService {
   final FirebaseFirestore _firestore;
+  final BaseNotificationService _notificationService;
 
-  SubscriptionService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  SubscriptionService(
+      {FirebaseFirestore? firestore,
+      BaseNotificationService? notificationService})
+      : _firestore = firestore ?? FirebaseFirestore.instance,
+        _notificationService = notificationService ??
+            (Get.isRegistered<BaseNotificationService>()
+                ? Get.find<BaseNotificationService>()
+                : NotificationService());
 
   Future<Set<String>> fetchSubscriptions(String userId) async {
     final snapshot = await _firestore
@@ -54,6 +63,24 @@ class SubscriptionService {
       txn.set(feedSubRef, {'createdAt': FieldValue.serverTimestamp()});
       txn.update(feedRef, {'subscriberCount': FieldValue.increment(1)});
     });
+    final feedDoc = await feedRef.get();
+    final ownerId = feedDoc.get('userId');
+    if (ownerId != userId) {
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      final userData = userDoc.data();
+      if (userData != null) {
+        userData['uid'] = userId;
+        final feedData = feedDoc.data();
+        if (feedData != null) feedData['id'] = feedId;
+        await _notificationService.createNotification(ownerId, {
+          'user': userData,
+          if (feedData != null) 'feed': feedData,
+          'type': 3,
+          'read': false,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+    }
   }
 
   Future<void> unsubscribe(String userId, String feedId) async {
