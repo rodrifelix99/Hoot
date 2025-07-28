@@ -140,7 +140,6 @@ void main() {
     final auth = FakeAuthService(user);
     final subService = SubscriptionService(
       firestore: firestore,
-      notificationService: NotificationService(firestore: firestore),
     );
     final profile = ProfileController(
       authService: auth,

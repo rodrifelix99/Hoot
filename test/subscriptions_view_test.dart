@@ -67,7 +67,6 @@ void main() {
     final auth = FakeAuthService(U(uid: 'u1'));
     final service = SubscriptionService(
       firestore: firestore,
-      notificationService: NotificationService(firestore: firestore),
     );
     final controller = SubscriptionsController(
       authService: auth,
@@ -107,7 +106,6 @@ void main() {
     final auth = FakeAuthService(U(uid: 'u1'));
     final service = SubscriptionService(
       firestore: firestore,
-      notificationService: NotificationService(firestore: firestore),
     );
     final controller = SubscriptionsController(
       authService: auth,

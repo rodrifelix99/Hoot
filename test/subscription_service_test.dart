@@ -11,7 +11,6 @@ void main() {
       final firestore = FakeFirebaseFirestore();
       final service = SubscriptionService(
         firestore: firestore,
-        notificationService: NotificationService(firestore: firestore),
       );
       await firestore.collection('feeds').doc('f1').set({'subscriberCount': 1});
       await firestore.collection('users').doc('u1').set({'uid': 'u1'});
@@ -53,7 +52,6 @@ void main() {
       final firestore = FakeFirebaseFirestore();
       final service = SubscriptionService(
         firestore: firestore,
-        notificationService: NotificationService(firestore: firestore),
       );
       await firestore.collection('feeds').doc('f1').set({'subscriberCount': 1});
       await firestore.collection('users').doc('u1').set({'uid': 'u1'});
