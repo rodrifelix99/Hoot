@@ -25,8 +25,8 @@ class EditFeedController extends GetxController {
   })  : _firestore = firestore ?? FirebaseFirestore.instance,
         _authService = authService ?? Get.find<AuthService>(),
         _profileController = profileController ??
-            (Get.isRegistered<ProfileController>()
-                ? Get.find<ProfileController>()
+            (Get.isRegistered<ProfileController>(tag: 'current')
+                ? Get.find<ProfileController>(tag: 'current')
                 : null);
 
   final TextEditingController titleController = TextEditingController();
