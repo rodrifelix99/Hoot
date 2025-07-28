@@ -7,13 +7,13 @@ import 'package:hoot/services/subscription_service.dart';
 
 void main() {
   group('FeedRequestService', () {
-    test('submit creates request and increments count', () async {
+    test('submit creates request document', () async {
       final firestore = FakeFirebaseFirestore();
       final service = FeedRequestService(
         firestore: firestore,
         subscriptionService: SubscriptionService(firestore: firestore),
       );
-      await firestore.collection('feeds').doc('f1').set({'requestCount': 0});
+      await firestore.collection('feeds').doc('f1').set({});
       await firestore.collection('users').doc('u1').set({'uid': 'u1'});
 
       await service.submit('f1', 'u1');
@@ -24,10 +24,7 @@ void main() {
           .collection('requests')
           .doc('u1')
           .get();
-      final feed = await firestore.collection('feeds').doc('f1').get();
-
       expect(req.exists, isTrue);
-      expect(feed.get('requestCount'), 1);
     });
 
     test('accept subscribes user and removes request', () async {
@@ -38,7 +35,6 @@ void main() {
         subscriptionService: subscriptionService,
       );
       await firestore.collection('feeds').doc('f1').set({
-        'requestCount': 1,
         'subscriberCount': 0,
       });
       await firestore.collection('users').doc('u1').set({'uid': 'u1'});
@@ -57,7 +53,6 @@ void main() {
           .collection('requests')
           .doc('u1')
           .get();
-      final feed = await firestore.collection('feeds').doc('f1').get();
       final userSub = await firestore
           .collection('users')
           .doc('u1')
@@ -72,7 +67,6 @@ void main() {
           .get();
 
       expect(req.exists, isFalse);
-      expect(feed.get('requestCount'), 0);
       expect(userSub.exists, isTrue);
       expect(feedSub.exists, isTrue);
     });
@@ -83,7 +77,7 @@ void main() {
         firestore: firestore,
         subscriptionService: SubscriptionService(firestore: firestore),
       );
-      await firestore.collection('feeds').doc('f1').set({'requestCount': 1});
+      await firestore.collection('feeds').doc('f1').set({});
       await firestore.collection('users').doc('u1').set({'uid': 'u1'});
       await firestore
           .collection('feeds')
@@ -100,10 +94,8 @@ void main() {
           .collection('requests')
           .doc('u1')
           .get();
-      final feed = await firestore.collection('feeds').doc('f1').get();
 
       expect(req.exists, isFalse);
-      expect(feed.get('requestCount'), 0);
     });
   });
 }

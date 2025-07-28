@@ -16,7 +16,6 @@ class Feed {
   bool? verified;
   FeedType? type;
   final int? subscriberCount;
-  final int? requestCount;
   List<Post>? posts;
 
   Feed(
@@ -32,7 +31,6 @@ class Feed {
       this.verified,
       this.type,
       this.subscriberCount,
-      this.requestCount,
       this.posts});
 
   factory Feed.fromJson(Map<String, dynamic> json) {
@@ -52,7 +50,6 @@ class Feed {
       nsfw: json['nsfw'],
       verified: json['verified'],
       subscriberCount: json['subscriberCount'],
-      requestCount: json['requestCount'],
       posts: json['posts'] != null
           ? (json['posts'] as List).map((i) => Post.fromJson(i)).toList()
           : null,
@@ -82,7 +79,6 @@ class Feed {
         'private': private,
         'nsfw': nsfw,
         'verified': verified,
-        'subscriberCount': subscriberCount,
-        'requestCount': requestCount
+        'subscriberCount': subscriberCount
       };
 }
