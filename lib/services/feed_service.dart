@@ -82,6 +82,28 @@ class FeedService implements BaseFeedService {
     DocumentSnapshot? startAfter,
     int limit = 10,
   }) async {
+    final user = _authService.currentUser;
+    if (user == null) {
+      return PostPage(posts: [], hasMore: false);
+    }
+
+    final feedDoc = await _firestore.collection('feeds').doc(feedId).get();
+    if (!feedDoc.exists) {
+      return PostPage(posts: [], hasMore: false);
+    }
+    final ownerId = feedDoc.get('userId');
+    if (ownerId != user.uid) {
+      final subDoc = await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('subscriptions')
+          .doc(feedId)
+          .get();
+      if (!subDoc.exists) {
+        return PostPage(posts: [], hasMore: false);
+      }
+    }
+
     var query = _firestore
         .collection('posts')
         .where('feedId', isEqualTo: feedId)
