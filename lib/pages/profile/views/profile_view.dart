@@ -173,15 +173,6 @@ class _ProfileViewState extends State<ProfileView> {
               selectedColor: color,
               backgroundColor: color.withValues(alpha: 0.2),
             ),
-            if (!controller.isCurrentUser) ...[
-              const SizedBox(width: 4),
-              TextButton(
-                child: Text(controller.isSubscribed(feed.id)
-                    ? 'unsubscribe'.tr
-                    : 'subscribe'.tr),
-                onPressed: () => controller.toggleSubscription(feed.id),
-              ),
-            ],
           ],
         );
       }));
@@ -317,18 +308,31 @@ class _ProfileViewState extends State<ProfileView> {
         ],
       ),
       extendBodyBehindAppBar: true,
-      floatingActionButton: controller.isCurrentUser &&
-              controller.feeds.isNotEmpty
-          ? FloatingActionButton.extended(
-              heroTag: 'edit_feed_fab',
-              onPressed: () => Get.toNamed(
-                AppRoutes.editFeed,
-                arguments: controller.feeds[controller.selectedFeedIndex.value],
-              ),
-              icon: const Icon(Icons.edit),
-              label: Text('editFeed'.tr),
-            )
-          : null,
+      floatingActionButton: controller.feeds.isEmpty
+          ? null
+          : Obx(() {
+              if (controller.isCurrentUser) {
+                return FloatingActionButton.extended(
+                  heroTag: 'edit_feed_fab',
+                  onPressed: () => Get.toNamed(
+                    AppRoutes.editFeed,
+                    arguments:
+                        controller.feeds[controller.selectedFeedIndex.value],
+                  ),
+                  icon: const Icon(Icons.edit),
+                  label: Text('editFeed'.tr),
+                );
+              }
+              final feedId =
+                  controller.feeds[controller.selectedFeedIndex.value].id;
+              final subscribed = controller.isSubscribed(feedId);
+              return FloatingActionButton.extended(
+                heroTag: 'sub_fab',
+                onPressed: () => controller.toggleSubscription(feedId),
+                icon: Icon(subscribed ? Icons.check : Icons.add),
+                label: Text(subscribed ? 'unsubscribe'.tr : 'subscribe'.tr),
+              );
+            }),
       body: buildBody(context),
     );
   }

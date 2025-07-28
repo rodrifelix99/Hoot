@@ -3,6 +3,7 @@ import 'services/auth_service.dart';
 import 'services/feed_service.dart';
 import 'services/theme_service.dart';
 import 'services/post_service.dart';
+import 'services/subscription_service.dart';
 
 /// Registers global dependencies for the application.
 class DependencyInjector {
@@ -14,6 +15,7 @@ class DependencyInjector {
     await auth.fetchUser();
     Get.put<BaseFeedService>(FeedService(), permanent: true);
     Get.put<BasePostService>(PostService(), permanent: true);
+    Get.put(SubscriptionService(), permanent: true);
     final theme = Get.put(ThemeService(), permanent: true);
     await theme.loadThemeMode();
   }
