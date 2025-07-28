@@ -40,6 +40,10 @@ class ExploreView extends GetView<ExploreController> {
                 ),
                 title: Text(f.title),
                 subtitle: Text('feed'.tr),
+                onTap: () => Get.toNamed(
+                  AppRoutes.profile,
+                  arguments: {'uid': f.userId, 'feedId': f.id},
+                ),
               ),
             ),
           ],
@@ -95,17 +99,23 @@ class ExploreView extends GetView<ExploreController> {
                       final f = controller.topFeeds[index];
                       return SizedBox(
                         width: 250,
-                        child: ListItemComponent(
-                          leading: ProfileAvatarComponent(
-                            image: f.imageUrl ?? '',
-                            size: 100,
-                            radius: 25,
+                        child: GestureDetector(
+                          onTap: () => Get.toNamed(
+                            AppRoutes.profile,
+                            arguments: {'uid': f.userId, 'feedId': f.id},
                           ),
-                          title: f.title,
-                          subtitle:
-                              '${f.subscriberCount ?? 0} ${'followers'.tr}',
-                          backgroundColor: f.color,
-                          foregroundColor: f.foregroundColor,
+                          child: ListItemComponent(
+                            leading: ProfileAvatarComponent(
+                              image: f.imageUrl ?? '',
+                              size: 100,
+                              radius: 25,
+                            ),
+                            title: f.title,
+                            subtitle:
+                                '${f.subscriberCount ?? 0} ${'followers'.tr}',
+                            backgroundColor: f.color,
+                            foregroundColor: f.foregroundColor,
+                          ),
                         ),
                       );
                     },
@@ -124,7 +134,7 @@ class ExploreView extends GetView<ExploreController> {
               SizedBox(
                 height: 100,
                 child: Obx(() => ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       scrollDirection: Axis.horizontal,
                       itemCount: controller.genres.length,
                       separatorBuilder: (_, __) => const SizedBox(width: 12),

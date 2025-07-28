@@ -22,14 +22,20 @@ class SearchByGenreView extends GetView<SearchByGenreController> {
             itemCount: controller.feeds.length,
             itemBuilder: (context, index) {
               final feed = controller.feeds[index];
-              return ListItemComponent(
-                leading: ProfileAvatarComponent(
-                  image: feed.imageUrl ?? '',
-                  size: 100,
-                  radius: 25,
+              return GestureDetector(
+                onTap: () => Get.toNamed(
+                  AppRoutes.profile,
+                  arguments: {'uid': feed.userId, 'feedId': feed.id},
                 ),
-                title: feed.title,
-                subtitle: '${feed.subscriberCount ?? 0} ${'followers'.tr}',
+                child: ListItemComponent(
+                  leading: ProfileAvatarComponent(
+                    image: feed.imageUrl ?? '',
+                    size: 100,
+                    radius: 25,
+                  ),
+                  title: feed.title,
+                  subtitle: '${feed.subscriberCount ?? 0} ${'followers'.tr}',
+                ),
               );
             },
           )),

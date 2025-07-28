@@ -24,6 +24,7 @@ class ProfileController extends GetxController {
   final RxSet<String> subscribedFeedIds = <String>{}.obs;
   final Map<String, PagingState<DocumentSnapshot?, Post>> feedStates = {};
   String? uid;
+  String? initialFeedId;
   bool get isCurrentUser => uid == null || uid == _authService.currentUser?.uid;
 
   @override
@@ -32,8 +33,13 @@ class ProfileController extends GetxController {
     final args = Get.arguments;
     if (args is String) {
       uid = args;
-    } else if (args is Map && args['uid'] is String) {
-      uid = args['uid'] as String;
+    } else if (args is Map) {
+      if (args['uid'] is String) {
+        uid = args['uid'] as String;
+      }
+      if (args['feedId'] is String) {
+        initialFeedId = args['feedId'] as String;
+      }
     }
     loadProfile();
   }
@@ -53,7 +59,13 @@ class ProfileController extends GetxController {
         }
       }
       if (feeds.isNotEmpty) {
-        await loadFeedPosts(feeds.first.id, refresh: true);
+        var index = 0;
+        if (initialFeedId != null) {
+          final i = feeds.indexWhere((f) => f.id == initialFeedId);
+          if (i != -1) index = i;
+        }
+        selectedFeedIndex.value = index;
+        await loadFeedPosts(feeds[index].id, refresh: true);
       }
       ever<int>(selectedFeedIndex, (i) {
         final feed = feeds[i];
