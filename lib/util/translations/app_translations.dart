@@ -104,8 +104,8 @@ class AppTranslations extends Translations {
           'following': 'Following',
           'noUsersToShow': 'No users to show',
           'noNotifications': 'You have no notifications yet',
-          'newFollower': '@{username} started following you',
-          'newUnfollower': '@{username} unfollowed you',
+          'newFollower': '@username started following you',
+          'newUnfollower': '@username unfollowed you',
           'createFeed': 'Create a new Feed',
           'title': 'Title',
           'description': 'Description',
@@ -115,13 +115,13 @@ class AppTranslations extends Translations {
           'genreRequired': 'Please select a genre',
           'searchEllipsis': 'Search...',
           'noResults': 'No results',
-          'noFeeds': '{username} has no feeds yet',
+          'noFeeds': '@username has no feeds yet',
           'noFeedsYou': 'You have no feeds yet!',
           'createFeedMessage':
               'You can create a new feed by clicking the + button',
           'whatIsAFeed':
               'Feeds let you group hoots by topic. Create your first feed using the + button above!',
-          'newSubscriber': '@{username} subscribed to {feedName}',
+          'newSubscriber': '@username subscribed to @feedName',
           'unsubscribe': 'Unsubscribe',
           'unsubscribeConfirmation':
               'Are you sure you want to unsubscribe from this feed?',
@@ -145,8 +145,8 @@ class AppTranslations extends Translations {
           'approve': 'Approve',
           'reject': 'Reject',
           'editFeed': 'Edit Feed',
-          'unsubscriber': ' @{username} unsubscribed from {feedName}',
-          'privateFeedRequest': '@{username} requested to join {feedName}',
+          'unsubscriber': ' @username unsubscribed from @feedName',
+          'privateFeedRequest': '@username requested to join @feedName',
           'removeSubscriber': 'Remove subscriber',
           'banSubscriber': 'Ban subscriber',
           'removeSubscriberConfirmation':
@@ -170,17 +170,17 @@ class AppTranslations extends Translations {
           'top10MostSubscribed': 'Top 10 most subscribed feeds',
           'upAndComing': 'Up and coming feeds',
           'upAndComingDescription': 'Recent feeds that are gaining popularity',
-          'noteToUser': 'Note to {displayName}',
+          'noteToUser': 'Note to @displayName',
           'noteToUserDetails':
               'Hoot is a place to explore one\'s creativity and identity. We encourage you to be yourself and express your creativity. Be it through feeds, hoots, comments, or anything else. There\'s no contest to be the best or the most popular. There\'s no need to be the most subscribed feed or the most liked hoot. There\'s no need to be the most followed user or the most commented hoot. Your experience is what you make of it and most of all, your people are ready to subscribe to you because your content is unique and so are you. Big hugs, The Hoot Team',
           'emptyFeed': 'This feed is empty',
           'emptyFeedDescription':
               'This feed is empty because it has no hoots. You can create a new hoot by clicking the floating button at the bottom right corner of the screen.',
           'emptyFeedToOtherUsers':
-              'Give {displayName} some love to motivate them to hoot more!',
+              'Give @displayName some love to motivate them to hoot more!',
           'thisFeedIsPrivate': 'This feed is private',
           'onlyMembersCanSee':
-              'Only people {displayName} accepts will be able to see their posts here!',
+              'Only people @displayName accepts will be able to see their posts here!',
           'privateFeed': 'Private Feed',
           'nsfwFeed': 'NSFW Feed',
           'verifiedUser': 'This user is verified',
@@ -260,11 +260,11 @@ class AppTranslations extends Translations {
           'popularTypes': 'Popular feed genres',
           'popularTypesDescription':
               'Take a look at the most popular feed genres',
-          'searchForGenreFeeds': '{genre} feeds',
+          'searchForGenreFeeds': '@genre feeds',
           'discoverMoreFeeds': 'Discover more feeds',
           'popular': 'Popular',
-          'betterKnownForFeed': 'Better known for creating {feedName}',
-          'reportUsername': 'Report @{username}',
+          'betterKnownForFeed': 'Better known for creating @feedName',
+          'reportUsername': 'Report @username',
           'delete': 'Delete',
           'aboutUs': 'About Us',
           'darkMode': 'Dark Mode',
@@ -279,10 +279,10 @@ class AppTranslations extends Translations {
               'Are you sure you want to delete your account?',
           'deleteAccountFailed': 'Failed to delete account',
           'deleteAccountSuccess': 'Account deleted successfully',
-          'blockUser': 'Block @{username}',
-          'unblockUser': 'Unblock @{username}',
+          'blockUser': 'Block @username',
+          'unblockUser': 'Unblock @username',
           'blockUserDescription':
-              'This will block @{username} and they won\'t be able to see your posts or interact with you.',
+              'This will block @username and they won\'t be able to see your posts or interact with you.',
           'aboutYourData': 'About Your Data',
           'aboutYourDataTitle1': 'Your phone number is a must',
           'aboutYourDataDescription1':
@@ -313,7 +313,7 @@ class AppTranslations extends Translations {
           'thankYouForSupporting': 'Thank you for supporting Hoot!',
           'verificationCode': 'Verification Code',
           'codeSent':
-              'We just sent you a 6 digit code for the number you provided: {phoneNumber}',
+              'We just sent you a 6 digit code for the number you provided: @phoneNumber',
           'enterCode': 'Enter Code',
           'changeNumber': 'Change Number',
           'thatsIt': 'That\'s it!',
@@ -321,11 +321,11 @@ class AppTranslations extends Translations {
           'likes10RecentLabel': 'We only show the 10 most recent likes',
           'hootDeletedOrDoesntExist': 'This hoot was deleted or doesn\'t exist',
           'privateFeedRequestAccepted':
-              '@{username} accepted your request to see their private feed: {feedName}',
+              '@username accepted your request to see their private feed: @feedName',
           'privateFeedRequestRejected':
-              '@{username} rejected your request to see their private feed: {feedName}',
-          'userLikedYourHoot': '@{username} liked your hoot',
-          'userReFeededYourHoot': '@{username} reFeeded your hoot',
+              '@username rejected your request to see their private feed: @feedName',
+          'userLikedYourHoot': '@username liked your hoot',
+          'userReFeededYourHoot': '@username reFeeded your hoot',
           'hootMightBeBuggy':
               'I wanted to let you know that I created Hoot all by myself during my summer break. It was a labor of love, and I poured my heart and soul into crafting a platform that could connect people and foster community. But, being a one-person team working within a limited timeframe, there might be a few bugs or features that don\'t quite work as intended. I appreciate your patience and understanding as I iron out these kinks and make the app better. I want to emphasize that your security and the protection of your information have been my top priorities from the get-go. I\'ve implemented strong security measures to ensure your data is safe and handled with the utmost care. While I am just one person, I\'m fully dedicated to improving Hoot. I\'m committed to updating and refining the app, making it the best it can be. Your feedback and support mean the world to me, and I\'m excited to grow Hoot into something truly exceptional in the future. Thank you for being a part of this journey, and I can\'t wait for you to see how Hoot evolves and becomes even greater over time.',
           'messageFromCreator': 'Message from the creator',
@@ -439,8 +439,8 @@ class AppTranslations extends Translations {
           'following': 'Siguiendo',
           'noUsersToShow': 'No hay usuarios para mostrar',
           'noNotifications': 'Aún no tienes notificaciones',
-          'newFollower': '@{username} comenzó a seguirte',
-          'newUnfollower': '@{username} dejó de seguirte',
+          'newFollower': '@username comenzó a seguirte',
+          'newUnfollower': '@username dejó de seguirte',
           'createFeed': 'Crear un nuevo Feed',
           'title': 'Título',
           'description': 'Descripción',
@@ -450,13 +450,13 @@ class AppTranslations extends Translations {
           'genreRequired': 'Por favor selecciona un género',
           'searchEllipsis': 'Buscar...',
           'noResults': 'Sin resultados',
-          'noFeeds': '{username} aún no tiene feeds',
+          'noFeeds': '@username aún no tiene feeds',
           'noFeedsYou': '¡Aún no tienes feeds!',
           'createFeedMessage':
               'Puedes crear un nuevo feed haciendo clic en el botón +',
           'whatIsAFeed':
               'Los feeds te permiten agrupar hoots por tema. ¡Crea tu primer feed usando el botón + de arriba!',
-          'newSubscriber': '@{username} se suscribió a {feedName}',
+          'newSubscriber': '@username se suscribió a @feedName',
           'unsubscribe': 'Cancelar Suscripción',
           'unsubscribeConfirmation':
               '¿Estás seguro de que deseas cancelar la suscripción a este feed?',
@@ -480,8 +480,8 @@ class AppTranslations extends Translations {
           'approve': 'Aprobar',
           'reject': 'Rechazar',
           'editFeed': 'Editar Feed',
-          'unsubscriber': ' @{username} canceló la suscripción a {feedName}',
-          'privateFeedRequest': '@{username} solicitó unirse a {feedName}',
+          'unsubscriber': ' @username canceló la suscripción a @feedName',
+          'privateFeedRequest': '@username solicitó unirse a @feedName',
           'removeSubscriber': 'Eliminar suscriptor',
           'banSubscriber': 'Prohibir suscriptor',
           'removeSubscriberConfirmation':
@@ -507,17 +507,17 @@ class AppTranslations extends Translations {
           'upAndComing': 'Feeds en Ascenso',
           'upAndComingDescription':
               'Feeds recientes que están ganando popularidad',
-          'noteToUser': 'Nota para {displayName}',
+          'noteToUser': 'Nota para @displayName',
           'noteToUserDetails':
               'Hoot es un lugar para explorar tu creatividad e identidad. Te animamos a ser tú mismo y expresar tu creatividad, ya sea a través de feeds, hoots, comentarios o cualquier otra cosa. No hay concurso para ser el mejor o el más popular. No es necesario ser el feed más suscrito o el hoot con más me gusta. No es necesario ser el usuario con más seguidores o el hoot más comentado. Tu experiencia es lo que haces de ella y, sobre todo, tus seguidores están listos para suscribirse a ti porque tu contenido es único y tú también lo eres. ¡Un abrazo grande, El Equipo de Hoot',
           'emptyFeed': 'Este feed está vacío',
           'emptyFeedDescription':
               'Este feed está vacío porque no tiene hoots. Puedes crear un nuevo hoot haciendo clic en el botón flotante en la esquina inferior derecha de la pantalla.',
           'emptyFeedToOtherUsers':
-              '¡Da un poco de amor a {displayName} para motivarlos a hootear más!',
+              '¡Da un poco de amor a @displayName para motivarlos a hootear más!',
           'thisFeedIsPrivate': 'Este feed es privado',
           'onlyMembersCanSee':
-              '¡Solo las personas a las que {displayName} acepta podrán ver sus publicaciones aquí!',
+              '¡Solo las personas a las que @displayName acepta podrán ver sus publicaciones aquí!',
           'privateFeed': 'Feed Privado',
           'nsfwFeed': 'Feed NSFW',
           'verifiedUser': 'Este usuario está verificado',
@@ -597,11 +597,11 @@ class AppTranslations extends Translations {
           'popularTypes': 'Géneros de feed populares',
           'popularTypesDescription':
               'Echa un vistazo a los géneros de feed más populares',
-          'searchForGenreFeeds': 'Feeds de {genre}',
+          'searchForGenreFeeds': 'Feeds de @genre',
           'discoverMoreFeeds': 'Descubre más feeds',
           'popular': 'Popular',
-          'betterKnownForFeed': 'Más conocido por crear {feedName}',
-          'reportUsername': 'Reportar a @{username}',
+          'betterKnownForFeed': 'Más conocido por crear @feedName',
+          'reportUsername': 'Reportar a @username',
           'delete': 'Eliminar',
           'aboutUs': 'Sobre Nosotros',
           'darkMode': 'Modo Oscuro',
@@ -616,10 +616,10 @@ class AppTranslations extends Translations {
               '¿Estás seguro de que deseas eliminar tu cuenta?',
           'deleteAccountFailed': 'No se pudo eliminar la cuenta',
           'deleteAccountSuccess': 'Cuenta eliminada exitosamente',
-          'blockUser': 'Bloquear a @{username}',
-          'unblockUser': 'Desbloquear a @{username}',
+          'blockUser': 'Bloquear a @username',
+          'unblockUser': 'Desbloquear a @username',
           'blockUserDescription':
-              'Esto bloqueará a @{username} y no podrán ver tus publicaciones ni interactuar contigo.',
+              'Esto bloqueará a @username y no podrán ver tus publicaciones ni interactuar contigo.',
           'aboutYourData': 'Acerca de tus Datos',
           'aboutYourDataTitle1': 'Tu número de teléfono es necesario',
           'aboutYourDataDescription1':
@@ -650,7 +650,7 @@ class AppTranslations extends Translations {
           'thankYouForSupporting': '¡Gracias por apoyar a Hoot!',
           'verificationCode': 'Código de Verificación',
           'codeSent':
-              'Acabamos de enviarte un código de 6 dígitos al número que proporcionaste: {phoneNumber}',
+              'Acabamos de enviarte un código de 6 dígitos al número que proporcionaste: @phoneNumber',
           'enterCode': 'Ingresar Código',
           'changeNumber': 'Cambiar Número',
           'thatsIt': '¡Eso es todo!',
@@ -658,11 +658,11 @@ class AppTranslations extends Translations {
           'likes10RecentLabel': 'Solo mostramos los 10 me gusta más recientes',
           'hootDeletedOrDoesntExist': 'Este hoot fue eliminado o no existe',
           'privateFeedRequestAccepted':
-              '@{username} aceptó tu solicitud para ver su feed privado: {feedName}',
+              '@username aceptó tu solicitud para ver su feed privado: @feedName',
           'privateFeedRequestRejected':
-              '@{username} rechazó tu solicitud para ver su feed privado: {feedName}',
-          'userLikedYourHoot': '@{username} le dio me gusta a tu hoot',
-          'userReFeededYourHoot': '@{username} rehootió tu hoot',
+              '@username rechazó tu solicitud para ver su feed privado: @feedName',
+          'userLikedYourHoot': '@username le dio me gusta a tu hoot',
+          'userReFeededYourHoot': '@username rehootió tu hoot',
           'hootMightBeBuggy':
               'Quería informarte que creé Hoot por mi cuenta durante mis vacaciones de verano. Fue un trabajo lleno de amor, y puse todo mi corazón y alma en crear una plataforma que pudiera conectar a las personas y fomentar la comunidad. Sin embargo, al ser un equipo de una sola persona trabajando en un marco de tiempo limitado, es posible que haya algunos errores o características que no funcionen como se pretendía. Agradezco tu paciencia y comprensión mientras corrijo estos problemas y mejoro la aplicación. Quiero enfatizar que tu seguridad y la protección de tu información han sido mis principales prioridades desde el principio. He implementado fuertes medidas de seguridad para garantizar que tus datos estén seguros y se manejen con el mayor cuidado. Aunque soy solo una persona, estoy totalmente dedicado a mejorar Hoot. Me comprometo a actualizar y perfeccionar la aplicación, para que sea lo mejor posible. Tus comentarios y apoyo significan mucho para mí, y estoy emocionado de hacer que Hoot se convierta en algo verdaderamente excepcional en el futuro. Gracias por ser parte de este viaje, y no puedo esperar a que veas cómo Hoot evoluciona y se vuelve aún mejor con el tiempo.',
           'messageFromCreator': 'Mensaje del creador',
@@ -779,8 +779,8 @@ class AppTranslations extends Translations {
           'following': 'A Seguir',
           'noUsersToShow': 'Não há utilizadores para mostrar',
           'noNotifications': 'Ainda não tens notificações',
-          'newFollower': '@{username} começou a seguir-te',
-          'newUnfollower': '@{username} deixou de seguir-te',
+          'newFollower': '@username começou a seguir-te',
+          'newUnfollower': '@username deixou de seguir-te',
           'createFeed': 'Criar um novo Feed',
           'title': 'Título',
           'description': 'Descrição',
@@ -790,12 +790,12 @@ class AppTranslations extends Translations {
           'genreRequired': 'Por favor seleciona um género',
           'searchEllipsis': 'Procurar...',
           'noResults': 'Sem resultados',
-          'noFeeds': '{username} ainda não tem feeds',
+          'noFeeds': '@username ainda não tem feeds',
           'noFeedsYou': 'Ainda não tens feeds!',
           'createFeedMessage': 'Podes criar um novo feed clicando no botão +',
           'whatIsAFeed':
               'Os feeds permitem agrupar hoots por tema. Cria o teu primeiro feed usando o botão + acima!',
-          'newSubscriber': '@{username} subscreveu {feedName}',
+          'newSubscriber': '@username subscreveu @feedName',
           'unsubscribe': 'Cancelar Subscrição',
           'unsubscribeConfirmation':
               'Tens a certeza de que queres cancelar a subscrição deste feed?',
@@ -819,8 +819,8 @@ class AppTranslations extends Translations {
           'approve': 'Aprovar',
           'reject': 'Rejeitar',
           'editFeed': 'Editar Feed',
-          'unsubscriber': ' @{username} cancelou a subscrição de {feedName}',
-          'privateFeedRequest': '@{username} pediu para aderir a {feedName}',
+          'unsubscriber': ' @username cancelou a subscrição de @feedName',
+          'privateFeedRequest': '@username pediu para aderir a @feedName',
           'removeSubscriber': 'Remover subscritor',
           'banSubscriber': 'Banir subscritor',
           'removeSubscriberConfirmation':
@@ -845,17 +845,17 @@ class AppTranslations extends Translations {
           'upAndComing': 'Feeds em Ascensão',
           'upAndComingDescription':
               'Feeds recentes que estão a ganhar popularidade',
-          'noteToUser': 'Nota para {displayName}',
+          'noteToUser': 'Nota para @displayName',
           'noteToUserDetails':
               'O Hoot é um lugar para explorar a tua criatividade e identidade. Encorajamos-te a seres tu próprio e a expressar a tua criatividade, seja através de feeds, hoots, comentários ou qualquer outra coisa. Não há concurso para ser o melhor ou o mais popular. Não precisas de ter o feed mais subscrito ou o hoot com mais gostos. Não precisas de ser o utilizador com mais seguidores ou o hoot mais comentado. A tua experiência é o que dela fizeres e, acima de tudo, os teus seguidores estão prontos para se subscreverem a ti porque o teu conteúdo é único e tu também o és. Um abraço apertado, A Equipa do Hoot',
           'emptyFeed': 'Este feed está vazio',
           'emptyFeedDescription':
               'Este feed está vazio porque não tem hoots. Podes criar um novo hoot clicando no botão flutuante no canto inferior direito do ecrã.',
           'emptyFeedToOtherUsers':
-              'Dá um pouco de amor a {displayName} para os motivar a hootear mais!',
+              'Dá um pouco de amor a @displayName para os motivar a hootear mais!',
           'thisFeedIsPrivate': 'Este feed é privado',
           'onlyMembersCanSee':
-              'Apenas as pessoas a quem {displayName} permitir poderão ver as suas publicações aqui!',
+              'Apenas as pessoas a quem @displayName permitir poderão ver as suas publicações aqui!',
           'privateFeed': 'Feed Privado',
           'nsfwFeed': 'Feed NSFW',
           'verifiedUser': 'Este utilizador está verificado',
@@ -935,11 +935,11 @@ class AppTranslations extends Translations {
           'popularTypes': 'Tipos de feed populares',
           'popularTypesDescription':
               'Dá uma vista de olhos aos tipos de feed mais populares',
-          'searchForGenreFeeds': 'Feeds de {genre}',
+          'searchForGenreFeeds': 'Feeds de @genre',
           'discoverMoreFeeds': 'Descobre mais feeds',
           'popular': 'Popular',
-          'betterKnownForFeed': 'Mais conhecido por criar {feedName}',
-          'reportUsername': 'Reportar @{username}',
+          'betterKnownForFeed': 'Mais conhecido por criar @feedName',
+          'reportUsername': 'Reportar @username',
           'delete': 'Eliminar',
           'aboutUs': 'Sobre Nós',
           'darkMode': 'Modo Escuro',
@@ -954,10 +954,10 @@ class AppTranslations extends Translations {
               'Tens a certeza de que queres eliminar a tua conta?',
           'deleteAccountFailed': 'Não foi possível eliminar a conta',
           'deleteAccountSuccess': 'Conta eliminada com sucesso',
-          'blockUser': 'Bloquear @{username}',
-          'unblockUser': 'Desbloquear @{username}',
+          'blockUser': 'Bloquear @username',
+          'unblockUser': 'Desbloquear @username',
           'blockUserDescription':
-              'Isto irá bloquear @{username} e eles não poderão ver as tuas publicações nem interagir contigo.',
+              'Isto irá bloquear @username e eles não poderão ver as tuas publicações nem interagir contigo.',
           'aboutYourData': 'Sobre os Teus Dados',
           'aboutYourDataTitle1': 'O teu número de telefone é necessário',
           'aboutYourDataDescription1':
@@ -988,7 +988,7 @@ class AppTranslations extends Translations {
           'thankYouForSupporting': 'Obrigado por apoiar o Hoot!',
           'verificationCode': 'Código de Verificação',
           'codeSent':
-              'Acabámos de enviar-te um código de 6 dígitos para o número que forneces-te: {phoneNumber}',
+              'Acabámos de enviar-te um código de 6 dígitos para o número que forneces-te: @phoneNumber',
           'enterCode': 'Introduzir Código',
           'changeNumber': 'Alterar Número',
           'thatsIt': 'É isso!',
@@ -996,11 +996,11 @@ class AppTranslations extends Translations {
           'likes10RecentLabel': 'Apenas mostramos os 10 gostos mais recentes',
           'hootDeletedOrDoesntExist': 'Este hoot foi eliminado ou não existe',
           'privateFeedRequestAccepted':
-              '@{username} aceitou o teu pedido para ver o seu feed privado: {feedName}',
+              '@username aceitou o teu pedido para ver o seu feed privado: @feedName',
           'privateFeedRequestRejected':
-              '@{username} rejeitou o teu pedido para ver o seu feed privado: {feedName}',
-          'userLikedYourHoot': '@{username} gostou do teu hoot',
-          'userReFeededYourHoot': '@{username} rehootou o teu hoot',
+              '@username rejeitou o teu pedido para ver o seu feed privado: @feedName',
+          'userLikedYourHoot': '@username gostou do teu hoot',
+          'userReFeededYourHoot': '@username rehootou o teu hoot',
           'hootMightBeBuggy':
               'Queria informar-te que criei o Hoot sozinho durante as minhas férias de verão. Foi um trabalho de amor, e dediquei-me de corpo e alma a criar uma plataforma que pudesse conectar pessoas e fomentar a comunidade. No entanto, sendo uma equipa de uma só pessoa a trabalhar num período limitado, poderão existir alguns bugs ou funcionalidades que não funcionem como planeado. Agradeço a tua paciência e compreensão enquanto resolvo estas questões e melhoro a aplicação. Quero salientar que a tua segurança e a proteção da tua informação foram sempre as minhas principais prioridades. Implementei medidas de segurança rigorosas para garantir que os teus dados estão seguros e são tratados com o máximo cuidado. Apesar de ser apenas uma pessoa, estou totalmente empenhado em melhorar o Hoot. Comprometo-me a atualizar e aperfeiçoar a aplicação, tornando-a o melhor que pode ser. As tuas opiniões e apoio significam muito para mim, e estou entusiasmado por fazer com que o Hoot se torne algo verdadeiramente excepcional no futuro. Obrigado por fazeres parte desta jornada, e mal posso esperar que vejas como o Hoot evolui e se torna ainda melhor ao longo do tempo.',
           'messageFromCreator': 'Mensagem do criador',
@@ -1114,8 +1114,8 @@ class AppTranslations extends Translations {
           'following': 'Seguindo',
           'noUsersToShow': 'Não há usuários para mostrar',
           'noNotifications': 'Ainda não há notificações',
-          'newFollower': '@{username} começou a te seguir',
-          'newUnfollower': '@{username} deixou de te seguir',
+          'newFollower': '@username começou a te seguir',
+          'newUnfollower': '@username deixou de te seguir',
           'createFeed': 'Criar um novo Feed',
           'title': 'Título',
           'description': 'Descrição',
@@ -1125,13 +1125,13 @@ class AppTranslations extends Translations {
           'genreRequired': 'Por favor selecione um gênero',
           'searchEllipsis': 'Pesquisar...',
           'noResults': 'Sem resultados',
-          'noFeeds': '{username} ainda não tem feeds',
+          'noFeeds': '@username ainda não tem feeds',
           'noFeedsYou': 'Você ainda não tem feeds!',
           'createFeedMessage':
               'Você pode criar um novo feed clicando no botão +',
           'whatIsAFeed':
               'Os feeds permitem agrupar hoots por tema. Crie seu primeiro feed usando o botão + acima!',
-          'newSubscriber': '@{username} se inscreveu em {feedName}',
+          'newSubscriber': '@username se inscreveu em @feedName',
           'unsubscribe': 'Cancelar Inscrição',
           'unsubscribeConfirmation':
               'Tem certeza de que deseja cancelar a inscrição deste feed?',
@@ -1153,9 +1153,9 @@ class AppTranslations extends Translations {
           'approve': 'Aprovar',
           'reject': 'Rejeitar',
           'editFeed': 'Editar Feed',
-          'unsubscriber': ' @{username} cancelou a inscrição em {feedName}',
+          'unsubscriber': ' @username cancelou a inscrição em @feedName',
           'privateFeedRequest':
-              '@{username} solicitou participação em {feedName}',
+              '@username solicitou participação em @feedName',
           'removeSubscriber': 'Remover inscrito',
           'banSubscriber': 'Banir inscrito',
           'removeSubscriberConfirmation':
@@ -1181,17 +1181,17 @@ class AppTranslations extends Translations {
           'upAndComing': 'Novos em Ascensão',
           'upAndComingDescription':
               'Feeds recentes que estão ganhando popularidade',
-          'noteToUser': 'Nota para {displayName}',
+          'noteToUser': 'Nota para @displayName',
           'noteToUserDetails':
               'O Hoot é um lugar para explorar sua criatividade e identidade. Encorajamos você a ser você mesmo e expressar sua criatividade, seja através de feeds, hoots, comentários ou qualquer outra coisa. Não há competição para ser o melhor ou o mais popular. Você não precisa ter o feed mais inscrito ou o hoot com mais curtidas. Você não precisa ser o usuário com mais seguidores ou o hoot mais comentado. Sua experiência é o que você faz dela e, acima de tudo, seus seguidores estão prontos para se inscrever em você porque seu conteúdo é único e você também é. Grande abraço, A Equipe Hoot',
           'emptyFeed': 'Este feed está vazio',
           'emptyFeedDescription':
               'Este feed está vazio porque não tem hoots. Você pode criar um novo hoot clicando no botão flutuante no canto inferior direito da tela.',
           'emptyFeedToOtherUsers':
-              'Dê um pouco de amor para {displayName} para incentivá-los a hootear mais!',
+              'Dê um pouco de amor para @displayName para incentivá-los a hootear mais!',
           'thisFeedIsPrivate': 'Este feed é privado',
           'onlyMembersCanSee':
-              'Apenas as pessoas que {displayName} aceita poderão ver suas postagens aqui!',
+              'Apenas as pessoas que @displayName aceita poderão ver suas postagens aqui!',
           'privateFeed': 'Feed Privado',
           'nsfwFeed': 'Feed NSFW',
           'verifiedUser': 'Este usuário está verificado',
@@ -1271,11 +1271,11 @@ class AppTranslations extends Translations {
           'popularTypes': 'Tipos populares de feeds',
           'popularTypesDescription':
               'Dê uma olhada nos tipos de feeds mais populares',
-          'searchForGenreFeeds': 'Feeds de {genre}',
+          'searchForGenreFeeds': 'Feeds de @genre',
           'discoverMoreFeeds': 'Descubra mais feeds',
           'popular': 'Popular',
-          'betterKnownForFeed': 'Mais conhecido por criar {feedName}',
-          'reportUsername': 'Denunciar @{username}',
+          'betterKnownForFeed': 'Mais conhecido por criar @feedName',
+          'reportUsername': 'Denunciar @username',
           'delete': 'Excluir',
           'aboutUs': 'Sobre Nós',
           'darkMode': 'Modo Escuro',
@@ -1290,10 +1290,10 @@ class AppTranslations extends Translations {
               'Tem certeza de que deseja excluir sua conta?',
           'deleteAccountFailed': 'Não foi possível excluir a conta',
           'deleteAccountSuccess': 'Conta excluída com sucesso',
-          'blockUser': 'Bloquear @{username}',
-          'unblockUser': 'Desbloquear @{username}',
+          'blockUser': 'Bloquear @username',
+          'unblockUser': 'Desbloquear @username',
           'blockUserDescription':
-              'Isso bloqueará @{username} e eles não poderão ver suas postagens nem interagir com você.',
+              'Isso bloqueará @username e eles não poderão ver suas postagens nem interagir com você.',
           'aboutYourData': 'Sobre seus Dados',
           'aboutYourDataTitle1': 'Seu número de telefone é necessário',
           'aboutYourDataDescription1':
@@ -1324,7 +1324,7 @@ class AppTranslations extends Translations {
           'thankYouForSupporting': 'Obrigado por apoiar o Hoot!',
           'verificationCode': 'Código de Verificação',
           'codeSent':
-              'Acabamos de enviar um código de 6 dígitos para o número que você forneceu: {phoneNumber}',
+              'Acabamos de enviar um código de 6 dígitos para o número que você forneceu: @phoneNumber',
           'enterCode': 'Digite o Código',
           'changeNumber': 'Mudar Número',
           'thatsIt': 'É isso!',
@@ -1332,11 +1332,11 @@ class AppTranslations extends Translations {
           'likes10RecentLabel': 'Mostramos apenas as 10 curtidas mais recentes',
           'hootDeletedOrDoesntExist': 'Este hoot foi excluído ou não existe',
           'privateFeedRequestAccepted':
-              '@{username} aceitou sua solicitação para ver o feed privado: {feedName}',
+              '@username aceitou sua solicitação para ver o feed privado: @feedName',
           'privateFeedRequestRejected':
-              '@{username} rejeitou sua solicitação para ver o feed privado: {feedName}',
-          'userLikedYourHoot': '@{username} curtiu seu hoot',
-          'userReFeededYourHoot': '@{username} rehootou seu hoot',
+              '@username rejeitou sua solicitação para ver o feed privado: @feedName',
+          'userLikedYourHoot': '@username curtiu seu hoot',
+          'userReFeededYourHoot': '@username rehootou seu hoot',
           'hootMightBeBuggy':
               'Queria te informar que criei o Hoot sozinho durante as minhas férias de verão. Foi um trabalho de amor, e dediquei-me de corpo e alma a criar uma plataforma que pudesse conectar pessoas e fomentar a comunidade. No entanto, sendo uma equipe de uma só pessoa trabalhando num período limitado, pode ser que ocorram alguns bugs ou funcionalidades que não estejam exatamente como planejado. Agradeço a sua paciência e compreensão enquanto resolvo essas questões e melhoro o aplicativo. Quero salientar que a sua segurança e a proteção das suas informações sempre foram as minhas principais prioridades. Implementei medidas de segurança rigorosas para garantir que seus dados estejam seguros e sejam tratados com o máximo cuidado. Apesar de ser apenas uma pessoa, estou totalmente dedicado a melhorar o Hoot. Comprometo-me a atualizar e aprimorar o aplicativo, tornando-o o melhor possível. Suas opiniões e apoio significam muito para mim, e estou empolgado para fazer com que o Hoot se torne algo verdadeiramente excepcional no futuro. Obrigado por fazer parte desta jornada, e mal posso esperar para que veja como o Hoot evolui e se torna ainda melhor ao longo do tempo.',
           'messageFromCreator': 'Mensagem do criador',
