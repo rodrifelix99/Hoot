@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:solar_icons/solar_icons.dart';
 
-import '../../create_post/views/create_post_view.dart';
 import '../../explore/views/explore_view.dart';
 import '../../feed/views/feed_view.dart';
 import '../../notifications/views/notifications_view.dart';
@@ -16,7 +16,6 @@ class HomeView extends GetView<HomeController> {
   static const List<Widget> _pages = [
     FeedView(),
     ExploreView(),
-    CreatePostView(),
     NotificationsView(),
     ProfileView(),
   ];
@@ -32,7 +31,6 @@ class HomeView extends GetView<HomeController> {
         ),
         extendBody: true,
         bottomNavigationBar: Padding(
-          // padding according to safe area
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).padding.bottom + 8,
             left: MediaQuery.of(context).padding.left + 16,
@@ -41,8 +39,7 @@ class HomeView extends GetView<HomeController> {
           child: LiquidGlassLayer(
             settings: LiquidGlassSettings(
               blur: 4,
-              glassColor:
-              Theme.of(context).colorScheme.surface.withAlpha(50),
+              glassColor: Theme.of(context).colorScheme.surface.withAlpha(50),
             ),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
@@ -76,26 +73,28 @@ class HomeView extends GetView<HomeController> {
                         IconButton(
                           icon: Icon(
                             SolarIconsOutline.bell,
+                            color: index == 2
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.onSurface,
+                          ),
+                          onPressed: () => controller.changeIndex(2),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            SolarIconsOutline.user,
                             color: index == 3
                                 ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context).colorScheme.onSurface,
                           ),
                           onPressed: () => controller.changeIndex(3),
                         ),
-                        IconButton(
-                          icon: Icon(
-                            SolarIconsOutline.user,
-                            color: index == 4
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.onSurface,
-                          ),
-                          onPressed: () => controller.changeIndex(4),
-                        ),
                       ],
                     ),
                   ),
                   const Spacer(),
-                  LiquidGlass.inLayer(
+                  Hero(
+                    tag: 'createHootButton',
+                    child: LiquidGlass.inLayer(
                       shape: LiquidRoundedRectangle(
                         borderRadius: Radius.circular(30),
                       ),
@@ -103,13 +102,12 @@ class HomeView extends GetView<HomeController> {
                       child: IconButton(
                         icon: Icon(
                           SolarIconsOutline.pen,
-                          color: index == 2
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.onSurface,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
-                        onPressed: () => controller.changeIndex(2),
+                        onPressed: () => Get.toNamed(AppRoutes.createPost),
                       ),
                     ),
+                  ),
                 ],
               ),
             ),
