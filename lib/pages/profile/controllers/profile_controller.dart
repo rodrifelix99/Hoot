@@ -7,15 +7,23 @@ import '../../../models/post.dart';
 import '../../../models/user.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/feed_service.dart';
+import '../../../services/subscription_service.dart';
+import '../../../services/error_service.dart';
 
 /// Loads the current user profile data and owned feeds.
 class ProfileController extends GetxController {
   final AuthService _authService;
   final BaseFeedService _feedService;
+  final SubscriptionService _subscriptionService;
 
-  ProfileController({AuthService? authService, BaseFeedService? feedService})
-      : _authService = authService ?? Get.find<AuthService>(),
-        _feedService = feedService ?? Get.find<BaseFeedService>();
+  ProfileController({
+    AuthService? authService,
+    BaseFeedService? feedService,
+    SubscriptionService? subscriptionService,
+  })  : _authService = authService ?? Get.find<AuthService>(),
+        _feedService = feedService ?? Get.find<BaseFeedService>(),
+        _subscriptionService =
+            subscriptionService ?? Get.find<SubscriptionService>();
 
   final Rxn<U> user = Rxn<U>();
   final RxList<Feed> feeds = <Feed>[].obs;
@@ -58,6 +66,12 @@ class ProfileController extends GetxController {
           feedStates[feed.id] = PagingState<DocumentSnapshot?, Post>();
         }
       }
+      if (!isCurrentUser && _authService.currentUser != null) {
+        final subs = await _subscriptionService
+            .fetchSubscriptions(_authService.currentUser!.uid);
+        subscribedFeedIds.addAll(subs);
+      }
+
       if (feeds.isNotEmpty) {
         var index = 0;
         if (initialFeedId != null) {
@@ -121,11 +135,28 @@ class ProfileController extends GetxController {
   }
 
   /// Toggles subscription state for [feedId].
-  void toggleSubscription(String feedId) {
-    if (subscribedFeedIds.contains(feedId)) {
+  Future<void> toggleSubscription(String feedId) async {
+    final userId = _authService.currentUser?.uid;
+    if (userId == null) return;
+    final subscribed = subscribedFeedIds.contains(feedId);
+    if (subscribed) {
       subscribedFeedIds.remove(feedId);
+      try {
+        await _subscriptionService.unsubscribe(userId, feedId);
+      } catch (e, s) {
+        subscribedFeedIds.add(feedId);
+        await ErrorService.reportError(e,
+            stack: s, message: 'errorUnsubscribing'.tr);
+      }
     } else {
       subscribedFeedIds.add(feedId);
+      try {
+        await _subscriptionService.subscribe(userId, feedId);
+      } catch (e, s) {
+        subscribedFeedIds.remove(feedId);
+        await ErrorService.reportError(e,
+            stack: s, message: 'errorSubscribing'.tr);
+      }
     }
   }
 
