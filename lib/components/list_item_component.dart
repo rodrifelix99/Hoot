@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/shimmer_skeletons.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
+import 'dart:ui';
 
 class ListItemComponent extends StatelessWidget {
   final Widget? leading;
@@ -125,12 +126,14 @@ class ListItemComponent extends StatelessWidget {
                         )
                       ],
                     ),
-                    child: LiquidGlass(
-                      shape: LiquidRoundedRectangle(
-                        borderRadius: Radius.circular(25),
-                      ),
-                      child: leading!,
-                    ),
+                    child: ImageFilter.isShaderFilterSupported
+                        ? LiquidGlass(
+                            shape: LiquidRoundedRectangle(
+                              borderRadius: Radius.circular(25),
+                            ),
+                            child: leading!,
+                          )
+                        : leading!,
                   ),
                 ),
               )
