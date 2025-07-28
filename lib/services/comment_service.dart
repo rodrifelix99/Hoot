@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 import '../models/comment.dart';
+import 'notification_service.dart';
 
 class CommentPage {
   CommentPage({required this.comments, this.lastDoc, this.hasMore = false});
@@ -19,14 +21,22 @@ abstract class BaseCommentService {
 
   String newCommentId(String postId);
 
-  Future<void> createComment(String postId, Map<String, dynamic> data, {String? id});
+  Future<void> createComment(String postId, Map<String, dynamic> data,
+      {String? id});
 }
 
 class CommentService implements BaseCommentService {
   final FirebaseFirestore _firestore;
+  final BaseNotificationService _notificationService;
 
-  CommentService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  CommentService(
+      {FirebaseFirestore? firestore,
+      BaseNotificationService? notificationService})
+      : _firestore = firestore ?? FirebaseFirestore.instance,
+        _notificationService = notificationService ??
+            (Get.isRegistered<BaseNotificationService>()
+                ? Get.find<BaseNotificationService>()
+                : NotificationService());
 
   @override
   Future<CommentPage> fetchComments(
@@ -67,7 +77,8 @@ class CommentService implements BaseCommentService {
       .id;
 
   @override
-  Future<void> createComment(String postId, Map<String, dynamic> data, {String? id}) async {
+  Future<void> createComment(String postId, Map<String, dynamic> data,
+      {String? id}) async {
     final postRef = _firestore.collection('posts').doc(postId);
     final commentsRef = postRef.collection('comments');
 
@@ -76,5 +87,41 @@ class CommentService implements BaseCommentService {
       txn.set(doc, data);
       txn.update(postRef, {'comments': FieldValue.increment(1)});
     });
+    final postDoc = await postRef.get();
+    final ownerId = postDoc.get('userId');
+    if (ownerId != data['userId']) {
+      await _notificationService.createNotification(ownerId, {
+        'user': data['user'],
+        if (data['feed'] != null) 'feed': data['feed'],
+        'postId': postId,
+        'type': 1,
+        'read': false,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    }
+
+    final text = data['text'] as String?;
+    if (text != null && text.contains('@')) {
+      final regex = RegExp(r'@([A-Za-z0-9_]+)');
+      for (final match in regex.allMatches(text)) {
+        final username = match.group(1)!;
+        final userQuery = await _firestore
+            .collection('users')
+            .where('username', isEqualTo: username)
+            .limit(1)
+            .get();
+        if (userQuery.docs.isEmpty) continue;
+        final targetId = userQuery.docs.first.id;
+        if (targetId == data['userId']) continue;
+        await _notificationService.createNotification(targetId, {
+          'user': data['user'],
+          if (data['feed'] != null) 'feed': data['feed'],
+          'postId': postId,
+          'type': 2,
+          'read': false,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+    }
   }
 }
