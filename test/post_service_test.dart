@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
 import 'package:hoot/services/post_service.dart';
+import 'package:hoot/services/notification_service.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
@@ -11,7 +12,10 @@ void main() {
   group('PostService', () {
     test('toggleLike increments and decrements', () async {
       final firestore = FakeFirebaseFirestore();
-      final service = PostService(firestore: firestore);
+      final service = PostService(
+        firestore: firestore,
+        notificationService: NotificationService(firestore: firestore),
+      );
       await firestore.collection('posts').doc('p1').set({'likes': 0});
 
       await service.toggleLike('p1', 'u1', true);
@@ -43,19 +47,34 @@ void main() {
 
     test('reFeed creates new post', () async {
       final firestore = FakeFirebaseFirestore();
-      final service = PostService(firestore: firestore);
-      await firestore.collection('posts').doc('orig').set({'text': 'Hello', 'reFeeds': 0});
+      final service = PostService(
+        firestore: firestore,
+        notificationService: NotificationService(firestore: firestore),
+      );
+      await firestore
+          .collection('posts')
+          .doc('orig')
+          .set({'text': 'Hello', 'reFeeds': 0});
       final original = Post(id: 'orig', text: 'Hello');
-      final feed = Feed(id: 'f1', userId: 'u1', title: 'feed', description: 'd', color: Colors.blue);
+      final feed = Feed(
+          id: 'f1',
+          userId: 'u1',
+          title: 'feed',
+          description: 'd',
+          color: Colors.blue);
       final user = U(uid: 'u1');
 
-      final newId = await service.reFeed(original: original, targetFeed: feed, user: user);
+      final newId = await service.reFeed(
+          original: original, targetFeed: feed, user: user);
 
       final newDoc = await firestore.collection('posts').doc(newId).get();
       expect(newDoc.exists, isTrue);
       expect(newDoc.get('reFeeded'), true);
       expect(newDoc.get('reFeededFrom')['id'], 'orig');
-      expect((await firestore.collection('posts').doc('orig').get()).get('reFeeds'), 1);
+      expect(
+          (await firestore.collection('posts').doc('orig').get())
+              .get('reFeeds'),
+          1);
     });
   });
 }
