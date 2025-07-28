@@ -57,10 +57,28 @@ class NotificationsView extends GetView<NotificationsController> {
                   text = '';
               }
               return ListTile(
-                leading: ProfileAvatarComponent(
-                  image: user.smallProfilePictureUrl ?? '',
-                  size: 40,
-                  radius: 20,
+                onTap: () {
+                  switch (n.type) {
+                    case 0:
+                    case 1:
+                    case 2:
+                      if (n.postId != null) {
+                        Get.toNamed(AppRoutes.post, arguments: {'id': n.postId});
+                      }
+                      break;
+                    case 3:
+                      Get.toNamed(AppRoutes.profile, arguments: user.uid);
+                      break;
+                  }
+                },
+                leading: GestureDetector(
+                  onTap: () =>
+                      Get.toNamed(AppRoutes.profile, arguments: user.uid),
+                  child: ProfileAvatarComponent(
+                    image: user.smallProfilePictureUrl ?? '',
+                    size: 40,
+                    radius: 20,
+                  ),
                 ),
                 title: Text(text),
               );
