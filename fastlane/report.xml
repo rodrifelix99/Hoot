@@ -5,47 +5,47 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Switch to increment_build_number_in_pubspec lane" time="0.000144">
+      <testcase classname="fastlane.lanes" name="0: Switch to increment_build_number_in_pubspec lane" time="0.00013">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: Switch to flutter lane" time="0.000169">
+      <testcase classname="fastlane.lanes" name="1: Switch to flutter lane" time="0.000106">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: Flutter clean" time="13.920598">
+      <testcase classname="fastlane.lanes" name="2: Flutter clean" time="10.126139">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: Switch to flutter lane" time="0.000209">
+      <testcase classname="fastlane.lanes" name="3: Switch to flutter lane" time="0.000754">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: Pub Get" time="6.060872">
+      <testcase classname="fastlane.lanes" name="4: Pub Get" time="5.234116">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: Switch to build_ios lane" time="0.000133">
+      <testcase classname="fastlane.lanes" name="5: Switch to build_ios lane" time="0.00012">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="6: Switch to flutter lane" time="7.1e-05">
+      <testcase classname="fastlane.lanes" name="6: Switch to flutter lane" time="6.8e-05">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="7: Build" time="389.959716">
+      <testcase classname="fastlane.lanes" name="7: Build" time="375.742698">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="8: upload_to_testflight" time="133.954736">
+      <testcase classname="fastlane.lanes" name="8: upload_to_testflight" time="109.684422">
         
       </testcase>
     
