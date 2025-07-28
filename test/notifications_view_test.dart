@@ -101,7 +101,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('@{username} liked your hoot'), findsOneWidget);
+    expect(find.text('Tester liked your hoot'), findsOneWidget);
     Get.reset();
   });
 
