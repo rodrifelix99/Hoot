@@ -29,13 +29,16 @@ class U {
 
   U({
     required this.uid,
-    this.name, this.username,
+    this.name,
+    this.username,
     this.smallProfilePictureUrl,
     this.largeProfilePictureUrl,
     this.bannerPictureUrl,
     this.radius,
-    this.color, this.musicUrl,
-    this.bio, this.location,
+    this.color,
+    this.musicUrl,
+    this.bio,
+    this.location,
     this.website,
     this.invitationCode,
     this.invitedBy,
@@ -48,6 +51,14 @@ class U {
     this.subscriptionCount,
     this.feeds,
   });
+
+  bool get isNewUser => username == null || username!.isEmpty;
+
+  bool get isUninvited =>
+      invitationCode == null ||
+      invitationCode!.isEmpty ||
+      invitedBy == null ||
+      invitedBy!.isEmpty;
 
   @override
   String toString() {
@@ -79,7 +90,9 @@ class U {
       tester: json['tester'],
       birthday: json['birthday'],
       subscriptionCount: json['subscriptionCount'],
-      feeds: json['feeds'] != null ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x))) : [],
+      feeds: json['feeds'] != null
+          ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x)))
+          : [],
     );
   }
 
@@ -106,27 +119,27 @@ class U {
   }
 
   Map<String, dynamic> toCache() => {
-    'uid': uid,
-    'displayName': name,
-    'username': username,
-    'smallAvatar': smallProfilePictureUrl,
-    'bigAvatar': largeProfilePictureUrl,
-    'banner': bannerPictureUrl,
-    'radius': radius,
-    'color': color,
-    'music': musicUrl,
-    'bio': bio,
-    'location': location,
-    'website': website,
-    'invitationCode': invitationCode,
-    'invitationUses': invitationUses,
-    'invitationLastReset': invitationLastReset,
-    'invitedBy': invitedBy,
-    'phoneNumber': phoneNumber,
-    'birthday': birthday,
-    'verified': verified,
-    'tester': tester,
-    'subscriptionCount': subscriptionCount,
-    'feeds': feeds?.map((e) => e.toCache()).toList(),
-  };
+        'uid': uid,
+        'displayName': name,
+        'username': username,
+        'smallAvatar': smallProfilePictureUrl,
+        'bigAvatar': largeProfilePictureUrl,
+        'banner': bannerPictureUrl,
+        'radius': radius,
+        'color': color,
+        'music': musicUrl,
+        'bio': bio,
+        'location': location,
+        'website': website,
+        'invitationCode': invitationCode,
+        'invitationUses': invitationUses,
+        'invitationLastReset': invitationLastReset,
+        'invitedBy': invitedBy,
+        'phoneNumber': phoneNumber,
+        'birthday': birthday,
+        'verified': verified,
+        'tester': tester,
+        'subscriptionCount': subscriptionCount,
+        'feeds': feeds?.map((e) => e.toCache()).toList(),
+      };
 }

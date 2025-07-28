@@ -14,11 +14,11 @@ class HomeController extends GetxController {
 
   Future<void> _verifyUser() async {
     final user = await _auth.fetchUser();
-    if (user == null) {
+    if (user == null || user.isNewUser) {
       Get.offAllNamed(AppRoutes.welcome);
       return;
     }
-    if (user.invitedBy == null) {
+    if (user.isUninvited) {
       Get.offAllNamed(AppRoutes.invitation);
     }
   }
