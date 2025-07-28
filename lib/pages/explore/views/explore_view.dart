@@ -29,6 +29,8 @@ class ExploreView extends GetView<ExploreController> {
               (u) => ListTile(
                 title: Text(u.name ?? ''),
                 subtitle: Text('@${u.username ?? ''}'),
+                onTap: () =>
+                    Get.toNamed(AppRoutes.profile, arguments: u.uid),
               ),
             ),
             ...controller.feedSuggestions.map(

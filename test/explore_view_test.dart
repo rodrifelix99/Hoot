@@ -5,6 +5,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
 import 'package:hoot/pages/explore/controllers/explore_controller.dart';
 import 'package:hoot/pages/explore/views/explore_view.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 
 void main() {
@@ -47,6 +48,47 @@ void main() {
 
     expect(find.text('Tester'), findsOneWidget);
     expect(find.text('test feed'), findsWidgets);
+
+    Get.reset();
+  });
+
+  testWidgets('tapping user suggestion opens profile', (tester) async {
+    final firestore = FakeFirebaseFirestore();
+    await firestore.collection('users').doc('u1').set({
+      'uid': 'u1',
+      'displayName': 'Tester',
+      'username': 'tester',
+    });
+
+    Get.put(ExploreController(firestore: firestore));
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        translations: AppTranslations(),
+        locale: const Locale('en'),
+        getPages: [
+          GetPage(
+            name: '/',
+            page: () => const Scaffold(body: ExploreView()),
+          ),
+          GetPage(
+            name: AppRoutes.profile,
+            page: () => const Scaffold(body: Text('profile page')),
+          ),
+        ],
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'test');
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    await tester.tap(find.text('Tester'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('profile page'), findsOneWidget);
 
     Get.reset();
   });
