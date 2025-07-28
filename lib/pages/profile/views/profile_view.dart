@@ -263,77 +263,83 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        surfaceTintColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.black,
-                Colors.black.withAlpha(0),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: LiquidGlass(
-              settings: LiquidGlassSettings(
-                blur: 4,
-                glassColor: Theme.of(context).colorScheme.surface.withAlpha(50),
+    return Obx(() {
+        return Scaffold(
+          appBar: AppBar(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            surfaceTintColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.black,
+                    Colors.black.withAlpha(0),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
-              shape: LiquidOval(),
-              glassContainsChild: false,
-              child: controller.isCurrentUser
-                  ? IconButton(
-                      icon: const Icon(Icons.settings),
-                      color: Colors.white,
-                      onPressed: () => Get.toNamed(AppRoutes.settings),
-                    )
-                  : IconButton(
-                      icon: const Icon(Icons.flag_outlined),
-                      color: Colors.white,
-                      onPressed: () => reportUser(context),
-                    ),
             ),
-          ),
-        ],
-      ),
-      extendBodyBehindAppBar: true,
-      floatingActionButton: controller.feeds.isEmpty
-          ? null
-          : Obx(() {
-              if (controller.isCurrentUser) {
-                return FloatingActionButton.extended(
-                  heroTag: 'edit_feed_fab',
-                  onPressed: () => Get.toNamed(
-                    AppRoutes.editFeed,
-                    arguments:
-                        controller.feeds[controller.selectedFeedIndex.value],
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: LiquidGlass(
+                  settings: LiquidGlassSettings(
+                    blur: 4,
+                    glassColor: Theme.of(context).colorScheme.surface.withAlpha(50),
                   ),
-                  icon: const Icon(Icons.edit),
-                  label: Text('editFeed'.tr),
-                );
-              }
-              final feedId =
-                  controller.feeds[controller.selectedFeedIndex.value].id;
-              final subscribed = controller.isSubscribed(feedId);
-              return FloatingActionButton.extended(
-                heroTag: 'sub_fab',
-                onPressed: () => controller.toggleSubscription(feedId),
-                icon: Icon(subscribed ? Icons.check : Icons.add),
-                label: Text(subscribed ? 'unsubscribe'.tr : 'subscribe'.tr),
-              );
-            }),
-      body: buildBody(context),
+                  shape: LiquidOval(),
+                  glassContainsChild: false,
+                  child: controller.isCurrentUser
+                      ? IconButton(
+                          icon: const Icon(Icons.settings),
+                          color: Colors.white,
+                          onPressed: () => Get.toNamed(AppRoutes.settings),
+                        )
+                      : IconButton(
+                          icon: const Icon(Icons.flag_outlined),
+                          color: Colors.white,
+                          onPressed: () => reportUser(context),
+                        ),
+                ),
+              ),
+            ],
+          ),
+          extendBodyBehindAppBar: true,
+          floatingActionButton: controller.feeds.isEmpty
+              ? null
+              : Builder(builder: (_) {
+                  if (controller.isCurrentUser) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+                      child: FloatingActionButton.extended(
+                        heroTag: 'edit_feed_fab',
+                        onPressed: () => Get.toNamed(
+                          AppRoutes.editFeed,
+                          arguments:
+                              controller.feeds[controller.selectedFeedIndex.value],
+                        ),
+                        icon: const Icon(Icons.edit),
+                        label: Text('editFeed'.tr),
+                      ),
+                    );
+                  }
+                  final feedId =
+                      controller.feeds[controller.selectedFeedIndex.value].id;
+                  final subscribed = controller.isSubscribed(feedId);
+                  return FloatingActionButton.extended(
+                    heroTag: 'sub_fab',
+                    onPressed: () => controller.toggleSubscription(feedId),
+                    icon: Icon(subscribed ? Icons.remove : Icons.add),
+                    label: Text(subscribed ? 'unsubscribe'.tr : 'subscribe'.tr),
+                  );
+                }),
+          body: buildBody(context),
+        );
+      }
     );
   }
 }
