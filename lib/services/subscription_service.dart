@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../models/feed.dart';
+
 class SubscriptionService {
   final FirebaseFirestore _firestore;
 
@@ -13,6 +15,24 @@ class SubscriptionService {
         .collection('subscriptions')
         .get();
     return snapshot.docs.map((d) => d.id).toSet();
+  }
+
+  /// Returns the [Feed]s the user with [userId] is subscribed to.
+  Future<List<Feed>> fetchSubscribedFeeds(String userId) async {
+    final subsSnapshot = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('subscriptions')
+        .get();
+    final ids = subsSnapshot.docs.map((d) => d.id).toList();
+    if (ids.isEmpty) return [];
+    final feedsSnapshot = await _firestore
+        .collection('feeds')
+        .where(FieldPath.documentId, whereIn: ids)
+        .get();
+    return feedsSnapshot.docs
+        .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
+        .toList();
   }
 
   Future<void> subscribe(String userId, String feedId) async {
@@ -35,10 +55,16 @@ class SubscriptionService {
         .doc(userId)
         .collection('subscriptions')
         .doc(feedId);
+    final feedSubRef = _firestore
+        .collection('feeds')
+        .doc(feedId)
+        .collection('subscribers')
+        .doc(userId);
     final feedRef = _firestore.collection('feeds').doc(feedId);
 
     await _firestore.runTransaction((txn) async {
       txn.delete(userSubRef);
+      txn.delete(feedSubRef);
       txn.update(feedRef, {'subscriberCount': FieldValue.increment(-1)});
     });
   }
