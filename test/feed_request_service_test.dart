@@ -50,7 +50,6 @@ void main() {
         firestore: firestore,
         subscriptionService: SubscriptionService(
           firestore: firestore,
-          notificationService: NotificationService(firestore: firestore),
         ),
         authService: FakeAuthService(U(uid: 'owner')),
       );
@@ -72,7 +71,6 @@ void main() {
       final firestore = FakeFirebaseFirestore();
       final subscriptionService = SubscriptionService(
         firestore: firestore,
-        notificationService: NotificationService(firestore: firestore),
       );
       final service = FeedRequestService(
         firestore: firestore,
@@ -122,7 +120,6 @@ void main() {
         firestore: firestore,
         subscriptionService: SubscriptionService(
           firestore: firestore,
-          notificationService: NotificationService(firestore: firestore),
         ),
         authService: FakeAuthService(U(uid: 'owner')),
       );
@@ -170,7 +167,6 @@ void main() {
         firestore: firestore,
         subscriptionService: SubscriptionService(
           firestore: firestore,
-          notificationService: NotificationService(firestore: firestore),
         ),
         authService: FakeAuthService(U(uid: 'owner')),
       );

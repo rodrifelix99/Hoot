@@ -14,7 +14,6 @@ void main() {
       final firestore = FakeFirebaseFirestore();
       final service = PostService(
         firestore: firestore,
-        notificationService: NotificationService(firestore: firestore),
       );
       await firestore.collection('posts').doc('p1').set({'likes': 0});
 
@@ -49,7 +48,6 @@ void main() {
       final firestore = FakeFirebaseFirestore();
       final service = PostService(
         firestore: firestore,
-        notificationService: NotificationService(firestore: firestore),
       );
       await firestore
           .collection('posts')

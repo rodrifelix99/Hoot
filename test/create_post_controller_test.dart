@@ -71,7 +71,6 @@ void main() {
       final firestore = FakeFirebaseFirestore();
       final postService = PostService(
         firestore: firestore,
-        notificationService: NotificationService(firestore: firestore),
       );
       final auth = FakeAuthService(U(
           uid: 'u1',
@@ -105,7 +104,6 @@ void main() {
       final firestore = FakeFirebaseFirestore();
       final postService = PostService(
         firestore: firestore,
-        notificationService: NotificationService(firestore: firestore),
       );
       final auth = FakeAuthService(U(
           uid: 'u1',
@@ -145,7 +143,6 @@ void main() {
       final firestore = FakeFirebaseFirestore();
       final postService = PostService(
         firestore: firestore,
-        notificationService: NotificationService(firestore: firestore),
       );
       final auth = FakeAuthService(U(
           uid: 'u1',
@@ -194,7 +191,6 @@ void main() {
       final firestore = FakeFirebaseFirestore();
       final postService = PostService(
         firestore: firestore,
-        notificationService: NotificationService(firestore: firestore),
       );
       final auth = FakeAuthService(U(
           uid: 'u1',
@@ -241,7 +237,6 @@ void main() {
       final firestore = FakeFirebaseFirestore();
       final postService = PostService(
         firestore: firestore,
-        notificationService: NotificationService(firestore: firestore),
       );
       final feed = Feed(
           id: 'f1',
