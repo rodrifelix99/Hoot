@@ -9,7 +9,6 @@ import 'package:hoot/pages/create_post/controllers/create_post_controller.dart';
 import 'package:get/get.dart';
 import 'package:hoot/services/post_service.dart';
 import 'package:hoot/services/storage_service.dart';
-import 'package:hoot/services/notification_service.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';

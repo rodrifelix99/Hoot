@@ -53,8 +53,6 @@ class FakeFeedRequestService extends FeedRequestService {
             firestore: FakeFirebaseFirestore(),
             subscriptionService: SubscriptionService(
               firestore: FakeFirebaseFirestore(),
-              notificationService:
-                  NotificationService(firestore: FakeFirebaseFirestore()),
             ),
             authService: FakeAuthService(U(uid: 'owner')));
 
@@ -71,9 +69,6 @@ class TestNotificationsController extends NotificationsController {
             authService: authService,
             notificationService: notificationService,
             feedRequestService: feedRequestService);
-
-  @override
-  void onInit() {}
 }
 
 void main() {

@@ -3,7 +3,6 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:hoot/services/subscription_service.dart';
-import 'package:hoot/services/notification_service.dart';
 
 void main() {
   group('SubscriptionService', () {

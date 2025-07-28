@@ -12,7 +12,6 @@ import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/services/feed_service.dart';
 import 'package:hoot/services/subscription_service.dart';
-import 'package:hoot/services/notification_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FakeAuthService extends GetxService implements AuthService {

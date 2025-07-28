@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:hoot/services/feed_request_service.dart';
 import 'package:hoot/services/subscription_service.dart';
-import 'package:hoot/services/notification_service.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hoot/models/user.dart';

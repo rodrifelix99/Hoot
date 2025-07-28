@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../../../util/routes/app_routes.dart';
 import '../controllers/notifications_controller.dart';
 
@@ -21,9 +22,11 @@ class NotificationsView extends GetView<NotificationsController> {
         }
         Widget list;
         if (controller.notifications.isEmpty) {
-          list = NothingToShowComponent(
-            icon: const Icon(Icons.notifications_none),
-            text: 'noNotifications'.tr,
+          list = Center(
+            child: NothingToShowComponent(
+              icon: const Icon(SolarIconsBold.bellOff),
+              text: 'noNotifications'.tr,
+            ),
           );
         } else {
           list = ListView.builder(

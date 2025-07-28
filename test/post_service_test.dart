@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
 import 'package:hoot/services/post_service.dart';
-import 'package:hoot/services/notification_service.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';

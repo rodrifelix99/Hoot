@@ -54,7 +54,7 @@ class SubscriptionService {
       txn.update(feedRef, {'subscriberCount': FieldValue.increment(1)});
     });
     final feedDoc = await feedRef.get();
-    final ownerId = feedDoc.get('userId');
+    feedDoc.get('userId');
     // Subscription notifications are handled server-side by Firestore triggers.
   }
 
