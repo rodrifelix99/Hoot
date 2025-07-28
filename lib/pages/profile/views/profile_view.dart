@@ -306,6 +306,28 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                 ),
               ),
+              if (controller.isCurrentUser && controller.feeds.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: LiquidGlass(
+                    settings: LiquidGlassSettings(
+                      blur: 4,
+                      glassColor:
+                          Theme.of(context).colorScheme.surface.withAlpha(50),
+                    ),
+                    shape: LiquidOval(),
+                    glassContainsChild: false,
+                    child: IconButton(
+                      icon: const Icon(Icons.group),
+                      color: Colors.white,
+                      onPressed: () => Get.toNamed(
+                        AppRoutes.subscribers,
+                        arguments: controller
+                            .feeds[controller.selectedFeedIndex.value].id,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
           extendBodyBehindAppBar: true,
