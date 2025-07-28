@@ -3,12 +3,16 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:hoot/services/subscription_service.dart';
+import 'package:hoot/services/notification_service.dart';
 
 void main() {
   group('SubscriptionService', () {
     test('removeSubscriber deletes docs and decrements count', () async {
       final firestore = FakeFirebaseFirestore();
-      final service = SubscriptionService(firestore: firestore);
+      final service = SubscriptionService(
+        firestore: firestore,
+        notificationService: NotificationService(firestore: firestore),
+      );
       await firestore.collection('feeds').doc('f1').set({'subscriberCount': 1});
       await firestore.collection('users').doc('u1').set({'uid': 'u1'});
       await firestore
@@ -47,7 +51,10 @@ void main() {
 
     test('banSubscriber moves user to banned list', () async {
       final firestore = FakeFirebaseFirestore();
-      final service = SubscriptionService(firestore: firestore);
+      final service = SubscriptionService(
+        firestore: firestore,
+        notificationService: NotificationService(firestore: firestore),
+      );
       await firestore.collection('feeds').doc('f1').set({'subscriberCount': 1});
       await firestore.collection('users').doc('u1').set({'uid': 'u1'});
       await firestore

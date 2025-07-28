@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hoot/pages/subscriptions/controllers/subscriptions_controller.dart';
 import 'package:hoot/pages/subscriptions/views/subscriptions_view.dart';
 import 'package:hoot/services/subscription_service.dart';
+import 'package:hoot/services/notification_service.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 import 'package:hoot/models/user.dart';
@@ -64,7 +65,10 @@ void main() {
         .doc('f1')
         .set({'createdAt': Timestamp.now()});
     final auth = FakeAuthService(U(uid: 'u1'));
-    final service = SubscriptionService(firestore: firestore);
+    final service = SubscriptionService(
+      firestore: firestore,
+      notificationService: NotificationService(firestore: firestore),
+    );
     final controller = SubscriptionsController(
       authService: auth,
       subscriptionService: service,
@@ -101,7 +105,10 @@ void main() {
         .doc('f1')
         .set({'createdAt': Timestamp.now()});
     final auth = FakeAuthService(U(uid: 'u1'));
-    final service = SubscriptionService(firestore: firestore);
+    final service = SubscriptionService(
+      firestore: firestore,
+      notificationService: NotificationService(firestore: firestore),
+    );
     final controller = SubscriptionsController(
       authService: auth,
       subscriptionService: service,
@@ -124,4 +131,3 @@ void main() {
     Get.reset();
   });
 }
-

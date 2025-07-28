@@ -12,6 +12,7 @@ import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/services/feed_service.dart';
 import 'package:hoot/services/subscription_service.dart';
+import 'package:hoot/services/notification_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
@@ -56,7 +57,8 @@ class FakeFeedService implements BaseFeedService {
   }
 
   @override
-  Future<PostPage> fetchFeedPosts(String feedId, {DocumentSnapshot? startAfter, int limit = 10}) async {
+  Future<PostPage> fetchFeedPosts(String feedId,
+      {DocumentSnapshot? startAfter, int limit = 10}) async {
     return PostPage(posts: []);
   }
 }
@@ -71,7 +73,8 @@ void main() {
 
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
-    final controller = CreateFeedController(firestore: firestore, userId: 'u1', authService: auth);
+    final controller = CreateFeedController(
+        firestore: firestore, userId: 'u1', authService: auth);
     controller.titleController.text = 'My Feed';
     controller.descriptionController.text = 'Desc';
     controller.selectedType.value = FeedType.music;
@@ -94,7 +97,8 @@ void main() {
 
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
-    final controller = CreateFeedController(firestore: firestore, userId: 'u1', authService: auth);
+    final controller = CreateFeedController(
+        firestore: firestore, userId: 'u1', authService: auth);
     controller.selectedType.value = FeedType.music;
 
     final result = await controller.createFeed();
@@ -113,7 +117,8 @@ void main() {
 
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
-    final controller = CreateFeedController(firestore: firestore, userId: 'u1', authService: auth);
+    final controller = CreateFeedController(
+        firestore: firestore, userId: 'u1', authService: auth);
     controller.titleController.text = 'Feed';
 
     final result = await controller.createFeed();
@@ -133,7 +138,10 @@ void main() {
     final firestore = FakeFirebaseFirestore();
     final user = U(uid: 'u1', feeds: []);
     final auth = FakeAuthService(user);
-    final subService = SubscriptionService(firestore: firestore);
+    final subService = SubscriptionService(
+      firestore: firestore,
+      notificationService: NotificationService(firestore: firestore),
+    );
     final profile = ProfileController(
       authService: auth,
       feedService: FakeFeedService(),
@@ -143,8 +151,11 @@ void main() {
     Get.put<SubscriptionService>(subService);
     Get.put<ProfileController>(profile);
 
-    final controller =
-        CreateFeedController(firestore: firestore, userId: 'u1', authService: auth, profileController: profile);
+    final controller = CreateFeedController(
+        firestore: firestore,
+        userId: 'u1',
+        authService: auth,
+        profileController: profile);
     controller.titleController.text = 'My Feed';
     controller.selectedType.value = FeedType.music;
 
@@ -166,7 +177,8 @@ void main() {
 
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
-    final controller = CreateFeedController(firestore: firestore, userId: 'u1', authService: auth);
+    final controller = CreateFeedController(
+        firestore: firestore, userId: 'u1', authService: auth);
     controller.titleController.text = 'My Feed';
     controller.selectedType.value = FeedType.music;
 
@@ -177,7 +189,11 @@ void main() {
     expect(result, isTrue);
     final feeds = await firestore.collection('feeds').get();
     final feedId = feeds.docs.first.id;
-    final subs = await firestore.collection('users').doc('u1').collection('subscriptions').get();
+    final subs = await firestore
+        .collection('users')
+        .doc('u1')
+        .collection('subscriptions')
+        .get();
     expect(subs.docs.length, 1);
     expect(subs.docs.first.id, feedId);
   });

@@ -141,6 +141,7 @@ class AppTranslations extends Translations {
           'errorRequestingToJoin':
               'There was an error requesting to join this feed',
           'feedRequests': 'Feed Requests',
+          'subscriberRequests': 'Subscriber Requests',
           'approve': 'Approve',
           'reject': 'Reject',
           'editFeed': 'Edit Feed',
@@ -475,6 +476,7 @@ class AppTranslations extends Translations {
           'errorRequestingToJoin':
               'Hubo un error al solicitar unirse a este feed',
           'feedRequests': 'Solicitudes',
+          'subscriberRequests': 'Solicitudes de suscriptores',
           'approve': 'Aprobar',
           'reject': 'Rechazar',
           'editFeed': 'Editar Feed',
@@ -813,6 +815,7 @@ class AppTranslations extends Translations {
           'errorRequestingToJoin':
               'Ocorreu um erro ao pedir para aderir a este feed',
           'feedRequests': 'Pedidos',
+          'subscriberRequests': 'Pedidos de subscritores',
           'approve': 'Aprovar',
           'reject': 'Rejeitar',
           'editFeed': 'Editar Feed',
@@ -1146,6 +1149,7 @@ class AppTranslations extends Translations {
               '{numberOfRequests, plural, =0 {Sem solicitações} one {# solicitação} other {# solicitações}}',
           'errorRequestingToJoin': 'Erro ao solicitar participação neste feed',
           'feedRequests': 'Solicitações',
+          'subscriberRequests': 'Solicitações de inscritos',
           'approve': 'Aprovar',
           'reject': 'Rejeitar',
           'editFeed': 'Editar Feed',
