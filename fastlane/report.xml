@@ -5,47 +5,47 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Switch to increment_build_number_in_pubspec lane" time="0.000232">
+      <testcase classname="fastlane.lanes" name="0: Switch to increment_build_number_in_pubspec lane" time="0.000144">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: Switch to flutter lane" time="0.000146">
+      <testcase classname="fastlane.lanes" name="1: Switch to flutter lane" time="0.000169">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: Flutter clean" time="19.300049">
+      <testcase classname="fastlane.lanes" name="2: Flutter clean" time="13.920598">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: Switch to flutter lane" time="0.000345">
+      <testcase classname="fastlane.lanes" name="3: Switch to flutter lane" time="0.000209">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: Pub Get" time="7.058989">
+      <testcase classname="fastlane.lanes" name="4: Pub Get" time="6.060872">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: Switch to build_ios lane" time="0.000211">
+      <testcase classname="fastlane.lanes" name="5: Switch to build_ios lane" time="0.000133">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="6: Switch to flutter lane" time="0.000199">
+      <testcase classname="fastlane.lanes" name="6: Switch to flutter lane" time="7.1e-05">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="7: Build" time="480.07691">
+      <testcase classname="fastlane.lanes" name="7: Build" time="389.959716">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="8: upload_to_testflight" time="132.578496">
+      <testcase classname="fastlane.lanes" name="8: upload_to_testflight" time="133.954736">
         
       </testcase>
     

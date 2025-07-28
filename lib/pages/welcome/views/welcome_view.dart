@@ -144,7 +144,7 @@ class _WelcomeViewState extends State<WelcomeView> {
             child: Container(
               height: MediaQuery.of(context).size.height * 0.6,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),

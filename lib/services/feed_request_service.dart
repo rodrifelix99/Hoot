@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-import 'auth_service.dart';
 import 'subscription_service.dart';
 import '../models/user.dart';
 

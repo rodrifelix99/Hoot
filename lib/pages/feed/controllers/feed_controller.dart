@@ -49,6 +49,7 @@ class FeedController extends GetxController {
     }
   }
 
+  @override
   void refresh() {
     state.value = state.value.reset();
     fetchNextPage();
