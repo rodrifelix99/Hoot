@@ -5,6 +5,7 @@ import '../../../components/avatar_component.dart';
 import '../../../components/name_component.dart';
 import '../../../components/empty_message.dart';
 import '../../../util/routes/app_routes.dart';
+import '../../../services/dialog_service.dart';
 
 class SubscribersView extends GetView<SubscribersController> {
   const SubscribersView({super.key});
@@ -38,16 +39,35 @@ class SubscribersView extends GetView<SubscribersController> {
               ),
               title: NameComponent(user: user, size: 16),
               trailing: PopupMenuButton<String>(
-                onSelected: (value) {
+                onSelected: (value) async {
                   if (value == 'remove') {
-                    controller.removeSubscriber(user.uid);
+                    final confirmed = await DialogService.confirm(
+                      context: context,
+                      title: 'removeSubscriber'.tr,
+                      message: 'removeSubscriberConfirmation'.tr,
+                      okLabel: 'removeSubscriber'.tr,
+                      cancelLabel: 'cancel'.tr,
+                    );
+                    if (confirmed) {
+                      controller.removeSubscriber(user.uid);
+                    }
                   } else if (value == 'ban') {
-                    controller.banSubscriber(user.uid);
+                    final confirmed = await DialogService.confirm(
+                      context: context,
+                      title: 'banSubscriber'.tr,
+                      message: 'banSubscriberConfirmation'.tr,
+                      okLabel: 'banSubscriber'.tr,
+                      cancelLabel: 'cancel'.tr,
+                    );
+                    if (confirmed) {
+                      controller.banSubscriber(user.uid);
+                    }
                   }
                 },
                 itemBuilder: (_) => [
-                  PopupMenuItem(value: 'remove', child: Text('remove'.tr)),
-                  PopupMenuItem(value: 'ban', child: Text('ban'.tr)),
+                  PopupMenuItem(
+                      value: 'remove', child: Text('removeSubscriber'.tr)),
+                  PopupMenuItem(value: 'ban', child: Text('banSubscriber'.tr)),
                 ],
               ),
             );

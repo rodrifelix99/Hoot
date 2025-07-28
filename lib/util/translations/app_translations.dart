@@ -143,6 +143,12 @@ class AppTranslations extends Translations {
           'editFeed': 'Edit Feed',
           'unsubscriber': ' @{username} unsubscribed from {feedName}',
           'privateFeedRequest': '@{username} requested to join {feedName}',
+          'removeSubscriber': 'Remove subscriber',
+          'banSubscriber': 'Ban subscriber',
+          'removeSubscriberConfirmation':
+              'Are you sure you want to remove this subscriber?',
+          'banSubscriberConfirmation':
+              'Are you sure you want to ban this subscriber?',
           'comingSoon': 'Coming soon!',
           'numberOfSubscriptions':
               '{count, plural, =0 {No subscriptions} one {1 subscription} other {{count} subscriptions}}',
@@ -468,6 +474,12 @@ class AppTranslations extends Translations {
           'editFeed': 'Editar Feed',
           'unsubscriber': ' @{username} canceló la suscripción a {feedName}',
           'privateFeedRequest': '@{username} solicitó unirse a {feedName}',
+          'removeSubscriber': 'Eliminar suscriptor',
+          'banSubscriber': 'Prohibir suscriptor',
+          'removeSubscriberConfirmation':
+              '¿Estás seguro de que deseas eliminar a este suscriptor?',
+          'banSubscriberConfirmation':
+              '¿Estás seguro de que deseas prohibir a este suscriptor?',
           'comingSoon': '¡Próximamente!',
           'numberOfSubscriptions':
               '{count, plural, =0 {No hay suscripciones} one {1 suscripción} other {{count} suscripciones}}',
@@ -797,6 +809,12 @@ class AppTranslations extends Translations {
           'editFeed': 'Editar Feed',
           'unsubscriber': ' @{username} cancelou a subscrição de {feedName}',
           'privateFeedRequest': '@{username} pediu para aderir a {feedName}',
+          'removeSubscriber': 'Remover subscritor',
+          'banSubscriber': 'Banir subscritor',
+          'removeSubscriberConfirmation':
+              'Tens a certeza de que queres remover este subscritor?',
+          'banSubscriberConfirmation':
+              'Tens a certeza de que queres banir este subscritor?',
           'comingSoon': 'Em Breve!',
           'numberOfSubscriptions':
               '{count, plural, =0 {Sem subscrições} one {1 subscrição} other {{count} subscrições}}',
@@ -1122,6 +1140,12 @@ class AppTranslations extends Translations {
           'unsubscriber': ' @{username} cancelou a inscrição em {feedName}',
           'privateFeedRequest':
               '@{username} solicitou participação em {feedName}',
+          'removeSubscriber': 'Remover inscrito',
+          'banSubscriber': 'Banir inscrito',
+          'removeSubscriberConfirmation':
+              'Tem certeza de que deseja remover este inscrito?',
+          'banSubscriberConfirmation':
+              'Tem certeza de que deseja banir este inscrito?',
           'comingSoon': 'Em Breve!',
           'numberOfSubscriptions':
               '{count, plural, =0 {Sem inscrições} one {1 inscrição} other {{count} inscrições}}',
