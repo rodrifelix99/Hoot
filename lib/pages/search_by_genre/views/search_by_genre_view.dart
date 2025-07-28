@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 import '../controllers/search_by_genre_controller.dart';
 import '../../../components/list_item_component.dart';
 import '../../../components/avatar_component.dart';
