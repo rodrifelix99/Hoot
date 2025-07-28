@@ -49,6 +49,10 @@ class SettingsView extends GetView<SettingsController> {
             onTap: controller.findFriends,
           ),
           ListTile(
+            title: Text('subscriptions'.tr),
+            onTap: () => Get.toNamed(AppRoutes.subscriptions),
+          ),
+          ListTile(
             title: Text('termsOfService'.tr),
             onTap: () => Get.toNamed(AppRoutes.terms),
           ),
