@@ -11,6 +11,7 @@ import 'package:hoot/pages/profile/controllers/profile_controller.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/services/feed_service.dart';
+import 'package:hoot/services/subscription_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
@@ -132,11 +133,14 @@ void main() {
     final firestore = FakeFirebaseFirestore();
     final user = U(uid: 'u1', feeds: []);
     final auth = FakeAuthService(user);
+    final subService = SubscriptionService(firestore: firestore);
     final profile = ProfileController(
       authService: auth,
       feedService: FakeFeedService(),
+      subscriptionService: subService,
     );
     Get.put<AuthService>(auth);
+    Get.put<SubscriptionService>(subService);
     Get.put<ProfileController>(profile);
 
     final controller =
