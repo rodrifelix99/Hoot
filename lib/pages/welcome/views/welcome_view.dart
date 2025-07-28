@@ -164,6 +164,7 @@ class _WelcomeViewState extends State<WelcomeView> {
               child: Swiper(
                 controller: _controller,
                 index: widget.initialIndex,
+                physics: const NeverScrollableScrollPhysics(),
                 loop: false,
                 itemCount: 3,
                 itemBuilder: (context, i) {
