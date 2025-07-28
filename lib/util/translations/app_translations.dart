@@ -140,6 +140,9 @@ class AppTranslations extends Translations {
               '{numberOfRequests, plural, =0 {No requests} one {# request} other {# requests}}',
           'errorRequestingToJoin':
               'There was an error requesting to join this feed',
+          'feedRequests': 'Feed Requests',
+          'approve': 'Approve',
+          'reject': 'Reject',
           'editFeed': 'Edit Feed',
           'unsubscriber': ' @{username} unsubscribed from {feedName}',
           'privateFeedRequest': '@{username} requested to join {feedName}',
@@ -471,6 +474,9 @@ class AppTranslations extends Translations {
               '{numberOfRequests, plural, =0 {No hay solicitudes} one {# solicitud} other {# solicitudes}}',
           'errorRequestingToJoin':
               'Hubo un error al solicitar unirse a este feed',
+          'feedRequests': 'Solicitudes',
+          'approve': 'Aprobar',
+          'reject': 'Rechazar',
           'editFeed': 'Editar Feed',
           'unsubscriber': ' @{username} canceló la suscripción a {feedName}',
           'privateFeedRequest': '@{username} solicitó unirse a {feedName}',
@@ -806,6 +812,9 @@ class AppTranslations extends Translations {
               '{numberOfRequests, plural, =0 {Sem pedidos} one {# pedido} other {# pedidos}}',
           'errorRequestingToJoin':
               'Ocorreu um erro ao pedir para aderir a este feed',
+          'feedRequests': 'Pedidos',
+          'approve': 'Aprovar',
+          'reject': 'Rejeitar',
           'editFeed': 'Editar Feed',
           'unsubscriber': ' @{username} cancelou a subscrição de {feedName}',
           'privateFeedRequest': '@{username} pediu para aderir a {feedName}',
@@ -1136,6 +1145,9 @@ class AppTranslations extends Translations {
           'numberOfRequests':
               '{numberOfRequests, plural, =0 {Sem solicitações} one {# solicitação} other {# solicitações}}',
           'errorRequestingToJoin': 'Erro ao solicitar participação neste feed',
+          'feedRequests': 'Solicitações',
+          'approve': 'Aprovar',
+          'reject': 'Rejeitar',
           'editFeed': 'Editar Feed',
           'unsubscriber': ' @{username} cancelou a inscrição em {feedName}',
           'privateFeedRequest':
