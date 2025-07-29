@@ -11,7 +11,7 @@ import {setGlobalOptions} from "firebase-functions";
 
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore, FieldValue} from "firebase-admin/firestore";
-import {onDocumentCreated} from "firebase-functions/v2/firestore";
+import {onDocumentCreated, onDocumentDeleted} from "firebase-functions/v2/firestore";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -202,6 +202,22 @@ export const onSubscriptionCreated = onDocumentCreated(
         read: false,
         createdAt: FieldValue.serverTimestamp(),
       });
+  }
+);
+
+export const onPostDeleted = onDocumentDeleted(
+  "posts/{postId}",
+  async (event) => {
+    const post = event.data?.data();
+    if (!post) return;
+
+    if (post.reFeeded && post.reFeededFrom?.id) {
+      const originalId = post.reFeededFrom.id as string;
+      await db
+        .collection("posts")
+        .doc(originalId)
+        .update({ reFeeds: FieldValue.increment(-1) });
+    }
   }
 );
 
