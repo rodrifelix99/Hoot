@@ -74,6 +74,14 @@ class FeedPageView extends GetView<FeedPageController> {
               padding: const EdgeInsets.only(top: 8),
               child: Text(feed.description!),
             ),
+          TextButton.icon(
+            onPressed: () => Get.toNamed(
+              AppRoutes.subscribers,
+              arguments: feed.id,
+            ),
+            icon: const Icon(Icons.group_outlined),
+            label: Text('${feed.subscriberCount ?? 0} ${'followers'.tr}'),
+          ),
         ],
       ),
     );
