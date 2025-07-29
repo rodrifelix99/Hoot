@@ -73,5 +73,26 @@ void main() {
               .get('reFeeds'),
           1);
     });
+
+    test('fetchPost returns post when found', () async {
+      final firestore = FakeFirebaseFirestore();
+      await firestore.collection('posts').doc('p1').set({'text': 'hello'});
+      final service = PostService(firestore: firestore);
+
+      final post = await service.fetchPost('p1');
+
+      expect(post, isNotNull);
+      expect(post!.id, 'p1');
+      expect(post.text, 'hello');
+    });
+
+    test('fetchPost returns null when missing', () async {
+      final firestore = FakeFirebaseFirestore();
+      final service = PostService(firestore: firestore);
+
+      final post = await service.fetchPost('missing');
+
+      expect(post, isNull);
+    });
   });
 }
