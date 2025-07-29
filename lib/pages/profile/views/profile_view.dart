@@ -40,11 +40,17 @@ class _ProfileViewState extends State<ProfileView> {
   void reportUser(BuildContext context) {
     final user = controller.user.value;
     if (user == null) return;
+    final controllerText = TextEditingController();
     showAdaptiveDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: Text(
           'reportUsername'.trParams({'username': user.username ?? ''}),
+        ),
+        content: TextField(
+          controller: controllerText,
+          maxLines: 3,
+          decoration: InputDecoration(labelText: 'reportInfo'.tr),
         ),
         actions: [
           TextButton(
@@ -52,7 +58,7 @@ class _ProfileViewState extends State<ProfileView> {
             child: Text('cancel'.tr),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(context, controllerText.text),
             child: Text('done'.tr),
           ),
         ],
@@ -264,104 +270,105 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-        return Scaffold(
-          appBar: AppBar(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            surfaceTintColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.black,
-                    Colors.black.withAlpha(0),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
+      return Scaffold(
+        appBar: AppBar(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.black,
+                  Colors.black.withAlpha(0),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
-            actions: [
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: LiquidGlass(
+                settings: LiquidGlassSettings(
+                  blur: 4,
+                  glassColor:
+                      Theme.of(context).colorScheme.surface.withAlpha(50),
+                ),
+                shape: LiquidOval(),
+                glassContainsChild: false,
+                child: controller.isCurrentUser
+                    ? IconButton(
+                        icon: const Icon(Icons.settings),
+                        color: Colors.white,
+                        onPressed: () => Get.toNamed(AppRoutes.settings),
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.flag_outlined),
+                        color: Colors.white,
+                        onPressed: () => reportUser(context),
+                      ),
+              ),
+            ),
+            if (controller.isCurrentUser && controller.feeds.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: LiquidGlass(
                   settings: LiquidGlassSettings(
                     blur: 4,
-                    glassColor: Theme.of(context).colorScheme.surface.withAlpha(50),
+                    glassColor:
+                        Theme.of(context).colorScheme.surface.withAlpha(50),
                   ),
                   shape: LiquidOval(),
                   glassContainsChild: false,
-                  child: controller.isCurrentUser
-                      ? IconButton(
-                          icon: const Icon(Icons.settings),
-                          color: Colors.white,
-                          onPressed: () => Get.toNamed(AppRoutes.settings),
-                        )
-                      : IconButton(
-                          icon: const Icon(Icons.flag_outlined),
-                          color: Colors.white,
-                          onPressed: () => reportUser(context),
-                        ),
-                ),
-              ),
-              if (controller.isCurrentUser && controller.feeds.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: LiquidGlass(
-                    settings: LiquidGlassSettings(
-                      blur: 4,
-                      glassColor:
-                          Theme.of(context).colorScheme.surface.withAlpha(50),
-                    ),
-                    shape: LiquidOval(),
-                    glassContainsChild: false,
-                    child: IconButton(
-                      icon: const Icon(Icons.group),
-                      color: Colors.white,
-                      onPressed: () => Get.toNamed(
-                        AppRoutes.subscribers,
-                        arguments: controller
-                            .feeds[controller.selectedFeedIndex.value].id,
-                      ),
+                  child: IconButton(
+                    icon: const Icon(Icons.group),
+                    color: Colors.white,
+                    onPressed: () => Get.toNamed(
+                      AppRoutes.subscribers,
+                      arguments: controller
+                          .feeds[controller.selectedFeedIndex.value].id,
                     ),
                   ),
                 ),
-            ],
-          ),
-          extendBodyBehindAppBar: true,
-          floatingActionButton: controller.feeds.isEmpty
-              ? null
-              : Builder(builder: (_) {
-                  if (controller.isCurrentUser) {
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-                      child: FloatingActionButton.extended(
-                        heroTag: 'edit_feed_fab',
-                        onPressed: () => Get.toNamed(
-                          AppRoutes.editFeed,
-                          arguments:
-                              controller.feeds[controller.selectedFeedIndex.value],
-                        ),
-                        icon: const Icon(Icons.edit),
-                        label: Text('editFeed'.tr),
+              ),
+          ],
+        ),
+        extendBodyBehindAppBar: true,
+        floatingActionButton: controller.feeds.isEmpty
+            ? null
+            : Builder(builder: (_) {
+                if (controller.isCurrentUser) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).padding.bottom),
+                    child: FloatingActionButton.extended(
+                      heroTag: 'edit_feed_fab',
+                      onPressed: () => Get.toNamed(
+                        AppRoutes.editFeed,
+                        arguments: controller
+                            .feeds[controller.selectedFeedIndex.value],
                       ),
-                    );
-                  }
-                  final feedId =
-                      controller.feeds[controller.selectedFeedIndex.value].id;
-                  final subscribed = controller.isSubscribed(feedId);
-                  return FloatingActionButton.extended(
-                    heroTag: 'sub_fab',
-                    onPressed: () => controller.toggleSubscription(feedId),
-                    icon: Icon(subscribed ? Icons.remove : Icons.add),
-                    label: Text(subscribed ? 'unsubscribe'.tr : 'subscribe'.tr),
+                      icon: const Icon(Icons.edit),
+                      label: Text('editFeed'.tr),
+                    ),
                   );
-                }),
-          body: buildBody(context),
-        );
-      }
-    );
+                }
+                final feedId =
+                    controller.feeds[controller.selectedFeedIndex.value].id;
+                final subscribed = controller.isSubscribed(feedId);
+                return FloatingActionButton.extended(
+                  heroTag: 'sub_fab',
+                  onPressed: () => controller.toggleSubscription(feedId),
+                  icon: Icon(subscribed ? Icons.remove : Icons.add),
+                  label: Text(subscribed ? 'unsubscribe'.tr : 'subscribe'.tr),
+                );
+              }),
+        body: buildBody(context),
+      );
+    });
   }
 }
