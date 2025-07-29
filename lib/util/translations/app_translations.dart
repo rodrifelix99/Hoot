@@ -192,6 +192,7 @@ class AppTranslations extends Translations {
           'newComment': 'New Comment',
           'newReHoot': 'New ReHoot',
           'newMention': 'New Mention',
+          'reHoot': 'ReHoot',
           'deleteOnRefeededPost':
               'To delete, do this on the hoot created when reFeeded',
           'youNeedToCreateAFeedFirst': 'You need to create a feed first',
@@ -531,6 +532,7 @@ class AppTranslations extends Translations {
           'newComment': 'Nuevo Comentario',
           'newReHoot': 'Nuevo ReHoot',
           'newMention': 'Nueva Mención',
+          'reHoot': 'ReHoot',
           'deleteOnRefeededPost':
               'Para eliminar, haz esto en el hoot creado cuando se rehootee',
           'youNeedToCreateAFeedFirst': 'Necesitas crear un feed primero',
@@ -871,6 +873,7 @@ class AppTranslations extends Translations {
           'newComment': 'Novo Comentário',
           'newReHoot': 'Novo ReHoot',
           'newMention': 'Nova Menção',
+          'reHoot': 'ReHoot',
           'deleteOnRefeededPost':
               'Para eliminar, faz isto no hoot criado quando for rehootado',
           'youNeedToCreateAFeedFirst': 'Precisas de criar um feed primeiro',
@@ -1208,6 +1211,7 @@ class AppTranslations extends Translations {
           'newComment': 'Novo Comentário',
           'newReHoot': 'Novo ReHoot',
           'newMention': 'Nova Menção',
+          'reHoot': 'ReHoot',
           'deleteOnRefeededPost':
               'Para excluir, faça isso no hoot criado quando for rehootado',
           'youNeedToCreateAFeedFirst': 'Você precisa criar um feed primeiro',
