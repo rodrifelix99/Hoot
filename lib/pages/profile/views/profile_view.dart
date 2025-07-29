@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/util/extensions/feed_extension.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import '../../../models/user.dart';
 import 'package:hoot/components/avatar_component.dart';
@@ -7,7 +8,6 @@ import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import '../../../util/routes/app_routes.dart';
-import '../../../util/color_utils.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends StatefulWidget {
@@ -143,7 +143,8 @@ class _ProfileViewState extends State<ProfileView> {
   Widget buildFeedGrid(BuildContext context) {
     return Obx(() {
       final feeds = controller.feeds;
-      final itemCount = controller.isCurrentUser ? feeds.length + 1 : feeds.length;
+      final itemCount =
+          controller.isCurrentUser ? feeds.length + 1 : feeds.length;
       return SliverPadding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         sliver: SliverGrid(
@@ -163,14 +164,14 @@ class _ProfileViewState extends State<ProfileView> {
               }
               final feed = feeds[controller.isCurrentUser ? index - 1 : index];
               final color = feed.color ?? Theme.of(context).colorScheme.primary;
-              final textColor = foregroundForBackground(color);
+              final textColor = feed.foregroundColor;
               return GestureDetector(
                 onTap: () => Get.toNamed(AppRoutes.feed, arguments: feed.id),
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: color.withOpacity(0.2),
+                    color: color.withOpacity(0.5),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -182,12 +183,28 @@ class _ProfileViewState extends State<ProfileView> {
                           size: 60,
                           radius: 16,
                         ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 16),
                       Text(
                         feed.title,
-                        style: TextStyle(color: textColor),
+                        style: Get.textTheme.titleMedium?.copyWith(
+                          color: textColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                         textAlign: TextAlign.center,
                       ),
+                      if (feed.description != null &&
+                          feed.description!.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          feed.description!,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Get.textTheme.bodyMedium?.copyWith(
+                            color: textColor,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -248,69 +265,52 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Scaffold(
-        appBar: AppBar(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          surfaceTintColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.black,
-                  Colors.black.withAlpha(0),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.black,
+                Colors.black.withAlpha(0),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: LiquidGlass(
-                settings: LiquidGlassSettings(
-                  blur: 4,
-                  glassColor:
-                      Theme.of(context).colorScheme.surface.withAlpha(50),
-                ),
-                shape: LiquidOval(),
-                glassContainsChild: false,
-                child: controller.isCurrentUser
-                    ? IconButton(
-                        icon: const Icon(Icons.settings),
-                        color: Colors.white,
-                        onPressed: () => Get.toNamed(AppRoutes.settings),
-                      )
-                    : IconButton(
-                        icon: const Icon(Icons.flag_outlined),
-                        color: Colors.white,
-                        onPressed: () => reportUser(context),
-                      ),
-              ),
-            ),
-            if (controller.isCurrentUser && controller.feeds.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: LiquidGlass(
-                  settings: LiquidGlassSettings(
-                    blur: 4,
-                    glassColor:
-                        Theme.of(context).colorScheme.surface.withAlpha(50),
-                  ),
-              ),
-          ],
         ),
-        extendBodyBehindAppBar: true,
-        floatingActionButton: controller.isCurrentUser ? FloatingActionButton(
-                onPressed: () => Get.toNamed(AppRoutes.createFeed),
-                child: const Icon(Icons.add),
-              ) : null,
-        body: buildBody(context),
-      );
-    });
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: LiquidGlass(
+              settings: LiquidGlassSettings(
+                blur: 4,
+                glassColor: Theme.of(context).colorScheme.surface.withAlpha(50),
+              ),
+              shape: LiquidOval(),
+              glassContainsChild: false,
+              child: controller.isCurrentUser
+                  ? IconButton(
+                      icon: const Icon(Icons.settings),
+                      color: Colors.white,
+                      onPressed: () => Get.toNamed(AppRoutes.settings),
+                    )
+                  : IconButton(
+                      icon: const Icon(Icons.flag_outlined),
+                      color: Colors.white,
+                      onPressed: () => reportUser(context),
+                    ),
+            ),
+          ),
+        ],
+      ),
+      extendBodyBehindAppBar: true,
+      body: buildBody(context),
+    );
   }
 }

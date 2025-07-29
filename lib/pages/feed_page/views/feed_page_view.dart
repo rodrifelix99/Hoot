@@ -52,7 +52,7 @@ class FeedPageView extends GetView<FeedPageController> {
       }
       final state = controller.state.value;
       return RefreshIndicator(
-        onRefresh: controller.refresh,
+        onRefresh: controller.refreshFeed,
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(child: _buildHeader(context)),

@@ -78,7 +78,7 @@ class FeedPageController extends GetxController {
     fetchNext();
   }
 
-  void fetchNext() async {
+  Future<void> fetchNext() async {
     if (state.value.isLoading || feed.value == null) return;
     state.value = state.value.copyWith(isLoading: true, error: null);
     try {
@@ -98,7 +98,7 @@ class FeedPageController extends GetxController {
     }
   }
 
-  Future<void> refresh() async {
+  Future<void> refreshFeed() async {
     state.value = state.value.reset();
     await fetchNext();
   }
