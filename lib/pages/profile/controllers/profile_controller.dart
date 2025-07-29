@@ -85,20 +85,8 @@ class ProfileController extends GetxController {
       }
 
       if (feeds.isNotEmpty) {
-        var index = 0;
-        if (initialFeedId != null) {
-          final i = feeds.indexWhere((f) => f.id == initialFeedId);
-          if (i != -1) index = i;
-        }
-        selectedFeedIndex.value = index;
-        await loadFeedPosts(feeds[index].id, refresh: true);
+        selectedFeedIndex.value = 0;
       }
-      ever<int>(selectedFeedIndex, (i) {
-        final feed = feeds[i];
-        if (feed.posts == null || feed.posts!.isEmpty) {
-          loadFeedPosts(feed.id, refresh: true);
-        }
-      });
     } finally {
       isLoading.value = false;
     }

@@ -33,6 +33,8 @@ import 'package:hoot/pages/subscriptions/bindings/subscriptions_binding.dart';
 import 'package:hoot/pages/subscriptions/views/subscriptions_view.dart';
 import 'package:hoot/pages/subscribers/bindings/subscribers_binding.dart';
 import 'package:hoot/pages/subscribers/views/subscribers_view.dart';
+import 'package:hoot/pages/feed_page/bindings/feed_page_binding.dart';
+import 'package:hoot/pages/feed_page/views/feed_page_view.dart';
 import 'package:hoot/pages/post/bindings/post_binding.dart';
 import 'package:hoot/pages/post/views/post_view.dart';
 import 'package:hoot/pages/report/bindings/report_binding.dart';
@@ -145,6 +147,12 @@ class AppPages {
         name: AppRoutes.subscribers,
         page: () => const SubscribersView(),
         binding: SubscribersBinding(),
+        middlewares: [AuthMiddleware()],
+      ),
+      GetPage(
+        name: AppRoutes.feed,
+        page: () => const FeedPageView(),
+        binding: FeedPageBinding(),
         middlewares: [AuthMiddleware()],
       ),
       GetPage(
