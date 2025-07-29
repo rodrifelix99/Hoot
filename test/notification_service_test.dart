@@ -60,5 +60,42 @@ void main() {
       expect(result.first.type, 1);
       expect(result.last.type, 0);
     });
+
+    test('markAllAsRead updates unread notifications', () async {
+      final firestore = FakeFirebaseFirestore();
+      final service = NotificationService(firestore: firestore);
+
+      await firestore
+          .collection('users')
+          .doc('u1')
+          .collection('notifications')
+          .add({
+        'user': {'uid': 'u2'},
+        'type': 0,
+        'read': false,
+        'createdAt': Timestamp.now(),
+      });
+      await firestore
+          .collection('users')
+          .doc('u1')
+          .collection('notifications')
+          .add({
+        'user': {'uid': 'u3'},
+        'type': 0,
+        'read': false,
+        'createdAt': Timestamp.now(),
+      });
+
+      await service.markAllAsRead('u1');
+
+      final remaining = await firestore
+          .collection('users')
+          .doc('u1')
+          .collection('notifications')
+          .where('read', isEqualTo: false)
+          .get();
+
+      expect(remaining.docs, isEmpty);
+    });
   });
 }

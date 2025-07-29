@@ -84,6 +84,7 @@ void main() {
     controller.loading.value = false;
     controller.notifications.assignAll([
       HootNotification(
+        id: 'n1',
         user: U(uid: 'u2', username: 'Tester'),
         type: 0,
         read: false,
@@ -115,6 +116,7 @@ void main() {
     controller.loading.value = false;
     controller.notifications.assignAll([
       HootNotification(
+        id: 'n2',
         user: U(uid: 'u2', username: 'Tester'),
         type: 4,
         postId: 'p1',
