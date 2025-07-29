@@ -59,6 +59,9 @@ class FakePostService extends GetxService implements BasePostService {
   Future<void> toggleLike(String postId, String userId, bool like) async {}
 
   @override
+  Future<Post?> fetchPost(String id) async => null;
+
+  @override
   Future<String> reFeed(
       {required Post original,
       required Feed targetFeed,

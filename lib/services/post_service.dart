@@ -16,6 +16,9 @@ abstract class BasePostService {
   /// Toggles like state for [postId] by [userId].
   Future<void> toggleLike(String postId, String userId, bool like);
 
+  /// Fetches a post document by [id]. Returns null if not found.
+  Future<Post?> fetchPost(String id);
+
   /// Creates a reFeed of [original] into [targetFeed] by [user].
   /// Returns the new post id.
   Future<String> reFeed({
@@ -60,6 +63,13 @@ class PostService implements BasePostService {
       }
     });
     // Like notifications are handled server-side by a Firestore trigger.
+  }
+
+  @override
+  Future<Post?> fetchPost(String id) async {
+    final doc = await _firestore.collection('posts').doc(id).get();
+    if (!doc.exists) return null;
+    return Post.fromJson({'id': doc.id, ...doc.data()!});
   }
 
   @override

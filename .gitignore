@@ -50,3 +50,6 @@ app.*.map.json
 # FVM Version Cache
 .fvm/
 /fastlane/build/
+
+# Environment files
+assets/.env

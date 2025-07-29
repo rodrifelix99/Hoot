@@ -10,19 +10,23 @@ import '../../../models/comment.dart';
 import '../../../services/comment_service.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/user_service.dart';
+import '../../../services/post_service.dart';
 
 class PostController extends GetxController {
   late Post post;
   final BaseCommentService _commentService;
   final AuthService _authService;
+  final BasePostService _postService;
   BaseUserService? _userService;
 
   PostController({
     BaseCommentService? commentService,
     AuthService? authService,
     BaseUserService? userService,
+    BasePostService? postService,
   })  : _commentService = commentService ?? CommentService(),
         _authService = authService ?? Get.find<AuthService>(),
+        _postService = postService ?? Get.find<BasePostService>(),
         _userService = userService;
 
   final Rx<PagingState<DocumentSnapshot?, Comment>> commentsState = PagingState<DocumentSnapshot?, Comment>().obs;
@@ -38,15 +42,36 @@ class PostController extends GetxController {
     final args = Get.arguments;
     if (args is Post) {
       post = args;
+      _setup();
     } else if (args is Map && args['post'] is Post) {
       post = args['post'];
+      _setup();
+    } else if (args is String) {
+      post = Post.empty();
+      _loadPost(args);
+    } else if (args is Map && args['id'] is String) {
+      post = Post.empty();
+      _loadPost(args['id']);
     } else {
       post = Post.empty();
+      _setup();
     }
+  }
+
+  void _setup() {
     commentController.addListener(() {
       showSendButton.value = commentController.text.trim().isNotEmpty;
     });
     fetchNextComments();
+  }
+
+  Future<void> _loadPost(String id) async {
+    final fetched = await _postService.fetchPost(id);
+    if (fetched != null) {
+      post = fetched;
+      update();
+    }
+    _setup();
   }
 
   void fetchNextComments() async {
