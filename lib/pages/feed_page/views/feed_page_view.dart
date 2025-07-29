@@ -76,7 +76,7 @@ class FeedPageView extends GetView<FeedPageController> {
                 ),
                 noItemsFoundIndicatorBuilder: (_) => NothingToShowComponent(
                   icon: const Icon(Icons.feed_outlined),
-                  text: 'noPosts'.tr,
+                  text: 'noHoots'.tr,
                 ),
               ),
             ),
