@@ -79,7 +79,7 @@ class _PostComponentState extends State<PostComponent> {
       context: context,
       title: 'selectAFeedToRefeedTo'.tr,
       actions: [
-        for (final f in feeds) SheetAction(label: f.title),
+        for (final f in feeds) SheetAction<Feed>(label: f.title, key: f),
       ],
     );
     if (feed == null) return;
