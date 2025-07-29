@@ -360,11 +360,23 @@ class _ProfileViewState extends State<ProfileView> {
                 final feedId =
                     controller.feeds[controller.selectedFeedIndex.value].id;
                 final subscribed = controller.isSubscribed(feedId);
+                final requested = controller.isRequested(feedId);
                 return FloatingActionButton.extended(
                   heroTag: 'sub_fab',
-                  onPressed: () => controller.toggleSubscription(feedId),
-                  icon: Icon(subscribed ? Icons.remove : Icons.add),
-                  label: Text(subscribed ? 'unsubscribe'.tr : 'subscribe'.tr),
+                  onPressed:
+                      requested ? null : () => controller.toggleSubscription(feedId),
+                  icon: Icon(subscribed
+                      ? Icons.remove
+                      : requested
+                          ? Icons.hourglass_top
+                          : Icons.add),
+                  label: Text(subscribed
+                      ? 'unsubscribe'.tr
+                      : requested
+                          ? 'requested'.tr
+                          : (controller.feeds[controller.selectedFeedIndex.value].private == true
+                              ? 'request'.tr
+                              : 'subscribe'.tr)),
                 );
               }),
         body: buildBody(context),

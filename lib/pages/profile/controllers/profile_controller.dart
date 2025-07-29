@@ -36,6 +36,7 @@ class ProfileController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxInt selectedFeedIndex = 0.obs;
   final RxSet<String> subscribedFeedIds = <String>{}.obs;
+  final RxSet<String> requestedFeedIds = <String>{}.obs;
   final Map<String, PagingState<DocumentSnapshot?, Post>> feedStates = {};
   String? uid;
   String? initialFeedId;
@@ -76,6 +77,11 @@ class ProfileController extends GetxController {
         final subs = await _subscriptionService
             .fetchSubscriptions(_authService.currentUser!.uid);
         subscribedFeedIds.addAll(subs);
+        final reqResults = await Future.wait(
+            feeds.map((f) => _feedRequestService.exists(f.id, _authService.currentUser!.uid)));
+        for (var i = 0; i < feeds.length; i++) {
+          if (reqResults[i]) requestedFeedIds.add(feeds[i].id);
+        }
       }
 
       if (feeds.isNotEmpty) {
@@ -144,6 +150,7 @@ class ProfileController extends GetxController {
   Future<void> toggleSubscription(String feedId) async {
     final userId = _authService.currentUser?.uid;
     if (userId == null) return;
+    if (requestedFeedIds.contains(feedId)) return;
     final subscribed = subscribedFeedIds.contains(feedId);
     if (subscribed) {
       subscribedFeedIds.remove(feedId);
@@ -159,6 +166,7 @@ class ProfileController extends GetxController {
       if (feed.private == true) {
         try {
           await _feedRequestService.submit(feedId, userId);
+          requestedFeedIds.add(feedId);
           ToastService.showSuccess('requestSent'.tr);
         } catch (e, s) {
           await ErrorService.reportError(e,
@@ -178,4 +186,5 @@ class ProfileController extends GetxController {
   }
 
   bool isSubscribed(String feedId) => subscribedFeedIds.contains(feedId);
+  bool isRequested(String feedId) => requestedFeedIds.contains(feedId);
 }
