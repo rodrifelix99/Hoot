@@ -6,6 +6,7 @@ import '../../../components/list_item_component.dart';
 import '../../../components/empty_message.dart';
 import '../../../util/routes/app_routes.dart';
 import '../controllers/subscriptions_controller.dart';
+import '../../../util/extensions/feed_extension.dart';
 
 class SubscriptionsView extends GetView<SubscriptionsController> {
   const SubscriptionsView({super.key});
@@ -37,9 +38,11 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
               ),
               child: ListItemComponent(
                 leading: ProfileAvatarComponent(
-                  image: feed.imageUrl ?? '',
+                  image: feed.bigAvatar ?? '',
                   size: 100,
                   radius: 25,
+                  color: feed.color,
+                  foregroundColor: feed.foregroundColor,
                 ),
                 title: feed.title,
                 subtitle:

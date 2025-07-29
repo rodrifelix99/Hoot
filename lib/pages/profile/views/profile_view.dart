@@ -177,12 +177,13 @@ class _ProfileViewState extends State<ProfileView> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (feed.imageUrl != null && feed.imageUrl!.isNotEmpty)
-                        ProfileAvatarComponent(
-                          image: feed.imageUrl!,
-                          size: 60,
-                          radius: 16,
-                        ),
+                      ProfileAvatarComponent(
+                        image: feed.smallAvatar ?? feed.bigAvatar ?? '',
+                        size: 60,
+                        radius: 16,
+                        color: color,
+                        foregroundColor: textColor,
+                      ),
                       const SizedBox(height: 16),
                       Text(
                         feed.title,

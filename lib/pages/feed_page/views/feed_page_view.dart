@@ -8,6 +8,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../../models/post.dart';
 import '../../../util/routes/app_routes.dart';
 import '../controllers/feed_page_controller.dart';
+import '../../../util/extensions/feed_extension.dart';
 
 class FeedPageView extends GetView<FeedPageController> {
   const FeedPageView({super.key});
@@ -24,12 +25,13 @@ class FeedPageView extends GetView<FeedPageController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (feed.imageUrl != null && feed.imageUrl!.isNotEmpty)
-            ProfileAvatarComponent(
-              image: feed.imageUrl!,
-              size: 120,
-              radius: 32,
-            ),
+          ProfileAvatarComponent(
+            image: feed.bigAvatar ?? '',
+            size: 120,
+            radius: 32,
+            color: feed.color,
+            foregroundColor: feed.foregroundColor,
+          ),
           const SizedBox(height: 8),
           Text(
             feed.title,

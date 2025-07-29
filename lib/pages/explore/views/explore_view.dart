@@ -36,9 +36,11 @@ class ExploreView extends GetView<ExploreController> {
             ...controller.feedSuggestions.map(
               (f) => ListTile(
                 leading: ProfileAvatarComponent(
-                  image: f.imageUrl ?? '',
+                  image: f.smallAvatar ?? f.bigAvatar ?? '',
                   size: 40,
                   radius: 20,
+                  color: f.color,
+                  foregroundColor: f.foregroundColor,
                 ),
                 title: Text(f.title),
                 subtitle: Text('feed'.tr),
@@ -108,9 +110,11 @@ class ExploreView extends GetView<ExploreController> {
                           ),
                           child: ListItemComponent(
                             leading: ProfileAvatarComponent(
-                              image: f.imageUrl ?? '',
+                              image: f.bigAvatar ?? '',
                               size: 100,
                               radius: 25,
+                              color: f.color,
+                              foregroundColor: f.foregroundColor,
                             ),
                             title: f.title,
                             subtitle:
