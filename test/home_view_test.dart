@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
@@ -64,9 +63,6 @@ class TestNotificationsController extends NotificationsController {
             notificationService:
                 NotificationService(firestore: FakeFirebaseFirestore()),
             feedRequestService: FakeFeedRequestService());
-
-  @override
-  void onInit() {}
 }
 
 void main() {
