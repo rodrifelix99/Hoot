@@ -35,6 +35,7 @@ class FeedPageController extends GetxController {
       PagingState<DocumentSnapshot?, Post>().obs;
   final RxBool subscribed = false.obs;
   final RxBool requested = false.obs;
+  final RxBool showNsfwWarning = false.obs;
 
   bool get isOwner => feed.value?.userId == _authService.currentUser?.uid;
 
@@ -68,14 +69,16 @@ class FeedPageController extends GetxController {
     final current = _authService.currentUser;
     final f = feed.value;
     if (current != null && f != null && current.uid != f.userId) {
-      final subs =
-          await _subscriptionService.fetchSubscriptions(current.uid);
+      final subs = await _subscriptionService.fetchSubscriptions(current.uid);
       subscribed.value = subs.contains(f.id);
-      final exists =
-          await _feedRequestService.exists(f.id, current.uid);
+      final exists = await _feedRequestService.exists(f.id, current.uid);
       requested.value = exists;
     }
-    fetchNext();
+    if (f != null && f.nsfw == true && f.private != true && !subscribed.value) {
+      showNsfwWarning.value = true;
+    } else {
+      fetchNext();
+    }
   }
 
   Future<void> fetchNext() async {
@@ -101,6 +104,11 @@ class FeedPageController extends GetxController {
   Future<void> refreshFeed() async {
     state.value = state.value.reset();
     await fetchNext();
+  }
+
+  void acknowledgeNsfw() {
+    showNsfwWarning.value = false;
+    fetchNext();
   }
 
   Future<void> toggleSubscription() async {
