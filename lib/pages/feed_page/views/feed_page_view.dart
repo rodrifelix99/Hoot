@@ -6,12 +6,44 @@ import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../../models/post.dart';
+import '../../../models/feed.dart';
 import '../../../util/routes/app_routes.dart';
 import '../controllers/feed_page_controller.dart';
 import '../../../util/extensions/feed_extension.dart';
 
 class FeedPageView extends GetView<FeedPageController> {
   const FeedPageView({super.key});
+
+  Widget _buildFab(Feed? feed) {
+    if (feed == null) return const SizedBox.shrink();
+    if (controller.isOwner) {
+      return FloatingActionButton(
+        heroTag: 'editFeedButton',
+        onPressed: () => Get.toNamed(
+          AppRoutes.editFeed,
+          arguments: feed,
+        ),
+        child: const Icon(Icons.edit),
+      );
+    }
+    return Obx(() {
+      final subscribed = controller.subscribed.value;
+      final requested = controller.requested.value;
+      IconData icon;
+      if (subscribed) {
+        icon = Icons.remove;
+      } else if (requested) {
+        icon = Icons.hourglass_top;
+      } else {
+        icon = Icons.add;
+      }
+      return FloatingActionButton(
+        heroTag: 'subscribeFeedButton',
+        onPressed: requested ? null : controller.toggleSubscription,
+        child: Icon(icon),
+      );
+    });
+  }
 
   Widget _buildHeader(BuildContext context) {
     final feed = controller.feed.value!;
@@ -133,28 +165,8 @@ class FeedPageView extends GetView<FeedPageController> {
       return Scaffold(
         appBar: AppBar(
           title: Text(feed?.title ?? ''),
-          actions: [
-            if (controller.isOwner)
-              IconButton(
-                onPressed: () => Get.toNamed(
-                  AppRoutes.editFeed,
-                  arguments: feed,
-                ),
-                icon: const Icon(Icons.edit),
-              )
-            else if (feed != null)
-              IconButton(
-                onPressed: controller.requested.value
-                    ? null
-                    : controller.toggleSubscription,
-                icon: Icon(controller.subscribed.value
-                    ? Icons.remove
-                    : controller.requested.value
-                        ? Icons.hourglass_top
-                        : Icons.add),
-              )
-          ],
         ),
+        floatingActionButton: _buildFab(feed),
         body: _buildBody(context),
       );
     });

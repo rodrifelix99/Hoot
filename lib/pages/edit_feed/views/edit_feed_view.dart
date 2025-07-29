@@ -4,6 +4,7 @@ import 'package:hoot/components/appbar_component.dart';
 import '../controllers/edit_feed_controller.dart';
 import '../../feed/widgets/feed_form.dart';
 import '../../feed/widgets/feed_avatar_picker.dart';
+import '../../../util/extensions/feed_extension.dart';
 
 class EditFeedView extends GetView<EditFeedController> {
   const EditFeedView({super.key});
