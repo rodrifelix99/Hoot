@@ -105,6 +105,38 @@ void main() {
     Get.reset();
   });
 
+  testWidgets('NotificationsView shows reFeed notification', (tester) async {
+    final controller = TestNotificationsController(
+      authService: FakeAuthService(U(uid: 'u1')),
+      notificationService:
+          NotificationService(firestore: FakeFirebaseFirestore()),
+      feedRequestService: FakeFeedRequestService(0),
+    );
+    controller.loading.value = false;
+    controller.notifications.assignAll([
+      HootNotification(
+        user: U(uid: 'u2', username: 'Tester'),
+        type: 4,
+        postId: 'p1',
+        read: false,
+        createdAt: DateTime.now(),
+      ),
+    ]);
+    Get.put<NotificationsController>(controller);
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        translations: AppTranslations(),
+        locale: const Locale('en'),
+        home: const NotificationsView(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tester reFeeded your hoot'), findsOneWidget);
+    Get.reset();
+  });
+
   testWidgets('Shows Subscriber Requests button when there are requests',
       (tester) async {
     final controller = TestNotificationsController(

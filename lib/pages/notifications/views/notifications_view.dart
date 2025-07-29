@@ -57,6 +57,10 @@ class NotificationsView extends GetView<NotificationsController> {
                     'feedName': feed?.title ?? '',
                   });
                   break;
+                case 4:
+                  text = 'userReFeededYourHoot'
+                      .trParams({'username': user.username ?? ''});
+                  break;
                 default:
                   text = '';
               }
@@ -66,6 +70,12 @@ class NotificationsView extends GetView<NotificationsController> {
                     case 0:
                     case 1:
                     case 2:
+                      if (n.postId != null) {
+                        Get.toNamed(AppRoutes.post,
+                            arguments: {'id': n.postId});
+                      }
+                      break;
+                    case 4:
                       if (n.postId != null) {
                         Get.toNamed(AppRoutes.post,
                             arguments: {'id': n.postId});
