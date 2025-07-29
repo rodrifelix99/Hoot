@@ -26,6 +26,9 @@ abstract class BasePostService {
     required Feed targetFeed,
     required U user,
   });
+
+  /// Deletes a post document by [id].
+  Future<void> deletePost(String id);
 }
 
 /// Default implementation writing to the `posts` collection.
@@ -103,5 +106,10 @@ class PostService implements BasePostService {
         .update({'reFeeds': FieldValue.increment(1)});
 
     return newId;
+  }
+
+  @override
+  Future<void> deletePost(String id) async {
+    await _firestore.collection('posts').doc(id).delete();
   }
 }

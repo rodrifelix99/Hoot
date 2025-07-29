@@ -72,6 +72,9 @@ class FakePostService extends GetxService implements BasePostService {
     lastUser = user;
     return 'n1';
   }
+
+  @override
+  Future<void> deletePost(String id) async {}
 }
 
 void main() {

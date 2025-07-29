@@ -12,16 +12,19 @@ import '../services/post_service.dart';
 import '../services/auth_service.dart';
 import '../services/dialog_service.dart';
 import '../services/toast_service.dart';
+import '../services/report_service.dart';
 import '../util/mention_utils.dart';
 import '../util/extensions/datetime_extension.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
   final BasePostService? postService;
+  final BaseReportService? reportService;
 
   const PostComponent({
     required this.post,
     this.postService,
+    this.reportService,
     super.key,
   });
 
@@ -33,6 +36,7 @@ class _PostComponentState extends State<PostComponent> {
   late Post _post;
   late BasePostService _postService;
   late AuthService _authService;
+  late BaseReportService _reportService;
 
   @override
   void initState() {
@@ -44,6 +48,10 @@ class _PostComponentState extends State<PostComponent> {
     _authService = Get.isRegistered<AuthService>()
         ? Get.find<AuthService>()
         : AuthService();
+    _reportService = widget.reportService ??
+        (Get.isRegistered<BaseReportService>()
+            ? Get.find<BaseReportService>()
+            : ReportService());
     super.initState();
   }
 
@@ -88,6 +96,55 @@ class _PostComponentState extends State<PostComponent> {
       _post.reFeeds = (_post.reFeeds ?? 0) + 1;
     });
     ToastService.showSuccess('newReHoot'.tr);
+  }
+
+  Future<void> _showOptions() async {
+    final user = _authService.currentUser;
+    final isOwner = user != null && user.uid == _post.user?.uid;
+    final action = await DialogService.showActionSheet<String>(
+      context: context,
+      actions: [
+        if (isOwner)
+          SheetAction(
+              label: 'deletePost'.tr, key: 'delete', isDestructiveAction: true),
+        if (!isOwner) SheetAction(label: 'reportPost'.tr, key: 'report'),
+        SheetAction(label: 'cancel'.tr, key: 'cancel'),
+      ],
+    );
+    if (action == 'delete') {
+      final confirmed = await DialogService.confirm(
+        context: context,
+        title: 'deletePost'.tr,
+        message: 'deletePostConfirmation'.tr,
+        okLabel: 'delete'.tr,
+        cancelLabel: 'cancel'.tr,
+      );
+      if (!confirmed) return;
+      try {
+        await _postService.deletePost(_post.id);
+        ToastService.showSuccess('deletePost'.tr);
+      } catch (e) {
+        ToastService.showError('somethingWentWrong'.tr);
+      }
+    } else if (action == 'report') {
+      final reasons = await showTextInputDialog(
+        context: context,
+        title: 'reportPost'.tr,
+        textFields: [
+          DialogTextField(
+            hintText: 'reportPostInfo'.tr,
+          ),
+        ],
+      );
+      final reason = reasons?.first;
+      if (reason == null || reason.isEmpty) return;
+      try {
+        await _reportService.reportPost(postId: _post.id, reason: reason);
+        ToastService.showSuccess('reportSent'.tr);
+      } catch (e) {
+        ToastService.showError('somethingWentWrong'.tr);
+      }
+    }
   }
 
   void _openPostDetails() {
@@ -135,6 +192,12 @@ class _PostComponentState extends State<PostComponent> {
                     _post.createdAt!.timeAgo(),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
+                const SizedBox(width: 4),
+                IconButton(
+                  visualDensity: VisualDensity.compact,
+                  icon: const Icon(Icons.more_vert_rounded),
+                  onPressed: _showOptions,
+                ),
               ],
             ),
             if (_post.text != null && _post.text!.isNotEmpty) ...[

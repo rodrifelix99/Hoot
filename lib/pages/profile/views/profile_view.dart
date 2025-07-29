@@ -9,6 +9,9 @@ import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import '../../../util/routes/app_routes.dart';
 import '../controllers/profile_controller.dart';
+import '../../../services/report_service.dart';
+import '../../../services/toast_service.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -33,33 +36,25 @@ class _ProfileViewState extends State<ProfileView> {
     controller = Get.find<ProfileController>(tag: uid ?? 'current');
   }
 
-  void reportUser(BuildContext context) {
+  Future<void> reportUser(BuildContext context) async {
     final user = controller.user.value;
     if (user == null) return;
-    final controllerText = TextEditingController();
-    showAdaptiveDialog(
+    final reasons = await showTextInputDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(
-          'reportUsername'.trParams({'username': user.username ?? ''}),
-        ),
-        content: TextField(
-          controller: controllerText,
-          maxLines: 3,
-          decoration: InputDecoration(labelText: 'reportInfo'.tr),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('cancel'.tr),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, controllerText.text),
-            child: Text('done'.tr),
-          ),
-        ],
-      ),
+      title: 'reportUsername'.trParams({'username': user.username ?? ''}),
+      textFields: [DialogTextField(hintText: 'reportInfo'.tr)],
     );
+    final reason = reasons?.first;
+    if (reason == null || reason.isEmpty) return;
+    final service = Get.isRegistered<BaseReportService>()
+        ? Get.find<BaseReportService>()
+        : ReportService();
+    try {
+      await service.reportUser(userId: user.uid, reason: reason);
+      ToastService.showSuccess('reportSent'.tr);
+    } catch (_) {
+      ToastService.showError('somethingWentWrong'.tr);
+    }
   }
 
   Widget buildHeader(U user) {
