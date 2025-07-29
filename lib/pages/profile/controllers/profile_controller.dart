@@ -9,21 +9,27 @@ import '../../../services/auth_service.dart';
 import '../../../services/feed_service.dart';
 import '../../../services/subscription_service.dart';
 import '../../../services/error_service.dart';
+import '../../../services/feed_request_service.dart';
+import '../../../services/toast_service.dart';
 
 /// Loads the current user profile data and owned feeds.
 class ProfileController extends GetxController {
   final AuthService _authService;
   final BaseFeedService _feedService;
   final SubscriptionService _subscriptionService;
+  final FeedRequestService _feedRequestService;
 
   ProfileController({
     AuthService? authService,
     BaseFeedService? feedService,
     SubscriptionService? subscriptionService,
+    FeedRequestService? feedRequestService,
   })  : _authService = authService ?? Get.find<AuthService>(),
         _feedService = feedService ?? Get.find<BaseFeedService>(),
         _subscriptionService =
-            subscriptionService ?? Get.find<SubscriptionService>();
+            subscriptionService ?? Get.find<SubscriptionService>(),
+        _feedRequestService =
+            feedRequestService ?? Get.find<FeedRequestService>();
 
   final Rxn<U> user = Rxn<U>();
   final RxList<Feed> feeds = <Feed>[].obs;
@@ -149,13 +155,24 @@ class ProfileController extends GetxController {
             stack: s, message: 'errorUnsubscribing'.tr);
       }
     } else {
-      subscribedFeedIds.add(feedId);
-      try {
-        await _subscriptionService.subscribe(userId, feedId);
-      } catch (e, s) {
-        subscribedFeedIds.remove(feedId);
-        await ErrorService.reportError(e,
-            stack: s, message: 'errorSubscribing'.tr);
+      final feed = feeds.firstWhere((f) => f.id == feedId);
+      if (feed.private == true) {
+        try {
+          await _feedRequestService.submit(feedId, userId);
+          ToastService.showSuccess('requestSent'.tr);
+        } catch (e, s) {
+          await ErrorService.reportError(e,
+              stack: s, message: 'errorRequestingToJoin'.tr);
+        }
+      } else {
+        subscribedFeedIds.add(feedId);
+        try {
+          await _subscriptionService.subscribe(userId, feedId);
+        } catch (e, s) {
+          subscribedFeedIds.remove(feedId);
+          await ErrorService.reportError(e,
+              stack: s, message: 'errorSubscribing'.tr);
+        }
       }
     }
   }
