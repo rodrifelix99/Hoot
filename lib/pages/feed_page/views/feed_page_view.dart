@@ -53,7 +53,7 @@ class FeedPageView extends GetView<FeedPageController> {
         return const Center(child: CircularProgressIndicator());
       }
       final state = controller.state.value;
-      return RefreshIndicator(
+      final body = RefreshIndicator(
         onRefresh: controller.refreshFeed,
         child: CustomScrollView(
           slivers: [
@@ -63,7 +63,8 @@ class FeedPageView extends GetView<FeedPageController> {
               state: state,
               fetchNextPage: controller.fetchNext,
               builderDelegate: PagedChildBuilderDelegate<Post>(
-                itemBuilder: (context, item, index) => PostComponent(post: item),
+                itemBuilder: (context, item, index) =>
+                    PostComponent(post: item),
                 firstPageProgressIndicatorBuilder: (_) => const Padding(
                   padding: EdgeInsets.all(16),
                   child: Center(child: CircularProgressIndicator()),
@@ -88,6 +89,40 @@ class FeedPageView extends GetView<FeedPageController> {
           ],
         ),
       );
+
+      return Stack(
+        children: [
+          body,
+          if (controller.showNsfwWarning.value)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black54,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'nsfwWarning'.tr,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(color: Colors.white),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: controller.acknowledgeNsfw,
+                        child: Text('continueButton'.tr),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
+      );
     });
   }
 
@@ -109,8 +144,9 @@ class FeedPageView extends GetView<FeedPageController> {
               )
             else if (feed != null)
               IconButton(
-                onPressed:
-                    controller.requested.value ? null : controller.toggleSubscription,
+                onPressed: controller.requested.value
+                    ? null
+                    : controller.toggleSubscription,
                 icon: Icon(controller.subscribed.value
                     ? Icons.remove
                     : controller.requested.value
