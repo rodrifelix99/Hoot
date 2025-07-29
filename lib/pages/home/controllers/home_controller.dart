@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import '../../../services/auth_service.dart';
 import '../../../util/routes/app_routes.dart';
+import '../../notifications/controllers/notifications_controller.dart';
 
 class HomeController extends GetxController {
   final selectedIndex = 0.obs;
@@ -25,5 +26,8 @@ class HomeController extends GetxController {
 
   void changeIndex(int index) {
     selectedIndex.value = index;
+    if (index == 2 && Get.isRegistered<NotificationsController>()) {
+      Get.find<NotificationsController>().markAllAsRead();
+    }
   }
 }

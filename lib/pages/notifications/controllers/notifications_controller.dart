@@ -46,6 +46,27 @@ class NotificationsController extends GetxController {
     await _loadRequestCount();
   }
 
+  Future<void> markAllAsRead() async {
+    final uid = _authService.currentUser?.uid;
+    if (uid == null) return;
+    await _notificationService.markAllAsRead(uid);
+    notifications.value = [
+      for (final n in notifications)
+        n.read
+            ? n
+            : HootNotification(
+                id: n.id,
+                user: n.user,
+                feed: n.feed,
+                postId: n.postId,
+                type: n.type,
+                read: true,
+                createdAt: n.createdAt,
+              )
+    ];
+    unreadCount.value = 0;
+  }
+
   Future<void> _loadNotifications() async {
     final uid = _authService.currentUser?.uid;
     if (uid == null) return;
