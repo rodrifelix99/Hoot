@@ -15,17 +15,17 @@ class QuickActionsService extends GetxService {
       const ShortcutItem(
         type: 'action_create_hoot',
         localizedTitle: 'Create Hoot',
-        icon: 'ic_launcher',
+        icon: 'ic_create_hoot',
       ),
       const ShortcutItem(
         type: 'action_create_feed',
         localizedTitle: 'Create Feed',
-        icon: 'ic_launcher',
+        icon: 'ic_create_feed',
       ),
       const ShortcutItem(
         type: 'action_view_notifications',
         localizedTitle: 'Notifications',
-        icon: 'ic_launcher',
+        icon: 'ic_notifications',
       ),
     ]);
   }
