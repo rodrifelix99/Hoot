@@ -158,7 +158,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Subscriber Requests'), findsOneWidget);
+    expect(find.text('Subscriber Requests (2)'), findsOneWidget);
     Get.reset();
   });
 }
