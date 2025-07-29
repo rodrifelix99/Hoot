@@ -1,7 +1,11 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image/image.dart' as img;
 
 import '../../../models/feed.dart';
 import '../../../services/auth_service.dart';
@@ -38,6 +42,19 @@ class EditFeedController extends GetxController {
   final RxBool isNsfw = false.obs;
   final RxBool saving = false.obs;
   final RxBool deleting = false.obs;
+  final Rx<File?> avatarFile = Rx<File?>(null);
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> pickAvatar() async {
+    try {
+      final picked = await _picker.pickImage(source: ImageSource.gallery);
+      if (picked != null) {
+        avatarFile.value = File(picked.path);
+      }
+    } catch (e, s) {
+      await ErrorService.reportError(e, stack: s);
+    }
+  }
 
   @override
   void onInit() {
@@ -69,6 +86,30 @@ class EditFeedController extends GetxController {
 
     saving.value = true;
     try {
+      String? smallAvatarUrl;
+      String? bigAvatarUrl;
+      if (avatarFile.value != null) {
+        final file = avatarFile.value!;
+        final bytes = await file.readAsBytes();
+        final decoded = img.decodeImage(bytes);
+        if (decoded != null) {
+          final small = img.copyResizeCropSquare(decoded, size: 32);
+          final big = img.copyResizeCropSquare(decoded, size: 128);
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('feed_avatars')
+              .child(feed.id);
+          final smallRef = storageRef.child('small_avatar.jpg');
+          final bigRef = storageRef.child('big_avatar.jpg');
+          await smallRef.putData(Uint8List.fromList(img.encodeJpg(small)),
+              SettableMetadata(contentType: 'image/jpeg'));
+          await bigRef.putData(Uint8List.fromList(img.encodeJpg(big)),
+              SettableMetadata(contentType: 'image/jpeg'));
+          smallAvatarUrl = await smallRef.getDownloadURL();
+          bigAvatarUrl = await bigRef.getDownloadURL();
+        }
+      }
+
       await _firestore.collection('feeds').doc(feed.id).update({
         'title': title,
         'description': description,
@@ -76,6 +117,8 @@ class EditFeedController extends GetxController {
         'type': type.toString().split('.').last,
         'private': isPrivate.value,
         'nsfw': isNsfw.value,
+        if (smallAvatarUrl != null) 'smallAvatar': smallAvatarUrl,
+        if (bigAvatarUrl != null) 'bigAvatar': bigAvatarUrl,
       });
 
       feed
@@ -84,7 +127,9 @@ class EditFeedController extends GetxController {
         ..color = selectedColor.value
         ..type = type
         ..private = isPrivate.value
-        ..nsfw = isNsfw.value;
+        ..nsfw = isNsfw.value
+        ..smallAvatar = smallAvatarUrl ?? feed.smallAvatar
+        ..bigAvatar = bigAvatarUrl ?? feed.bigAvatar;
 
       final user = _authService.currentUser;
       if (user != null && user.feeds != null) {
@@ -139,6 +184,7 @@ class EditFeedController extends GetxController {
     titleController.dispose();
     descriptionController.dispose();
     typeSearchController.dispose();
+    avatarFile.value = null;
     super.onClose();
   }
 }
