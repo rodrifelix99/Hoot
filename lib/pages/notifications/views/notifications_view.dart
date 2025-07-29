@@ -117,7 +117,8 @@ class NotificationsView extends GetView<NotificationsController> {
                 padding: const EdgeInsets.all(8),
                 child: ElevatedButton(
                   onPressed: () => Get.toNamed(AppRoutes.feedRequests),
-                  child: Text('subscriberRequests'.tr),
+                  child: Text('subscriberRequestsCount'.trParams(
+                      {'count': controller.requestCount.value.toString()})),
                 ),
               ),
             Expanded(
