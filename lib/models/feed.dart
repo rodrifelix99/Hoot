@@ -6,7 +6,8 @@ import 'package:hoot/models/post.dart';
 class Feed {
   final String id;
   String userId;
-  String? imageUrl;
+  String? smallAvatar;
+  String? bigAvatar;
   String title;
   String? description;
   String? icon;
@@ -21,7 +22,8 @@ class Feed {
   Feed(
       {required this.id,
       required this.userId,
-      this.imageUrl,
+      this.smallAvatar,
+      this.bigAvatar,
       required this.title,
       required this.description,
       this.icon,
@@ -37,7 +39,8 @@ class Feed {
     return Feed(
       id: json['id'],
       userId: json['userId'],
-      imageUrl: json['imageUrl'],
+      smallAvatar: json['smallAvatar'] ?? json['imageUrl'],
+      bigAvatar: json['bigAvatar'] ?? json['imageUrl'],
       title: json['title'],
       description: json['description'],
       icon: json['icon'],
@@ -60,7 +63,8 @@ class Feed {
         'title': title,
         'description': description,
         'icon': icon,
-        'imageUrl': imageUrl,
+        'smallAvatar': smallAvatar,
+        'bigAvatar': bigAvatar,
         'color': color!.hashCode.toString(),
         'type': type.toString().split('.').last,
         'private': private,
@@ -70,7 +74,8 @@ class Feed {
   Map<String, dynamic> toCache() => {
         'id': id,
         'userId': userId,
-        'imageUrl': imageUrl,
+        'smallAvatar': smallAvatar,
+        'bigAvatar': bigAvatar,
         'title': title,
         'description': description,
         'icon': icon,

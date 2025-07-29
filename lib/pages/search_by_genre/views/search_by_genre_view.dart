@@ -6,6 +6,7 @@ import '../controllers/search_by_genre_controller.dart';
 import '../../../components/list_item_component.dart';
 import '../../../components/avatar_component.dart';
 import '../../../util/enums/feed_types.dart';
+import '../../../util/extensions/feed_extension.dart';
 
 class SearchByGenreView extends GetView<SearchByGenreController> {
   const SearchByGenreView({super.key});
@@ -30,9 +31,11 @@ class SearchByGenreView extends GetView<SearchByGenreController> {
                 ),
                 child: ListItemComponent(
                   leading: ProfileAvatarComponent(
-                    image: feed.imageUrl ?? '',
+                    image: feed.bigAvatar ?? '',
                     size: 100,
                     radius: 25,
+                    color: feed.color,
+                    foregroundColor: feed.foregroundColor,
                   ),
                   title: feed.title,
                   subtitle: '${feed.subscriberCount ?? 0} ${'followers'.tr}',

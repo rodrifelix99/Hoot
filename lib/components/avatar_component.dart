@@ -9,13 +9,17 @@ class ProfileAvatarComponent extends StatefulWidget {
   final bool preview;
   final String url;
   final double radius;
+  final Color? color;
+  final Color? foregroundColor;
   const ProfileAvatarComponent(
       {super.key,
       required this.image,
       required this.size,
       this.preview = false,
       this.url = '',
-      this.radius = -1});
+      this.radius = -1,
+      this.color,
+      this.foregroundColor});
 
   @override
   State<ProfileAvatarComponent> createState() => _ProfileAvatarComponentState();
@@ -31,13 +35,23 @@ class _ProfileAvatarComponentState extends State<ProfileAvatarComponent> {
           child: Hero(
             tag: widget.image,
             child: Avatar(
-                image: widget.image, size: widget.size, radius: widget.radius),
+              image: widget.image,
+              size: widget.size,
+              radius: widget.radius,
+              color: widget.color,
+              foregroundColor: widget.foregroundColor,
+            ),
           ),
         ),
       );
     } else {
       return Avatar(
-          image: widget.image, size: widget.size, radius: widget.radius);
+        image: widget.image,
+        size: widget.size,
+        radius: widget.radius,
+        color: widget.color,
+        foregroundColor: widget.foregroundColor,
+      );
     }
   }
 }
@@ -46,11 +60,15 @@ class Avatar extends StatefulWidget {
   final String image;
   final int size;
   final double radius;
+  final Color? color;
+  final Color? foregroundColor;
   const Avatar(
       {super.key,
       required this.image,
       required this.size,
-      required this.radius});
+      required this.radius,
+      this.color,
+      this.foregroundColor});
 
   @override
   State<Avatar> createState() => _AvatarState();
@@ -60,18 +78,22 @@ class _AvatarState extends State<Avatar> {
   @override
   Widget build(BuildContext context) {
     if (widget.image.isEmpty) {
+      final bgColor = widget.color ??
+          Theme.of(context).colorScheme.primaryContainer;
+      final fgColor = widget.foregroundColor ??
+          Theme.of(context).colorScheme.onPrimaryContainer;
       return Container(
         height: widget.size.toDouble(),
         width: widget.size.toDouble(),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
+          color: bgColor,
           borderRadius: widget.radius == -1
               ? BorderRadius.all(Radius.circular(widget.size / 3))
               : BorderRadius.all(Radius.circular(widget.radius)),
         ),
         child: Center(
           child: Icon(SolarIconsBold.linkRoundAngle,
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
+              color: fgColor,
               size: widget.size / 2),
         ),
       );

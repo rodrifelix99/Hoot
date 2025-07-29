@@ -1,8 +1,14 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image/image.dart' as img;
 
 import '../../../services/toast_service.dart';
 import '../../../services/error_service.dart';
@@ -50,8 +56,25 @@ class CreateFeedController extends GetxController {
   /// Whether the feed is marked NSFW.
   final RxBool isNsfw = false.obs;
 
+  /// Selected avatar file.
+  final Rx<File?> avatarFile = Rx<File?>(null);
+
+  final ImagePicker _picker = ImagePicker();
+
   /// Whether a feed is currently being created.
   final RxBool creating = false.obs;
+
+  /// Prompts the user to pick an avatar image.
+  Future<void> pickAvatar() async {
+    try {
+      final picked = await _picker.pickImage(source: ImageSource.gallery);
+      if (picked != null) {
+        avatarFile.value = File(picked.path);
+      }
+    } catch (e, s) {
+      await ErrorService.reportError(e, stack: s);
+    }
+  }
 
   /// Creates the feed in Firestore after validating input.
   Future<bool> createFeed() async {
@@ -72,7 +95,36 @@ class CreateFeedController extends GetxController {
 
     creating.value = true;
     try {
-      final doc = await _firestore.collection('feeds').add({
+      final docRef = _firestore.collection('feeds').doc();
+      String? smallAvatarUrl;
+      String? bigAvatarUrl;
+      if (avatarFile.value != null) {
+        final file = avatarFile.value!;
+        final bytes = await file.readAsBytes();
+        final decoded = img.decodeImage(bytes);
+        if (decoded != null) {
+          final small = img.copyResizeCropSquare(decoded, size: 32);
+          final big = img.copyResizeCropSquare(decoded, size: 128);
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('feed_avatars')
+              .child(docRef.id);
+          final smallRef = storageRef.child('small_avatar.jpg');
+          final bigRef = storageRef.child('big_avatar.jpg');
+          await smallRef.putData(
+              Uint8List.fromList(img.encodeJpg(small)),
+              SettableMetadata(contentType: 'image/jpeg'));
+          await bigRef.putData(Uint8List.fromList(img.encodeJpg(big)),
+              SettableMetadata(contentType: 'image/jpeg'));
+          smallAvatarUrl = await smallRef.getDownloadURL();
+          bigAvatarUrl = await bigRef.getDownloadURL();
+        }
+      } else {
+        smallAvatarUrl = _authService.currentUser?.smallProfilePictureUrl;
+        bigAvatarUrl = _authService.currentUser?.largeProfilePictureUrl;
+      }
+
+      await docRef.set({
         'title': title,
         'description': description,
         'color': selectedColor.value.value.toString(),
@@ -80,7 +132,8 @@ class CreateFeedController extends GetxController {
         'private': isPrivate.value,
         'nsfw': isNsfw.value,
         'userId': _userId,
-        'imageUrl': _authService.currentUser?.largeProfilePictureUrl,
+        if (smallAvatarUrl != null) 'smallAvatar': smallAvatarUrl,
+        if (bigAvatarUrl != null) 'bigAvatar': bigAvatarUrl,
         'subscriberCount': 0,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -88,12 +141,13 @@ class CreateFeedController extends GetxController {
           .collection('users')
           .doc(_userId)
           .collection('subscriptions')
-          .doc(doc.id)
+          .doc(docRef.id)
           .set({'createdAt': FieldValue.serverTimestamp()});
       final feed = Feed(
-        id: doc.id,
+        id: docRef.id,
         userId: _userId,
-        imageUrl: _authService.currentUser?.largeProfilePictureUrl,
+        smallAvatar: smallAvatarUrl,
+        bigAvatar: bigAvatarUrl,
         title: title,
         description: description,
         color: selectedColor.value,
@@ -127,6 +181,7 @@ class CreateFeedController extends GetxController {
     titleController.dispose();
     descriptionController.dispose();
     typeSearchController.dispose();
+    avatarFile.value = null;
     super.onClose();
   }
 }
