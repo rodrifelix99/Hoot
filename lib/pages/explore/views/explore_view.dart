@@ -5,6 +5,7 @@ import 'package:hoot/components/list_item_component.dart';
 import 'package:hoot/components/type_box_component.dart';
 import 'package:hoot/util/extensions/feed_extension.dart';
 import 'package:hoot/components/avatar_component.dart';
+import 'package:hoot/components/post_component.dart';
 import '../../../util/routes/app_routes.dart';
 import '../controllers/explore_controller.dart';
 
@@ -126,6 +127,30 @@ class ExploreView extends GetView<ExploreController> {
                       );
                     },
                   ),
+                ),
+              ),
+              const SizedBox(height: 32),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'top10RecentPopularHoots'.tr,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Obx(
+                () => ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: controller.topPosts.length,
+                  itemBuilder: (context, index) {
+                    final p = controller.topPosts[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: PostComponent(post: p),
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 32),

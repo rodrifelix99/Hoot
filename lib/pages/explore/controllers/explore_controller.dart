@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../models/feed.dart';
+import '../../../models/post.dart';
 import '../../../models/user.dart';
 import '../../../util/enums/feed_types.dart';
 
@@ -28,6 +29,9 @@ class ExploreController extends GetxController {
   /// Recently created feeds.
   final RxList<Feed> newFeeds = <Feed>[].obs;
 
+  /// Most popular recent posts from public feeds.
+  final RxList<Post> topPosts = <Post>[].obs;
+
   /// Popular feed genres.
   final RxList<FeedType> genres = <FeedType>[].obs;
 
@@ -51,6 +55,7 @@ class ExploreController extends GetxController {
       loadTopFeeds(),
       loadNewFeeds(),
       loadGenres(),
+      loadTopPosts(),
     ]);
   }
 
@@ -75,6 +80,21 @@ class ExploreController extends GetxController {
         .get();
     newFeeds.assignAll(snapshot.docs
         .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
+        .toList());
+  }
+
+  /// Queries the most popular recent posts from public feeds.
+  Future<void> loadTopPosts() async {
+    final snapshot = await _firestore
+        .collection('posts')
+        .where('feed.private', isEqualTo: false)
+        .orderBy('likes', descending: true)
+        .orderBy('createdAt', descending: true)
+        .limit(10)
+        .get();
+
+    topPosts.assignAll(snapshot.docs
+        .map((d) => Post.fromJson({'id': d.id, ...d.data()}))
         .toList());
   }
 

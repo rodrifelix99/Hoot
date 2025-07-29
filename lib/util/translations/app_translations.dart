@@ -170,6 +170,7 @@ class AppTranslations extends Translations {
           'noHoots': 'No hoots to show',
           'subscribeToSeeHoots': 'Subscribe to some feeds to see hoots here',
           'top10MostSubscribed': 'Top 10 most subscribed feeds',
+          'top10RecentPopularHoots': 'Top 10 most popular recent hoots',
           'upAndComing': 'Up and coming feeds',
           'upAndComingDescription': 'Recent feeds that are gaining popularity',
           'noteToUser': 'Note to @displayName',
@@ -511,6 +512,8 @@ class AppTranslations extends Translations {
           'subscribeToSeeHoots':
               'Suscríbete a algunos feeds para ver hoots aquí',
           'top10MostSubscribed': 'Top 10 de feeds más suscritos',
+          'top10RecentPopularHoots':
+              'Top 10 de hoots recientes más populares',
           'upAndComing': 'Feeds en Ascenso',
           'upAndComingDescription':
               'Feeds recientes que están ganando popularidad',
@@ -854,6 +857,8 @@ class AppTranslations extends Translations {
           'noHoots': 'Não há hoots para mostrar',
           'subscribeToSeeHoots': 'Subscreve a alguns feeds para ver hoots aqui',
           'top10MostSubscribed': 'Top 10 de feeds mais subscritos',
+          'top10RecentPopularHoots':
+              'Top 10 de hoots recentes mais populares',
           'upAndComing': 'Feeds em Ascensão',
           'upAndComingDescription':
               'Feeds recentes que estão a ganhar popularidade',
@@ -1194,6 +1199,8 @@ class AppTranslations extends Translations {
           'subscribeToSeeHoots':
               'Inscreva-se em alguns feeds para ver hoots aqui',
           'top10MostSubscribed': 'Top 10 dos feeds mais inscritos',
+          'top10RecentPopularHoots':
+              'Top 10 hoots recentes mais populares',
           'upAndComing': 'Novos em Ascensão',
           'upAndComingDescription':
               'Feeds recentes que estão ganhando popularidade',
