@@ -140,6 +140,7 @@ class AppTranslations extends Translations {
               '{numberOfRequests, plural, =0 {No requests} one {# request} other {# requests}}',
           'errorRequestingToJoin':
               'There was an error requesting to join this feed',
+          'requestSent': 'Request sent',
           'feedRequests': 'Feed Requests',
           'subscriberRequests': 'Subscriber Requests',
           'approve': 'Approve',
@@ -475,6 +476,7 @@ class AppTranslations extends Translations {
               '{numberOfRequests, plural, =0 {No hay solicitudes} one {# solicitud} other {# solicitudes}}',
           'errorRequestingToJoin':
               'Hubo un error al solicitar unirse a este feed',
+          'requestSent': 'Solicitud enviada',
           'feedRequests': 'Solicitudes',
           'subscriberRequests': 'Solicitudes de suscriptores',
           'approve': 'Aprobar',
@@ -814,6 +816,7 @@ class AppTranslations extends Translations {
               '{numberOfRequests, plural, =0 {Sem pedidos} one {# pedido} other {# pedidos}}',
           'errorRequestingToJoin':
               'Ocorreu um erro ao pedir para aderir a este feed',
+          'requestSent': 'Pedido enviado',
           'feedRequests': 'Pedidos',
           'subscriberRequests': 'Pedidos de subscritores',
           'approve': 'Aprovar',
@@ -1148,14 +1151,14 @@ class AppTranslations extends Translations {
           'numberOfRequests':
               '{numberOfRequests, plural, =0 {Sem solicitações} one {# solicitação} other {# solicitações}}',
           'errorRequestingToJoin': 'Erro ao solicitar participação neste feed',
+          'requestSent': 'Solicitação enviada',
           'feedRequests': 'Solicitações',
           'subscriberRequests': 'Solicitações de inscritos',
           'approve': 'Aprovar',
           'reject': 'Rejeitar',
           'editFeed': 'Editar Feed',
           'unsubscriber': ' @username cancelou a inscrição em @feedName',
-          'privateFeedRequest':
-              '@username solicitou participação em @feedName',
+          'privateFeedRequest': '@username solicitou participação em @feedName',
           'removeSubscriber': 'Remover inscrito',
           'banSubscriber': 'Banir inscrito',
           'removeSubscriberConfirmation':
