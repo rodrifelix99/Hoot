@@ -11,7 +11,7 @@ import {setGlobalOptions} from "firebase-functions";
 
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore, FieldValue} from "firebase-admin/firestore";
-import {onDocumentCreated, onDocumentDeleted} from "firebase-functions/v2/firestore";
+import {onDocumentCreated, onDocumentDeleted, onDocumentWritten} from "firebase-functions/v2/firestore";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -217,6 +217,88 @@ export const onPostDeleted = onDocumentDeleted(
         .collection("posts")
         .doc(originalId)
         .update({ reFeeds: FieldValue.increment(-1) });
+    }
+  }
+);
+
+export const onUserUpdated = onDocumentWritten(
+  "users/{userId}",
+  async (event) => {
+    const { userId } = event.params;
+    const before = event.data?.before?.data();
+    const after = event.data?.after?.data();
+    if (!before || !after) return;
+
+    if (
+      before.smallAvatar === after.smallAvatar &&
+      before.bigAvatar === after.bigAvatar
+    ) {
+      return;
+    }
+
+    const postsSnapshot = await db
+      .collection("posts")
+      .where("userId", "==", userId)
+      .get();
+
+    const batches = [] as FirebaseFirestore.WriteBatch[];
+    let batch = db.batch();
+    let count = 0;
+    for (const doc of postsSnapshot.docs) {
+      batch.update(doc.ref, {
+        "user.smallAvatar": after.smallAvatar,
+        "user.bigAvatar": after.bigAvatar,
+      });
+      count++;
+      if (count === 400) {
+        batches.push(batch);
+        batch = db.batch();
+        count = 0;
+      }
+    }
+    if (count > 0) batches.push(batch);
+    for (const b of batches) {
+      await b.commit();
+    }
+  }
+);
+
+export const onFeedUpdated = onDocumentWritten(
+  "feeds/{feedId}",
+  async (event) => {
+    const { feedId } = event.params;
+    const before = event.data?.before?.data();
+    const after = event.data?.after?.data();
+    if (!before || !after) return;
+
+    if (
+      before.smallAvatar === after.smallAvatar &&
+      before.bigAvatar === after.bigAvatar
+    ) {
+      return;
+    }
+
+    const feedData = { ...after, id: feedId };
+    const postsSnapshot = await db
+      .collection("posts")
+      .where("feedId", "==", feedId)
+      .get();
+
+    const batches = [] as FirebaseFirestore.WriteBatch[];
+    let batch = db.batch();
+    let count = 0;
+    for (const doc of postsSnapshot.docs) {
+      batch.update(doc.ref, { feed: feedData });
+      count++;
+      if (count === 400) {
+        batches.push(batch);
+        batch = db.batch();
+        count = 0;
+      }
+    }
+    if (count > 0) batches.push(batch);
+    for (const b of batches) {
+      await b.commit();
     }
   }
 );
