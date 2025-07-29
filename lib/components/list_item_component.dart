@@ -12,17 +12,20 @@ class ListItemComponent extends StatelessWidget {
   final Color? foregroundColor;
   final bool isLoading;
   final bool small;
+  final double? leadingRadius;
 
-  const ListItemComponent(
-      {super.key,
-      this.leading,
-      required this.title,
-      required this.subtitle,
-      this.trailing,
-      this.backgroundColor,
-      this.foregroundColor,
-      this.isLoading = false,
-      this.small = false});
+  const ListItemComponent({
+    super.key,
+    this.leading,
+    required this.title,
+    required this.subtitle,
+    this.trailing,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.isLoading = false,
+    this.small = false,
+    this.leadingRadius,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +50,7 @@ class ListItemComponent extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: backgroundColor ??
-                    Theme.of(context)
-                        .colorScheme
-                        .secondary
-                        .withValues(alpha: 0.1),
+                    Theme.of(context).colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
@@ -129,7 +129,7 @@ class ListItemComponent extends StatelessWidget {
                     child: ImageFilter.isShaderFilterSupported
                         ? LiquidGlass(
                             shape: LiquidRoundedRectangle(
-                              borderRadius: Radius.circular(25),
+                              borderRadius: Radius.circular(leadingRadius ?? 25),
                             ),
                             child: leading!,
                           )

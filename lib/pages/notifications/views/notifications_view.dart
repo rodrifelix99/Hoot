@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
+import 'package:hoot/components/list_item_component.dart';
+import 'package:hoot/util/extensions/datetime_extension.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../../../util/routes/app_routes.dart';
 import '../controllers/notifications_controller.dart';
@@ -26,6 +28,8 @@ class NotificationsView extends GetView<NotificationsController> {
             child: NothingToShowComponent(
               icon: const Icon(SolarIconsBold.bellOff),
               text: 'noNotifications'.tr,
+              buttonText: 'refresh'.tr,
+              buttonAction: controller.refreshNotifications,
             ),
           );
         } else {
@@ -56,14 +60,15 @@ class NotificationsView extends GetView<NotificationsController> {
                 default:
                   text = '';
               }
-              return ListTile(
+              return GestureDetector(
                 onTap: () {
                   switch (n.type) {
                     case 0:
                     case 1:
                     case 2:
                       if (n.postId != null) {
-                        Get.toNamed(AppRoutes.post, arguments: {'id': n.postId});
+                        Get.toNamed(AppRoutes.post,
+                            arguments: {'id': n.postId});
                       }
                       break;
                     case 3:
@@ -71,16 +76,26 @@ class NotificationsView extends GetView<NotificationsController> {
                       break;
                   }
                 },
-                leading: GestureDetector(
-                  onTap: () =>
-                      Get.toNamed(AppRoutes.profile, arguments: user.uid),
-                  child: ProfileAvatarComponent(
-                    image: user.smallProfilePictureUrl ?? '',
-                    size: 40,
-                    radius: 20,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                  ),
+                  child: ListItemComponent(
+                    small: true,
+                    leadingRadius: 16,
+                    leading: GestureDetector(
+                      onTap: () =>
+                          Get.toNamed(AppRoutes.profile, arguments: user.uid),
+                      child: ProfileAvatarComponent(
+                        image: user.largeProfilePictureUrl ?? '',
+                        size: 60,
+                        radius: 16,
+                      ),
+                    ),
+                    title: text,
+                    subtitle: n.createdAt.timeAgo(),
                   ),
                 ),
-                title: Text(text),
               );
             },
           );

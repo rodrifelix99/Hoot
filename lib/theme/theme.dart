@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static Color primaryColor = Colors.blue;
@@ -11,12 +12,7 @@ class AppTheme {
       centerTitle: false,
     ),
     fontFamily: 'Inter',
-    textTheme: const TextTheme(
-      titleLarge: TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.w900,
-      ),
-    ),
+    textTheme: textTheme,
     snackBarTheme: snackBarTheme,
     elevatedButtonTheme: elevatedButtonTheme,
     inputDecorationTheme: inputDecorationTheme,
@@ -34,12 +30,7 @@ class AppTheme {
         centerTitle: false,
       ),
       fontFamily: 'Inter',
-      textTheme: const TextTheme(
-        titleLarge: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w900,
-        ),
-      ),
+      textTheme: textTheme,
       snackBarTheme: snackBarTheme,
       elevatedButtonTheme: elevatedButtonTheme,
       inputDecorationTheme: inputDecorationTheme.copyWith(
@@ -65,6 +56,13 @@ class AppTheme {
   static ColorScheme darkColorScheme = ColorScheme.fromSeed(
     seedColor: primaryColor,
     brightness: Brightness.dark,
+  );
+
+  static TextTheme get textTheme => GoogleFonts.interTextTheme().copyWith(
+    titleLarge: TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.w900,
+    ),
   );
 
   static SnackBarThemeData snackBarTheme = SnackBarThemeData(
