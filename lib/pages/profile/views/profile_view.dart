@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hoot/components/post_component.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
-import '../../../models/post.dart';
 import '../../../models/user.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
@@ -144,46 +140,69 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  Widget buildFeedChips(BuildContext context) {
+  Widget buildFeedGrid(BuildContext context) {
     return Obx(() {
-      final List<Widget> chips = [];
-      if (controller.isCurrentUser) {
-        chips.add(ChoiceChip(
-          label: Row(
-            children: [
-              const Icon(Icons.add, size: 16),
-              const SizedBox(width: 4),
-              Text('createFeed'.tr),
-            ],
+      final feeds = controller.feeds;
+      final itemCount = controller.isCurrentUser ? feeds.length + 1 : feeds.length;
+      return SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        sliver: SliverGrid(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              if (controller.isCurrentUser && index == 0) {
+                return GestureDetector(
+                  onTap: () => Get.toNamed(AppRoutes.createFeed),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Theme.of(context).colorScheme.surfaceContainer,
+                    ),
+                    child: const Center(child: Icon(Icons.add)),
+                  ),
+                );
+              }
+              final feed = feeds[controller.isCurrentUser ? index - 1 : index];
+              final color = feed.color ?? Theme.of(context).colorScheme.primary;
+              final textColor = foregroundForBackground(color);
+              return GestureDetector(
+                onTap: () => Get.toNamed(AppRoutes.feed, arguments: feed.id),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: color.withOpacity(0.2),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (feed.imageUrl != null && feed.imageUrl!.isNotEmpty)
+                        ProfileAvatarComponent(
+                          image: feed.imageUrl!,
+                          size: 60,
+                          radius: 16,
+                        ),
+                      const SizedBox(height: 8),
+                      Text(
+                        feed.title,
+                        style: TextStyle(color: textColor),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            childCount: itemCount,
           ),
-          selected: false,
-          onSelected: (_) => Get.toNamed(AppRoutes.createFeed),
-        ));
-      }
-
-      chips.addAll(List.generate(controller.feeds.length, (i) {
-        final feed = controller.feeds[i];
-        final color = feed.color ?? Theme.of(context).colorScheme.primary;
-        final textColor = foregroundForBackground(color);
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ChoiceChip(
-              label: Text(
-                feed.title,
-                style: TextStyle(color: textColor),
-              ),
-              checkmarkColor: textColor,
-              selected: controller.selectedFeedIndex.value == i,
-              onSelected: (_) => controller.selectedFeedIndex.value = i,
-              selectedColor: color,
-              backgroundColor: color.withValues(alpha: 0.2),
-            ),
-          ],
-        );
-      }));
-
-      return Wrap(spacing: 8, children: chips);
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+            childAspectRatio: 1,
+          ),
+        ),
+      );
     });
   }
 
@@ -197,16 +216,8 @@ class _ProfileViewState extends State<ProfileView> {
         return const SizedBox.shrink();
       }
 
-      final feedId = controller.feeds.isNotEmpty
-          ? controller.feeds[controller.selectedFeedIndex.value].id
-          : null;
-      final state = feedId != null
-          ? controller.feedStates[feedId] ??
-              PagingState<DocumentSnapshot?, Post>()
-          : PagingState<DocumentSnapshot?, Post>();
-
       return RefreshIndicator(
-        onRefresh: controller.refreshSelectedFeed,
+        onRefresh: () async => controller.loadProfile(),
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(child: buildHeader(user)),
@@ -227,40 +238,8 @@ class _ProfileViewState extends State<ProfileView> {
                         }),
                       ),
               )
-            else ...[
-              SliverToBoxAdapter(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: buildFeedChips(context),
-                ),
-              ),
-              PagedSliverList<DocumentSnapshot?, Post>(
-                state: state,
-                fetchNextPage: controller.loadMoreSelectedFeed,
-                builderDelegate: PagedChildBuilderDelegate<Post>(
-                  itemBuilder: (context, item, index) => PostComponent(
-                    post: item,
-                  ),
-                  firstPageProgressIndicatorBuilder: (_) => const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                  newPageProgressIndicatorBuilder: (_) => const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                  firstPageErrorIndicatorBuilder: (_) => NothingToShowComponent(
-                    icon: const Icon(Icons.error_outline),
-                    text: 'somethingWentWrong'.tr,
-                  ),
-                  noItemsFoundIndicatorBuilder: (_) => NothingToShowComponent(
-                    icon: const Icon(Icons.feed_outlined),
-                    text: 'noPosts'.tr,
-                  ),
-                ),
-              ),
-            ],
+            else
+              buildFeedGrid(context),
           ],
         ),
       );
@@ -322,63 +301,14 @@ class _ProfileViewState extends State<ProfileView> {
                     glassColor:
                         Theme.of(context).colorScheme.surface.withAlpha(50),
                   ),
-                  shape: LiquidOval(),
-                  glassContainsChild: false,
-                  child: IconButton(
-                    icon: const Icon(Icons.group),
-                    color: Colors.white,
-                    onPressed: () => Get.toNamed(
-                      AppRoutes.subscribers,
-                      arguments: controller
-                          .feeds[controller.selectedFeedIndex.value].id,
-                    ),
-                  ),
-                ),
               ),
           ],
         ),
         extendBodyBehindAppBar: true,
-        floatingActionButton: controller.feeds.isEmpty
-            ? null
-            : Builder(builder: (_) {
-                if (controller.isCurrentUser) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).padding.bottom),
-                    child: FloatingActionButton.extended(
-                      heroTag: 'edit_feed_fab',
-                      onPressed: () => Get.toNamed(
-                        AppRoutes.editFeed,
-                        arguments: controller
-                            .feeds[controller.selectedFeedIndex.value],
-                      ),
-                      icon: const Icon(Icons.edit),
-                      label: Text('editFeed'.tr),
-                    ),
-                  );
-                }
-                final feedId =
-                    controller.feeds[controller.selectedFeedIndex.value].id;
-                final subscribed = controller.isSubscribed(feedId);
-                final requested = controller.isRequested(feedId);
-                return FloatingActionButton.extended(
-                  heroTag: 'sub_fab',
-                  onPressed:
-                      requested ? null : () => controller.toggleSubscription(feedId),
-                  icon: Icon(subscribed
-                      ? Icons.remove
-                      : requested
-                          ? Icons.hourglass_top
-                          : Icons.add),
-                  label: Text(subscribed
-                      ? 'unsubscribe'.tr
-                      : requested
-                          ? 'requested'.tr
-                          : (controller.feeds[controller.selectedFeedIndex.value].private == true
-                              ? 'request'.tr
-                              : 'subscribe'.tr)),
-                );
-              }),
+        floatingActionButton: controller.isCurrentUser ? FloatingActionButton(
+                onPressed: () => Get.toNamed(AppRoutes.createFeed),
+                child: const Icon(Icons.add),
+              ) : null,
         body: buildBody(context),
       );
     });

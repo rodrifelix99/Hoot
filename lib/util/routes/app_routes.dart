@@ -17,6 +17,7 @@ class AppRoutes {
   static const feedRequests = '/feed_requests';
   static const subscriptions = '/subscriptions';
   static const subscribers = '/subscribers';
+  static const feed = '/feed';
   static const post = '/post';
   static const report = '/report';
   static const aboutUs = '/about_us';
