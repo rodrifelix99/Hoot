@@ -11,6 +11,7 @@ class MentionTextField extends StatelessWidget {
     this.maxLength,
     this.minLines,
     this.maxLines = 1,
+    this.textCapitalization = TextCapitalization.sentences,
     this.onSearchChanged,
     this.onChanged,
   });
@@ -21,6 +22,7 @@ class MentionTextField extends StatelessWidget {
   final int? maxLength;
   final int? minLines;
   final int maxLines;
+  final TextCapitalization textCapitalization;
   final ValueChanged<String>? onSearchChanged;
   final ValueChanged<String>? onChanged;
 
@@ -32,6 +34,7 @@ class MentionTextField extends StatelessWidget {
       minLines: minLines,
       maxLines: maxLines,
       decoration: InputDecoration(hintText: hintText),
+      textCapitalization: textCapitalization,
       onChanged: onChanged,
       onSearchChanged: (trigger, value) {
         if (trigger == '@') onSearchChanged?.call(value);

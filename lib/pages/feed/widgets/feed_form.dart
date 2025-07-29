@@ -63,11 +63,13 @@ class FeedForm extends StatelessWidget {
         TextField(
           controller: titleController,
           decoration: InputDecoration(labelText: 'title'.tr),
+          textCapitalization: TextCapitalization.sentences,
         ),
         const SizedBox(height: 16),
         TextField(
           controller: descriptionController,
           decoration: InputDecoration(labelText: 'description'.tr),
+          textCapitalization: TextCapitalization.sentences,
           maxLines: 3,
         ),
         const SizedBox(height: 16),
@@ -127,6 +129,7 @@ class FeedForm extends StatelessWidget {
                     hintText: 'searchEllipsis'.tr,
                     border: const OutlineInputBorder(),
                   ),
+                  textCapitalization: TextCapitalization.sentences,
                 ),
               ),
               searchMatchFn: (item, searchValue) {

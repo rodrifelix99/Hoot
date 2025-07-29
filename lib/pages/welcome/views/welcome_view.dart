@@ -184,6 +184,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                             labelText: 'displayName'.tr,
                             hintText: 'displayNameExample'.tr,
                           ),
+                          textCapitalization: TextCapitalization.sentences,
                         ),
                       );
                     case 1:

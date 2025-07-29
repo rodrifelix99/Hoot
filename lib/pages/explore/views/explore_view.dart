@@ -76,6 +76,7 @@ class ExploreView extends GetView<ExploreController> {
                     hintText: 'searchPlaceholder'.tr,
                     prefixIcon: const Icon(Icons.search),
                   ),
+                  textCapitalization: TextCapitalization.sentences,
                   onChanged: controller.search,
                 ),
               ),
