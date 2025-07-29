@@ -179,17 +179,29 @@ class _PostComponentState extends State<PostComponent> {
               ),
             Row(
               children: [
-                ProfileAvatarComponent(
-                  image: _post.user?.smallProfilePictureUrl ?? '',
-                  size: 40,
-                  radius: 12,
+                GestureDetector(
+                  onTap: () {
+                    if (_post.user != null) {
+                      Get.toNamed(AppRoutes.profile, arguments: _post.user!.uid);
+                    }
+                  },
+                  child: ProfileAvatarComponent(
+                    image: _post.user?.smallProfilePictureUrl ?? '',
+                    size: 40,
+                    radius: 12,
+                  ),
                 ),
                 const SizedBox(width: 8),
                 if (_post.user != null)
-                  NameComponent(
-                    user: _post.user!,
-                    size: 16,
-                    feedName: _post.feed?.title ?? '',
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed(AppRoutes.profile, arguments: _post.user!.uid);
+                    },
+                    child: NameComponent(
+                      user: _post.user!,
+                      size: 16,
+                      feedName: _post.feed?.title ?? '',
+                    ),
                   ),
                 const Spacer(),
                 if (_post.createdAt != null)

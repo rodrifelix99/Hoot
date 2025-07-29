@@ -147,7 +147,9 @@ class _ProfileViewState extends State<ProfileView> {
       final itemCount =
           controller.isCurrentUser ? feeds.length + 1 : feeds.length;
       return SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16).copyWith(
+          bottom: MediaQuery.of(context).padding.bottom + 16,
+        ),
         sliver: SliverGrid(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
