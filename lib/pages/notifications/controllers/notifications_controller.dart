@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:get/get.dart';
 
 import '../../../models/hoot_notification.dart';
@@ -24,11 +25,20 @@ class NotificationsController extends GetxController {
   final RxInt requestCount = 0.obs;
   final RxBool loading = false.obs;
 
+  StreamSubscription<int>? _unreadSub;
+
   @override
   void onInit() {
     super.onInit();
     _loadNotifications();
     _loadRequestCount();
+    _listenUnreadCount();
+  }
+
+  @override
+  void onClose() {
+    _unreadSub?.cancel();
+    super.onClose();
   }
 
   Future<void> refreshNotifications() async {
@@ -47,6 +57,14 @@ class NotificationsController extends GetxController {
     } finally {
       loading.value = false;
     }
+  }
+
+  void _listenUnreadCount() {
+    final uid = _authService.currentUser?.uid;
+    if (uid == null) return;
+    _unreadSub = _notificationService
+        .unreadCountStream(uid)
+        .listen((c) => unreadCount.value = c);
   }
 
   Future<void> _loadRequestCount() async {

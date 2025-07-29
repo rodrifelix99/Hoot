@@ -7,6 +7,7 @@ import 'package:solar_icons/solar_icons.dart';
 import '../../explore/views/explore_view.dart';
 import '../../feed/views/feed_view.dart';
 import '../../notifications/views/notifications_view.dart';
+import '../../notifications/controllers/notifications_controller.dart';
 import '../../profile/views/profile_view.dart';
 import '../controllers/home_controller.dart';
 
@@ -24,6 +25,7 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Obx(() {
       final index = controller.selectedIndex.value;
+      final unread = Get.find<NotificationsController>().unreadCount.value;
       return Scaffold(
         body: IndexedStack(
           index: index,
@@ -70,14 +72,42 @@ class HomeView extends GetView<HomeController> {
                           ),
                           onPressed: () => controller.changeIndex(1),
                         ),
-                        IconButton(
-                          icon: Icon(
-                            SolarIconsOutline.bell,
-                            color: index == 2
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.onSurface,
-                          ),
-                          onPressed: () => controller.changeIndex(2),
+                        Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                SolarIconsOutline.bell,
+                                color: index == 2
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.onSurface,
+                              ),
+                              onPressed: () => controller.changeIndex(2),
+                            ),
+                            if (unread > 0)
+                              Positioned(
+                                right: 4,
+                                top: 4,
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.error,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  constraints:
+                                      const BoxConstraints(minWidth: 16, minHeight: 16),
+                                  child: Text(
+                                    unread > 99 ? '99+' : '$unread',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      height: 1,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                         IconButton(
                           icon: Icon(
