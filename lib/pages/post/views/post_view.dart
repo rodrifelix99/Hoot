@@ -29,7 +29,9 @@ class PostView extends GetView<PostController> {
                 SliverPadding(
                   padding: const EdgeInsets.all(8),
                   sliver: SliverToBoxAdapter(
-                    child: PostComponent(post: controller.post),
+                    child: Obx(
+                      () => PostComponent(post: controller.post.value),
+                    ),
                   ),
                 ),
                 Obx(() {

@@ -13,7 +13,7 @@ import '../../../services/user_service.dart';
 import '../../../services/post_service.dart';
 
 class PostController extends GetxController {
-  late Post post;
+  final Rx<Post> post = Post.empty().obs;
   final BaseCommentService _commentService;
   final AuthService _authService;
   final BasePostService _postService;
@@ -41,19 +41,19 @@ class PostController extends GetxController {
     super.onInit();
     final args = Get.arguments;
     if (args is Post) {
-      post = args;
+      post.value = args;
       _setup();
     } else if (args is Map && args['post'] is Post) {
-      post = args['post'];
+      post.value = args['post'];
       _setup();
     } else if (args is String) {
-      post = Post.empty();
+      post.value = Post.empty();
       _loadPost(args);
     } else if (args is Map && args['id'] is String) {
-      post = Post.empty();
+      post.value = Post.empty();
       _loadPost(args['id']);
     } else {
-      post = Post.empty();
+      post.value = Post.empty();
       _setup();
     }
   }
@@ -68,8 +68,7 @@ class PostController extends GetxController {
   Future<void> _loadPost(String id) async {
     final fetched = await _postService.fetchPost(id);
     if (fetched != null) {
-      post = fetched;
-      update();
+      post.value = fetched;
     }
     _setup();
   }
@@ -81,7 +80,7 @@ class PostController extends GetxController {
     commentsState.value = current.copyWith(isLoading: true, error: null);
     try {
       final page = await _commentService.fetchComments(
-        post.id,
+        post.value.id,
         startAfter: current.keys?.last,
       );
       commentsState.value = commentsState.value.copyWith(
@@ -124,12 +123,12 @@ class PostController extends GetxController {
     try {
       final userData = user.toJson();
       userData['uid'] = user.uid;
-      final id = _commentService.newCommentId(post.id);
+      final id = _commentService.newCommentId(post.value.id);
       await _commentService.createComment(
-          post.id,
+          post.value.id,
           {
             'text': text,
-            'postId': post.id,
+            'postId': post.value.id,
             'userId': user.uid,
             'user': userData,
             'createdAt': FieldValue.serverTimestamp(),
@@ -141,7 +140,7 @@ class PostController extends GetxController {
 
       final newComment = Comment(
         id: id,
-        postId: post.id,
+        postId: post.value.id,
         text: text,
         user: user,
         createdAt: DateTime.now(),
@@ -156,7 +155,8 @@ class PostController extends GetxController {
         first.insert(0, newComment);
         commentsState.value = commentsState.value.copyWith(pages: [first, ...pages.skip(1)]);
       }
-      post.comments = (post.comments ?? 0) + 1;
+      post.value.comments = (post.value.comments ?? 0) + 1;
+      post.refresh();
     } catch (e) {
       FirebaseCrashlytics.instance.recordError(
         e,
