@@ -133,30 +133,6 @@ class ExploreView extends GetView<ExploreController> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  'top10RecentPopularHoots'.tr,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Obx(
-                () => ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller.topPosts.length,
-                  itemBuilder: (context, index) {
-                    final p = controller.topPosts[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: PostComponent(post: p),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 32),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
                   'popularTypes'.tr,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
@@ -180,6 +156,30 @@ class ExploreView extends GetView<ExploreController> {
                         );
                       },
                     )),
+              ),
+              const SizedBox(height: 32),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'top10RecentPopularHoots'.tr,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Obx(
+                    () => ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: controller.topPosts.length,
+                  itemBuilder: (context, index) {
+                    final p = controller.topPosts[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: PostComponent(post: p),
+                    );
+                  },
+                ),
               ),
               SafeArea(child: const SizedBox(height: 16)),
             ],

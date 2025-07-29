@@ -106,9 +106,9 @@ class _PostComponentState extends State<PostComponent> {
       actions: [
         if (isOwner)
           SheetAction(
-              label: 'deletePost'.tr, key: 'delete', isDestructiveAction: true),
-        if (!isOwner) SheetAction(label: 'reportPost'.tr, key: 'report'),
-        SheetAction(label: 'cancel'.tr, key: 'cancel'),
+              label: 'deletePost'.tr, key: 'delete', isDestructiveAction: true)
+        else
+          SheetAction(label: 'reportPost'.tr, key: 'report'),
       ],
     );
     if (action == 'delete') {
@@ -133,6 +133,11 @@ class _PostComponentState extends State<PostComponent> {
         textFields: [
           DialogTextField(
             hintText: 'reportPostInfo'.tr,
+            minLines: 3,
+            maxLength: 500,
+            maxLines: 5,
+            keyboardType: TextInputType.multiline,
+            textCapitalization: TextCapitalization.sentences,
           ),
         ],
       );
