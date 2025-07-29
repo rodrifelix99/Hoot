@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/util/extensions/feed_extension.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../../../models/user.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
@@ -158,64 +159,88 @@ class _ProfileViewState extends State<ProfileView> {
                       borderRadius: BorderRadius.circular(8),
                       color: Theme.of(context).colorScheme.surfaceContainer,
                     ),
-                    child: const Center(child: Icon(Icons.add)),
+                    child: Center(
+                      child: Icon(
+                        SolarIconsBold.addSquare,
+                        size: 64,
+                        color: Theme.of(context).colorScheme.onSurface.withAlpha(
+                            75),
+                      ),
+                    ),
                   ),
                 );
               }
               final feed = feeds[controller.isCurrentUser ? index - 1 : index];
               final color = feed.color ?? Theme.of(context).colorScheme.primary;
               final textColor = feed.foregroundColor;
-              return GestureDetector(
-                onTap: () => Get.toNamed(AppRoutes.feed, arguments: feed.id),
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: color.withOpacity(0.5),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ProfileAvatarComponent(
-                        image: feed.smallAvatar ?? feed.bigAvatar ?? '',
-                        size: 60,
-                        radius: 16,
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Positioned.fill(
+                      child: ProfileAvatarComponent(
+                        image: feed.bigAvatar ?? feed.bigAvatar ?? '',
+                        size: 120,
+                        radius: 0,
                         color: color,
                         foregroundColor: textColor,
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        feed.title,
-                        style: Get.textTheme.titleMedium?.copyWith(
-                          color: textColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      if (feed.description != null &&
-                          feed.description!.isNotEmpty) ...[
-                        const SizedBox(height: 8),
-                        Text(
-                          feed.description!,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: Get.textTheme.bodyMedium?.copyWith(
-                            color: textColor,
+                    ),
+                    Positioned.fill(
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        color: color.withAlpha(200),
+                        child: InkWell(
+                          onTap: () => Get.toNamed(
+                            AppRoutes.feed,
+                            arguments: feed.id,
                           ),
-                          textAlign: TextAlign.center,
+                          splashColor: Colors.white.withAlpha(50),
+                          highlightColor: Colors.white.withAlpha(50),
+                          borderRadius: BorderRadius.circular(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 16),
+                              Text(
+                                feed.title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: Get.textTheme.titleLarge?.copyWith(
+                                  color: textColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              if (feed.description != null &&
+                                  feed.description!.isNotEmpty) ...[
+                                const SizedBox(height: 8),
+                                Text(
+                                  feed.description!,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Get.textTheme.bodyMedium?.copyWith(
+                                    color: textColor,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                              const SizedBox(height: 8),
+                              Text(
+                                '${feed.subscriberCount ?? 0} ${'followers'.tr}',
+                                style: Get.textTheme.bodySmall?.copyWith(
+                                  color: textColor,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                      const SizedBox(height: 8),
-                      Text(
-                        '${feed.subscriberCount ?? 0} ${'followers'.tr}',
-                        style: Get.textTheme.bodySmall?.copyWith(
-                          color: textColor,
-                        ),
-                        textAlign: TextAlign.center,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               );
             },

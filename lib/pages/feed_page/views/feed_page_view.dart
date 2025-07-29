@@ -204,8 +204,6 @@ class FeedPageView extends GetView<FeedPageController> {
       return Scaffold(
         appBar: AppBarComponent(
           title: feed?.title ?? '',
-          backgroundColor: feed?.color,
-          foregroundColor: feed?.foregroundColor,
         ),
         floatingActionButton: _buildFab(feed),
         body: _buildBody(context),
