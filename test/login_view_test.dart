@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
@@ -54,7 +54,7 @@ void main() {
     Get.put(LoginController());
 
     await tester.pumpWidget(
-      GetMaterialApp(
+      GetCupertinoApp(
         translations: AppTranslations(),
         locale: const Locale('en'),
         theme: AppTheme.lightTheme,

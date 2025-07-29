@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/post_component.dart';
@@ -99,8 +99,9 @@ void main() {
 
     await tester.pumpWidget(
       ToastificationWrapper(
-        child: GetMaterialApp(
-          home: Scaffold(body: PostComponent(post: post, postService: service)),
+        child: GetCupertinoApp(
+          home: CupertinoPageScaffold(
+              child: PostComponent(post: post, postService: service)),
         ),
       ),
     );
@@ -133,8 +134,8 @@ void main() {
     Get.put<BasePostService>(service);
 
     await tester.pumpWidget(
-      GetMaterialApp(
-        home: Scaffold(body: PostComponent(post: post)),
+      GetCupertinoApp(
+        home: CupertinoPageScaffold(child: PostComponent(post: post)),
       ),
     );
     await tester.pumpAndSettle();

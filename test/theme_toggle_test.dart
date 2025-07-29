@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,7 +53,7 @@ void main() {
     Get.put(SettingsController());
 
     await tester.pumpWidget(
-      Obx(() => GetMaterialApp(
+      Obx(() => GetCupertinoApp(
             translations: AppTranslations(),
             locale: const Locale('en'),
             theme: AppTheme.lightTheme,

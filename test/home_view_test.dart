@@ -73,7 +73,7 @@ void main() {
     n.unreadCount.value = 2;
     Get.put<NotificationsController>(n);
 
-    await tester.pumpWidget(const GetMaterialApp(home: HomeView()));
+    await tester.pumpWidget(const GetCupertinoApp(home: HomeView()));
     await tester.pumpAndSettle();
 
     expect(find.text('2'), findsOneWidget);

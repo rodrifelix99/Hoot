@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -71,8 +71,8 @@ void main() {
       FlutterError.onError = FlutterError.dumpErrorToConsole;
     });
 
-    await tester.pumpWidget(const GetMaterialApp(
-      home: Scaffold(body: CreatePostView()),
+    await tester.pumpWidget(const GetCupertinoApp(
+      home: CupertinoPageScaffold(child: CreatePostView()),
     ));
     await tester.pumpAndSettle();
 

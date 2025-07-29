@@ -5,7 +5,7 @@ import 'package:hoot/services/post_service.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 void main() {
   group('PostService', () {

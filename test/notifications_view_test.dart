@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
@@ -94,10 +94,10 @@ void main() {
     Get.put<NotificationsController>(controller);
 
     await tester.pumpWidget(
-      GetMaterialApp(
+      GetCupertinoApp(
         translations: AppTranslations(),
         locale: const Locale('en'),
-        home: const NotificationsView(),
+        home: const CupertinoPageScaffold(child: NotificationsView()),
       ),
     );
     await tester.pumpAndSettle();
@@ -127,10 +127,10 @@ void main() {
     Get.put<NotificationsController>(controller);
 
     await tester.pumpWidget(
-      GetMaterialApp(
+      GetCupertinoApp(
         translations: AppTranslations(),
         locale: const Locale('en'),
-        home: const NotificationsView(),
+        home: const CupertinoPageScaffold(child: NotificationsView()),
       ),
     );
     await tester.pumpAndSettle();
@@ -152,10 +152,10 @@ void main() {
     Get.put<NotificationsController>(controller);
 
     await tester.pumpWidget(
-      GetMaterialApp(
+      GetCupertinoApp(
         translations: AppTranslations(),
         locale: const Locale('en'),
-        home: const NotificationsView(),
+        home: const CupertinoPageScaffold(child: NotificationsView()),
       ),
     );
     await tester.pumpAndSettle();

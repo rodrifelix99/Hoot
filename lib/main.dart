@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:hoot/util/routes/app_pages.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/dependency_injector.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hoot/theme/theme.dart';
@@ -47,7 +47,7 @@ void main() {
       Portal(
         child: ToastificationWrapper(
           child: Obx(
-            () => GetMaterialApp(
+            () => GetCupertinoApp(
               title: 'Hoot',
               debugShowCheckedModeBanner: false,
               getPages: AppPages.pages,

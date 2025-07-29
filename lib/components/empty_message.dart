@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class NothingToShowComponent extends StatelessWidget {
   final Icon icon;
@@ -28,14 +28,12 @@ class NothingToShowComponent extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20.0),
-          if (buttonText != null && buttonAction != null) ElevatedButton(
-            onPressed: buttonAction,
-            style: ElevatedButtonTheme.of(context).style?.copyWith(
-              backgroundColor: WidgetStateProperty.all<Color>(Theme.of(context).colorScheme.secondaryContainer),
-              foregroundColor: WidgetStateProperty.all<Color>(Theme.of(context).colorScheme.onSecondaryContainer),
+          if (buttonText != null && buttonAction != null)
+            CupertinoButton.filled(
+              onPressed: buttonAction,
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+              child: Text(buttonText!),
             ),
-            child: Text(buttonText!),
-          ),
         ],
       ),
     );

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
@@ -29,10 +29,10 @@ void main() {
     Get.put(ExploreController(firestore: firestore));
 
     await tester.pumpWidget(
-      GetMaterialApp(
+      GetCupertinoApp(
         translations: AppTranslations(),
         locale: const Locale('en'),
-        home: const Scaffold(body: ExploreView()),
+        home: const CupertinoPageScaffold(child: ExploreView()),
       ),
     );
 
@@ -63,17 +63,17 @@ void main() {
     Get.put(ExploreController(firestore: firestore));
 
     await tester.pumpWidget(
-      GetMaterialApp(
+      GetCupertinoApp(
         translations: AppTranslations(),
         locale: const Locale('en'),
         getPages: [
           GetPage(
             name: '/',
-            page: () => const Scaffold(body: ExploreView()),
+            page: () => const CupertinoPageScaffold(child: ExploreView()),
           ),
           GetPage(
             name: AppRoutes.profile,
-            page: () => const Scaffold(body: Text('profile page')),
+            page: () => const CupertinoPageScaffold(child: Text('profile page')),
           ),
         ],
       ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
@@ -56,11 +56,11 @@ void main() {
         InvitationController(invitationService: FakeInvitationService()));
 
     await tester.pumpWidget(
-      GetMaterialApp(
+      GetCupertinoApp(
         translations: AppTranslations(),
         locale: const Locale('en'),
         theme: AppTheme.lightTheme,
-        home: const InvitationView(),
+        home: const CupertinoPageScaffold(child: InvitationView()),
       ),
     );
     await tester.pumpAndSettle();

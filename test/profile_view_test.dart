@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -78,8 +78,8 @@ void main() {
     Get.put<AuthService>(service);
     Get.put<ProfileController>(controller);
 
-    await tester.pumpWidget(const GetMaterialApp(
-      home: Scaffold(body: ProfileView()),
+    await tester.pumpWidget(const GetCupertinoApp(
+      home: CupertinoPageScaffold(child: ProfileView()),
     ));
 
     await tester.pumpAndSettle();

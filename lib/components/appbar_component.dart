@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
@@ -18,29 +18,27 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      elevation: 0,
-      centerTitle: false,
+    return CupertinoNavigationBar(
       backgroundColor: backgroundColor,
-      foregroundColor: foregroundColor,
-      scrolledUnderElevation: elevationDuringScroll,
-      shadowColor: Theme.of(context).colorScheme.surface.withValues(alpha: .25),
-      title: title != null ? PreferredSize(
-        preferredSize: preferredSize,
-        child: Text(
-          title!,
-          overflow: TextOverflow.fade,
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-            color: foregroundColor ?? Theme.of(context).colorScheme.primary,
-            fontWeight: FontWeight.w900,
-            fontSize: 32,
-          ),
-        ),
-      ) : null,
-      actions: actions,
+      middle: title != null
+          ? Text(
+              title!,
+              overflow: TextOverflow.fade,
+              style: TextStyle(
+                color:
+                    foregroundColor ?? CupertinoTheme.of(context).primaryColor,
+                fontWeight: FontWeight.w900,
+                fontSize: 32,
+                fontFamily: 'Inter',
+              ),
+            )
+          : null,
+      trailing: actions != null
+          ? Row(mainAxisSize: MainAxisSize.min, children: actions!)
+          : null,
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(44.0);
 }

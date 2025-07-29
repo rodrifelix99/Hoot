@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:hoot/models/post.dart';
@@ -37,8 +37,8 @@ void main() {
     Get.put<FeedController>(controller);
 
     await tester.pumpWidget(
-      const GetMaterialApp(
-        home: Scaffold(body: FeedView()),
+      const GetCupertinoApp(
+        home: CupertinoPageScaffold(child: FeedView()),
       ),
     );
 
