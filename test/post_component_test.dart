@@ -59,7 +59,10 @@ class FakePostService extends GetxService implements BasePostService {
   Future<void> toggleLike(String postId, String userId, bool like) async {}
 
   @override
-  Future<String> reFeed({required Post original, required Feed targetFeed, required U user}) async {
+  Future<String> reFeed(
+      {required Post original,
+      required Feed targetFeed,
+      required U user}) async {
     callCount++;
     lastOriginal = original;
     lastFeed = targetFeed;
@@ -112,6 +115,25 @@ void main() {
     expect(service.lastFeed?.id, 'f1');
     expect(service.lastUser?.uid, 'u1');
 
+    Get.reset();
+  });
+
+  testWidgets('reFeeded post shows indicator', (tester) async {
+    final post = Post(id: 'p1', text: 'Hi', reFeeded: true);
+    final auth = FakeAuthService(U(uid: 'u1'));
+    final service = FakePostService();
+
+    Get.put<AuthService>(auth);
+    Get.put<BasePostService>(service);
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        home: Scaffold(body: PostComponent(post: post)),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('reHoot'), findsOneWidget);
     Get.reset();
   });
 }

@@ -103,6 +103,18 @@ class _PostComponentState extends State<PostComponent> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (_post.reFeeded)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
+                  children: [
+                    const Icon(SolarIconsOutline.refreshSquare, size: 16),
+                    const SizedBox(width: 4),
+                    Text('reHoot'.tr,
+                        style: Theme.of(context).textTheme.bodySmall),
+                  ],
+                ),
+              ),
             Row(
               children: [
                 ProfileAvatarComponent(
