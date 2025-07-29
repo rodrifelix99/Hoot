@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import '../controllers/edit_feed_controller.dart';
 import '../../feed/widgets/feed_form.dart';
+import '../../feed/widgets/feed_avatar_picker.dart';
 
 class EditFeedView extends GetView<EditFeedController> {
   const EditFeedView({super.key});
@@ -37,6 +38,17 @@ class EditFeedView extends GetView<EditFeedController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Obx(() => Center(
+                  child: FeedAvatarPicker(
+                    file: controller.avatarFile.value,
+                    imageUrl: controller.feed.bigAvatar ??
+                        controller.feed.smallAvatar,
+                    color: controller.feed.color,
+                    foregroundColor: controller.feed.foregroundColor,
+                    onTap: controller.pickAvatar,
+                  ),
+                )),
+            const SizedBox(height: 16),
             FeedForm(
               titleController: controller.titleController,
               descriptionController: controller.descriptionController,

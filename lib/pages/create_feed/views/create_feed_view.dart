@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import '../controllers/create_feed_controller.dart';
 import '../../feed/widgets/feed_form.dart';
+import '../../feed/widgets/feed_avatar_picker.dart';
 
 class CreateFeedView extends GetView<CreateFeedController> {
   const CreateFeedView({super.key});
@@ -34,18 +35,30 @@ class CreateFeedView extends GetView<CreateFeedController> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: FeedForm(
-          titleController: controller.titleController,
-          descriptionController: controller.descriptionController,
-          typeSearchController: controller.typeSearchController,
-          selectedColor: controller.selectedColor,
-          onColorChanged: (c) => controller.selectedColor.value = c,
-          selectedType: controller.selectedType,
-          onTypeChanged: (t) => controller.selectedType.value = t,
-          isPrivate: controller.isPrivate,
-          onPrivateChanged: (v) => controller.isPrivate.value = v,
-          isNsfw: controller.isNsfw,
-          onNsfwChanged: (v) => controller.isNsfw.value = v,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Obx(() => Center(
+                  child: FeedAvatarPicker(
+                    file: controller.avatarFile.value,
+                    onTap: controller.pickAvatar,
+                  ),
+                )),
+            const SizedBox(height: 16),
+            FeedForm(
+              titleController: controller.titleController,
+              descriptionController: controller.descriptionController,
+              typeSearchController: controller.typeSearchController,
+              selectedColor: controller.selectedColor,
+              onColorChanged: (c) => controller.selectedColor.value = c,
+              selectedType: controller.selectedType,
+              onTypeChanged: (t) => controller.selectedType.value = t,
+              isPrivate: controller.isPrivate,
+              onPrivateChanged: (v) => controller.isPrivate.value = v,
+              isNsfw: controller.isNsfw,
+              onNsfwChanged: (v) => controller.isNsfw.value = v,
+            ),
+          ],
         ),
       ),
     );
