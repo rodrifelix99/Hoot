@@ -6,6 +6,7 @@ abstract class BaseNotificationService {
   Future<List<HootNotification>> fetchNotifications(String userId);
   Future<void> createNotification(String userId, Map<String, dynamic> data);
   Future<void> markAsRead(String userId, String notificationId);
+  Stream<int> unreadCountStream(String userId);
 }
 
 class NotificationService implements BaseNotificationService {
@@ -44,5 +45,16 @@ class NotificationService implements BaseNotificationService {
         .collection('notifications')
         .doc(notificationId)
         .update({'read': true});
+  }
+
+  @override
+  Stream<int> unreadCountStream(String userId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('notifications')
+        .where('read', isEqualTo: false)
+        .snapshots()
+        .map((s) => s.docs.length);
   }
 }
