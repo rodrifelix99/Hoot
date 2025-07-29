@@ -88,7 +88,7 @@ class EditProfileController extends GetxController {
         final decoded = img.decodeImage(bytes);
         Uint8List data = bytes;
         if (decoded != null) {
-          final resized = img.copyResize(decoded, height: 256);
+          final resized = img.copyResize(decoded, height: 1024);
           data = Uint8List.fromList(img.encodeJpg(resized));
         }
         final ref = FirebaseStorage.instance
@@ -108,7 +108,7 @@ class EditProfileController extends GetxController {
         final decoded = img.decodeImage(bytes);
         if (decoded != null) {
           final small = img.copyResizeCropSquare(decoded, size: 32);
-          final big = img.copyResizeCropSquare(decoded, size: 128);
+          final big = img.copyResizeCropSquare(decoded, size: 512);
           final smallData = Uint8List.fromList(img.encodeJpg(small));
           final bigData = Uint8List.fromList(img.encodeJpg(big));
           final storageRef =

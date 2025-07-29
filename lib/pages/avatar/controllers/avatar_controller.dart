@@ -57,7 +57,7 @@ class AvatarController extends GetxController {
         final decoded = img.decodeImage(bytes);
         if (decoded != null) {
           final small = img.copyResizeCropSquare(decoded, size: 32);
-          final big = img.copyResizeCropSquare(decoded, size: 128);
+          final big = img.copyResizeCropSquare(decoded, size: 512);
 
           final smallData = Uint8List.fromList(img.encodeJpg(small));
           final bigData = Uint8List.fromList(img.encodeJpg(big));
