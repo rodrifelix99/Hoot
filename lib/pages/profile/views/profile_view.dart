@@ -43,7 +43,12 @@ class _ProfileViewState extends State<ProfileView> {
     final reasons = await showTextInputDialog(
       context: context,
       title: 'reportUsername'.trParams({'username': user.username ?? ''}),
-      textFields: [DialogTextField(hintText: 'reportInfo'.tr)],
+      textFields: [
+        DialogTextField(
+          hintText: 'reportInfo'.tr,
+          textCapitalization: TextCapitalization.sentences,
+        )
+      ],
     );
     final reason = reasons?.first;
     if (reason == null || reason.isEmpty) return;

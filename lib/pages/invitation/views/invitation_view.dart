@@ -81,6 +81,7 @@ class InvitationView extends GetView<InvitationController> {
                         controller: controller.codeController,
                         decoration:
                             InputDecoration(labelText: 'invitationCode'.tr),
+                        textCapitalization: TextCapitalization.sentences,
                       ),
                     ),
                     const SizedBox(height: 16),
