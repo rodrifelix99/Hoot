@@ -84,6 +84,36 @@ class FeedPageView extends GetView<FeedPageController> {
       if (controller.loading.value || controller.feed.value == null) {
         return const Center(child: CircularProgressIndicator());
       }
+      final feed = controller.feed.value!;
+
+      // If the feed is private and the current user is not subscribed, show a
+      // placeholder instead of the posts.
+      if (feed.private == true &&
+          !controller.isOwner &&
+          !controller.subscribed.value) {
+        return RefreshIndicator(
+          onRefresh: controller.refreshFeed,
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              _buildHeader(context),
+              const SizedBox(height: 16),
+              NothingToShowComponent(
+                icon: const Icon(Icons.lock_outline),
+                text: 'thisFeedIsPrivate'.tr,
+                buttonText: controller.requested.value
+                    ? 'requested'.tr
+                    : 'requestToJoin'.tr,
+                buttonAction: controller.requested.value
+                    ? null
+                    : controller.toggleSubscription,
+              ),
+              const SizedBox(height: 32),
+            ],
+          ),
+        );
+      }
+
       final state = controller.state.value;
       final body = RefreshIndicator(
         onRefresh: controller.refreshFeed,
