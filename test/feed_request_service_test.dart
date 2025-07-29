@@ -78,6 +78,7 @@ void main() {
       );
       await firestore.collection('feeds').doc('f1').set({
         'subscriberCount': 0,
+        'userId': 'owner',
       });
       await firestore.collection('users').doc('u1').set({'uid': 'u1'});
       await firestore
@@ -141,6 +142,28 @@ void main() {
           .get();
 
       expect(req.exists, isFalse);
+    });
+
+    test('exists returns true when request present', () async {
+      final firestore = FakeFirebaseFirestore();
+      final service = FeedRequestService(
+        firestore: firestore,
+        subscriptionService: SubscriptionService(
+          firestore: firestore,
+        ),
+        authService: FakeAuthService(U(uid: 'owner')),
+      );
+      await firestore.collection('feeds').doc('f1').set({});
+      await firestore.collection('users').doc('u1').set({'uid': 'u1'});
+      await firestore
+          .collection('feeds')
+          .doc('f1')
+          .collection('requests')
+          .doc('u1')
+          .set({'createdAt': Timestamp.now()});
+
+      final result = await service.exists('f1', 'u1');
+      expect(result, isTrue);
     });
 
     test('pendingRequestCount returns total for user feeds', () async {

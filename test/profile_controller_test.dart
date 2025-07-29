@@ -126,6 +126,7 @@ void main() {
 
       expect(subService.subscribeCalls.length, 1);
       expect(requestService.submitCalls, isEmpty);
+      expect(controller.requestedFeedIds.contains('f1'), isFalse);
       Get.reset();
     });
 
@@ -158,6 +159,7 @@ void main() {
 
       expect(subService.subscribeCalls, isEmpty);
       expect(requestService.submitCalls.length, 1);
+      expect(controller.requestedFeedIds.contains('f1'), isTrue);
       Get.reset();
     });
   });

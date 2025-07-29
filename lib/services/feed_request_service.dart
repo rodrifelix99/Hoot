@@ -53,6 +53,17 @@ class FeedRequestService {
     });
   }
 
+  /// Returns true if [userId] has a pending request to join the feed [feedId].
+  Future<bool> exists(String feedId, String userId) async {
+    final doc = await _firestore
+        .collection('feeds')
+        .doc(feedId)
+        .collection('requests')
+        .doc(userId)
+        .get();
+    return doc.exists;
+  }
+
   Future<List<U>> fetchRequests(String feedId) async {
     final snapshot = await _firestore
         .collection('feeds')
