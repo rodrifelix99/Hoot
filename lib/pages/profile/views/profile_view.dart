@@ -206,6 +206,14 @@ class _ProfileViewState extends State<ProfileView> {
                           textAlign: TextAlign.center,
                         ),
                       ],
+                      const SizedBox(height: 8),
+                      Text(
+                        '${feed.subscriberCount ?? 0} ${'followers'.tr}',
+                        style: Get.textTheme.bodySmall?.copyWith(
+                          color: textColor,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ],
                   ),
                 ),
