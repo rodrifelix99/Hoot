@@ -15,6 +15,7 @@ import 'package:toastification/toastification.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'services/theme_service.dart';
+import 'services/quick_actions_service.dart';
 import 'firebase_options.dart';
 
 void main() {
@@ -27,6 +28,7 @@ void main() {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     await DependencyInjector.init();
+    final quickActions = Get.find<QuickActionsService>();
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
@@ -61,6 +63,7 @@ void main() {
         ),
       ),
     );
+    quickActions.handlePendingAction();
     FlutterNativeSplash.remove();
   }, (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack);

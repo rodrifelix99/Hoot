@@ -52,6 +52,7 @@ dependencies:
   full_screen_image_null_safe: ^2.0.0
   animations: ^2.0.7
   package_info_plus: ^8.3.0
+  quick_actions: ^1.1.0
   image_cropper: ^9.1.0
   timeago: ^3.5.0
   flex_color_picker: ^3.2.2

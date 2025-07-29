@@ -5,6 +5,7 @@ import 'services/theme_service.dart';
 import 'services/post_service.dart';
 import 'services/subscription_service.dart';
 import 'services/feed_request_service.dart';
+import 'services/quick_actions_service.dart';
 
 /// Registers global dependencies for the application.
 class DependencyInjector {
@@ -18,7 +19,9 @@ class DependencyInjector {
     Get.put<BasePostService>(PostService(), permanent: true);
     Get.put(SubscriptionService(), permanent: true);
     Get.put(FeedRequestService(), permanent: true);
+    Get.put(QuickActionsService(), permanent: true);
     final theme = Get.put(ThemeService(), permanent: true);
     await theme.loadThemeMode();
+    await Get.find<QuickActionsService>().init();
   }
 }
