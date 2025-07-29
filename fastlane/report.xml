@@ -5,47 +5,47 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Switch to increment_build_number_in_pubspec lane" time="0.00014">
+      <testcase classname="fastlane.lanes" name="0: Switch to increment_build_number_in_pubspec lane" time="0.039979">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: Switch to flutter lane" time="7.2e-05">
+      <testcase classname="fastlane.lanes" name="1: Switch to flutter lane" time="0.009783">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: Flutter clean" time="121.210894">
+      <testcase classname="fastlane.lanes" name="2: Flutter clean" time="232.742451">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: Switch to flutter lane" time="0.004395">
+      <testcase classname="fastlane.lanes" name="3: Switch to flutter lane" time="0.002821">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: Pub Get" time="137.234079">
+      <testcase classname="fastlane.lanes" name="4: Pub Get" time="318.759887">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: Switch to build_ios lane" time="0.001226">
+      <testcase classname="fastlane.lanes" name="5: Switch to build_ios lane" time="0.003319">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="6: Switch to flutter lane" time="0.000585">
+      <testcase classname="fastlane.lanes" name="6: Switch to flutter lane" time="0.000237">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="7: Build" time="5148.679886">
+      <testcase classname="fastlane.lanes" name="7: Build" time="802.4737">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="8: upload_to_testflight" time="109.412508">
+      <testcase classname="fastlane.lanes" name="8: upload_to_testflight" time="134.889853">
         
       </testcase>
     

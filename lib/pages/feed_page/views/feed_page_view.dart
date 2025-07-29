@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/avatar_component.dart';
@@ -201,8 +202,10 @@ class FeedPageView extends GetView<FeedPageController> {
     return Obx(() {
       final feed = controller.feed.value;
       return Scaffold(
-        appBar: AppBar(
-          title: Text(feed?.title ?? ''),
+        appBar: AppBarComponent(
+          title: feed?.title ?? '',
+          backgroundColor: feed?.color,
+          foregroundColor: feed?.foregroundColor,
         ),
         floatingActionButton: _buildFab(feed),
         body: _buildBody(context),

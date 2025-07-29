@@ -33,6 +33,7 @@ class EditProfileView extends GetView<EditProfileController> {
           fit: BoxFit.cover,
           height: 300,
           width: double.infinity,
+          radius: 16,
         );
       } else {
         bannerWidget = Container(
