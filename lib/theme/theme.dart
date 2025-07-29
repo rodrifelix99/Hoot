@@ -12,7 +12,7 @@ class AppTheme {
       centerTitle: false,
     ),
     fontFamily: 'Inter',
-    textTheme: textTheme,
+    textTheme: lightTextTheme,
     snackBarTheme: snackBarTheme,
     elevatedButtonTheme: elevatedButtonTheme,
     inputDecorationTheme: inputDecorationTheme,
@@ -30,7 +30,7 @@ class AppTheme {
         centerTitle: false,
       ),
       fontFamily: 'Inter',
-      textTheme: textTheme,
+      textTheme: darkTextTheme,
       snackBarTheme: snackBarTheme,
       elevatedButtonTheme: elevatedButtonTheme,
       inputDecorationTheme: inputDecorationTheme.copyWith(
@@ -58,12 +58,20 @@ class AppTheme {
     brightness: Brightness.dark,
   );
 
-  static TextTheme get textTheme => GoogleFonts.interTextTheme().copyWith(
-    titleLarge: TextStyle(
-      fontSize: 24,
-      fontWeight: FontWeight.w900,
-    ),
-  );
+  static TextTheme get lightTextTheme => GoogleFonts.interTextTheme().copyWith(
+        titleLarge: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w900,
+        ),
+      );
+
+  static TextTheme get darkTextTheme =>
+      GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
+        titleLarge: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w900,
+        ),
+      );
 
   static SnackBarThemeData snackBarTheme = SnackBarThemeData(
     behavior: SnackBarBehavior.floating,
