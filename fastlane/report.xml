@@ -5,47 +5,47 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Switch to increment_build_number_in_pubspec lane" time="0.039979">
+      <testcase classname="fastlane.lanes" name="0: Switch to increment_build_number_in_pubspec lane" time="0.000198">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: Switch to flutter lane" time="0.009783">
+      <testcase classname="fastlane.lanes" name="1: Switch to flutter lane" time="0.000332">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: Flutter clean" time="232.742451">
+      <testcase classname="fastlane.lanes" name="2: Flutter clean" time="9.382114">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: Switch to flutter lane" time="0.002821">
+      <testcase classname="fastlane.lanes" name="3: Switch to flutter lane" time="0.000154">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: Pub Get" time="318.759887">
+      <testcase classname="fastlane.lanes" name="4: Pub Get" time="5.557976">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: Switch to build_ios lane" time="0.003319">
+      <testcase classname="fastlane.lanes" name="5: Switch to build_ios lane" time="0.000199">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="6: Switch to flutter lane" time="0.000237">
+      <testcase classname="fastlane.lanes" name="6: Switch to flutter lane" time="6.5e-05">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="7: Build" time="802.4737">
+      <testcase classname="fastlane.lanes" name="7: Build" time="343.109817">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="8: upload_to_testflight" time="134.889853">
+      <testcase classname="fastlane.lanes" name="8: upload_to_testflight" time="130.762232">
         
       </testcase>
     
