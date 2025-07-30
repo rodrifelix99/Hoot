@@ -135,6 +135,16 @@ class _ProfileViewState extends State<ProfileView> {
                     user.bio!,
                   ),
                 ),
+              if (controller.isCurrentUser)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: TextButton.icon(
+                    onPressed: () =>
+                        Get.toNamed(AppRoutes.subscriptions),
+                    icon: const Icon(Icons.feed_outlined),
+                    label: Text('subscriptions'.tr),
+                  ),
+                ),
             ],
           ),
         ),

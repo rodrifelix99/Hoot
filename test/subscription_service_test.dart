@@ -80,5 +80,27 @@ void main() {
       expect(banned.exists, isTrue);
       expect(feed.get('subscriberCount'), 0);
     });
+
+    test('fetchSubscribers returns all users even when more than 10', () async {
+      final firestore = FakeFirebaseFirestore();
+      final service = SubscriptionService(
+        firestore: firestore,
+      );
+      await firestore.collection('feeds').doc('f1').set({});
+      for (var i = 0; i < 11; i++) {
+        await firestore.collection('users').doc('u\$i').set({'uid': 'u\$i'});
+        await firestore
+            .collection('feeds')
+            .doc('f1')
+            .collection('subscribers')
+            .doc('u\$i')
+            .set({'createdAt': Timestamp.now()});
+      }
+
+      final result = await service.fetchSubscribers('f1');
+
+      expect(result.length, 11);
+      expect(result.first.uid, 'u0');
+    });
   });
 }

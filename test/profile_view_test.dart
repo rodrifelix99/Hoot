@@ -94,5 +94,6 @@ void main() {
     expect(find.text('@tester'), findsOneWidget);
     expect(find.text('Hello'), findsOneWidget);
     expect(find.text('Feed 1'), findsOneWidget);
+    expect(find.text('Subscriptions'), findsOneWidget);
   });
 }
