@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/pages/photo_view/controllers/photo_view_controller.dart';
@@ -10,7 +9,7 @@ class PhotoZoomView extends GetView<PhotoZoomViewController> {
   ImageProvider get provider {
     final imageUrl = controller.imageUrl;
     if (imageUrl.startsWith('http')) {
-      return CachedNetworkImageProvider(imageUrl);
+      return NetworkImage(imageUrl);
     } else {
       return AssetImage(imageUrl);
     }

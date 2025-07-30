@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/util/extensions/feed_extension.dart';
@@ -193,7 +193,7 @@ class _ProfileViewState extends State<ProfileView> {
                   fit: StackFit.expand,
                   children: [
                     Positioned.fill(
-                      child: CachedNetworkImage(
+                      child: HashCachedImage(
                         imageUrl: feed.bigAvatar ??
                             controller.user.value?.largeProfilePictureUrl ??
                             '',

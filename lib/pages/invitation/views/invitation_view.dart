@@ -1,5 +1,5 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,7 +18,7 @@ class InvitationView extends GetView<InvitationController> {
             child: FadeIn(
               duration: const Duration(milliseconds: 500),
               delay: const Duration(milliseconds: 1000),
-              child: CachedNetworkImage(
+              child: HashCachedImage(
                 imageUrl:
                     'https://r1.ilikewallpaper.net/ipad-pro-wallpapers/download/100031/dark-blur-abstract-4k-ipad-pro-wallpaper-ilikewallpaper_com.jpg',
                 fit: BoxFit.cover,
