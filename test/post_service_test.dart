@@ -43,6 +43,30 @@ void main() {
           isFalse);
     });
 
+    test('toggleLike does not duplicate likes', () async {
+      final firestore = FakeFirebaseFirestore();
+      final service = PostService(
+        firestore: firestore,
+      );
+      await firestore.collection('posts').doc('p1').set({'likes': 0});
+
+      await service.toggleLike('p1', 'u1', true);
+      // Attempt to like again when already liked
+      await service.toggleLike('p1', 'u1', true);
+
+      final post = await firestore.collection('posts').doc('p1').get();
+      expect(post.get('likes'), 1);
+      expect(
+          (await firestore
+                  .collection('posts')
+                  .doc('p1')
+                  .collection('likes')
+                  .doc('u1')
+                  .get())
+              .exists,
+          isTrue);
+    });
+
     test('reFeed creates new post', () async {
       final firestore = FakeFirebaseFirestore();
       final service = PostService(
