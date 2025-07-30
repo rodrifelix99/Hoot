@@ -29,7 +29,7 @@ class AppTheme {
       appBarTheme: AppBarTheme(
         centerTitle: false,
       ),
-      fontFamily: 'Inter',
+      fontFamily: 'Lexend',
       textTheme: darkTextTheme,
       snackBarTheme: snackBarTheme,
       elevatedButtonTheme: elevatedButtonTheme,
@@ -58,19 +58,17 @@ class AppTheme {
     brightness: Brightness.dark,
   );
 
-  static TextTheme get lightTextTheme => GoogleFonts.interTextTheme().copyWith(
-        titleLarge: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w900,
-        ),
-      );
+  static TextTheme get lightTextTheme => GoogleFonts.lexendTextTheme().copyWith(
+    bodySmall: GoogleFonts.interTextTheme().bodySmall,
+    bodyMedium: GoogleFonts.interTextTheme().bodyMedium,
+    bodyLarge: GoogleFonts.interTextTheme().bodyLarge,
+  );
 
   static TextTheme get darkTextTheme =>
-      GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
-        titleLarge: const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w900,
-        ),
+      GoogleFonts.lexendTextTheme(ThemeData.dark().textTheme).copyWith(
+        bodySmall: GoogleFonts.interTextTheme().bodySmall,
+        bodyMedium: GoogleFonts.interTextTheme().bodyMedium,
+        bodyLarge: GoogleFonts.interTextTheme().bodyLarge,
       );
 
   static SnackBarThemeData snackBarTheme = SnackBarThemeData(
