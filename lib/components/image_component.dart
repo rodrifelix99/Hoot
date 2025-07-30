@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/services/haptic_service.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:hash_cached_image/hash_cached_image.dart';
 
 class ImageComponent extends StatefulWidget {
