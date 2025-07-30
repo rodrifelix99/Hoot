@@ -163,6 +163,7 @@ class AppTranslations extends Translations {
           'noSubscribers': 'No subscribers',
           'subscriberSingular': '@count subscriber',
           'subscriberPlural': '@count subscribers',
+          'subscribers': 'Subscribers',
           'subscriptions': 'Subscriptions',
           'by': 'by',
           'deleteFeed': 'Delete Feed',
@@ -350,6 +351,10 @@ class AppTranslations extends Translations {
           'findFriendsFromContacts': 'Find friends from your contacts list',
           'contactsPermission':
               'We need your permission to access your contacts',
+          'contacts': 'Contacts',
+          'refresh': 'Refresh',
+          'report': 'Report',
+          'reportReasonRequired': 'Report reason required',
         },
         'es': {
           'helloWorld': '¡Hola Mundo!',
@@ -704,6 +709,10 @@ class AppTranslations extends Translations {
           'findFriendsFromContacts': 'Buscar amigos en tu lista de contactos',
           'contactsPermission':
               'Necesitamos tu permiso para acceder a tus contactos',
+          'contacts': 'Contactos',
+          'refresh': 'Actualizar',
+          'report': 'Reportar',
+          'reportReasonRequired': 'Se requiere un motivo',
         },
         'pt': {
           'helloWorld': 'Olá Mundo!',
@@ -1060,6 +1069,10 @@ class AppTranslations extends Translations {
               'Encontrar amigos a partir da tua lista de contactos',
           'contactsPermission':
               'Precisamos da tua permissão para aceder aos teus contactos',
+          'contacts': 'Contactos',
+          'refresh': 'Atualizar',
+          'report': 'Reportar',
+          'reportReasonRequired': 'É necessário fornecer uma razão',
         },
         'pt_BR': {
           'helloWorld': 'Olá Mundo!',
@@ -1412,6 +1425,10 @@ class AppTranslations extends Translations {
               'Encontrar amigos na sua lista de contatos',
           'contactsPermission':
               'Precisamos da sua permissão para acessar seus contatos',
+          'contacts': 'Contatos',
+          'refresh': 'Atualizar',
+          'report': 'Denunciar',
+          'reportReasonRequired': 'É necessário fornecer um motivo',
         },
       };
 }
