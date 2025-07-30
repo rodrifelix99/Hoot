@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:hash_cached_image/hash_cached_image.dart';
 
 class AboutYourDataPage extends StatelessWidget {
   const AboutYourDataPage({super.key});
@@ -41,12 +41,12 @@ class AboutYourDataPage extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: CachedNetworkImage(
+          child: HashCachedImage(
             imageUrl: backgroundImage ??
                 'https://i.pinimg.com/originals/7b/84/9b/7b849be9e09eb87ddaa2a732ab2c8034.gif',
             fit: BoxFit.cover,
-            placeholder: (context, url) => const SizedBox.shrink(),
-            errorWidget: (context, url, error) =>
+            placeholder: (context) => const SizedBox.shrink(),
+            errorWidget: (context, error, stackTrace) =>
                 const Icon(Icons.error, color: Colors.red),
           ),
         ),
@@ -56,11 +56,11 @@ class AboutYourDataPage extends StatelessWidget {
                 left: 20,
                 right: 20,
                 bottom: 50,
-                child: CachedNetworkImage(
+                child: HashCachedImage(
                   imageUrl: image!,
                   fit: BoxFit.contain,
-                  placeholder: (context, url) => const SizedBox.shrink(),
-                  errorWidget: (context, url, error) =>
+                  placeholder: (context) => const SizedBox.shrink(),
+                  errorWidget: (context, error, stackTrace) =>
                       const Icon(Icons.error, color: Colors.red),
                 ),
               )

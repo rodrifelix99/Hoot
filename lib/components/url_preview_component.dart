@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 import 'package:hoot/components/shimmer_skeletons.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -115,13 +115,13 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
                       topLeft: Radius.circular(15),
                       bottomLeft: Radius.circular(15),
                     ),
-                    child: CachedNetworkImage(
+                    child: HashCachedImage(
                       imageUrl: _ogp.image ?? "https://i.gifer.com/DXKg.gif",
-                      errorWidget: (context, url, error) => Icon(
+                      errorWidget: (context, error, stackTrace) => Icon(
                         SolarIconsBold.shieldNetwork,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
-                      placeholder: (context, url) => const SizedBox.shrink(),
+                      placeholder: (context) => const SizedBox.shrink(),
                       width: 100,
                       height: 100,
                       fit: BoxFit.cover,

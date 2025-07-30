@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:hash_cached_image/hash_cached_image.dart';
 
 class ImageComponent extends StatefulWidget {
   final String url;
@@ -47,14 +47,14 @@ class _ImageComponentState extends State<ImageComponent> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(widget.radius),
-          child: CachedNetworkImage(
+          child: HashCachedImage(
             imageUrl: widget.url,
             width: widget.width,
             height: widget.height,
             fit: widget.fit,
             alignment: widget.alignment ?? Alignment.center,
             repeat: widget.repeat ?? ImageRepeat.noRepeat,
-            placeholder: (context, url) => Container(
+            placeholder: (context) => Container(
               color: Theme.of(context).colorScheme.secondaryContainer,
               child: Center(
                 child: LoadingAnimationWidget.inkDrop(
@@ -63,7 +63,7 @@ class _ImageComponentState extends State<ImageComponent> {
                 ),
               ),
             ),
-            errorWidget: (context, url, error) => Container(
+            errorWidget: (context, error, stackTrace) => Container(
               color: Colors.grey.shade800,
               child: const Icon(Icons.error, color: Colors.white),
             ),

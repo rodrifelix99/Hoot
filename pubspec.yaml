@@ -45,7 +45,8 @@ dependencies:
   flutter_signin_button: ^2.0.0
   sign_in_with_apple: ^7.0.1
   google_sign_in: ^6.3.0
-  cached_network_image: ^3.4.1
+  hash_cached_image: ^0.0.2
+  blurhash: ^1.2.0
   image_picker: ^1.0.0
   firebase_storage: ^12.4.10
   image: ^4.5.4
