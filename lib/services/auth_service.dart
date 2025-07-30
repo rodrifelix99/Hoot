@@ -19,6 +19,12 @@ class AuthService {
   U? _currentUser;
   bool _fetched = false;
 
+  /// Forces refetch of the current user from Firestore.
+  Future<U?> refreshUser() {
+    _fetched = false;
+    return fetchUser();
+  }
+
   /// Returns the cached [U] if available or fetches it from Firestore.
   Future<U?> fetchUser() async {
     if (_fetched) return _currentUser;
