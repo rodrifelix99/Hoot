@@ -10,6 +10,8 @@ import 'package:solar_icons/solar_icons.dart';
 import '../controllers/create_post_controller.dart';
 import 'package:hoot/components/url_preview_component.dart';
 import 'package:hoot/models/feed.dart';
+import '../../home/controllers/home_controller.dart';
+import '../../feed/controllers/feed_controller.dart';
 
 class CreatePostView extends GetView<CreatePostController> {
   const CreatePostView({super.key});
@@ -130,7 +132,14 @@ class CreatePostView extends GetView<CreatePostController> {
                   onPressed: () async {
                     final post = await controller.publish();
                     if (post != null) {
-                      Get.toNamed(AppRoutes.post, arguments: post);
+                      // Return to the feed after publishing
+                      if (Get.isRegistered<HomeController>()) {
+                        Get.find<HomeController>().changeIndex(0);
+                      }
+                      if (Get.isRegistered<FeedController>()) {
+                        Get.find<FeedController>().refresh();
+                      }
+                      Get.back();
                     }
                   },
                   child: Text('publish'.tr),
