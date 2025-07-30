@@ -10,6 +10,7 @@ import '../../notifications/views/notifications_view.dart';
 import '../../notifications/controllers/notifications_controller.dart';
 import '../../profile/views/profile_view.dart';
 import '../controllers/home_controller.dart';
+import 'package:hoot/services/haptic_service.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -29,6 +30,7 @@ class HomeView extends GetView<HomeController> {
       return GestureDetector(
         onHorizontalDragEnd: (details) {
           if (details.primaryVelocity != null && details.primaryVelocity! < 0) {
+            HapticService.lightImpact();
             Get.toNamed(AppRoutes.createPost);
           }
         },

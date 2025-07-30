@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/pages/photo_view/controllers/photo_view_controller.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:hoot/services/haptic_service.dart';
 
 class PhotoZoomView extends GetView<PhotoZoomViewController> {
   const PhotoZoomView({super.key});
@@ -24,7 +25,10 @@ class PhotoZoomView extends GetView<PhotoZoomViewController> {
       ),
       extendBodyBehindAppBar: true,
       body: GestureDetector(
-        onTap: () => Navigator.pop(context),
+        onTap: () {
+          HapticService.lightImpact();
+          Navigator.pop(context);
+        },
         child: PhotoView(
           heroAttributes: PhotoViewHeroAttributes(tag: controller.imageUrl),
           imageProvider: provider,

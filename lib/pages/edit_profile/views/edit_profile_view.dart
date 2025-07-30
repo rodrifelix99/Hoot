@@ -4,6 +4,7 @@ import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:solar_icons/solar_icons.dart';
+import 'package:hoot/services/haptic_service.dart';
 import '../controllers/edit_profile_controller.dart';
 
 class EditProfileView extends GetView<EditProfileController> {
@@ -72,7 +73,10 @@ class EditProfileView extends GetView<EditProfileController> {
         child: Stack(
           children: [
             GestureDetector(
-              onTap: controller.pickBanner,
+              onTap: () {
+                HapticService.lightImpact();
+                controller.pickBanner();
+              },
               child: Stack(
                 children: [
                   Container(
@@ -110,7 +114,10 @@ class EditProfileView extends GetView<EditProfileController> {
               right: 16,
               child: Center(
                 child: GestureDetector(
-                  onTap: controller.pickAvatar,
+                  onTap: () {
+                    HapticService.lightImpact();
+                    controller.pickAvatar();
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(32),

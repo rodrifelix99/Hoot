@@ -5,6 +5,7 @@ import 'package:ogp_data_extract/ogp_data_extract.dart';
 import 'package:hoot/components/shimmer_skeletons.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:hoot/services/haptic_service.dart';
 
 class UrlPreviewComponent extends StatefulWidget {
   final String url;
@@ -41,7 +42,12 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
   Widget build(BuildContext context) {
     return _isLoading
         ? GestureDetector(
-            onTap: widget.isClickable ? _visitUrl : null,
+            onTap: widget.isClickable
+                ? () {
+                    HapticService.lightImpact();
+                    _visitUrl();
+                  }
+                : null,
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
@@ -84,7 +90,12 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
             ),
           )
         : GestureDetector(
-            onTap: widget.isClickable ? _visitUrl : null,
+            onTap: widget.isClickable
+                ? () {
+                    HapticService.lightImpact();
+                    _visitUrl();
+                  }
+                : null,
             child: Container(
               width: double.infinity,
               height: 100,
