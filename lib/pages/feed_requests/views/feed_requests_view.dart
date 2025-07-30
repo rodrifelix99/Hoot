@@ -22,7 +22,7 @@ class FeedRequestsView extends GetView<FeedRequestsController> {
         if (controller.requests.isEmpty) {
           return NothingToShowComponent(
             icon: const Icon(Icons.person_outline),
-            text: 'numberOfRequests'.trParams({'numberOfRequests': '0'}),
+            text: 'noRequests'.tr,
           );
         }
         return ListView.builder(
