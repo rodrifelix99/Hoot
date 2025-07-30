@@ -36,7 +36,7 @@ class SearchByGenreView extends GetView<SearchByGenreController> {
                 child: ListItemComponent(
                   leading: ProfileAvatarComponent(
                     image: feed.bigAvatar ?? '',
-                    hash: feed.bigAvatarHash,
+                    hash: feed.bigAvatarHash ?? feed.smallAvatarHash,
                     size: 100,
                     radius: 25,
                     color: feed.color,
