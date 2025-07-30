@@ -6,6 +6,7 @@ import 'package:hoot/models/post.dart';
 import 'package:hoot/util/enums/feed_types.dart';
 
 import 'package:hoot/models/comment.dart';
+
 void main() {
   group('U JSON', () {
     test('fromJson and toJson round trip', () {
@@ -42,6 +43,8 @@ void main() {
         'tester': false,
         'birthday': DateTime(2020, 1, 1),
         'subscriptionCount': 2,
+        'activityScore': 5,
+        'popularityScore': 10,
         'feeds': [feedJson]
       };
 
@@ -52,6 +55,8 @@ void main() {
       expect(user.invitationCode, 'ABCDEF');
       expect(user.invitedBy, 'u0');
       expect(user.invitationUses, 1);
+      expect(user.activityScore, 5);
+      expect(user.popularityScore, 10);
 
       final json = user.toJson();
       expect(json['displayName'], 'John');

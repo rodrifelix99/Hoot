@@ -25,6 +25,8 @@ class U {
   bool? tester;
   DateTime? birthday;
   int? subscriptionCount;
+  int? activityScore;
+  int? popularityScore;
   List<Feed>? feeds;
 
   U({
@@ -49,6 +51,8 @@ class U {
     this.tester = false,
     this.birthday,
     this.subscriptionCount,
+    this.activityScore = 0,
+    this.popularityScore = 0,
     this.feeds,
   });
 
@@ -90,6 +94,8 @@ class U {
       tester: json['tester'],
       birthday: json['birthday'],
       subscriptionCount: json['subscriptionCount'],
+      activityScore: json['activityScore'],
+      popularityScore: json['popularityScore'],
       feeds: json['feeds'] != null
           ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x)))
           : [],
@@ -140,6 +146,8 @@ class U {
         'verified': verified,
         'tester': tester,
         'subscriptionCount': subscriptionCount,
+        'activityScore': activityScore,
+        'popularityScore': popularityScore,
         'feeds': feeds?.map((e) => e.toCache()).toList(),
       };
 }
