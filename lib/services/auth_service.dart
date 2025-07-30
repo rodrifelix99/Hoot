@@ -88,6 +88,8 @@ class AuthService {
       'invitationUses': 0,
       'invitationLastReset': FieldValue.serverTimestamp(),
       'createdAt': FieldValue.serverTimestamp(),
+      'activityScore': 0,
+      'popularityScore': 0,
     });
   }
 
