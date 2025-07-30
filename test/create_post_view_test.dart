@@ -44,6 +44,9 @@ class FakeAuthService extends GetxService implements AuthService {
 
   @override
   Future<void> deleteAccount() async {}
+
+  @override
+  Future<void> createUserDocumentIfNeeded(User user) async {}
 }
 
 class FakeStorageService extends GetxService implements BaseStorageService {
@@ -55,14 +58,19 @@ class FakeStorageService extends GetxService implements BaseStorageService {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('media buttons remain visible with media selected', (tester) async {
+  testWidgets('media buttons remain visible with media selected',
+      (tester) async {
     final firestore = FakeFirebaseFirestore();
     final postService = PostService(firestore: firestore);
     final auth = FakeAuthService(U(uid: 'u1'));
     final storage = FakeStorageService();
-    final controller =
-        CreatePostController(postService: postService, authService: auth, userId: 'u1', storageService: storage);
-    controller.availableFeeds.assignAll([Feed(id: 'f1', userId: 'u1', title: 't', description: 'd')]);
+    final controller = CreatePostController(
+        postService: postService,
+        authService: auth,
+        userId: 'u1',
+        storageService: storage);
+    controller.availableFeeds.assignAll(
+        [Feed(id: 'f1', userId: 'u1', title: 't', description: 'd')]);
     Get.put<AuthService>(auth);
     Get.put<CreatePostController>(controller);
 
@@ -82,7 +90,8 @@ void main() {
     controller.pickGif('https://example.com/g.gif');
     await tester.pump();
 
-    final imageButton = tester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.image));
+    final imageButton =
+        tester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.image));
     expect(imageButton.onPressed, isNull);
     expect(find.byIcon(Icons.gif_box), findsOneWidget);
 
@@ -97,7 +106,8 @@ void main() {
     controller.imageFiles.assignAll(files);
     await tester.pump();
 
-    final gifButton = tester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.gif_box));
+    final gifButton = tester
+        .widget<IconButton>(find.widgetWithIcon(IconButton, Icons.gif_box));
     expect(gifButton.onPressed, isNull);
 
     for (final f in files) {

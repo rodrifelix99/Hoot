@@ -44,6 +44,9 @@ class FakeAuthService extends GetxService implements AuthService {
     // TODO: implement deleteAccount
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> createUserDocumentIfNeeded(User user) async {}
 }
 
 class FakeFeedService implements BaseFeedService {
@@ -56,7 +59,8 @@ class FakeFeedService implements BaseFeedService {
   }
 
   @override
-  Future<PostPage> fetchFeedPosts(String feedId, {DocumentSnapshot? startAfter, int limit = 10}) async {
+  Future<PostPage> fetchFeedPosts(String feedId,
+      {DocumentSnapshot? startAfter, int limit = 10}) async {
     return PostPage(posts: []);
   }
 }
@@ -68,7 +72,9 @@ void main() {
       name: 'Tester',
       username: 'tester',
       bio: 'Hello',
-      feeds: [Feed(id: 'f1', userId: 't', title: 'Feed 1', description: 'desc')],
+      feeds: [
+        Feed(id: 'f1', userId: 't', title: 'Feed 1', description: 'desc')
+      ],
     );
     final service = FakeAuthService(user);
     final controller = ProfileController(
