@@ -7,6 +7,7 @@ import 'package:hoot/models/post.dart';
 import 'package:get/get.dart';
 import 'package:flutter/gestures.dart';
 import 'package:solar_icons/solar_icons.dart';
+import 'like_button_component.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import '../util/routes/app_routes.dart';
 import '../services/post_service.dart';
@@ -318,18 +319,9 @@ class _PostComponentState extends State<PostComponent> {
               Row(
                 children: [
                   const Spacer(),
-                  IconButton(
-                    visualDensity: VisualDensity.compact,
-                    icon: Icon(
-                      _post.liked
-                          ? SolarIconsBold.heart
-                          : SolarIconsOutline.heart,
-                      color: _post.liked
-                          ? Colors.red
-                          : Theme.of(context).iconTheme.color,
-                    ),
-                    iconSize: 20,
-                    onPressed: _toggleLike,
+                  LikeButtonComponent(
+                    liked: _post.liked,
+                    onTap: _toggleLike,
                   ),
                   if ((_post.likes ?? 0) > 0)
                     Padding(
