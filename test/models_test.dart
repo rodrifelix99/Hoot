@@ -63,6 +63,10 @@ void main() {
       expect(json['username'], 'john');
       expect(json.containsKey('uid'), isFalse);
       expect(json['invitationCode'], 'ABCDEF');
+
+      final cache = user.toCache();
+      expect(cache['activityScore'], 5);
+      expect(cache['popularityScore'], 10);
     });
   });
 
