@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:solar_icons/solar_icons.dart';
 
@@ -33,27 +34,41 @@ class HomeView extends GetView<HomeController> {
           }
         },
         child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.onPrimaryFixedVariant,
-          body: AnimatedContainer(
-            duration: const Duration(milliseconds: 400),
-            clipBehavior: Clip.antiAlias,
-            decoration: ShapeDecoration(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(controller.screenRadius.value),
+          body: Stack(
+            fit: StackFit.expand,
+            children: [
+              HashCachedImage(
+                imageUrl:
+                    'https://static.vecteezy.com/system/resources/previews/019/511/518/non_2x/blue-background-abstract-illustration-with-gradient-blur-design-free-vector.jpg',
+                fit: BoxFit.cover,
               ),
-              shadows: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(100),
-                  blurRadius: 32,
-                  spreadRadius: 8,
+              SafeArea(
+                top: false,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 400),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(controller.screenRadius.value),
+                    ),
+                    shadows: [
+                      BoxShadow(
+                        color: Colors.black.withAlpha(100),
+                        blurRadius: 32,
+                        spreadRadius: 8,
+                      ),
+                    ],
+                  ),
+                  child: IndexedStack(
+                    index: index,
+                    children: _pages,
+                  ),
                 ),
-              ],
-            ),
-            child: IndexedStack(
-              index: index,
-              children: _pages,
-            ),
+              ),
+            ],
           ),
+          extendBody: true,
           bottomNavigationBar: Padding(
             padding: EdgeInsets.only(
               top: 16,
@@ -67,7 +82,7 @@ class HomeView extends GetView<HomeController> {
               data: Theme.of(context).copyWith(
                 iconButtonTheme: IconButtonThemeData(
                   style: IconButton.styleFrom(
-                    foregroundColor: Theme.of(context).colorScheme.primaryFixed,
+                    foregroundColor: Colors.white,
                     iconSize: 24,
                     padding: EdgeInsets.zero,
                     visualDensity: VisualDensity.compact,
@@ -90,8 +105,8 @@ class HomeView extends GetView<HomeController> {
                       icon: Icon(
                         SolarIconsOutline.feed,
                         color: index == 0
-                            ? Theme.of(context).colorScheme.primaryFixed
-                            : Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
+                            ? Colors.white
+                            : Colors.white.withAlpha(175),
                       ),
                       onPressed: () => controller.changeIndex(0),
                     ),
@@ -108,8 +123,8 @@ class HomeView extends GetView<HomeController> {
                       icon: Icon(
                         SolarIconsOutline.compass,
                         color: index == 1
-                            ? Theme.of(context).colorScheme.primaryFixed
-                            : Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
+                            ? Colors.white
+                            : Colors.white.withAlpha(175),
                       ),
                       onPressed: () => controller.changeIndex(1),
                     ),
@@ -124,7 +139,7 @@ class HomeView extends GetView<HomeController> {
                         visualDensity: VisualDensity.compact,
                         icon: Icon(
                           SolarIconsBold.addSquare,
-                          color: Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
+                          color: Colors.white.withAlpha(175),
                         ),
                         onPressed: () => Get.toNamed(AppRoutes.createPost),
                       ),
@@ -145,8 +160,8 @@ class HomeView extends GetView<HomeController> {
                           icon: Icon(
                             SolarIconsOutline.bell,
                             color: index == 2
-                                ? Theme.of(context).colorScheme.primaryFixed
-                                : Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
+                                ? Colors.white
+                                : Colors.white.withAlpha(175),
                           ),
                           onPressed: () => controller.changeIndex(2),
                         ),
@@ -161,7 +176,8 @@ class HomeView extends GetView<HomeController> {
                             child: Container(
                               padding: const EdgeInsets.all(2),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primaryFixed,
+                                color:
+                                    Colors.white,
                                 shape: BoxShape.circle,
                               ),
                               constraints: const BoxConstraints(
@@ -169,7 +185,7 @@ class HomeView extends GetView<HomeController> {
                               child: Text(
                                 unread > 99 ? '' : '$unread',
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+                                  color: Colors.black.withAlpha(150),
                                   fontSize: 10,
                                   height: 1,
                                 ),
@@ -192,8 +208,8 @@ class HomeView extends GetView<HomeController> {
                       icon: Icon(
                         SolarIconsOutline.user,
                         color: index == 3
-                            ? Theme.of(context).colorScheme.primaryFixed
-                            : Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
+                            ? Colors.white
+                            : Colors.white.withAlpha(175),
                       ),
                       onPressed: () => controller.changeIndex(3),
                     ),
