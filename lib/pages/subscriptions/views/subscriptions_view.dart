@@ -23,9 +23,11 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
           return const Center(child: CircularProgressIndicator());
         }
         if (controller.feeds.isEmpty) {
-          return NothingToShowComponent(
-            icon: const Icon(Icons.feed_outlined),
-            text: 'noSubscriptions'.tr,
+          return Center(
+            child: NothingToShowComponent(
+              icon: const Icon(Icons.feed_outlined),
+              text: 'noSubscriptions'.tr,
+            ),
           );
         }
         return ListView.builder(

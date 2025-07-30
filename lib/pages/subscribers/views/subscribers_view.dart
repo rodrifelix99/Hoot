@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/components/appbar_component.dart';
 import '../controllers/subscribers_controller.dart';
 import '../../../components/avatar_component.dart';
 import '../../../components/name_component.dart';
@@ -13,17 +14,19 @@ class SubscribersView extends GetView<SubscribersController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('subscribers'.tr),
+      appBar: AppBarComponent(
+        title: 'subscribers'.tr,
       ),
       body: Obx(() {
         if (controller.loading.value) {
           return const Center(child: CircularProgressIndicator());
         }
         if (controller.subscribers.isEmpty) {
-          return NothingToShowComponent(
-            icon: const Icon(Icons.person_outline),
-            text: 'noSubscribers'.tr,
+          return Center(
+            child: NothingToShowComponent(
+              icon: const Icon(Icons.person_outline),
+              text: 'noSubscribers'.tr,
+            ),
           );
         }
         return ListView.builder(

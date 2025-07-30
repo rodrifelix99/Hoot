@@ -20,9 +20,11 @@ class FeedRequestsView extends GetView<FeedRequestsController> {
           return const Center(child: CircularProgressIndicator());
         }
         if (controller.requests.isEmpty) {
-          return NothingToShowComponent(
-            icon: const Icon(Icons.person_outline),
-            text: 'noRequests'.tr,
+          return Center(
+            child: NothingToShowComponent(
+              icon: const Icon(Icons.person_outline),
+              text: 'noRequests'.tr,
+            ),
           );
         }
         return ListView.builder(
