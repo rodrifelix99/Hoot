@@ -45,14 +45,15 @@ class FeedPageController extends GetxController {
     final args = Get.arguments;
     if (args is Feed) {
       feed.value = args;
+      _initState();
     } else if (args is Map && args['feed'] is Feed) {
       feed.value = args['feed'];
+      _initState();
     } else if (args is String) {
       _loadFeed(args);
     } else if (args is Map && args['id'] is String) {
       _loadFeed(args['id']);
     }
-    _initState();
   }
 
   Future<void> _loadFeed(String id) async {
@@ -63,6 +64,7 @@ class FeedPageController extends GetxController {
       feed.value = Feed.fromJson({'id': doc.id, ...doc.data()!});
     }
     loading.value = false;
+    await _initState();
   }
 
   Future<void> _initState() async {
