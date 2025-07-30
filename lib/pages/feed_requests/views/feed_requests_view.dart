@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/components/appbar_component.dart';
 import '../controllers/feed_requests_controller.dart';
 import '../../../components/avatar_component.dart';
 import '../../../components/name_component.dart';
@@ -11,8 +12,8 @@ class FeedRequestsView extends GetView<FeedRequestsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('feedRequests'.tr),
+      appBar: AppBarComponent(
+        title: 'feedRequests'.tr,
       ),
       body: Obx(() {
         if (controller.loading.value) {

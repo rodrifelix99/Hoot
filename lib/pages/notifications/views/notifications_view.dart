@@ -113,13 +113,12 @@ class NotificationsView extends GetView<NotificationsController> {
         return Column(
           children: [
             if (controller.requestCount.value > 0)
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: ElevatedButton(
-                  onPressed: () => Get.toNamed(AppRoutes.feedRequests),
-                  child: Text('subscriberRequestsCount'.trParams(
-                      {'count': controller.requestCount.value.toString()})),
-                ),
+              ListTile(
+                onTap: () => Get.toNamed(AppRoutes.feedRequests),
+                title: Text('subscriberRequestsCount'.trParams(
+                    {'count': controller.requestCount.value.toString()})),
+                leading: Icon(SolarIconsBold.tickerStar),
+                trailing: const Icon(Icons.chevron_right),
               ),
             Expanded(
               child: RefreshIndicator(

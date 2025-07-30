@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/components/appbar_component.dart';
 
 import '../../../components/avatar_component.dart';
 import '../../../components/list_item_component.dart';
@@ -14,8 +15,8 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('subscriptions'.tr),
+      appBar: AppBarComponent(
+        title: 'subscriptions'.tr,
       ),
       body: Obx(() {
         if (controller.loading.value) {

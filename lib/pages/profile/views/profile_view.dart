@@ -139,8 +139,7 @@ class _ProfileViewState extends State<ProfileView> {
                 Padding(
                   padding: const EdgeInsets.only(top: 16),
                   child: TextButton.icon(
-                    onPressed: () =>
-                        Get.toNamed(AppRoutes.subscriptions),
+                    onPressed: () => Get.toNamed(AppRoutes.subscriptions),
                     icon: const Icon(Icons.feed_outlined),
                     label: Text('subscriptions'.tr),
                   ),
@@ -337,24 +336,42 @@ class _ProfileViewState extends State<ProfileView> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
-            child: LiquidGlass(
+            child: LiquidGlassLayer(
               settings: LiquidGlassSettings(
                 blur: 4,
                 glassColor: Theme.of(context).colorScheme.surface.withAlpha(50),
               ),
-              shape: LiquidOval(),
-              glassContainsChild: false,
-              child: controller.isCurrentUser
-                  ? IconButton(
-                      icon: const Icon(Icons.settings),
+              child: Row(
+                children: [
+                  LiquidGlass.inLayer(
+                    shape: LiquidOval(),
+                    glassContainsChild: false,
+                    child: IconButton(
+                      icon: const Icon(Icons.people_rounded),
                       color: Colors.white,
-                      onPressed: () => Get.toNamed(AppRoutes.settings),
-                    )
-                  : IconButton(
-                      icon: const Icon(Icons.flag_outlined),
-                      color: Colors.white,
-                      onPressed: () => reportUser(context),
+                      onPressed: () => Get.toNamed(
+                        AppRoutes.subscriptions,
+                        arguments: controller.user.value?.uid,
+                      ),
                     ),
+                  ),
+                  LiquidGlass.inLayer(
+                    shape: LiquidOval(),
+                    glassContainsChild: false,
+                    child: controller.isCurrentUser
+                        ? IconButton(
+                            icon: const Icon(Icons.settings),
+                            color: Colors.white,
+                            onPressed: () => Get.toNamed(AppRoutes.settings),
+                          )
+                        : IconButton(
+                            icon: const Icon(Icons.flag_outlined),
+                            color: Colors.white,
+                            onPressed: () => reportUser(context),
+                          ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
