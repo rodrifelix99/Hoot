@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:solar_icons/solar_icons.dart';
 
@@ -37,9 +36,8 @@ class HomeView extends GetView<HomeController> {
           body: Stack(
             fit: StackFit.expand,
             children: [
-              HashCachedImage(
-                imageUrl:
-                    'https://static.vecteezy.com/system/resources/previews/019/511/518/non_2x/blue-background-abstract-illustration-with-gradient-blur-design-free-vector.jpg',
+              Image.asset(
+                'assets/images/home_background.jpg',
                 fit: BoxFit.cover,
               ),
               SafeArea(
