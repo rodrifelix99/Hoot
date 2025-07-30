@@ -57,10 +57,12 @@ class PostService implements BasePostService {
     final postRef = _firestore.collection('posts').doc(postId);
     final likeRef = postRef.collection('likes').doc(userId);
     await _firestore.runTransaction((txn) async {
-      if (like) {
+      final likeSnap = await txn.get(likeRef);
+      final currentlyLiked = likeSnap.exists;
+      if (like && !currentlyLiked) {
         txn.set(likeRef, {'createdAt': FieldValue.serverTimestamp()});
         txn.update(postRef, {'likes': FieldValue.increment(1)});
-      } else {
+      } else if (!like && currentlyLiked) {
         txn.delete(likeRef);
         txn.update(postRef, {'likes': FieldValue.increment(-1)});
       }
