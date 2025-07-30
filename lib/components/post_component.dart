@@ -315,10 +315,6 @@ class _PostComponentState extends State<PostComponent> {
                   ),
               ],
               const SizedBox(height: 8),
-              Divider(
-                thickness: 1,
-                color: Theme.of(context).dividerColor.withAlpha(50),
-              ),
               Row(
                 children: [
                   const Spacer(),
@@ -332,6 +328,7 @@ class _PostComponentState extends State<PostComponent> {
                           ? Colors.red
                           : Theme.of(context).iconTheme.color,
                     ),
+                    iconSize: 20,
                     onPressed: _toggleLike,
                   ),
                   if ((_post.likes ?? 0) > 0)
@@ -345,6 +342,7 @@ class _PostComponentState extends State<PostComponent> {
                   IconButton(
                     visualDensity: VisualDensity.compact,
                     icon: const Icon(SolarIconsOutline.refreshSquare),
+                    iconSize: 20,
                     onPressed: _reFeed,
                   ),
                   if ((_post.reFeeds ?? 0) > 0)
@@ -358,6 +356,7 @@ class _PostComponentState extends State<PostComponent> {
                   IconButton(
                     visualDensity: VisualDensity.compact,
                     icon: const Icon(SolarIconsOutline.chatRoundLine),
+                    iconSize: 20,
                     onPressed: _openPostDetails,
                   ),
                   Text('${_post.comments ?? 0}'),
