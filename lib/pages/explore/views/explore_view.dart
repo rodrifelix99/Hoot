@@ -114,7 +114,7 @@ class ExploreView extends GetView<ExploreController> {
                             leading: ProfileAvatarComponent(
                               image: f.bigAvatar ?? '',
                               size: 100,
-                              radius: 25,
+                              radius: 16,
                               color: f.color,
                               foregroundColor: f.foregroundColor,
                             ),
@@ -169,7 +169,7 @@ class ExploreView extends GetView<ExploreController> {
               const SizedBox(height: 8),
               Obx(
                     () => ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: controller.topPosts.length,

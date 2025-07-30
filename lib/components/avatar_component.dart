@@ -1,3 +1,4 @@
+import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -11,6 +12,7 @@ class ProfileAvatarComponent extends StatefulWidget {
   final double radius;
   final Color? color;
   final Color? foregroundColor;
+
   const ProfileAvatarComponent(
       {super.key,
       required this.image,
@@ -62,6 +64,7 @@ class Avatar extends StatefulWidget {
   final double radius;
   final Color? color;
   final Color? foregroundColor;
+
   const Avatar(
       {super.key,
       required this.image,
@@ -78,31 +81,42 @@ class _AvatarState extends State<Avatar> {
   @override
   Widget build(BuildContext context) {
     if (widget.image.isEmpty) {
-      final bgColor = widget.color ??
-          Theme.of(context).colorScheme.primaryContainer;
+      final bgColor =
+          widget.color ?? Theme.of(context).colorScheme.primaryContainer;
       final fgColor = widget.foregroundColor ??
           Theme.of(context).colorScheme.onPrimaryContainer;
       return Container(
         height: widget.size.toDouble(),
         width: widget.size.toDouble(),
-        decoration: BoxDecoration(
+        clipBehavior: Clip.hardEdge,
+        decoration: ShapeDecoration(
           color: bgColor,
-          borderRadius: widget.radius == -1
-              ? BorderRadius.all(Radius.circular(widget.size / 3))
-              : BorderRadius.all(Radius.circular(widget.radius)),
+          shape: SmoothRectangleBorder(
+            borderRadius: SmoothBorderRadius(
+              cornerRadius:
+                  widget.radius == -1 ? widget.size / 3 : widget.radius,
+              cornerSmoothing: 1.25,
+            ),
+          ),
         ),
         child: Center(
           child: Icon(SolarIconsBold.linkRoundAngle,
-              color: fgColor,
-              size: widget.size / 2),
+              color: fgColor, size: widget.size / 2),
         ),
       );
     }
 
-    return ClipRRect(
-      borderRadius: widget.radius == -1
-          ? BorderRadius.all(Radius.circular(widget.size / 3))
-          : BorderRadius.all(Radius.circular(widget.radius)),
+    return Container(
+      decoration: ShapeDecoration(
+        shape: SmoothRectangleBorder(
+          borderRadius: SmoothBorderRadius(
+            cornerRadius:
+                widget.radius == -1 ? widget.size / 3 : widget.radius,
+            cornerSmoothing: 1.25,
+          ),
+        ),
+      ),
+      clipBehavior: Clip.hardEdge,
       child: CachedNetworkImage(
         imageUrl: widget.image,
         placeholder: (context, url) => const SizedBox.shrink(),

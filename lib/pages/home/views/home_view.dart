@@ -38,11 +38,21 @@ class HomeView extends GetView<HomeController> {
             children: _pages,
           ),
           extendBody: true,
-        bottomNavigationBar: Padding(
+        bottomNavigationBar: Container(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).padding.bottom + 8,
             left: MediaQuery.of(context).padding.left + 16,
             right: MediaQuery.of(context).padding.right + 16,
+          ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Theme.of(context).colorScheme.surface.withAlpha(200),
+                Theme.of(context).colorScheme.surface.withAlpha(0),
+              ],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
           ),
           child: LiquidGlassLayer(
             settings: LiquidGlassSettings(
@@ -100,8 +110,8 @@ class HomeView extends GetView<HomeController> {
                                     color: Theme.of(context).colorScheme.error,
                                     shape: BoxShape.circle,
                                   ),
-                                  constraints:
-                                      const BoxConstraints(minWidth: 16, minHeight: 16),
+                                  constraints: const BoxConstraints(
+                                      minWidth: 16, minHeight: 16),
                                   child: Text(
                                     unread > 99 ? '99+' : '$unread',
                                     style: const TextStyle(
@@ -149,75 +159,7 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
         ),
-        /* Old code:
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: index,
-          onDestinationSelected: controller.changeIndex,
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-          indicatorColor: Colors.transparent,
-          indicatorShape: const CircleBorder(),
-          backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(250),
-          destinations: [
-            NavigationDestination(
-              icon: Icon(
-                SolarIconsOutline.feed,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              selectedIcon: Icon(
-                SolarIconsBold.feed,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              label: 'feed'.tr,
-            ),
-            NavigationDestination(
-              icon: Icon(
-                SolarIconsOutline.compass,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              selectedIcon: Icon(
-                SolarIconsBold.compass,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              label: 'explore'.tr,
-            ),
-            NavigationDestination(
-              icon: Icon(
-                SolarIconsOutline.addSquare,
-                color: Theme.of(context).colorScheme.primary,
-                size: 42,
-              ),
-              selectedIcon: Icon(
-                SolarIconsBold.addSquare,
-                color: Theme.of(context).colorScheme.primary,
-                size: 42,
-              ),
-              label: 'createPost'.tr,
-            ),
-            NavigationDestination(
-              icon: Icon(
-                SolarIconsOutline.bell,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              selectedIcon: Icon(
-                SolarIconsBold.bell,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              label: 'notifications'.tr,
-            ),
-            NavigationDestination(
-              icon: Icon(
-                SolarIconsOutline.user,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              selectedIcon: Icon(
-                SolarIconsBold.user,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              label: 'profile'.tr,
-            ),
-          ],
-        ),*/
-      );
+      ),);
     });
   }
 }

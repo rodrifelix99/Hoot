@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/util/extensions/feed_extension.dart';
@@ -103,7 +104,7 @@ class _ProfileViewState extends State<ProfileView> {
                     child: ProfileAvatarComponent(
                       image: user.largeProfilePictureUrl ?? '',
                       size: 120,
-                      radius: 32,
+                      radius: 16,
                     ),
                   ),
                 ),
@@ -165,8 +166,10 @@ class _ProfileViewState extends State<ProfileView> {
                       child: Icon(
                         SolarIconsBold.addSquare,
                         size: 64,
-                        color: Theme.of(context).colorScheme.onSurface.withAlpha(
-                            75),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withAlpha(75),
                       ),
                     ),
                   ),
@@ -181,12 +184,13 @@ class _ProfileViewState extends State<ProfileView> {
                   fit: StackFit.expand,
                   children: [
                     Positioned.fill(
-                      child: ProfileAvatarComponent(
-                        image: feed.bigAvatar ?? feed.bigAvatar ?? '',
-                        size: 120,
-                        radius: 0,
-                        color: color,
-                        foregroundColor: textColor,
+                      child: CachedNetworkImage(
+                        imageUrl: feed.bigAvatar ??
+                            controller.user.value?.largeProfilePictureUrl ??
+                            '',
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
                       ),
                     ),
                     Positioned.fill(
