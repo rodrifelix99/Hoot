@@ -22,6 +22,30 @@ class DialogService {
     return result == OkCancelResult.ok;
   }
 
+  /// Shows a confirmation dialog requiring the user to type [expectedWord]
+  /// before confirming. Returns true when the word is entered correctly.
+  static Future<bool> confirmWithText({
+    required BuildContext context,
+    required String title,
+    required String message,
+    required String expectedWord,
+    required String okLabel,
+    required String cancelLabel,
+  }) async {
+    final result = await showTextInputDialog(
+      context: context,
+      title: title,
+      message: message,
+      textFields: [
+        DialogTextField(autocorrect: false),
+      ],
+      okLabel: okLabel,
+      cancelLabel: cancelLabel,
+    );
+    final input = result?.first.trim().toLowerCase();
+    return input == expectedWord.toLowerCase();
+  }
+
   /// Shows a modal action sheet with the provided [actions].
   /// Returns the value associated with the selected action.
   static Future<T?> showActionSheet<T>({

@@ -52,4 +52,60 @@ void main() {
 
     expect(await future, isTrue);
   });
+
+  testWidgets('DialogService confirmWithText succeeds when text matches',
+      (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: SizedBox()),
+      ),
+    );
+
+    final context = tester.element(find.byType(Scaffold));
+
+    final future = DialogService.confirmWithText(
+      context: context,
+      title: 'Title',
+      message: 'Message',
+      expectedWord: 'delete',
+      okLabel: 'OK',
+      cancelLabel: 'Cancel',
+    );
+
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'DELETE');
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+
+    expect(await future, isTrue);
+  });
+
+  testWidgets('DialogService confirmWithText returns false on mismatch',
+      (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: SizedBox()),
+      ),
+    );
+
+    final context = tester.element(find.byType(Scaffold));
+
+    final future = DialogService.confirmWithText(
+      context: context,
+      title: 'Title',
+      message: 'Message',
+      expectedWord: 'delete',
+      okLabel: 'OK',
+      cancelLabel: 'Cancel',
+    );
+
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'wrong');
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+
+    expect(await future, isFalse);
+  });
 }

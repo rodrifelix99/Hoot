@@ -295,6 +295,7 @@ class AppTranslations extends Translations {
               'This will delete your account and all your data. This action is irreversible.',
           'deleteAccountConfirmation':
               'Are you sure you want to delete your account?',
+          'deleteAccountVerify': "Type 'delete' to confirm.",
           'deleteAccountFailed': 'Failed to delete account',
           'deleteAccountSuccess': 'Account deleted successfully',
           'blockUser': 'Block @username',
@@ -653,6 +654,7 @@ class AppTranslations extends Translations {
               'Esto eliminará tu cuenta y todos tus datos. Esta acción es irreversible.',
           'deleteAccountConfirmation':
               '¿Estás seguro de que deseas eliminar tu cuenta?',
+          'deleteAccountVerify': "Escribe 'delete' para confirmar.",
           'deleteAccountFailed': 'No se pudo eliminar la cuenta',
           'deleteAccountSuccess': 'Cuenta eliminada exitosamente',
           'blockUser': 'Bloquear a @username',
@@ -1012,6 +1014,7 @@ class AppTranslations extends Translations {
               'Isto irá eliminar a tua conta e todos os teus dados. Esta ação é irreversível.',
           'deleteAccountConfirmation':
               'Tens a certeza de que queres eliminar a tua conta?',
+          'deleteAccountVerify': "Escreve 'delete' para confirmar.",
           'deleteAccountFailed': 'Não foi possível eliminar a conta',
           'deleteAccountSuccess': 'Conta eliminada com sucesso',
           'blockUser': 'Bloquear @username',
@@ -1368,6 +1371,7 @@ class AppTranslations extends Translations {
               'Isso excluirá sua conta e todos os seus dados. Essa ação é irreversível.',
           'deleteAccountConfirmation':
               'Tem certeza de que deseja excluir sua conta?',
+          'deleteAccountVerify': "Digite 'delete' para confirmar.",
           'deleteAccountFailed': 'Não foi possível excluir a conta',
           'deleteAccountSuccess': 'Conta excluída com sucesso',
           'blockUser': 'Bloquear @username',
