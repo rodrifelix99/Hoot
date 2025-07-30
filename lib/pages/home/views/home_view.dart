@@ -63,131 +63,144 @@ class HomeView extends GetView<HomeController> {
               left: MediaQuery.of(context).padding.left + 16,
               right: MediaQuery.of(context).padding.right + 16,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                FadeInUp(
-                  duration: const Duration(milliseconds: 400),
-                  delay: const Duration(milliseconds: 500),
-                  child: IconButton(
-                    padding: const EdgeInsets.all(16),
-                    constraints: const BoxConstraints(
-                      minWidth: 56,
-                      minHeight: 56,
-                    ),
-                    icon: Icon(
-                      SolarIconsOutline.feed,
-                      color: index == 0
-                          ? Theme.of(context).colorScheme.primaryFixed
-                          : Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
-                    ),
-                    onPressed: () => controller.changeIndex(0),
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                iconButtonTheme: IconButtonThemeData(
+                  style: IconButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.primaryFixed,
+                    iconSize: 24,
+                    padding: EdgeInsets.zero,
+                    visualDensity: VisualDensity.compact,
+
                   ),
                 ),
-                FadeInUp(
-                  duration: const Duration(milliseconds: 400),
-                  delay: const Duration(milliseconds: 800),
-                  child: IconButton(
-                    padding: const EdgeInsets.all(16),
-                    constraints: const BoxConstraints(
-                      minWidth: 56,
-                      minHeight: 56,
-                    ),
-                    icon: Icon(
-                      SolarIconsOutline.compass,
-                      color: index == 1
-                          ? Theme.of(context).colorScheme.primaryFixed
-                          : Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
-                    ),
-                    onPressed: () => controller.changeIndex(1),
-                  ),
-                ),
-                FadeInUp(
-                  duration: const Duration(milliseconds: 400),
-                  delay: const Duration(milliseconds: 1100),
-                  child: Hero(
-                    tag: 'createHootButton',
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 400),
+                    delay: const Duration(milliseconds: 500),
                     child: IconButton(
-                      iconSize: 50,
-                      visualDensity: VisualDensity.compact,
-                      icon: Icon(
-                        SolarIconsBold.addSquare,
-                        color: Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
+                      padding: const EdgeInsets.all(16),
+                      constraints: const BoxConstraints(
+                        minWidth: 56,
+                        minHeight: 56,
                       ),
-                      onPressed: () => Get.toNamed(AppRoutes.createPost),
+                      icon: Icon(
+                        SolarIconsOutline.feed,
+                        color: index == 0
+                            ? Theme.of(context).colorScheme.primaryFixed
+                            : Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
+                      ),
+                      onPressed: () => controller.changeIndex(0),
                     ),
                   ),
-                ),
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    FadeInUp(
-                      duration: const Duration(milliseconds: 400),
-                      delay: const Duration(milliseconds: 1400),
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 400),
+                    delay: const Duration(milliseconds: 800),
+                    child: IconButton(
+                      padding: const EdgeInsets.all(16),
+                      constraints: const BoxConstraints(
+                        minWidth: 56,
+                        minHeight: 56,
+                      ),
+                      icon: Icon(
+                        SolarIconsOutline.compass,
+                        color: index == 1
+                            ? Theme.of(context).colorScheme.primaryFixed
+                            : Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
+                      ),
+                      onPressed: () => controller.changeIndex(1),
+                    ),
+                  ),
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 400),
+                    delay: const Duration(milliseconds: 1100),
+                    child: Hero(
+                      tag: 'createHootButton',
                       child: IconButton(
-                        padding: const EdgeInsets.all(16),
-                        constraints: const BoxConstraints(
-                          minWidth: 56,
-                          minHeight: 56,
-                        ),
+                        iconSize: 50,
+                        visualDensity: VisualDensity.compact,
                         icon: Icon(
-                          SolarIconsOutline.bell,
-                          color: index == 2
-                              ? Theme.of(context).colorScheme.primaryFixed
-                              : Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
+                          SolarIconsBold.addSquare,
+                          color: Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
                         ),
-                        onPressed: () => controller.changeIndex(2),
+                        onPressed: () => Get.toNamed(AppRoutes.createPost),
                       ),
                     ),
-                    if (unread > -10)
-                      Positioned(
-                        right: 12,
-                        top: 12,
-                        child: FadeIn(
-                          duration: const Duration(milliseconds: 400),
-                          delay: const Duration(milliseconds: 1700),
-                          child: Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primaryFixed,
-                              shape: BoxShape.circle,
-                            ),
-                            constraints: const BoxConstraints(
-                                minWidth: 16, minHeight: 16),
-                            child: Text(
-                              unread > 99 ? '' : '$unread',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
-                                fontSize: 10,
-                                height: 1,
+                  ),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 400),
+                        delay: const Duration(milliseconds: 1400),
+                        child: IconButton(
+                          padding: const EdgeInsets.all(16),
+                          constraints: const BoxConstraints(
+                            minWidth: 56,
+                            minHeight: 56,
+                          ),
+                          icon: Icon(
+                            SolarIconsOutline.bell,
+                            color: index == 2
+                                ? Theme.of(context).colorScheme.primaryFixed
+                                : Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
+                          ),
+                          onPressed: () => controller.changeIndex(2),
+                        ),
+                      ),
+                      if (unread > 0)
+                        Positioned(
+                          right: 12,
+                          top: 12,
+                          child: FadeIn(
+                            duration: const Duration(milliseconds: 400),
+                            delay: const Duration(milliseconds: 1700),
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primaryFixed,
+                                shape: BoxShape.circle,
                               ),
-                              textAlign: TextAlign.center,
+                              constraints: const BoxConstraints(
+                                  minWidth: 16, minHeight: 16),
+                              child: Text(
+                                unread > 99 ? '' : '$unread',
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+                                  fontSize: 10,
+                                  height: 1,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                  ],
-                ),
-                FadeInUp(
-                  duration: const Duration(milliseconds: 400),
-                  delay: const Duration(milliseconds: 1700),
-                  child: IconButton(
-                    padding: const EdgeInsets.all(16),
-                    constraints: const BoxConstraints(
-                      minWidth: 56,
-                      minHeight: 56,
-                    ),
-                    icon: Icon(
-                      SolarIconsOutline.user,
-                      color: index == 3
-                          ? Theme.of(context).colorScheme.primaryFixed
-                          : Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
-                    ),
-                    onPressed: () => controller.changeIndex(3),
+                    ],
                   ),
-                ),
-              ],
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 400),
+                    delay: const Duration(milliseconds: 1700),
+                    child: IconButton(
+                      padding: const EdgeInsets.all(16),
+                      constraints: const BoxConstraints(
+                        minWidth: 56,
+                        minHeight: 56,
+                      ),
+                      icon: Icon(
+                        SolarIconsOutline.user,
+                        color: index == 3
+                            ? Theme.of(context).colorScheme.primaryFixed
+                            : Theme.of(context).colorScheme.primaryFixed.withAlpha(150),
+                      ),
+                      onPressed: () => controller.changeIndex(3),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
