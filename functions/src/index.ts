@@ -53,6 +53,10 @@ export const onLikeCreated = onDocumentCreated("posts/{postId}/likes/{userId}", 
       read: false,
       createdAt: FieldValue.serverTimestamp(),
     });
+  await db
+    .collection("users")
+    .doc(ownerId)
+    .update({ popularityScore: FieldValue.increment(1) });
 });
 
 export const onCommentCreated = onDocumentCreated(
@@ -109,6 +113,16 @@ export const onCommentCreated = onDocumentCreated(
           });
       }
     }
+    if (ownerId) {
+      await db
+        .collection("users")
+        .doc(ownerId)
+        .update({ popularityScore: FieldValue.increment(1) });
+    }
+    await db
+      .collection("users")
+      .doc(userId)
+      .update({ activityScore: FieldValue.increment(1) });
   }
 );
 
@@ -147,33 +161,37 @@ export const onPostCreated = onDocumentCreated(
     }
 
     const text = post.text as string | undefined;
-    if (!text || !text.includes("@")) return;
-
-    const regex = /@([A-Za-z0-9_]+)/g;
-    let match;
-    while ((match = regex.exec(text)) !== null) {
-      const username = match[1];
-      const userQuery = await db
-        .collection("users")
-        .where("username", "==", username)
-        .limit(1)
-        .get();
-      if (userQuery.empty) continue;
-      const targetId = userQuery.docs[0].id;
-      if (targetId === userId) continue;
-      await db
-        .collection("users")
-        .doc(targetId)
-        .collection("notifications")
-        .add({
-          user,
-          ...(feed ? { feed } : {}),
-          postId,
-          type: 2,
-          read: false,
-          createdAt: FieldValue.serverTimestamp(),
-        });
+    if (text && text.includes("@")) {
+      const regex = /@([A-Za-z0-9_]+)/g;
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        const username = match[1];
+        const userQuery = await db
+          .collection("users")
+          .where("username", "==", username)
+          .limit(1)
+          .get();
+        if (userQuery.empty) continue;
+        const targetId = userQuery.docs[0].id;
+        if (targetId === userId) continue;
+        await db
+          .collection("users")
+          .doc(targetId)
+          .collection("notifications")
+          .add({
+            user,
+            ...(feed ? { feed } : {}),
+            postId,
+            type: 2,
+            read: false,
+            createdAt: FieldValue.serverTimestamp(),
+          });
+      }
     }
+    await db
+      .collection("users")
+      .doc(userId)
+      .update({ activityScore: FieldValue.increment(1) });
   }
 );
 
@@ -202,6 +220,10 @@ export const onSubscriptionCreated = onDocumentCreated(
         read: false,
         createdAt: FieldValue.serverTimestamp(),
       });
+    await db
+      .collection("users")
+      .doc(ownerId)
+      .update({ popularityScore: FieldValue.increment(1) });
   }
 );
 
@@ -218,6 +240,10 @@ export const onPostDeleted = onDocumentDeleted(
         .doc(originalId)
         .update({ reFeeds: FieldValue.increment(-1) });
     }
+    await db
+      .collection("users")
+      .doc(post.userId)
+      .update({ activityScore: FieldValue.increment(-1) });
   }
 );
 
