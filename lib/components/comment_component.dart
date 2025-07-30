@@ -14,7 +14,7 @@ class CommentComponent extends StatelessWidget {
     return ListTile(
       leading: ProfileAvatarComponent(
         image: comment.user?.smallProfilePictureUrl ?? '',
-        hash: comment.user?.smallAvatarHash,
+        hash: comment.user?.smallAvatarHash ?? comment.user?.bigAvatarHash,
         size: 32,
         radius: 16,
       ),

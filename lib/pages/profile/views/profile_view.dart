@@ -113,7 +113,7 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     child: ProfileAvatarComponent(
                       image: user.largeProfilePictureUrl ?? '',
-                      hash: user.bigAvatarHash,
+                      hash: user.bigAvatarHash ?? user.smallAvatarHash,
                       size: 120,
                       radius: 16,
                     ),

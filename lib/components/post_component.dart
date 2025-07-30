@@ -243,7 +243,8 @@ class _PostComponentState extends State<PostComponent> {
                     },
                     child: ProfileAvatarComponent(
                       image: _post.user?.smallProfilePictureUrl ?? '',
-                      hash: _post.user?.smallAvatarHash,
+                      hash: _post.user?.smallAvatarHash ??
+                          _post.user?.bigAvatarHash,
                       size: 40,
                       radius: 12,
                     ),
@@ -291,7 +292,9 @@ class _PostComponentState extends State<PostComponent> {
                     aspectRatio: 1,
                     child: ImageComponent(
                       url: _post.media!.first,
-                      hash: _post.hashes?.first,
+                      hash: _post.hashes != null && _post.hashes!.isNotEmpty
+                          ? _post.hashes!.first
+                          : null,
                       width: double.infinity,
                       fit: BoxFit.cover,
                       radius: 16,
@@ -316,7 +319,10 @@ class _PostComponentState extends State<PostComponent> {
                       itemBuilder: (context, i) {
                         return ImageComponent(
                           url: _post.media![i],
-                          hash: _post.hashes?[i],
+                          hash: _post.hashes != null &&
+                                  i < _post.hashes!.length
+                              ? _post.hashes![i]
+                              : null,
                           fit: BoxFit.cover,
                           radius: 8,
                         );

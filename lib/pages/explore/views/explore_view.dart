@@ -114,7 +114,7 @@ class ExploreView extends GetView<ExploreController> {
                           child: ProfileAvatarComponent(
                             image: u.largeProfilePictureUrl ??
                                 '',
-                            hash: u.bigAvatarHash,
+                            hash: u.bigAvatarHash ?? u.smallAvatarHash,
                             size: 80,
                             radius: 16,
                           ),
@@ -155,7 +155,7 @@ class ExploreView extends GetView<ExploreController> {
                           child: ListItemComponent(
                             leading: ProfileAvatarComponent(
                               image: f.bigAvatar ?? '',
-                              hash: f.bigAvatarHash,
+                              hash: f.bigAvatarHash ?? f.smallAvatarHash,
                               size: 100,
                               radius: 16,
                               color: f.color,
