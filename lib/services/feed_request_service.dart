@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 
 import 'subscription_service.dart';
 import '../models/user.dart';
+import '../models/feed_join_request.dart';
+import 'dart:math' as math;
 import 'auth_service.dart';
 
 class FeedRequestService {
@@ -64,20 +66,35 @@ class FeedRequestService {
     return doc.exists;
   }
 
-  Future<List<U>> fetchRequests(String feedId) async {
+  Future<List<FeedJoinRequest>> fetchRequests(String feedId) async {
     final snapshot = await _firestore
         .collection('feeds')
         .doc(feedId)
         .collection('requests')
+        .orderBy('createdAt', descending: true)
         .get();
     final ids = snapshot.docs.map((d) => d.id).toList();
     if (ids.isEmpty) return [];
-    final usersSnapshot = await _firestore
-        .collection('users')
-        .where(FieldPath.documentId, whereIn: ids)
-        .get();
-    return usersSnapshot.docs
-        .map((d) => U.fromJson({'uid': d.id, ...d.data()}))
+
+    const chunkSize = 10;
+    final Map<String, U> users = {};
+    for (var i = 0; i < ids.length; i += chunkSize) {
+      final chunk = ids.sublist(i, math.min(i + chunkSize, ids.length));
+      final usersSnapshot = await _firestore
+          .collection('users')
+          .where(FieldPath.documentId, whereIn: chunk)
+          .get();
+      for (final doc in usersSnapshot.docs) {
+        users[doc.id] = U.fromJson({'uid': doc.id, ...doc.data()});
+      }
+    }
+
+    return snapshot.docs
+        .where((d) => users.containsKey(d.id))
+        .map((d) => FeedJoinRequest(
+              user: users[d.id]!,
+              createdAt: (d.data()['createdAt'] as Timestamp).toDate(),
+            ))
         .toList();
   }
 

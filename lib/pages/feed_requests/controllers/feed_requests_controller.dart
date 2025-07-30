@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../../../models/user.dart';
+import '../../../models/feed_join_request.dart';
 import '../../../services/feed_request_service.dart';
 import '../../../util/routes/app_routes.dart';
 
@@ -11,7 +11,7 @@ class FeedRequestsController extends GetxController {
       : _service = service ?? Get.find<FeedRequestService>();
 
   late String feedId;
-  final RxList<U> requests = <U>[].obs;
+  final RxList<FeedJoinRequest> requests = <FeedJoinRequest>[].obs;
   final RxBool loading = false.obs;
 
   @override
@@ -33,12 +33,12 @@ class FeedRequestsController extends GetxController {
 
   Future<void> accept(String userId) async {
     await _service.accept(feedId, userId);
-    requests.removeWhere((u) => u.uid == userId);
+    requests.removeWhere((r) => r.user.uid == userId);
   }
 
   Future<void> reject(String userId) async {
     await _service.reject(feedId, userId);
-    requests.removeWhere((u) => u.uid == userId);
+    requests.removeWhere((r) => r.user.uid == userId);
   }
 
   void openProfile(String userId) {

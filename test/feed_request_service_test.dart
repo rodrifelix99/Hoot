@@ -8,6 +8,7 @@ import 'package:hoot/services/subscription_service.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/models/feed_join_request.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
   final U _user;
@@ -201,6 +202,34 @@ void main() {
 
       final count = await service.pendingRequestCount();
       expect(count, 2);
+    });
+
+    test('fetchRequests returns ordered join requests', () async {
+      final firestore = FakeFirebaseFirestore();
+      final service = FeedRequestService(
+        firestore: firestore,
+        subscriptionService: SubscriptionService(
+          firestore: firestore,
+        ),
+        authService: FakeAuthService(U(uid: 'owner')),
+      );
+      await firestore.collection('feeds').doc('f1').set({});
+      for (var i = 0; i < 11; i++) {
+        await firestore.collection('users').doc('u$i').set({'uid': 'u$i'});
+        await firestore
+            .collection('feeds')
+            .doc('f1')
+            .collection('requests')
+            .doc('u$i')
+            .set({'createdAt': Timestamp.fromMillisecondsSinceEpoch(i * 1000)});
+      }
+
+      final result = await service.fetchRequests('f1');
+
+      expect(result.length, 11);
+      expect(result.first.user.uid, 'u10');
+      expect(result.last.user.uid, 'u0');
+      expect(result.first.createdAt.isAfter(result.last.createdAt), isTrue);
     });
   });
 }
