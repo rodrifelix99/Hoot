@@ -84,7 +84,6 @@ class _LikeButtonComponentState extends State<LikeButtonComponent>
                     'assets/images/heart.png',
                     width: widget.size,
                     height: widget.size,
-                    color: Colors.red,
                   );
                 } else {
                   icon = Icon(
