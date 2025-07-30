@@ -79,6 +79,7 @@ dependencies:
   uuid: any
   figma_squircle: ^0.6.3
   animate_do: ^4.2.0
+  screen_corner_radius: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:screen_corner_radius/screen_corner_radius.dart';
 import '../../../services/auth_service.dart';
 import '../../../util/routes/app_routes.dart';
 import '../../notifications/controllers/notifications_controller.dart';
@@ -7,10 +8,23 @@ class HomeController extends GetxController {
   final selectedIndex = 0.obs;
   final _auth = Get.find<AuthService>();
 
+  final RxDouble screenRadius = 32.0.obs;
+
   @override
   void onInit() {
     super.onInit();
     _verifyUser();
+  }
+
+  Future<void> _setRadius() async {
+    final ScreenRadius screenRadius = await ScreenCornerRadius.get();
+    // await 2 seconds to ensure the screen corner radius is available
+    await Future.delayed(const Duration(seconds: 2));
+    if (screenRadius.bottomLeft == 0.0) {
+      this.screenRadius.value = 32.0;
+      return;
+    }
+    this.screenRadius.value = screenRadius.bottomLeft;
   }
 
   Future<void> _verifyUser() async {
@@ -22,6 +36,7 @@ class HomeController extends GetxController {
     if (user.isUninvited) {
       Get.offAllNamed(AppRoutes.invitation);
     }
+    _setRadius();
   }
 
   void changeIndex(int index) {
