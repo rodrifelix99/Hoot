@@ -11,6 +11,8 @@ import 'package:hoot/services/notification_service.dart';
 import 'package:hoot/services/feed_request_service.dart';
 import 'package:hoot/services/subscription_service.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/util/translations/app_translations.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
   final U _user;
@@ -77,6 +79,33 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('2'), findsOneWidget);
+    Get.reset();
+  });
+
+  testWidgets('swiping left opens create post page', (tester) async {
+    Get.put<AuthService>(FakeAuthService(U(uid: 'u1', username: 't')));
+    Get.put(HomeController());
+    Get.put<NotificationsController>(TestNotificationsController());
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        translations: AppTranslations(),
+        locale: const Locale('en'),
+        getPages: [
+          GetPage(name: '/', page: () => const HomeView()),
+          GetPage(
+            name: AppRoutes.createPost,
+            page: () => const Scaffold(body: Text('create post page')),
+          ),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byType(HomeView), const Offset(-300, 0));
+    await tester.pumpAndSettle();
+
+    expect(find.text('create post page'), findsOneWidget);
     Get.reset();
   });
 }
