@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:blurhash/blurhash.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 
@@ -62,16 +63,19 @@ class AvatarController extends GetxController {
           final smallData = Uint8List.fromList(img.encodeJpg(small));
           final bigData = Uint8List.fromList(img.encodeJpg(big));
 
-          final storageRef = FirebaseStorage.instance
-              .ref()
-              .child('avatars')
-              .child(uid);
+          final smallHash = await BlurHash.encode(smallData, 4, 3);
+          final bigHash = await BlurHash.encode(bigData, 4, 3);
+
+          final storageRef =
+              FirebaseStorage.instance.ref().child('avatars').child(uid);
 
           final smallRef = storageRef.child('small_avatar.jpg');
           final bigRef = storageRef.child('big_avatar.jpg');
 
-          await smallRef.putData(smallData, SettableMetadata(contentType: 'image/jpeg'));
-          await bigRef.putData(bigData, SettableMetadata(contentType: 'image/jpeg'));
+          await smallRef.putData(
+              smallData, SettableMetadata(contentType: 'image/jpeg'));
+          await bigRef.putData(
+              bigData, SettableMetadata(contentType: 'image/jpeg'));
 
           final smallUrl = await smallRef.getDownloadURL();
           final bigUrl = await bigRef.getDownloadURL();
@@ -79,12 +83,16 @@ class AvatarController extends GetxController {
           await FirebaseFirestore.instance.collection('users').doc(uid).set({
             'smallAvatar': smallUrl,
             'bigAvatar': bigUrl,
+            'smallAvatarHash': smallHash,
+            'bigAvatarHash': bigHash,
           }, SetOptions(merge: true));
 
           final user = _auth.currentUser;
           if (user != null) {
             user.smallProfilePictureUrl = smallUrl;
             user.largeProfilePictureUrl = bigUrl;
+            user.smallAvatarHash = smallHash;
+            user.bigAvatarHash = bigHash;
           }
         }
       }

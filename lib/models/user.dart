@@ -7,6 +7,8 @@ class U {
   String? username;
   String? smallProfilePictureUrl;
   String? largeProfilePictureUrl;
+  String? smallAvatarHash;
+  String? bigAvatarHash;
   String? bannerPictureUrl;
   double? radius;
   String? color;
@@ -35,6 +37,8 @@ class U {
     this.username,
     this.smallProfilePictureUrl,
     this.largeProfilePictureUrl,
+    this.smallAvatarHash,
+    this.bigAvatarHash,
     this.bannerPictureUrl,
     this.radius,
     this.color,
@@ -76,6 +80,8 @@ class U {
       username: json['username'],
       smallProfilePictureUrl: json['smallAvatar'],
       largeProfilePictureUrl: json['bigAvatar'],
+      smallAvatarHash: json['smallAvatarHash'],
+      bigAvatarHash: json['bigAvatarHash'],
       bannerPictureUrl: json['banner'],
       radius: double.tryParse(json['radius'].toString()),
       color: json['color'],
@@ -130,6 +136,8 @@ class U {
         'username': username,
         'smallAvatar': smallProfilePictureUrl,
         'bigAvatar': largeProfilePictureUrl,
+        'smallAvatarHash': smallAvatarHash,
+        'bigAvatarHash': bigAvatarHash,
         'banner': bannerPictureUrl,
         'radius': radius,
         'color': color,
