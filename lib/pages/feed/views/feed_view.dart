@@ -19,7 +19,13 @@ class FeedView extends GetView<FeedController> {
         state: state,
         fetchNextPage: controller.fetchNextPage,
         builderDelegate: PagedChildBuilderDelegate<Post>(
-          itemBuilder: (context, item, index) => PostComponent(post: item),
+          itemBuilder: (context, item, index) => PostComponent(
+            post: item,
+            margin: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
+          ),
           firstPageProgressIndicatorBuilder: (_) =>
               const ShimmerListTile(hasSubtitle: true),
           newPageProgressIndicatorBuilder: (_) => const Padding(

@@ -203,7 +203,6 @@ class ExploreView extends GetView<ExploreController> {
               const SizedBox(height: 8),
               Obx(
                 () => ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: controller.topPosts.length,
@@ -211,7 +210,11 @@ class ExploreView extends GetView<ExploreController> {
                     final p = controller.topPosts[index];
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
-                      child: PostComponent(post: p),
+                      child: PostComponent(post: p,
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 0,
+                        ),),
                     );
                   },
                 ),

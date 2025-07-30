@@ -134,8 +134,13 @@ class FeedPageView extends GetView<FeedPageController> {
               state: state,
               fetchNextPage: controller.fetchNext,
               builderDelegate: PagedChildBuilderDelegate<Post>(
-                itemBuilder: (context, item, index) =>
-                    PostComponent(post: item),
+                itemBuilder: (context, item, index) => PostComponent(
+                  post: item,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                ),
                 firstPageProgressIndicatorBuilder: (_) => const Padding(
                   padding: EdgeInsets.all(16),
                   child: Center(child: CircularProgressIndicator()),

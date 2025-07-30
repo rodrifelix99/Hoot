@@ -716,7 +716,7 @@ class AppTranslations extends Translations {
           'report': 'Reportar',
           'reportReasonRequired': 'Se requiere un motivo',
         },
-        'pt': {
+        'pt_PT': {
           'helloWorld': 'Olá Mundo!',
           'welcome': 'Bem-vindo ao Hoot',
           'welcomeTo': 'Bem-vindo ao',

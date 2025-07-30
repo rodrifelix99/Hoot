@@ -40,7 +40,8 @@ void main() {
 
     timeago.setLocaleMessages('es', timeago.EsMessages());
     timeago.setLocaleMessages('pt', timeago.PtBrMessages());
-    timeago.setLocaleMessages('pt_BR', timeago.PtBrMessages());
+    timeago.setLocaleMessages('pt-BR', timeago.PtBrMessages());
+    timeago.setLocaleMessages('pt-PT', timeago.PtBrMessages());
 
     final themeService = Get.find<ThemeService>();
     runApp(
