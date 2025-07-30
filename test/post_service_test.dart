@@ -6,6 +6,48 @@ import 'package:hoot/models/post.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class FakeAuthService extends GetxService implements AuthService {
+  final U? _user;
+  FakeAuthService(this._user);
+
+  @override
+  U? get currentUser => _user;
+
+  @override
+  Future<U?> fetchUser() async => _user;
+
+  @override
+  Future<U?> fetchUserById(String uid) async => _user;
+
+  @override
+  Future<U?> fetchUserByUsername(String username) async => _user;
+
+  @override
+  Future<List<U>> searchUsers(String query, {int limit = 5}) async => [];
+
+  @override
+  Future<void> signOut() async {}
+
+  @override
+  Future<UserCredential> signInWithGoogle() async => throw UnimplementedError();
+
+  @override
+  Future<UserCredential> signInWithApple() async => throw UnimplementedError();
+
+  @override
+  Future<void> deleteAccount() async {}
+
+  @override
+  Future<U?> refreshUser() async => _user;
+
+  @override
+  Future<void> createUserDocumentIfNeeded(User user) async {}
+}
 
 void main() {
   group('PostService', () {
@@ -108,6 +150,25 @@ void main() {
       expect(post, isNotNull);
       expect(post!.id, 'p1');
       expect(post.text, 'hello');
+    });
+
+    test('fetchPost marks post as liked when like exists', () async {
+      final firestore = FakeFirebaseFirestore();
+      await firestore.collection('posts').doc('p1').set({'text': 'hello'});
+      await firestore
+          .collection('posts')
+          .doc('p1')
+          .collection('likes')
+          .doc('u1')
+          .set({'createdAt': Timestamp.now()});
+      final service = PostService(
+        firestore: firestore,
+        authService: FakeAuthService(U(uid: 'u1')),
+      );
+
+      final post = await service.fetchPost('p1');
+
+      expect(post?.liked, isTrue);
     });
 
     test('fetchPost returns null when missing', () async {

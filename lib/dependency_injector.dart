@@ -16,7 +16,7 @@ class DependencyInjector {
     final auth = Get.put(AuthService(), permanent: true);
     await auth.fetchUser();
     Get.put<BaseFeedService>(FeedService(), permanent: true);
-    Get.put<BasePostService>(PostService(), permanent: true);
+    Get.put<BasePostService>(PostService(authService: auth), permanent: true);
     Get.put(SubscriptionService(), permanent: true);
     Get.put(FeedRequestService(), permanent: true);
     Get.put(QuickActionsService(), permanent: true);

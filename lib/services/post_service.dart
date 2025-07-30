@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/post.dart';
 import '../models/user.dart';
 import '../models/feed.dart';
+import 'auth_service.dart';
 
 
 /// Base interface for creating posts in Firestore.
@@ -34,9 +35,11 @@ abstract class BasePostService {
 /// Default implementation writing to the `posts` collection.
 class PostService implements BasePostService {
   final FirebaseFirestore _firestore;
+  final AuthService? _authService;
 
-  PostService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  PostService({FirebaseFirestore? firestore, AuthService? authService})
+      : _firestore = firestore ?? FirebaseFirestore.instance,
+        _authService = authService;
 
   @override
   String newPostId() => _firestore.collection('posts').doc().id;
@@ -74,7 +77,18 @@ class PostService implements BasePostService {
   Future<Post?> fetchPost(String id) async {
     final doc = await _firestore.collection('posts').doc(id).get();
     if (!doc.exists) return null;
-    return Post.fromJson({'id': doc.id, ...doc.data()!});
+    final data = {'id': doc.id, ...doc.data()!};
+    if (_authService?.currentUser != null) {
+      final uid = _authService!.currentUser!.uid;
+      final likeDoc = await _firestore
+          .collection('posts')
+          .doc(id)
+          .collection('likes')
+          .doc(uid)
+          .get();
+      data['liked'] = likeDoc.exists;
+    }
+    return Post.fromJson(data);
   }
 
   @override
