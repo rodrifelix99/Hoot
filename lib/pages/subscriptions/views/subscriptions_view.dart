@@ -46,6 +46,7 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
               child: ListItemComponent(
                 leading: ProfileAvatarComponent(
                   image: feed.bigAvatar ?? '',
+                  hash: feed.bigAvatarHash,
                   size: 100,
                   radius: 25,
                   color: feed.color,

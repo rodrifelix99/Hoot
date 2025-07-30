@@ -60,6 +60,7 @@ class FeedPageView extends GetView<FeedPageController> {
         children: [
           ProfileAvatarComponent(
             image: feed.bigAvatar ?? '',
+            hash: feed.bigAvatarHash,
             size: 120,
             radius: 32,
             color: feed.color,

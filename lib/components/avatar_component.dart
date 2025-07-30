@@ -9,6 +9,7 @@ class ProfileAvatarComponent extends StatefulWidget {
   final int size;
   final bool preview;
   final String url;
+  final String? hash;
   final double radius;
   final Color? color;
   final Color? foregroundColor;
@@ -19,6 +20,7 @@ class ProfileAvatarComponent extends StatefulWidget {
       required this.size,
       this.preview = false,
       this.url = '',
+      this.hash,
       this.radius = -1,
       this.color,
       this.foregroundColor});
@@ -38,6 +40,7 @@ class _ProfileAvatarComponentState extends State<ProfileAvatarComponent> {
             tag: widget.image,
             child: Avatar(
               image: widget.image,
+              hash: widget.hash,
               size: widget.size,
               radius: widget.radius,
               color: widget.color,
@@ -49,6 +52,7 @@ class _ProfileAvatarComponentState extends State<ProfileAvatarComponent> {
     } else {
       return Avatar(
         image: widget.image,
+        hash: widget.hash,
         size: widget.size,
         radius: widget.radius,
         color: widget.color,
@@ -60,6 +64,7 @@ class _ProfileAvatarComponentState extends State<ProfileAvatarComponent> {
 
 class Avatar extends StatefulWidget {
   final String image;
+  final String? hash;
   final int size;
   final double radius;
   final Color? color;
@@ -68,6 +73,7 @@ class Avatar extends StatefulWidget {
   const Avatar(
       {super.key,
       required this.image,
+      this.hash,
       required this.size,
       required this.radius,
       this.color,
@@ -119,6 +125,7 @@ class _AvatarState extends State<Avatar> {
       clipBehavior: Clip.hardEdge,
       child: HashCachedImage(
         imageUrl: widget.image,
+        hash: widget.hash,
         placeholder: (context) => const SizedBox.shrink(),
         errorWidget: (context, error, stackTrace) => Icon(
           Icons.error,

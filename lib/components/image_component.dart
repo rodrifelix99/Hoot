@@ -8,6 +8,7 @@ import 'package:hash_cached_image/hash_cached_image.dart';
 
 class ImageComponent extends StatefulWidget {
   final String url;
+  final String? hash;
   final double? width;
   final double? height;
   final BoxFit? fit;
@@ -18,6 +19,7 @@ class ImageComponent extends StatefulWidget {
   const ImageComponent(
       {super.key,
       required this.url,
+      this.hash,
       this.width,
       this.height,
       this.fit,
@@ -53,6 +55,7 @@ class _ImageComponentState extends State<ImageComponent> {
           borderRadius: BorderRadius.circular(widget.radius),
           child: HashCachedImage(
             imageUrl: widget.url,
+            hash: widget.hash,
             width: widget.width,
             height: widget.height,
             fit: widget.fit,

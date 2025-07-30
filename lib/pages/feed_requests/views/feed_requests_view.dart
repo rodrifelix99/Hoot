@@ -36,6 +36,7 @@ class FeedRequestsView extends GetView<FeedRequestsController> {
               onTap: () => controller.openProfile(user.uid),
               leading: ProfileAvatarComponent(
                 image: user.smallProfilePictureUrl ?? '',
+                hash: user.smallAvatarHash,
                 size: 40,
                 radius: 20,
               ),

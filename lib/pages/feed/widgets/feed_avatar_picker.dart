@@ -9,6 +9,7 @@ import '../../../components/avatar_component.dart';
 class FeedAvatarPicker extends StatelessWidget {
   final File? file;
   final String? imageUrl;
+  final String? hash;
   final VoidCallback onTap;
   final Color? color;
   final Color? foregroundColor;
@@ -17,6 +18,7 @@ class FeedAvatarPicker extends StatelessWidget {
     super.key,
     required this.file,
     this.imageUrl,
+    this.hash,
     required this.onTap,
     this.color,
     this.foregroundColor,
@@ -40,6 +42,7 @@ class FeedAvatarPicker extends StatelessWidget {
     } else if (imageUrl != null && imageUrl!.isNotEmpty) {
       avatarWidget = ProfileAvatarComponent(
         image: imageUrl!,
+        hash: hash,
         size: 120,
         radius: 32,
         color: color,
