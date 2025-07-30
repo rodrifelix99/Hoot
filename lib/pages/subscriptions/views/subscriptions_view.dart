@@ -25,7 +25,7 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
         if (controller.feeds.isEmpty) {
           return NothingToShowComponent(
             icon: const Icon(Icons.feed_outlined),
-            text: 'numberOfSubscriptions'.trParams({'count': '0'}),
+            text: 'noSubscriptions'.tr,
           );
         }
         return ListView.builder(

@@ -23,7 +23,7 @@ class SubscribersView extends GetView<SubscribersController> {
         if (controller.subscribers.isEmpty) {
           return NothingToShowComponent(
             icon: const Icon(Icons.person_outline),
-            text: 'numberOfSubscribers'.trParams({'count': '0'}),
+            text: 'noSubscribers'.tr,
           );
         }
         return ListView.builder(

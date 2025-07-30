@@ -136,8 +136,9 @@ class AppTranslations extends Translations {
               'Are you sure you want to request to join this feed?',
           'request': 'Request',
           'requested': 'Requested',
-          'numberOfRequests':
-              '{numberOfRequests, plural, =0 {No requests} one {# request} other {# requests}}',
+          'noRequests': 'No requests',
+          'requestSingular': '@count request',
+          'requestPlural': '@count requests',
           'errorRequestingToJoin':
               'There was an error requesting to join this feed',
           'requestSent': 'Request sent',
@@ -156,10 +157,12 @@ class AppTranslations extends Translations {
           'banSubscriberConfirmation':
               'Are you sure you want to ban this subscriber?',
           'comingSoon': 'Coming soon!',
-          'numberOfSubscriptions':
-              '{count, plural, =0 {No subscriptions} one {1 subscription} other {{count} subscriptions}}',
-          'numberOfSubscribers':
-              '{count, plural, =0 {No subscribers} one {1 subscriber} other {{count} subscribers}}',
+          'noSubscriptions': 'No subscriptions',
+          'subscriptionSingular': '@count subscription',
+          'subscriptionPlural': '@count subscriptions',
+          'noSubscribers': 'No subscribers',
+          'subscriberSingular': '@count subscriber',
+          'subscriberPlural': '@count subscribers',
           'subscriptions': 'Subscriptions',
           'by': 'by',
           'deleteFeed': 'Delete Feed',
@@ -485,8 +488,9 @@ class AppTranslations extends Translations {
               '¿Estás seguro de que deseas solicitar unirte a este feed?',
           'request': 'Solicitud',
           'requested': 'Solicitado',
-          'numberOfRequests':
-              '{numberOfRequests, plural, =0 {No hay solicitudes} one {# solicitud} other {# solicitudes}}',
+          'noRequests': 'No hay solicitudes',
+          'requestSingular': '@count solicitud',
+          'requestPlural': '@count solicitudes',
           'errorRequestingToJoin':
               'Hubo un error al solicitar unirse a este feed',
           'requestSent': 'Solicitud enviada',
@@ -505,10 +509,12 @@ class AppTranslations extends Translations {
           'banSubscriberConfirmation':
               '¿Estás seguro de que deseas prohibir a este suscriptor?',
           'comingSoon': '¡Próximamente!',
-          'numberOfSubscriptions':
-              '{count, plural, =0 {No hay suscripciones} one {1 suscripción} other {{count} suscripciones}}',
-          'numberOfSubscribers':
-              '{count, plural, =0 {No hay suscriptores} one {1 suscriptor} other {{count} suscriptores}}',
+          'noSubscriptions': 'No hay suscripciones',
+          'subscriptionSingular': '@count suscripción',
+          'subscriptionPlural': '@count suscripciones',
+          'noSubscribers': 'No hay suscriptores',
+          'subscriberSingular': '@count suscriptor',
+          'subscriberPlural': '@count suscriptores',
           'subscriptions': 'Suscripciones',
           'by': 'por',
           'deleteFeed': 'Eliminar Feed',
@@ -838,8 +844,9 @@ class AppTranslations extends Translations {
               'Tens a certeza de que queres pedir para aderir a este feed?',
           'request': 'Pedido',
           'requested': 'Pedido',
-          'numberOfRequests':
-              '{numberOfRequests, plural, =0 {Sem pedidos} one {# pedido} other {# pedidos}}',
+          'noRequests': 'Sem pedidos',
+          'requestSingular': '@count pedido',
+          'requestPlural': '@count pedidos',
           'errorRequestingToJoin':
               'Ocorreu um erro ao pedir para aderir a este feed',
           'requestSent': 'Pedido enviado',
@@ -858,10 +865,12 @@ class AppTranslations extends Translations {
           'banSubscriberConfirmation':
               'Tens a certeza de que queres banir este subscritor?',
           'comingSoon': 'Em Breve!',
-          'numberOfSubscriptions':
-              '{count, plural, =0 {Sem subscrições} one {1 subscrição} other {{count} subscrições}}',
-          'numberOfSubscribers':
-              '{count, plural, =0 {Sem subscritores} one {1 subscritor} other {{count} subscritores}}',
+          'noSubscriptions': 'Sem subscrições',
+          'subscriptionSingular': '@count subscrição',
+          'subscriptionPlural': '@count subscrições',
+          'noSubscribers': 'Sem subscritores',
+          'subscriberSingular': '@count subscritor',
+          'subscriberPlural': '@count subscritores',
           'subscriptions': 'Subscrições',
           'by': 'por',
           'deleteFeed': 'Eliminar Feed',
@@ -1187,8 +1196,9 @@ class AppTranslations extends Translations {
               'Tem certeza de que deseja solicitar participação neste feed?',
           'request': 'Solicitação',
           'requested': 'Solicitado',
-          'numberOfRequests':
-              '{numberOfRequests, plural, =0 {Sem solicitações} one {# solicitação} other {# solicitações}}',
+          'noRequests': 'Sem solicitações',
+          'requestSingular': '@count solicitação',
+          'requestPlural': '@count solicitações',
           'errorRequestingToJoin': 'Erro ao solicitar participação neste feed',
           'requestSent': 'Solicitação enviada',
           'feedRequests': 'Solicitações',
@@ -1206,10 +1216,12 @@ class AppTranslations extends Translations {
           'banSubscriberConfirmation':
               'Tem certeza de que deseja banir este inscrito?',
           'comingSoon': 'Em Breve!',
-          'numberOfSubscriptions':
-              '{count, plural, =0 {Sem inscrições} one {1 inscrição} other {{count} inscrições}}',
-          'numberOfSubscribers':
-              '{count, plural, =0 {Sem inscritos} one {1 inscrito} other {{count} inscritos}}',
+          'noSubscriptions': 'Sem inscrições',
+          'subscriptionSingular': '@count inscrição',
+          'subscriptionPlural': '@count inscrições',
+          'noSubscribers': 'Sem inscritos',
+          'subscriberSingular': '@count inscrito',
+          'subscriberPlural': '@count inscritos',
           'subscriptions': 'Inscrições',
           'by': 'por',
           'deleteFeed': 'Excluir Feed',
