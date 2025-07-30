@@ -67,10 +67,20 @@ class SettingsController extends GetxController {
   }
 
   Future<void> deleteAccount(BuildContext context) async {
-    final confirmed = await DialogService.confirm(
+    var confirmed = await DialogService.confirm(
       context: context,
       title: 'deleteAccount'.tr,
-      message: 'deleteAccountDescription'.tr,
+      message: 'deleteAccountConfirmation'.tr,
+      okLabel: 'delete'.tr,
+      cancelLabel: 'cancel'.tr,
+    );
+    if (!confirmed) return;
+
+    confirmed = await DialogService.confirmWithText(
+      context: context,
+      title: 'deleteAccount'.tr,
+      message: 'deleteAccountVerify'.tr,
+      expectedWord: 'delete',
       okLabel: 'delete'.tr,
       cancelLabel: 'cancel'.tr,
     );
