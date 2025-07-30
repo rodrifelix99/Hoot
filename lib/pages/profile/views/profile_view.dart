@@ -48,6 +48,15 @@ class _ProfileViewState extends State<ProfileView> {
         DialogTextField(
           hintText: 'reportInfo'.tr,
           textCapitalization: TextCapitalization.sentences,
+          maxLines: 5,
+          minLines: 3,
+          maxLength: 500,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'reportReasonRequired'.tr;
+            }
+            return null;
+          }
         )
       ],
     );
@@ -133,15 +142,6 @@ class _ProfileViewState extends State<ProfileView> {
                   padding: const EdgeInsets.only(top: 16),
                   child: Text(
                     user.bio!,
-                  ),
-                ),
-              if (controller.isCurrentUser)
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: TextButton.icon(
-                    onPressed: () => Get.toNamed(AppRoutes.subscriptions),
-                    icon: const Icon(Icons.feed_outlined),
-                    label: Text('subscriptions'.tr),
                   ),
                 ),
             ],
@@ -343,18 +343,19 @@ class _ProfileViewState extends State<ProfileView> {
               ),
               child: Row(
                 children: [
-                  LiquidGlass.inLayer(
-                    shape: LiquidOval(),
-                    glassContainsChild: false,
-                    child: IconButton(
-                      icon: const Icon(Icons.people_rounded),
-                      color: Colors.white,
-                      onPressed: () => Get.toNamed(
-                        AppRoutes.subscriptions,
-                        arguments: controller.user.value?.uid,
+                  if (controller.isCurrentUser)
+                    LiquidGlass.inLayer(
+                      shape: LiquidOval(),
+                      glassContainsChild: false,
+                      child: IconButton(
+                        icon: const Icon(Icons.people_rounded),
+                        color: Colors.white,
+                        onPressed: () => Get.toNamed(
+                          AppRoutes.subscriptions,
+                          arguments: controller.user.value?.uid,
+                        ),
                       ),
                     ),
-                  ),
                   LiquidGlass.inLayer(
                     shape: LiquidOval(),
                     glassContainsChild: false,
