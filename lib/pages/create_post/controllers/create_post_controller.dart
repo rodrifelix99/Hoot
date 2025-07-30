@@ -41,10 +41,12 @@ class CreatePostController extends GetxController {
   final textController = TextEditingController();
 
   /// Controller for mention text field.
-  final GlobalKey<FlutterMentionsState> mentionKey = GlobalKey<FlutterMentionsState>();
+  final GlobalKey<FlutterMentionsState> mentionKey =
+      GlobalKey<FlutterMentionsState>();
 
   /// Mention suggestions for the text field.
-  final RxList<Map<String, dynamic>> mentionSuggestions = <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> mentionSuggestions =
+      <Map<String, dynamic>>[].obs;
 
   /// Picked image files, up to 4.
   final RxList<File> imageFiles = <File>[].obs;
@@ -165,8 +167,12 @@ class CreatePostController extends GetxController {
 
       final postId = _postService.newPostId();
       List<String>? imageUrls;
+      List<String>? hashes;
       if (imageFiles.isNotEmpty) {
-        imageUrls = await _storageService.uploadPostImages(postId, imageFiles);
+        final uploaded =
+            await _storageService.uploadPostImages(postId, imageFiles);
+        imageUrls = uploaded.map((e) => e.url).toList();
+        hashes = uploaded.map((e) => e.blurHash).toList();
       }
 
       await _postService.createPost(
@@ -175,6 +181,7 @@ class CreatePostController extends GetxController {
             'feedId': feed.id,
             'feed': feedData,
             if (imageUrls != null) 'images': imageUrls,
+            if (hashes != null) 'hashes': hashes,
             if (gifUrl.value != null) 'gifs': [gifUrl.value],
             'userId': _userId,
             if (userData != null) 'user': userData,

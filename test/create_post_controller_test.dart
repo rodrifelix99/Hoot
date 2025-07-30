@@ -48,7 +48,7 @@ class FakeAuthService extends GetxService implements AuthService {
 
   @override
   Future<U?> refreshUser() async => _user;
-  
+
   @override
   Future<void> createUserDocumentIfNeeded(User user) async {}
 }
@@ -57,10 +57,13 @@ class FakeStorageService extends GetxService implements BaseStorageService {
   List<List<File>> calls = [];
 
   @override
-  Future<List<String>> uploadPostImages(String postId, List<File> files) async {
+  Future<List<UploadedPostImage>> uploadPostImages(
+      String postId, List<File> files) async {
     calls.add(files);
     return files
-        .map((f) => 'https://example.com/${f.path.split('/').last}')
+        .map((f) => UploadedPostImage(
+            url: 'https://example.com/${f.path.split('/').last}',
+            blurHash: 'hash'))
         .toList();
   }
 }
@@ -236,6 +239,7 @@ void main() {
       final posts = await firestore.collection('posts').get();
       expect(
           posts.docs.first.data()['images'][0], 'https://example.com/img.jpg');
+      expect(posts.docs.first.data()['hashes'][0], 'hash');
     });
 
     testWidgets('available feeds loaded on init', (tester) async {

@@ -47,14 +47,15 @@ class FakeAuthService extends GetxService implements AuthService {
 
   @override
   Future<U?> refreshUser() async => _user;
-  
+
   @override
   Future<void> createUserDocumentIfNeeded(User user) async {}
 }
 
 class FakeStorageService extends GetxService implements BaseStorageService {
   @override
-  Future<List<String>> uploadPostImages(String postId, List<File> files) async {
+  Future<List<UploadedPostImage>> uploadPostImages(
+      String postId, List<File> files) async {
     return [];
   }
 }
