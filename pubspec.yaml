@@ -78,6 +78,7 @@ dependencies:
   liquid_glass_renderer: ^0.1.1-dev.10
   uuid: any
   figma_squircle: ^0.6.3
+  animate_do: ^4.2.0
 
 dev_dependencies:
   flutter_test:

@@ -108,11 +108,10 @@ class ExploreView extends GetView<ExploreController> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: ProfileAvatarComponent(
-                            image: u.smallProfilePictureUrl ??
-                                u.largeProfilePictureUrl ??
+                            image: u.largeProfilePictureUrl ??
                                 '',
-                            size: 60,
-                            radius: 30,
+                            size: 80,
+                            radius: 16,
                           ),
                         ),
                       );
@@ -120,7 +119,7 @@ class ExploreView extends GetView<ExploreController> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 32),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
