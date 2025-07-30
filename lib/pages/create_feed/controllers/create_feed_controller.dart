@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
@@ -9,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image/image.dart' as img;
+import 'package:blurhash/blurhash.dart';
 
 import '../../../services/toast_service.dart';
 import '../../../services/error_service.dart';
@@ -98,6 +98,8 @@ class CreateFeedController extends GetxController {
       final docRef = _firestore.collection('feeds').doc();
       String? smallAvatarUrl;
       String? bigAvatarUrl;
+      String? smallAvatarHash;
+      String? bigAvatarHash;
       if (avatarFile.value != null) {
         final file = avatarFile.value!;
         final bytes = await file.readAsBytes();
@@ -105,6 +107,10 @@ class CreateFeedController extends GetxController {
         if (decoded != null) {
           final small = img.copyResizeCropSquare(decoded, size: 32);
           final big = img.copyResizeCropSquare(decoded, size: 128);
+          final smallData = Uint8List.fromList(img.encodeJpg(small));
+          final bigData = Uint8List.fromList(img.encodeJpg(big));
+          smallAvatarHash = await BlurHash.encode(smallData, 4, 3);
+          bigAvatarHash = await BlurHash.encode(bigData, 4, 3);
           final storageRef = FirebaseStorage.instance
               .ref()
               .child('feed_avatars')
@@ -112,10 +118,9 @@ class CreateFeedController extends GetxController {
           final smallRef = storageRef.child('small_avatar.jpg');
           final bigRef = storageRef.child('big_avatar.jpg');
           await smallRef.putData(
-              Uint8List.fromList(img.encodeJpg(small)),
-              SettableMetadata(contentType: 'image/jpeg'));
-          await bigRef.putData(Uint8List.fromList(img.encodeJpg(big)),
-              SettableMetadata(contentType: 'image/jpeg'));
+              smallData, SettableMetadata(contentType: 'image/jpeg'));
+          await bigRef.putData(
+              bigData, SettableMetadata(contentType: 'image/jpeg'));
           smallAvatarUrl = await smallRef.getDownloadURL();
           bigAvatarUrl = await bigRef.getDownloadURL();
         }
@@ -134,6 +139,8 @@ class CreateFeedController extends GetxController {
         'userId': _userId,
         if (smallAvatarUrl != null) 'smallAvatar': smallAvatarUrl,
         if (bigAvatarUrl != null) 'bigAvatar': bigAvatarUrl,
+        if (smallAvatarHash != null) 'smallAvatarHash': smallAvatarHash,
+        if (bigAvatarHash != null) 'bigAvatarHash': bigAvatarHash,
         'subscriberCount': 0,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -148,6 +155,8 @@ class CreateFeedController extends GetxController {
         userId: _userId,
         smallAvatar: smallAvatarUrl,
         bigAvatar: bigAvatarUrl,
+        smallAvatarHash: smallAvatarHash,
+        bigAvatarHash: bigAvatarHash,
         title: title,
         description: description,
         color: selectedColor.value,

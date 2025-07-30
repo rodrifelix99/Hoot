@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image/image.dart' as img;
+import 'package:blurhash/blurhash.dart';
 
 import '../../../models/feed.dart';
 import '../../../services/auth_service.dart';
@@ -88,6 +89,8 @@ class EditFeedController extends GetxController {
     try {
       String? smallAvatarUrl;
       String? bigAvatarUrl;
+      String? smallAvatarHash;
+      String? bigAvatarHash;
       if (avatarFile.value != null) {
         final file = avatarFile.value!;
         final bytes = await file.readAsBytes();
@@ -95,16 +98,20 @@ class EditFeedController extends GetxController {
         if (decoded != null) {
           final small = img.copyResizeCropSquare(decoded, size: 32);
           final big = img.copyResizeCropSquare(decoded, size: 128);
+          final smallData = Uint8List.fromList(img.encodeJpg(small));
+          final bigData = Uint8List.fromList(img.encodeJpg(big));
+          smallAvatarHash = await BlurHash.encode(smallData, 4, 3);
+          bigAvatarHash = await BlurHash.encode(bigData, 4, 3);
           final storageRef = FirebaseStorage.instance
               .ref()
               .child('feed_avatars')
               .child(feed.id);
           final smallRef = storageRef.child('small_avatar.jpg');
           final bigRef = storageRef.child('big_avatar.jpg');
-          await smallRef.putData(Uint8List.fromList(img.encodeJpg(small)),
-              SettableMetadata(contentType: 'image/jpeg'));
-          await bigRef.putData(Uint8List.fromList(img.encodeJpg(big)),
-              SettableMetadata(contentType: 'image/jpeg'));
+          await smallRef.putData(
+              smallData, SettableMetadata(contentType: 'image/jpeg'));
+          await bigRef.putData(
+              bigData, SettableMetadata(contentType: 'image/jpeg'));
           smallAvatarUrl = await smallRef.getDownloadURL();
           bigAvatarUrl = await bigRef.getDownloadURL();
         }
@@ -119,6 +126,8 @@ class EditFeedController extends GetxController {
         'nsfw': isNsfw.value,
         if (smallAvatarUrl != null) 'smallAvatar': smallAvatarUrl,
         if (bigAvatarUrl != null) 'bigAvatar': bigAvatarUrl,
+        if (smallAvatarHash != null) 'smallAvatarHash': smallAvatarHash,
+        if (bigAvatarHash != null) 'bigAvatarHash': bigAvatarHash,
       });
 
       feed
@@ -129,7 +138,9 @@ class EditFeedController extends GetxController {
         ..private = isPrivate.value
         ..nsfw = isNsfw.value
         ..smallAvatar = smallAvatarUrl ?? feed.smallAvatar
-        ..bigAvatar = bigAvatarUrl ?? feed.bigAvatar;
+        ..bigAvatar = bigAvatarUrl ?? feed.bigAvatar
+        ..smallAvatarHash = smallAvatarHash ?? feed.smallAvatarHash
+        ..bigAvatarHash = bigAvatarHash ?? feed.bigAvatarHash;
 
       final user = _authService.currentUser;
       if (user != null && user.feeds != null) {
