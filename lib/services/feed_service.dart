@@ -69,6 +69,16 @@ class FeedService implements BaseFeedService {
         .map((d) => Post.fromJson({'id': d.id, ...d.data()}))
         .toList();
 
+    for (final post in posts) {
+      final likeDoc = await _firestore
+          .collection('posts')
+          .doc(post.id)
+          .collection('likes')
+          .doc(user.uid)
+          .get();
+      post.liked = likeDoc.exists;
+    }
+
     return PostPage(
       posts: posts,
       lastDoc: postsSnapshot.docs.isNotEmpty ? postsSnapshot.docs.last : null,
@@ -119,6 +129,16 @@ class FeedService implements BaseFeedService {
     final posts = snapshot.docs
         .map((d) => Post.fromJson({'id': d.id, ...d.data()}))
         .toList();
+
+    for (final post in posts) {
+      final likeDoc = await _firestore
+          .collection('posts')
+          .doc(post.id)
+          .collection('likes')
+          .doc(user.uid)
+          .get();
+      post.liked = likeDoc.exists;
+    }
 
     return PostPage(
       posts: posts,
