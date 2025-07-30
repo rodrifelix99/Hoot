@@ -8,7 +8,6 @@ import 'package:hoot/services/subscription_service.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hoot/models/user.dart';
-import 'package:hoot/models/feed_join_request.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
   final U _user;
