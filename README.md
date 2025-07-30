@@ -73,6 +73,10 @@ flutter pub get
 flutter test
 ```
 
+## Cloud Functions
+
+The backend includes a trigger named `onAuthUserDeleted` that runs whenever a Firebase Auth user is removed. It removes the user's Firestore document along with posts, subscriptions and notifications to satisfy EU data deletion rules.
+
 
 ## License
 
