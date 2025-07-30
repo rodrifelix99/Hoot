@@ -61,15 +61,10 @@ class _ImageComponentState extends State<ImageComponent> {
             fit: widget.fit,
             alignment: widget.alignment ?? Alignment.center,
             repeat: widget.repeat ?? ImageRepeat.noRepeat,
-            placeholder: (context) => Container(
-              color: Theme.of(context).colorScheme.secondaryContainer,
-              child: Center(
-                child: LoadingAnimationWidget.inkDrop(
-                  color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  size: 50,
-                ),
-              ),
-            ),
+            // Show the blur hash while the image loads instead of a loading
+            // animation. Removing the placeholder parameter lets
+            // `HashCachedImage` fall back to its default behaviour, which
+            // uses the provided blur hash as a placeholder when available.
             errorWidget: (context, error, stackTrace) => Container(
               color: Colors.grey.shade800,
               child: const Icon(Icons.error, color: Colors.white),

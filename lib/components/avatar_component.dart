@@ -126,7 +126,9 @@ class _AvatarState extends State<Avatar> {
       child: HashCachedImage(
         imageUrl: widget.image,
         hash: widget.hash,
-        placeholder: (context) => const SizedBox.shrink(),
+        // When a blur hash is provided, `HashCachedImage` will automatically
+        // render the blurred placeholder while loading. Removing the custom
+        // placeholder ensures the blur hash is shown instead of an empty box.
         errorWidget: (context, error, stackTrace) => Icon(
           Icons.error,
           color: Theme.of(context).colorScheme.error,
