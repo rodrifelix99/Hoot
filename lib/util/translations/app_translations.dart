@@ -169,6 +169,7 @@ class AppTranslations extends Translations {
           'topFeeds': 'Top Feeds',
           'noHoots': 'No hoots to show',
           'subscribeToSeeHoots': 'Subscribe to some feeds to see hoots here',
+          'popularUsers': 'Popular users',
           'top10MostSubscribed': 'Top 10 most subscribed feeds',
           'top10RecentPopularHoots': 'Top 10 most popular recent hoots',
           'upAndComing': 'Up and coming feeds',
@@ -202,7 +203,8 @@ class AppTranslations extends Translations {
           'youNeedToCreateAFeedFirst': 'You need to create a feed first',
           'selectAFeedToRefeedTo': 'Select a feed to reFeed to',
           'deletePost': 'Delete Post',
-          'deletePostConfirmation': 'Are you sure you want to delete this post?',
+          'deletePostConfirmation':
+              'Are you sure you want to delete this post?',
           'reportPost': 'Report Post',
           'reportPostInfo': 'Why are you reporting this post?',
           'reportSent': 'Report sent',
@@ -517,9 +519,9 @@ class AppTranslations extends Translations {
           'noHoots': 'No hay hoots para mostrar',
           'subscribeToSeeHoots':
               'Suscríbete a algunos feeds para ver hoots aquí',
+          'popularUsers': 'Usuarios populares',
           'top10MostSubscribed': 'Top 10 de feeds más suscritos',
-          'top10RecentPopularHoots':
-              'Top 10 de hoots recientes más populares',
+          'top10RecentPopularHoots': 'Top 10 de hoots recientes más populares',
           'upAndComing': 'Feeds en Ascenso',
           'upAndComingDescription':
               'Feeds recientes que están ganando popularidad',
@@ -552,7 +554,8 @@ class AppTranslations extends Translations {
           'youNeedToCreateAFeedFirst': 'Necesitas crear un feed primero',
           'selectAFeedToRefeedTo': 'Selecciona un feed al que rehootear',
           'deletePost': 'Eliminar Hoot',
-          'deletePostConfirmation': '¿Estás seguro de que deseas eliminar este hoot?',
+          'deletePostConfirmation':
+              '¿Estás seguro de que deseas eliminar este hoot?',
           'reportPost': 'Reportar Hoot',
           'reportPostInfo': '¿Por qué estás reportando este hoot?',
           'reportSent': 'Reporte enviado',
@@ -868,9 +871,9 @@ class AppTranslations extends Translations {
           'topFeeds': 'Feeds Populares',
           'noHoots': 'Não há hoots para mostrar',
           'subscribeToSeeHoots': 'Subscreve a alguns feeds para ver hoots aqui',
+          'popularUsers': 'Utilizadores populares',
           'top10MostSubscribed': 'Top 10 de feeds mais subscritos',
-          'top10RecentPopularHoots':
-              'Top 10 de hoots recentes mais populares',
+          'top10RecentPopularHoots': 'Top 10 de hoots recentes mais populares',
           'upAndComing': 'Feeds em Ascensão',
           'upAndComingDescription':
               'Feeds recentes que estão a ganhar popularidade',
@@ -903,7 +906,8 @@ class AppTranslations extends Translations {
           'youNeedToCreateAFeedFirst': 'Precisas de criar um feed primeiro',
           'selectAFeedToRefeedTo': 'Seleciona um feed para rehootar',
           'deletePost': 'Eliminar Hoot',
-          'deletePostConfirmation': 'Tens a certeza de que queres eliminar este hoot?',
+          'deletePostConfirmation':
+              'Tens a certeza de que queres eliminar este hoot?',
           'reportPost': 'Reportar Hoot',
           'reportPostInfo': 'Por que estás denunciando este hoot?',
           'reportSent': 'Reporte enviado',
@@ -1216,9 +1220,9 @@ class AppTranslations extends Translations {
           'noHoots': 'Não há hoots para mostrar',
           'subscribeToSeeHoots':
               'Inscreva-se em alguns feeds para ver hoots aqui',
+          'popularUsers': 'Usuários populares',
           'top10MostSubscribed': 'Top 10 dos feeds mais inscritos',
-          'top10RecentPopularHoots':
-              'Top 10 hoots recentes mais populares',
+          'top10RecentPopularHoots': 'Top 10 hoots recentes mais populares',
           'upAndComing': 'Novos em Ascensão',
           'upAndComingDescription':
               'Feeds recentes que estão ganhando popularidade',
@@ -1251,7 +1255,8 @@ class AppTranslations extends Translations {
           'youNeedToCreateAFeedFirst': 'Você precisa criar um feed primeiro',
           'selectAFeedToRefeedTo': 'Selecione um feed para rehootear',
           'deletePost': 'Excluir Hoot',
-          'deletePostConfirmation': 'Tem certeza de que deseja excluir este hoot?',
+          'deletePostConfirmation':
+              'Tem certeza de que deseja excluir este hoot?',
           'reportPost': 'Denunciar Hoot',
           'reportPostInfo': 'Por que você está denunciando este hoot?',
           'reportSent': 'Denúncia enviada',
