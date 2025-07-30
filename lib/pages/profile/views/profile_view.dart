@@ -47,18 +47,17 @@ class _ProfileViewState extends State<ProfileView> {
       title: 'reportUsername'.trParams({'username': user.username ?? ''}),
       textFields: [
         DialogTextField(
-          hintText: 'reportInfo'.tr,
-          textCapitalization: TextCapitalization.sentences,
-          maxLines: 5,
-          minLines: 3,
-          maxLength: 500,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'reportReasonRequired'.tr;
-            }
-            return null;
-          }
-        )
+            hintText: 'reportInfo'.tr,
+            textCapitalization: TextCapitalization.sentences,
+            maxLines: 5,
+            minLines: 3,
+            maxLength: 500,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'reportReasonRequired'.tr;
+              }
+              return null;
+            })
       ],
     );
     final reason = reasons?.first;
@@ -85,6 +84,7 @@ class _ProfileViewState extends State<ProfileView> {
                   user.bannerPictureUrl!.isNotEmpty)
                 ImageComponent(
                   url: user.bannerPictureUrl!,
+                  hash: user.bannerHash,
                   height: 300,
                   width: double.infinity,
                   fit: BoxFit.cover,

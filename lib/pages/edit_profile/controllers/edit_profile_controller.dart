@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
+import 'package:blurhash/blurhash.dart';
 
 import '../../../services/auth_service.dart';
 import '../../../services/error_service.dart';
@@ -82,6 +83,7 @@ class EditProfileController extends GetxController {
       if (uid == null) return false;
 
       String? bannerUrl;
+      String? bannerHash;
       if (bannerFile.value != null) {
         final file = bannerFile.value!;
         final bytes = await file.readAsBytes();
@@ -90,6 +92,7 @@ class EditProfileController extends GetxController {
         if (decoded != null) {
           final resized = img.copyResize(decoded, height: 1024);
           data = Uint8List.fromList(img.encodeJpg(resized));
+          bannerHash = await BlurHash.encode(data, 4, 3);
         }
         final ref = FirebaseStorage.instance
             .ref()
@@ -102,6 +105,8 @@ class EditProfileController extends GetxController {
 
       String? smallAvatarUrl;
       String? bigAvatarUrl;
+      String? smallAvatarHash;
+      String? bigAvatarHash;
       if (avatarFile.value != null) {
         final file = avatarFile.value!;
         final bytes = await file.readAsBytes();
@@ -111,6 +116,8 @@ class EditProfileController extends GetxController {
           final big = img.copyResizeCropSquare(decoded, size: 512);
           final smallData = Uint8List.fromList(img.encodeJpg(small));
           final bigData = Uint8List.fromList(img.encodeJpg(big));
+          smallAvatarHash = await BlurHash.encode(smallData, 4, 3);
+          bigAvatarHash = await BlurHash.encode(bigData, 4, 3);
           final storageRef =
               FirebaseStorage.instance.ref().child('avatars').child(uid);
           final smallRef = storageRef.child('small_avatar.jpg');
@@ -128,8 +135,11 @@ class EditProfileController extends GetxController {
         'displayName': name,
         'bio': bio,
         if (bannerUrl != null) 'banner': bannerUrl,
+        if (bannerHash != null) 'bannerHash': bannerHash,
         if (smallAvatarUrl != null) 'smallAvatar': smallAvatarUrl,
         if (bigAvatarUrl != null) 'bigAvatar': bigAvatarUrl,
+        if (smallAvatarHash != null) 'smallAvatarHash': smallAvatarHash,
+        if (bigAvatarHash != null) 'bigAvatarHash': bigAvatarHash,
       });
 
       final u = user;
@@ -137,8 +147,11 @@ class EditProfileController extends GetxController {
         u.name = name;
         u.bio = bio;
         if (bannerUrl != null) u.bannerPictureUrl = bannerUrl;
+        if (bannerHash != null) u.bannerHash = bannerHash;
         if (smallAvatarUrl != null) u.smallProfilePictureUrl = smallAvatarUrl;
         if (bigAvatarUrl != null) u.largeProfilePictureUrl = bigAvatarUrl;
+        if (smallAvatarHash != null) u.smallAvatarHash = smallAvatarHash;
+        if (bigAvatarHash != null) u.bigAvatarHash = bigAvatarHash;
       }
 
       ToastService.showSuccess('editProfile'.tr);

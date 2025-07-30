@@ -31,6 +31,7 @@ class EditProfileView extends GetView<EditProfileController> {
           user!.bannerPictureUrl!.isNotEmpty) {
         bannerWidget = ImageComponent(
           url: user.bannerPictureUrl!,
+          hash: user.bannerHash,
           fit: BoxFit.cover,
           height: 300,
           width: double.infinity,
