@@ -71,7 +71,6 @@ class HomeView extends GetView<HomeController> {
                     iconSize: 24,
                     padding: EdgeInsets.zero,
                     visualDensity: VisualDensity.compact,
-
                   ),
                 ),
               ),
