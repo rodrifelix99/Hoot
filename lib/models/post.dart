@@ -6,6 +6,7 @@ class Post {
   String id;
   String? text;
   List<String>? media;
+  List<String>? hashes;
   U? user;
   String? feedId;
   Feed? feed;
@@ -24,6 +25,7 @@ class Post {
     required this.id,
     this.text,
     this.media,
+    this.hashes,
     this.user,
     this.feedId,
     this.feed,
@@ -48,6 +50,8 @@ class Post {
           : json['gifs'] != null
               ? List<String>.from(json['gifs'])
               : null,
+      hashes:
+          json['hashes'] != null ? List<String>.from(json['hashes']) : null,
       feedId: json['feedId'],
       feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
       user: json['user'] != null ? U.fromJson(json['user']) : null,
@@ -80,6 +84,7 @@ class Post {
       id: '0',
       text: 'ABC',
       media: [],
+      hashes: [],
       feedId: '0',
       feed: null,
       user: null,
@@ -98,6 +103,7 @@ class Post {
     return {
       'text': text,
       'images': media,
+      'hashes': hashes,
       'feedId': feedId,
     };
   }
@@ -107,6 +113,7 @@ class Post {
       'id': id,
       'text': text,
       'media': media,
+      'hashes': hashes,
       'feedId': feedId,
       'feed': feed?.toCache(),
       'user': user?.toCache(),
@@ -126,6 +133,7 @@ class Post {
       id: json['id'],
       text: json['text'],
       media: json['media'] != null ? List<String>.from(json['media']) : null,
+      hashes: json['hashes'] != null ? List<String>.from(json['hashes']) : null,
       feedId: json['feedId'],
       feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
       user: json['user'] != null ? U.fromJson(json['user']) : null,

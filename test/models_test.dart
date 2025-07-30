@@ -18,6 +18,8 @@ void main() {
         'icon': 'i',
         'smallAvatar': 's.png',
         'bigAvatar': 'b.png',
+        'smallAvatarHash': 'shash',
+        'bigAvatarHash': 'bhash',
         'color': '123',
         'type': 'general',
       };
@@ -27,6 +29,8 @@ void main() {
         'username': 'john',
         'smallAvatar': 's.png',
         'bigAvatar': 'b.png',
+        'smallAvatarHash': 'uhash',
+        'bigAvatarHash': 'ubhash',
         'banner': 'ban.png',
         'radius': 1,
         'color': 'blue',
@@ -52,6 +56,8 @@ void main() {
       expect(user.uid, 'u1');
       expect(user.name, 'John');
       expect(user.feeds?.first.title, 'Feed');
+      expect(user.smallAvatarHash, 'uhash');
+      expect(user.bigAvatarHash, 'ubhash');
       expect(user.invitationCode, 'ABCDEF');
       expect(user.invitedBy, 'u0');
       expect(user.invitationUses, 1);
@@ -63,10 +69,14 @@ void main() {
       expect(json['username'], 'john');
       expect(json.containsKey('uid'), isFalse);
       expect(json['invitationCode'], 'ABCDEF');
+      expect(json['smallAvatarHash'], 'uhash');
+      expect(json['bigAvatarHash'], 'ubhash');
 
       final cache = user.toCache();
       expect(cache['activityScore'], 5);
       expect(cache['popularityScore'], 10);
+      expect(cache['smallAvatarHash'], 'uhash');
+      expect(cache['bigAvatarHash'], 'ubhash');
     });
   });
 
@@ -81,6 +91,8 @@ void main() {
         'icon': 'i',
         'smallAvatar': 's.png',
         'bigAvatar': 'avatar.png',
+        'smallAvatarHash': 'fsh',
+        'bigAvatarHash': 'fbh',
         'color': color.value.toString(),
         'type': 'music',
         'private': true,
@@ -97,11 +109,15 @@ void main() {
       expect(feed.color, Color(int.parse(color.value.toString())));
       expect(feed.type, FeedType.music);
       expect(feed.posts?.first.id, 'p1');
+      expect(feed.smallAvatarHash, 'fsh');
+      expect(feed.bigAvatarHash, 'fbh');
 
       final toJson = feed.toJson();
       expect(toJson['title'], 'T');
       expect(toJson['color'], feed.color!.hashCode.toString());
       expect(toJson.containsKey('id'), isFalse);
+      expect(toJson['smallAvatarHash'], 'fsh');
+      expect(toJson['bigAvatarHash'], 'fbh');
     });
   });
 
@@ -111,6 +127,7 @@ void main() {
         'id': 'p1',
         'text': 'hello',
         'feedId': 'f1',
+        'hashes': ['h1'],
         'liked': true,
         'likes': 2,
         'reFeeded': false,
@@ -123,10 +140,12 @@ void main() {
       final post = Post.fromJson(json);
       expect(post.createdAt, DateTime.fromMillisecondsSinceEpoch(10000));
       expect(post.updatedAt, DateTime.fromMillisecondsSinceEpoch(20000));
+      expect(post.hashes?.first, 'h1');
 
       final toJson = post.toJson();
       expect(toJson['text'], 'hello');
       expect(toJson['feedId'], 'f1');
+      expect(toJson['hashes'][0], 'h1');
       expect(toJson.containsKey('id'), isFalse);
     });
   });

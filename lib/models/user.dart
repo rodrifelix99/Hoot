@@ -114,6 +114,8 @@ class U {
       'username': username,
       'smallAvatar': smallProfilePictureUrl,
       'bigAvatar': largeProfilePictureUrl,
+      'smallAvatarHash': smallAvatarHash,
+      'bigAvatarHash': bigAvatarHash,
       'banner': bannerPictureUrl,
       'radius': radius,
       'color': color,
