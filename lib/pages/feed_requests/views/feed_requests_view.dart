@@ -27,7 +27,8 @@ class FeedRequestsView extends GetView<FeedRequestsController> {
         return ListView.builder(
           itemCount: controller.requests.length,
           itemBuilder: (context, index) {
-            final user = controller.requests[index];
+            final request = controller.requests[index];
+            final user = request.user;
             return ListTile(
               onTap: () => controller.openProfile(user.uid),
               leading: ProfileAvatarComponent(
