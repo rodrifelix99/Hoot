@@ -8,6 +8,7 @@ import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/post_component.dart';
 import '../../../util/routes/app_routes.dart';
 import '../controllers/explore_controller.dart';
+import 'package:hoot/services/haptic_service.dart';
 
 class ExploreView extends GetView<ExploreController> {
   const ExploreView({super.key});
@@ -103,8 +104,10 @@ class ExploreView extends GetView<ExploreController> {
                     itemBuilder: (context, index) {
                       final u = controller.popularUsers[index];
                       return GestureDetector(
-                        onTap: () =>
-                            Get.toNamed(AppRoutes.profile, arguments: u.uid),
+                        onTap: () {
+                          HapticService.lightImpact();
+                          Get.toNamed(AppRoutes.profile, arguments: u.uid);
+                        },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: ProfileAvatarComponent(
@@ -140,10 +143,13 @@ class ExploreView extends GetView<ExploreController> {
                       return SizedBox(
                         width: 250,
                         child: GestureDetector(
-                          onTap: () => Get.toNamed(
-                            AppRoutes.profile,
-                            arguments: {'uid': f.userId, 'feedId': f.id},
-                          ),
+                          onTap: () {
+                            HapticService.lightImpact();
+                            Get.toNamed(
+                              AppRoutes.profile,
+                              arguments: {'uid': f.userId, 'feedId': f.id},
+                            );
+                          },
                           child: ListItemComponent(
                             leading: ProfileAvatarComponent(
                               image: f.bigAvatar ?? '',
@@ -183,10 +189,13 @@ class ExploreView extends GetView<ExploreController> {
                       itemBuilder: (context, index) {
                         final type = controller.genres[index];
                         return GestureDetector(
-                          onTap: () => Get.toNamed(
-                            AppRoutes.searchByGenre,
-                            arguments: type,
-                          ),
+                          onTap: () {
+                            HapticService.lightImpact();
+                            Get.toNamed(
+                              AppRoutes.searchByGenre,
+                              arguments: type,
+                            );
+                          },
                           child: TypeBoxComponent(type: type),
                         );
                       },

@@ -6,6 +6,7 @@ import '../../../components/avatar_component.dart';
 import '../../../components/list_item_component.dart';
 import '../../../components/empty_message.dart';
 import '../../../util/routes/app_routes.dart';
+import 'package:hoot/services/haptic_service.dart';
 import '../controllers/subscriptions_controller.dart';
 import '../../../util/extensions/feed_extension.dart';
 
@@ -35,10 +36,13 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
           itemBuilder: (context, index) {
             final feed = controller.feeds[index];
             return GestureDetector(
-              onTap: () => Get.toNamed(
-                AppRoutes.profile,
-                arguments: {'uid': feed.userId, 'feedId': feed.id},
-              ),
+              onTap: () {
+                HapticService.lightImpact();
+                Get.toNamed(
+                  AppRoutes.profile,
+                  arguments: {'uid': feed.userId, 'feedId': feed.id},
+                );
+              },
               child: ListItemComponent(
                 leading: ProfileAvatarComponent(
                   image: feed.bigAvatar ?? '',

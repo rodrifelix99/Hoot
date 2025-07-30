@@ -17,6 +17,7 @@ import '../services/toast_service.dart';
 import '../services/report_service.dart';
 import '../util/mention_utils.dart';
 import '../util/extensions/datetime_extension.dart';
+import '../services/haptic_service.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
@@ -188,7 +189,10 @@ class _PostComponentState extends State<PostComponent> {
         ],
       ),
       child: InkWell(
-        onTap: _openPostDetails,
+        onTap: () {
+          HapticService.lightImpact();
+          _openPostDetails();
+        },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -232,6 +236,7 @@ class _PostComponentState extends State<PostComponent> {
                 children: [
                   GestureDetector(
                     onTap: () {
+                      HapticService.lightImpact();
                       if (_post.user != null) {
                         Get.toNamed(AppRoutes.profile, arguments: _post.user!.uid);
                       }
@@ -246,6 +251,7 @@ class _PostComponentState extends State<PostComponent> {
                   if (_post.user != null)
                     GestureDetector(
                       onTap: () {
+                        HapticService.lightImpact();
                         Get.toNamed(AppRoutes.profile, arguments: _post.user!.uid);
                       },
                       child: NameComponent(

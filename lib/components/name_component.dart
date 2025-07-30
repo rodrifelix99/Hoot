@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/services/toast_service.dart';
+import 'package:hoot/services/haptic_service.dart';
 
 class NameComponent extends StatelessWidget {
   final U user;
@@ -60,7 +61,10 @@ class NameComponent extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 4),
                 child: GestureDetector(
-                    onTap: _onTapVerified,
+                    onTap: () {
+                      HapticService.lightImpact();
+                      _onTapVerified();
+                    },
                     child: color != Colors.blue
                         ? Icon(
                             Icons.verified_rounded,
@@ -77,7 +81,10 @@ class NameComponent extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 4),
                 child: GestureDetector(
-                    onTap: _onTapTester,
+                    onTap: () {
+                      HapticService.lightImpact();
+                      _onTapTester();
+                    },
                     child: color != Colors.blue
                         ? Icon(
                             Icons.bug_report_rounded,

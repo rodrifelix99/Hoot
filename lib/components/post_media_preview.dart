@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:solar_icons/solar_icons.dart';
+import 'package:hoot/services/haptic_service.dart';
 
 class PostMediaPreview extends StatelessWidget {
   final List<File> imageFiles;
@@ -37,7 +38,10 @@ class PostMediaPreview extends StatelessWidget {
               child: Stack(
                 children: [
                   GestureDetector(
-                    onTap: () => onOpenViewer(file.path),
+                    onTap: () {
+                      HapticService.lightImpact();
+                      onOpenViewer(file.path);
+                    },
                     child: Container(
                       width: 100,
                       height: 100,
@@ -54,7 +58,10 @@ class PostMediaPreview extends StatelessWidget {
                     top: 4,
                     right: 4,
                     child: GestureDetector(
-                      onTap: () => onRemoveImage(i),
+                      onTap: () {
+                        HapticService.lightImpact();
+                        onRemoveImage(i);
+                      },
                       child: Container(
                         width: 24,
                         height: 24,
@@ -71,7 +78,10 @@ class PostMediaPreview extends StatelessWidget {
                     bottom: 4,
                     right: 4,
                     child: GestureDetector(
-                      onTap: () => onCropImage(i),
+                      onTap: () {
+                        HapticService.lightImpact();
+                        onCropImage(i);
+                      },
                       child: Container(
                         width: 24,
                         height: 24,
@@ -109,7 +119,10 @@ class PostMediaPreview extends StatelessWidget {
                 top: 4,
                 right: 4,
                 child: GestureDetector(
-                  onTap: onRemoveGif,
+                  onTap: () {
+                    HapticService.lightImpact();
+                    onRemoveGif();
+                  },
                   child: Container(
                     width: 24,
                     height: 24,

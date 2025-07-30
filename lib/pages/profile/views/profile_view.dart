@@ -14,6 +14,7 @@ import '../controllers/profile_controller.dart';
 import '../../../services/report_service.dart';
 import '../../../services/toast_service.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import '../../../services/haptic_service.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -165,7 +166,10 @@ class _ProfileViewState extends State<ProfileView> {
             (context, index) {
               if (controller.isCurrentUser && index == 0) {
                 return GestureDetector(
-                  onTap: () => Get.toNamed(AppRoutes.createFeed),
+                  onTap: () {
+                    HapticService.lightImpact();
+                    Get.toNamed(AppRoutes.createFeed);
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
@@ -207,10 +211,13 @@ class _ProfileViewState extends State<ProfileView> {
                         padding: const EdgeInsets.all(16),
                         color: color.withAlpha(200),
                         child: InkWell(
-                          onTap: () => Get.toNamed(
-                            AppRoutes.feed,
-                            arguments: feed.id,
-                          ),
+                          onTap: () {
+                            HapticService.lightImpact();
+                            Get.toNamed(
+                              AppRoutes.feed,
+                              arguments: feed.id,
+                            );
+                          },
                           splashColor: Colors.white.withAlpha(50),
                           highlightColor: Colors.white.withAlpha(50),
                           borderRadius: BorderRadius.circular(16),

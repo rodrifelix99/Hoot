@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/services/haptic_service.dart';
 import '../controllers/search_by_genre_controller.dart';
 import '../../../components/list_item_component.dart';
 import '../../../components/avatar_component.dart';
@@ -25,10 +26,13 @@ class SearchByGenreView extends GetView<SearchByGenreController> {
             itemBuilder: (context, index) {
               final feed = controller.feeds[index];
               return GestureDetector(
-                onTap: () => Get.toNamed(
-                  AppRoutes.profile,
-                  arguments: {'uid': feed.userId, 'feedId': feed.id},
-                ),
+                onTap: () {
+                  HapticService.lightImpact();
+                  Get.toNamed(
+                    AppRoutes.profile,
+                    arguments: {'uid': feed.userId, 'feedId': feed.id},
+                  );
+                },
                 child: ListItemComponent(
                   leading: ProfileAvatarComponent(
                     image: feed.bigAvatar ?? '',

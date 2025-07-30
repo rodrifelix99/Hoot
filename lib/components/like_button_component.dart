@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:solar_icons/solar_icons.dart';
+import 'package:hoot/services/haptic_service.dart';
 
 class LikeButtonComponent extends StatefulWidget {
   final bool liked;
@@ -65,7 +66,10 @@ class _LikeButtonComponentState extends State<LikeButtonComponent>
         ? Colors.red
         : Theme.of(context).iconTheme.color;
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: () {
+        HapticService.lightImpact();
+        widget.onTap();
+      },
       child: SizedBox(
         width: widget.size + 20,
         height: widget.size + 20,

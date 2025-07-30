@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:hoot/services/haptic_service.dart';
 
 import '../../../util/enums/feed_types.dart';
 
@@ -79,6 +80,7 @@ class FeedForm extends StatelessWidget {
                 const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () async {
+                    HapticService.lightImpact();
                     final color = await showColorPickerDialog(
                       context,
                       selectedColor.value,
