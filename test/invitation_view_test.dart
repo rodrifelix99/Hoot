@@ -38,15 +38,16 @@ class FakeAuthService extends GetxService implements AuthService {
   Future<void> signOut() async {}
 
   @override
-  Future<UserCredential> signInWithGoogle() async =>
-      throw UnimplementedError();
+  Future<UserCredential> signInWithGoogle() async => throw UnimplementedError();
 
   @override
-  Future<UserCredential> signInWithApple() async =>
-      throw UnimplementedError();
+  Future<UserCredential> signInWithApple() async => throw UnimplementedError();
 
   @override
   Future<void> deleteAccount() async {}
+
+  @override
+  Future<U?> refreshUser() async => currentUser;
 }
 
 void main() {

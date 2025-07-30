@@ -12,7 +12,8 @@ class InvitationController extends GetxController {
   final InvitationService _invitationService;
   final AuthService _authService;
 
-  InvitationController({InvitationService? invitationService, AuthService? authService})
+  InvitationController(
+      {InvitationService? invitationService, AuthService? authService})
       : _invitationService = invitationService ?? InvitationService(),
         _authService = authService ?? Get.find<AuthService>();
 
@@ -34,10 +35,12 @@ class InvitationController extends GetxController {
     if (code.isEmpty) return;
     verifying.value = true;
     try {
-      final uid = _authService.currentUser?.uid ?? FirebaseAuth.instance.currentUser?.uid;
+      final uid = _authService.currentUser?.uid ??
+          FirebaseAuth.instance.currentUser?.uid;
       if (uid == null) return;
       final success = await _invitationService.useInvitationCode(uid, code);
       if (success) {
+        await _authService.refreshUser();
         Get.offAllNamed(AppRoutes.home);
       } else {
         ToastService.showError('invalidInvitationCode'.tr);

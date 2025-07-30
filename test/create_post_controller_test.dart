@@ -45,6 +45,9 @@ class FakeAuthService extends GetxService implements AuthService {
 
   @override
   Future<void> deleteAccount() async {}
+
+  @override
+  Future<U?> refreshUser() async => _user;
 }
 
 class FakeStorageService extends GetxService implements BaseStorageService {

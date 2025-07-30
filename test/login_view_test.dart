@@ -37,6 +37,9 @@ class FakeAuthService extends GetxService implements AuthService {
 
   @override
   Future<void> deleteAccount() async {}
+
+  @override
+  Future<U?> refreshUser() async => null;
 }
 
 void main() {

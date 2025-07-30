@@ -39,6 +39,9 @@ class FakeAuthService extends GetxService implements AuthService {
 
   @override
   Future<void> deleteAccount() async {}
+
+  @override
+  Future<U?> refreshUser() async => null;
 }
 
 void main() {
@@ -65,7 +68,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(themeService.themeMode.value, ThemeMode.system);
-    expect(Theme.of(tester.element(find.byType(SettingsView))).brightness, Brightness.light);
+    expect(Theme.of(tester.element(find.byType(SettingsView))).brightness,
+        Brightness.light);
 
     await tester.tap(find.byKey(const Key('themeModeDropdown')));
     await tester.pumpAndSettle();
@@ -73,6 +77,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(themeService.themeMode.value, ThemeMode.dark);
-    expect(Theme.of(tester.element(find.byType(SettingsView))).brightness, Brightness.dark);
+    expect(Theme.of(tester.element(find.byType(SettingsView))).brightness,
+        Brightness.dark);
   });
 }
