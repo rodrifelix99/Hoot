@@ -31,7 +31,9 @@ class SubscriptionsController extends GetxController {
     loading.value = true;
     try {
       final result = await _subscriptionService.fetchSubscribedFeeds(userId);
-      feeds.assignAll(result);
+      feeds.assignAll(
+        result.where((f) => f.userId != userId).toList(),
+      );
     } finally {
       loading.value = false;
     }

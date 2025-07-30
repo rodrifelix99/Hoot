@@ -53,7 +53,7 @@ void main() {
       'title': 'Feed 1',
       'description': 'd',
       'color': '0',
-      'userId': 'u1',
+      'userId': 'u2',
       'subscriberCount': 1,
     });
     await firestore.collection('users').doc('u1').set({'uid': 'u1'});
@@ -92,7 +92,7 @@ void main() {
       'title': 'Feed 1',
       'description': 'd',
       'color': '0',
-      'userId': 'u1',
+      'userId': 'u2',
       'subscriberCount': 1,
     });
     await firestore.collection('users').doc('u1').set({'uid': 'u1'});
@@ -124,6 +124,59 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Feed 1'), findsNothing);
+
+    Get.reset();
+  });
+
+  testWidgets('SubscriptionsView does not show own feeds', (tester) async {
+    final firestore = FakeFirebaseFirestore();
+    await firestore.collection('feeds').doc('f1').set({
+      'title': 'My Feed',
+      'description': 'd',
+      'color': '0',
+      'userId': 'u1',
+      'subscriberCount': 1,
+    });
+    await firestore.collection('feeds').doc('f2').set({
+      'title': 'Other Feed',
+      'description': 'd',
+      'color': '0',
+      'userId': 'u2',
+      'subscriberCount': 1,
+    });
+    await firestore.collection('users').doc('u1').set({'uid': 'u1'});
+    await firestore
+        .collection('users')
+        .doc('u1')
+        .collection('subscriptions')
+        .doc('f1')
+        .set({'createdAt': Timestamp.now()});
+    await firestore
+        .collection('users')
+        .doc('u1')
+        .collection('subscriptions')
+        .doc('f2')
+        .set({'createdAt': Timestamp.now()});
+    final auth = FakeAuthService(U(uid: 'u1'));
+    final service = SubscriptionService(
+      firestore: firestore,
+    );
+    final controller = SubscriptionsController(
+      authService: auth,
+      subscriptionService: service,
+    );
+    Get.put<AuthService>(auth);
+    Get.put<SubscriptionsController>(controller);
+
+    await tester.pumpWidget(GetMaterialApp(
+      translations: AppTranslations(),
+      locale: const Locale('en'),
+      home: const SubscriptionsView(),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.text('My Feed'), findsNothing);
+    expect(find.text('Other Feed'), findsOneWidget);
 
     Get.reset();
   });
