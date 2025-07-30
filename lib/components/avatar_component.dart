@@ -1,7 +1,7 @@
 import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 class ProfileAvatarComponent extends StatefulWidget {
@@ -117,10 +117,10 @@ class _AvatarState extends State<Avatar> {
         ),
       ),
       clipBehavior: Clip.hardEdge,
-      child: CachedNetworkImage(
+      child: HashCachedImage(
         imageUrl: widget.image,
-        placeholder: (context, url) => const SizedBox.shrink(),
-        errorWidget: (context, url, error) => Icon(
+        placeholder: (context) => const SizedBox.shrink(),
+        errorWidget: (context, error, stackTrace) => Icon(
           Icons.error,
           color: Theme.of(context).colorScheme.error,
         ),
