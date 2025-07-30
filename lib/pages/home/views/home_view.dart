@@ -71,6 +71,11 @@ class HomeView extends GetView<HomeController> {
                     child: Row(
                       children: [
                         IconButton(
+                          padding: const EdgeInsets.all(16),
+                          constraints: const BoxConstraints(
+                            minWidth: 56,
+                            minHeight: 56,
+                          ),
                           icon: Icon(
                             SolarIconsOutline.feed,
                             color: index == 0
@@ -80,6 +85,11 @@ class HomeView extends GetView<HomeController> {
                           onPressed: () => controller.changeIndex(0),
                         ),
                         IconButton(
+                          padding: const EdgeInsets.all(16),
+                          constraints: const BoxConstraints(
+                            minWidth: 56,
+                            minHeight: 56,
+                          ),
                           icon: Icon(
                             SolarIconsOutline.compass,
                             color: index == 1
@@ -92,6 +102,11 @@ class HomeView extends GetView<HomeController> {
                           clipBehavior: Clip.none,
                           children: [
                             IconButton(
+                              padding: const EdgeInsets.all(16),
+                              constraints: const BoxConstraints(
+                                minWidth: 56,
+                                minHeight: 56,
+                              ),
                               icon: Icon(
                                 SolarIconsOutline.bell,
                                 color: index == 2
@@ -126,6 +141,11 @@ class HomeView extends GetView<HomeController> {
                           ],
                         ),
                         IconButton(
+                          padding: const EdgeInsets.all(16),
+                          constraints: const BoxConstraints(
+                            minWidth: 56,
+                            minHeight: 56,
+                          ),
                           icon: Icon(
                             SolarIconsOutline.user,
                             color: index == 3
@@ -146,6 +166,11 @@ class HomeView extends GetView<HomeController> {
                       ),
                       glassContainsChild: false,
                       child: IconButton(
+                        padding: const EdgeInsets.all(16),
+                        constraints: const BoxConstraints(
+                          minWidth: 56,
+                          minHeight: 56,
+                        ),
                         icon: Icon(
                           SolarIconsOutline.pen,
                           color: Theme.of(context).colorScheme.onSurface,
