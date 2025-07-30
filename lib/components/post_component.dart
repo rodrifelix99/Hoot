@@ -5,6 +5,7 @@ import 'package:hoot/components/name_component.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
 import 'package:get/get.dart';
+import 'package:flutter/gestures.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import '../util/routes/app_routes.dart';
@@ -53,6 +54,18 @@ class _PostComponentState extends State<PostComponent> {
             ? Get.find<BaseReportService>()
             : ReportService());
     super.initState();
+
+    if (_post.reFeeded &&
+        _post.reFeededFrom?.id != null &&
+        _post.reFeededFrom?.user == null) {
+      _postService.fetchPost(_post.reFeededFrom!.id).then((orig) {
+        if (orig != null) {
+          setState(() {
+            _post.reFeededFrom = orig;
+          });
+        }
+      });
+    }
   }
 
   Future<void> _toggleLike() async {
@@ -172,8 +185,29 @@ class _PostComponentState extends State<PostComponent> {
                   children: [
                     const Icon(SolarIconsOutline.refreshSquare, size: 16),
                     const SizedBox(width: 4),
-                    Text('reHoot'.tr,
-                        style: Theme.of(context).textTheme.bodySmall),
+                    RichText(
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.bodySmall,
+                        children: [
+                          TextSpan(text: '${'reHootOf'.tr} '),
+                          if (_post.reFeededFrom?.user != null)
+                            TextSpan(
+                              text:
+                                  '@${_post.reFeededFrom!.user!.username ?? ''}',
+                              style: const TextStyle(color: Colors.blue),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  if (_post.reFeededFrom?.id != null) {
+                                    Get.toNamed(AppRoutes.post,
+                                        arguments: {'id': _post.reFeededFrom!.id});
+                                  }
+                                },
+                            )
+                          else
+                            const TextSpan(text: '@...'),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

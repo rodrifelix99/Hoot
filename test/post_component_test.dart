@@ -139,7 +139,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('reHoot'), findsOneWidget);
+    expect(find.textContaining('ReHoot'), findsOneWidget);
     Get.reset();
   });
 }
