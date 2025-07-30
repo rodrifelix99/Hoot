@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:meta/meta.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 import '../models/user.dart';
@@ -8,8 +9,12 @@ import '../models/feed.dart';
 
 /// Provides authentication helpers for the application.
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore;
+
+  AuthService({FirebaseAuth? auth, FirebaseFirestore? firestore})
+      : _auth = auth ?? FirebaseAuth.instance,
+        _firestore = firestore ?? FirebaseFirestore.instance;
 
   U? _currentUser;
   bool _fetched = false;
@@ -130,6 +135,10 @@ class AuthService {
       'popularityScore': 0,
     });
   }
+
+  @visibleForTesting
+  Future<void> createUserDocumentIfNeeded(User user) =>
+      _createUserDocumentIfNeeded(user);
 
   /// Signs out the current user and clears cached data.
   Future<void> signOut() async {

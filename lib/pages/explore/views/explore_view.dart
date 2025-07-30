@@ -30,8 +30,7 @@ class ExploreView extends GetView<ExploreController> {
               (u) => ListTile(
                 title: Text(u.name ?? ''),
                 subtitle: Text('@${u.username ?? ''}'),
-                onTap: () =>
-                    Get.toNamed(AppRoutes.profile, arguments: u.uid),
+                onTap: () => Get.toNamed(AppRoutes.profile, arguments: u.uid),
               ),
             ),
             ...controller.feedSuggestions.map(
@@ -86,6 +85,41 @@ class ExploreView extends GetView<ExploreController> {
                 child: buildSuggestions(),
               ),
               const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'popularUsers'.tr,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 80,
+                child: Obx(
+                  () => ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    itemCount: controller.popularUsers.length,
+                    itemBuilder: (context, index) {
+                      final u = controller.popularUsers[index];
+                      return GestureDetector(
+                        onTap: () =>
+                            Get.toNamed(AppRoutes.profile, arguments: u.uid),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: ProfileAvatarComponent(
+                            image: u.largeProfilePictureUrl ??
+                                '',
+                            size: 80,
+                            radius: 16,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
@@ -168,7 +202,7 @@ class ExploreView extends GetView<ExploreController> {
               ),
               const SizedBox(height: 8),
               Obx(
-                    () => ListView.builder(
+                () => ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),

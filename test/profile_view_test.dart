@@ -47,6 +47,9 @@ class FakeAuthService extends GetxService implements AuthService {
 
   @override
   Future<U?> refreshUser() async => _user;
+  
+  @override
+  Future<void> createUserDocumentIfNeeded(User user) async {}
 }
 
 class FakeFeedService implements BaseFeedService {
@@ -94,5 +97,6 @@ void main() {
     expect(find.text('@tester'), findsOneWidget);
     expect(find.text('Hello'), findsOneWidget);
     expect(find.text('Feed 1'), findsOneWidget);
+    expect(find.text('Subscriptions'), findsOneWidget);
   });
 }

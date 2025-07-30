@@ -26,6 +26,9 @@ class ExploreController extends GetxController {
   /// Top feeds ordered by subscriber count.
   final RxList<Feed> topFeeds = <Feed>[].obs;
 
+  /// Users with the highest popularity score.
+  final RxList<U> popularUsers = <U>[].obs;
+
   /// Recently created feeds.
   final RxList<Feed> newFeeds = <Feed>[].obs;
 
@@ -53,6 +56,7 @@ class ExploreController extends GetxController {
   Future<void> _loadExploreData() async {
     await Future.wait([
       loadTopFeeds(),
+      loadPopularUsers(),
       loadNewFeeds(),
       loadGenres(),
       loadTopPosts(),
@@ -81,6 +85,17 @@ class ExploreController extends GetxController {
     newFeeds.assignAll(snapshot.docs
         .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
         .toList());
+  }
+
+  /// Queries the ten users with highest popularity score.
+  Future<void> loadPopularUsers() async {
+    final snapshot = await _firestore
+        .collection('users')
+        .orderBy('popularityScore', descending: true)
+        .limit(10)
+        .get();
+    popularUsers
+        .assignAll(snapshot.docs.map((d) => U.fromJson(d.data())).toList());
   }
 
   /// Queries the most popular recent posts from public feeds.
@@ -169,4 +184,3 @@ class ExploreController extends GetxController {
     super.onClose();
   }
 }
-

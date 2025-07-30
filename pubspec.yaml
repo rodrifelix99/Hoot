@@ -78,10 +78,13 @@ dependencies:
   liquid_glass_renderer: ^0.1.1-dev.10
   uuid: any
   figma_squircle: ^0.6.3
+  animate_do: ^4.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  firebase_auth_mocks: ^0.14.2
+  google_sign_in_mocks: ^0.3.0
   
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
