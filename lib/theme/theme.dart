@@ -29,7 +29,6 @@ class AppTheme {
       appBarTheme: AppBarTheme(
         centerTitle: false,
       ),
-      fontFamily: 'Lexend',
       textTheme: darkTextTheme,
       snackBarTheme: snackBarTheme,
       elevatedButtonTheme: elevatedButtonTheme,
