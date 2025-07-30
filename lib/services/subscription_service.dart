@@ -86,11 +86,21 @@ class SubscriptionService {
         .get();
     final ids = snapshot.docs.map((d) => d.id).toList();
     if (ids.isEmpty) return [];
-    final usersSnapshot = await _firestore
-        .collection('users')
-        .where(FieldPath.documentId, whereIn: ids)
-        .get();
-    return usersSnapshot.docs.map((d) => U.fromJson(d.data())).toList();
+
+    const chunkSize = 10;
+    final List<U> users = [];
+    for (var i = 0; i < ids.length; i += chunkSize) {
+      final chunk = ids.sublist(
+          i, i + chunkSize > ids.length ? ids.length : i + chunkSize);
+      final usersSnapshot = await _firestore
+          .collection('users')
+          .where(FieldPath.documentId, whereIn: chunk)
+          .get();
+      users.addAll(usersSnapshot.docs
+          .map((d) => U.fromJson({'uid': d.id, ...d.data()}))
+          .toList());
+    }
+    return users;
   }
 
   Future<void> removeSubscriber(String feedId, String userId) async {
