@@ -26,12 +26,18 @@ class HomeView extends GetView<HomeController> {
     return Obx(() {
       final index = controller.selectedIndex.value;
       final unread = Get.find<NotificationsController>().unreadCount.value;
-      return Scaffold(
-        body: IndexedStack(
-          index: index,
-          children: _pages,
-        ),
-        extendBody: true,
+      return GestureDetector(
+        onHorizontalDragEnd: (details) {
+          if (details.primaryVelocity != null && details.primaryVelocity! < 0) {
+            Get.toNamed(AppRoutes.createPost);
+          }
+        },
+        child: Scaffold(
+          body: IndexedStack(
+            index: index,
+            children: _pages,
+          ),
+          extendBody: true,
         bottomNavigationBar: Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).padding.bottom + 8,
