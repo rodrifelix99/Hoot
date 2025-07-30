@@ -102,6 +102,7 @@ class NotificationsView extends GetView<NotificationsController> {
                       },
                       child: ProfileAvatarComponent(
                         image: user.largeProfilePictureUrl ?? '',
+                        hash: user.bigAvatarHash,
                         size: 60,
                         radius: 16,
                       ),

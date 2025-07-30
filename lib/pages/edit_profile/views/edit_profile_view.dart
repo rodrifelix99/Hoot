@@ -63,6 +63,7 @@ class EditProfileView extends GetView<EditProfileController> {
       } else {
         avatarWidget = ProfileAvatarComponent(
           image: user?.largeProfilePictureUrl ?? '',
+          hash: user?.bigAvatarHash,
           size: 120,
           radius: 32,
         );

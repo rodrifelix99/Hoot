@@ -44,6 +44,8 @@ class EditFeedView extends GetView<EditFeedController> {
                     file: controller.avatarFile.value,
                     imageUrl: controller.feed.bigAvatar ??
                         controller.feed.smallAvatar,
+                    hash: controller.feed.bigAvatarHash ??
+                        controller.feed.smallAvatarHash,
                     color: controller.feed.color,
                     foregroundColor: controller.feed.foregroundColor,
                     onTap: controller.pickAvatar,

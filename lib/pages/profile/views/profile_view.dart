@@ -113,6 +113,7 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     child: ProfileAvatarComponent(
                       image: user.largeProfilePictureUrl ?? '',
+                      hash: user.bigAvatarHash,
                       size: 120,
                       radius: 16,
                     ),
@@ -201,6 +202,8 @@ class _ProfileViewState extends State<ProfileView> {
                         imageUrl: feed.bigAvatar ??
                             controller.user.value?.largeProfilePictureUrl ??
                             '',
+                        hash: feed.bigAvatarHash ??
+                            controller.user.value?.bigAvatarHash,
                         width: double.infinity,
                         height: double.infinity,
                         fit: BoxFit.cover,

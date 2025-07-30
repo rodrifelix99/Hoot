@@ -37,6 +37,7 @@ class SubscribersView extends GetView<SubscribersController> {
               onTap: () => Get.toNamed(AppRoutes.profile, arguments: user.uid),
               leading: ProfileAvatarComponent(
                 image: user.smallProfilePictureUrl ?? '',
+                hash: user.smallAvatarHash,
                 size: 40,
                 radius: 20,
               ),
