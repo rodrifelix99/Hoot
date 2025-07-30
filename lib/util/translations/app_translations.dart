@@ -174,8 +174,8 @@ class AppTranslations extends Translations {
           'noHoots': 'No hoots to show',
           'subscribeToSeeHoots': 'Subscribe to some feeds to see hoots here',
           'popularUsers': 'Popular users',
-          'top10MostSubscribed': 'Top 10 most subscribed feeds',
-          'top10RecentPopularHoots': 'Top 10 most popular recent hoots',
+          'top10MostSubscribed': 'Popular feeds',
+          'top10RecentPopularHoots': 'Popular hoots',
           'upAndComing': 'Up and coming feeds',
           'upAndComingDescription': 'Recent feeds that are gaining popularity',
           'noteToUser': 'Note to @displayName',
@@ -532,8 +532,8 @@ class AppTranslations extends Translations {
           'subscribeToSeeHoots':
               'Suscríbete a algunos feeds para ver hoots aquí',
           'popularUsers': 'Usuarios populares',
-          'top10MostSubscribed': 'Top 10 de feeds más suscritos',
-          'top10RecentPopularHoots': 'Top 10 de hoots recientes más populares',
+          'top10MostSubscribed': 'Feeds populares',
+          'top10RecentPopularHoots': 'Hoots populares',
           'upAndComing': 'Feeds en Ascenso',
           'upAndComingDescription':
               'Feeds recientes que están ganando popularidad',
@@ -892,8 +892,8 @@ class AppTranslations extends Translations {
           'noHoots': 'Não há hoots para mostrar',
           'subscribeToSeeHoots': 'Subscreve a alguns feeds para ver hoots aqui',
           'popularUsers': 'Utilizadores populares',
-          'top10MostSubscribed': 'Top 10 de feeds mais subscritos',
-          'top10RecentPopularHoots': 'Top 10 de hoots recentes mais populares',
+          'top10MostSubscribed': 'Feeds populares',
+          'top10RecentPopularHoots': 'Hoots populares',
           'upAndComing': 'Feeds em Ascensão',
           'upAndComingDescription':
               'Feeds recentes que estão a ganhar popularidade',
@@ -1249,8 +1249,8 @@ class AppTranslations extends Translations {
           'subscribeToSeeHoots':
               'Inscreva-se em alguns feeds para ver hoots aqui',
           'popularUsers': 'Usuários populares',
-          'top10MostSubscribed': 'Top 10 dos feeds mais inscritos',
-          'top10RecentPopularHoots': 'Top 10 hoots recentes mais populares',
+          'top10MostSubscribed': 'Feeds populares',
+          'top10RecentPopularHoots': 'Hoots populares',
           'upAndComing': 'Novos em Ascensão',
           'upAndComingDescription':
               'Feeds recentes que estão ganhando popularidade',
