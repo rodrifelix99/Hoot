@@ -8,6 +8,8 @@ class Feed {
   String userId;
   String? smallAvatar;
   String? bigAvatar;
+  String? smallAvatarHash;
+  String? bigAvatarHash;
   String title;
   String? description;
   String? icon;
@@ -24,6 +26,8 @@ class Feed {
       required this.userId,
       this.smallAvatar,
       this.bigAvatar,
+      this.smallAvatarHash,
+      this.bigAvatarHash,
       required this.title,
       required this.description,
       this.icon,
@@ -41,6 +45,8 @@ class Feed {
       userId: json['userId'],
       smallAvatar: json['smallAvatar'] ?? json['imageUrl'],
       bigAvatar: json['bigAvatar'] ?? json['imageUrl'],
+      smallAvatarHash: json['smallAvatarHash'],
+      bigAvatarHash: json['bigAvatarHash'],
       title: json['title'],
       description: json['description'],
       icon: json['icon'],
@@ -65,6 +71,8 @@ class Feed {
         'icon': icon,
         'smallAvatar': smallAvatar,
         'bigAvatar': bigAvatar,
+        'smallAvatarHash': smallAvatarHash,
+        'bigAvatarHash': bigAvatarHash,
         'color': color!.hashCode.toString(),
         'type': type.toString().split('.').last,
         'private': private,
@@ -76,6 +84,8 @@ class Feed {
         'userId': userId,
         'smallAvatar': smallAvatar,
         'bigAvatar': bigAvatar,
+        'smallAvatarHash': smallAvatarHash,
+        'bigAvatarHash': bigAvatarHash,
         'title': title,
         'description': description,
         'icon': icon,
