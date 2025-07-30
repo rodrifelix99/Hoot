@@ -178,7 +178,7 @@ class _PostComponentState extends State<PostComponent> {
     return Container(
       margin: widget.margin,
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(

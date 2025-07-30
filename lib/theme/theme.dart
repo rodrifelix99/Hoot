@@ -58,16 +58,19 @@ class AppTheme {
   );
 
   static TextTheme get lightTextTheme => GoogleFonts.lexendTextTheme().copyWith(
-    bodySmall: GoogleFonts.interTextTheme().bodySmall,
-    bodyMedium: GoogleFonts.interTextTheme().bodyMedium,
-    bodyLarge: GoogleFonts.interTextTheme().bodyLarge,
-  );
-
-  static TextTheme get darkTextTheme =>
-      GoogleFonts.lexendTextTheme(ThemeData.dark().textTheme).copyWith(
         bodySmall: GoogleFonts.interTextTheme().bodySmall,
         bodyMedium: GoogleFonts.interTextTheme().bodyMedium,
         bodyLarge: GoogleFonts.interTextTheme().bodyLarge,
+      );
+
+  static TextTheme get darkTextTheme =>
+      GoogleFonts.lexendTextTheme(ThemeData.dark().textTheme).copyWith(
+        bodySmall:
+            GoogleFonts.interTextTheme(ThemeData.dark().textTheme).bodySmall,
+        bodyMedium:
+            GoogleFonts.interTextTheme(ThemeData.dark().textTheme).bodyMedium,
+        bodyLarge:
+            GoogleFonts.interTextTheme(ThemeData.dark().textTheme).bodyLarge,
       );
 
   static SnackBarThemeData snackBarTheme = SnackBarThemeData(
