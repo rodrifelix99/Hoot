@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -11,6 +12,7 @@ import '../../../services/feed_request_service.dart';
 import '../../../services/subscription_manager.dart';
 import '../../../services/error_service.dart';
 import '../../../services/toast_service.dart';
+import '../../../services/dialog_service.dart';
 import '../../../util/routes/args/feed_page_args.dart';
 
 class FeedPageController extends GetxController {
@@ -116,11 +118,34 @@ class FeedPageController extends GetxController {
     fetchNext();
   }
 
-  Future<void> toggleSubscription() async {
+  Future<void> toggleSubscription([BuildContext? context]) async {
     final current = _authService.currentUser;
     final f = feed.value;
     if (current == null || f == null) return;
-    if (requested.value) return;
+    final ctx = context ?? Get.context;
+    if (requested.value) {
+      if (ctx != null) {
+        final confirmed = await DialogService.confirm(
+          context: ctx,
+          title: 'cancelRequest'.tr,
+          message: 'cancelRequestConfirmation'.tr,
+          okLabel: 'cancelRequest'.tr,
+          cancelLabel: 'cancel'.tr,
+        );
+        if (!confirmed) return;
+      }
+    } else if (subscribed.value) {
+      if (ctx != null) {
+        final confirmed = await DialogService.confirm(
+          context: ctx,
+          title: 'unsubscribe'.tr,
+          message: 'unsubscribeConfirmation'.tr,
+          okLabel: 'unsubscribe'.tr,
+          cancelLabel: 'cancel'.tr,
+        );
+        if (!confirmed) return;
+      }
+    }
     try {
       final result = await _subscriptionManager.toggle(f.id, current);
       switch (result) {
@@ -129,6 +154,7 @@ class FeedPageController extends GetxController {
           break;
         case SubscriptionResult.unsubscribed:
           subscribed.value = false;
+          requested.value = false;
           break;
         case SubscriptionResult.requested:
           requested.value = true;

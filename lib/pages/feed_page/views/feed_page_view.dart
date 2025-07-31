@@ -34,13 +34,18 @@ class FeedPageView extends GetView<FeedPageController> {
       if (subscribed) {
         icon = Icons.remove;
       } else if (requested) {
-        icon = Icons.hourglass_top;
+        icon = Icons.close;
       } else {
         icon = Icons.add;
       }
       return FloatingActionButton(
         heroTag: 'subscribeFeedButton',
-        onPressed: requested ? null : controller.toggleSubscription,
+        onPressed: () => controller.toggleSubscription(context),
+        tooltip: subscribed
+            ? 'unsubscribe'.tr
+            : requested
+                ? 'cancelRequest'.tr
+                : 'subscribe'.tr,
         child: Icon(icon),
       );
     });
@@ -111,11 +116,9 @@ class FeedPageView extends GetView<FeedPageController> {
                 icon: const Icon(Icons.lock_outline),
                 text: 'thisFeedIsPrivate'.tr,
                 buttonText: controller.requested.value
-                    ? 'requested'.tr
+                    ? 'cancelRequest'.tr
                     : 'requestToJoin'.tr,
-                buttonAction: controller.requested.value
-                    ? null
-                    : controller.toggleSubscription,
+                buttonAction: () => controller.toggleSubscription(context),
               ),
               const SizedBox(height: 32),
             ],
