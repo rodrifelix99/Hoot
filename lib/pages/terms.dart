@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
-import 'package:solar_icons/solar_icons.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class TermsOfService extends StatefulWidget {

@@ -254,7 +254,9 @@ class _PostComponentState extends State<PostComponent> {
                 ),
               ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0).copyWith(
+                bottom: 8,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -378,7 +380,6 @@ class _PostComponentState extends State<PostComponent> {
                         flex: 2,
                       ),
                       IconButton(
-                        visualDensity: VisualDensity.compact,
                         icon: Icon(
                           SolarIconsOutline.refreshSquare,
                           color: _post.reFeededByMe ? Colors.green : null,
@@ -395,7 +396,6 @@ class _PostComponentState extends State<PostComponent> {
                         flex: 2,
                       ),
                       IconButton(
-                        visualDensity: VisualDensity.compact,
                         icon: const Icon(SolarIconsOutline.chatRoundLine),
                         iconSize: 20,
                         onPressed: _openPostDetails,
