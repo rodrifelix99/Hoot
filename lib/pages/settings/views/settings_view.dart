@@ -40,6 +40,10 @@ class SettingsView extends GetView<SettingsController> {
             ),
           ),
           ListTile(
+            title: Text('appColor'.tr),
+            onTap: () => Get.toNamed(AppRoutes.appColor),
+          ),
+          ListTile(
             title: Text('editProfile'.tr),
             onTap: controller.goToEditProfile,
           ),

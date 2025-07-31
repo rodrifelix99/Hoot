@@ -289,6 +289,8 @@ class AppTranslations extends Translations {
           'syncedWithSystem': 'Synced with system',
           'light': 'Light',
           'dark': 'Dark',
+          'appColor': 'App Color',
+          'resetColor': 'Revert to default color',
           'version': 'Version',
           'deleteAccount': 'Delete Account',
           'deleteAccountDescription':
@@ -632,6 +634,8 @@ class AppTranslations extends Translations {
           'syncedWithSystem': 'Sincronizado con el sistema',
           'light': 'Claro',
           'dark': 'Oscuro',
+          'appColor': 'Color de la App',
+          'resetColor': 'Restablecer color por defecto',
           'version': 'Versión',
           'deleteAccount': 'Eliminar Cuenta',
           'deleteAccountDescription':
@@ -976,6 +980,8 @@ class AppTranslations extends Translations {
           'syncedWithSystem': 'Sincronizado com o sistema',
           'light': 'Claro',
           'dark': 'Escuro',
+          'appColor': 'Cor da App',
+          'resetColor': 'Repor cor padrão',
           'version': 'Versão',
           'deleteAccount': 'Eliminar Conta',
           'deleteAccountDescription':
@@ -1317,6 +1323,8 @@ class AppTranslations extends Translations {
           'syncedWithSystem': 'Sincronizado com o sistema',
           'light': 'Claro',
           'dark': 'Escuro',
+          'appColor': 'Cor do App',
+          'resetColor': 'Restaurar cor padrão',
           'version': 'Versão',
           'deleteAccount': 'Excluir Conta',
           'deleteAccountDescription':

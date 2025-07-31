@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hoot/theme/theme.dart';
+import 'package:hoot/util/enums/app_colors.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
@@ -53,8 +54,8 @@ void main() {
               debugShowCheckedModeBanner: false,
               getPages: AppPages.pages,
               initialRoute: AppRoutes.home,
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
+              theme: AppTheme.lightTheme(themeService.appColor.value.color),
+              darkTheme: AppTheme.darkTheme(themeService.appColor.value.color),
               themeMode: themeService.themeMode.value,
               translations: AppTranslations(),
               locale: Get.deviceLocale,

@@ -2,68 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static Color primaryColor = Colors.blue;
+  static ThemeData lightTheme(Color primaryColor) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: primaryColor,
+      brightness: Brightness.light,
+    );
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
+      colorScheme: colorScheme,
+      appBarTheme: const AppBarTheme(centerTitle: false),
+      fontFamily: 'Inter',
+      textTheme: _lightTextTheme,
+      snackBarTheme: _snackBarTheme,
+      elevatedButtonTheme: _elevatedButtonTheme(primaryColor),
+      inputDecorationTheme: _inputDecorationTheme,
+      dropdownMenuTheme:
+          DropdownMenuThemeData(inputDecorationTheme: _inputDecorationTheme),
+      chipTheme: _chipTheme(colorScheme, false),
+    );
+  }
 
-  static ThemeData lightTheme = ThemeData(
-    useMaterial3: true,
-    brightness: Brightness.light,
-    colorSchemeSeed: primaryColor,
-    appBarTheme: AppBarTheme(
-      centerTitle: false,
-    ),
-    fontFamily: 'Inter',
-    textTheme: lightTextTheme,
-    snackBarTheme: snackBarTheme,
-    elevatedButtonTheme: elevatedButtonTheme,
-    inputDecorationTheme: inputDecorationTheme,
-    dropdownMenuTheme: DropdownMenuThemeData(
-      inputDecorationTheme: inputDecorationTheme,
-    ),
-    chipTheme: chipTheme,
-  );
-
-  static ThemeData darkTheme = ThemeData(
+  static ThemeData darkTheme(Color primaryColor) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: primaryColor,
+      brightness: Brightness.dark,
+    );
+    return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      colorSchemeSeed: primaryColor,
-      appBarTheme: AppBarTheme(
-        centerTitle: false,
-      ),
-      textTheme: darkTextTheme,
-      snackBarTheme: snackBarTheme,
-      elevatedButtonTheme: elevatedButtonTheme,
-      inputDecorationTheme: inputDecorationTheme.copyWith(
+      colorScheme: colorScheme,
+      appBarTheme: const AppBarTheme(centerTitle: false),
+      textTheme: _darkTextTheme,
+      snackBarTheme: _snackBarTheme,
+      elevatedButtonTheme: _elevatedButtonTheme(primaryColor),
+      inputDecorationTheme: _inputDecorationTheme.copyWith(
         labelStyle: const TextStyle(color: Colors.white),
         fillColor: Colors.grey.shade800,
       ),
       dropdownMenuTheme:
-          DropdownMenuThemeData(inputDecorationTheme: inputDecorationTheme),
-      chipTheme: chipTheme.copyWith(
-        backgroundColor: darkColorScheme.onPrimary,
-        labelStyle: TextStyle(
-          fontSize: 12,
-          color: darkColorScheme.primary,
-        ),
-        iconTheme: IconThemeData(size: 16, color: darkColorScheme.primary),
-      ));
+          DropdownMenuThemeData(inputDecorationTheme: _inputDecorationTheme),
+      chipTheme: _chipTheme(colorScheme, true),
+    );
+  }
 
-  static ColorScheme lightColorScheme = ColorScheme.fromSeed(
-    seedColor: primaryColor,
-    brightness: Brightness.light,
-  );
-
-  static ColorScheme darkColorScheme = ColorScheme.fromSeed(
-    seedColor: primaryColor,
-    brightness: Brightness.dark,
-  );
-
-  static TextTheme get lightTextTheme => GoogleFonts.lexendTextTheme().copyWith(
+  static TextTheme get _lightTextTheme => GoogleFonts.lexendTextTheme().copyWith(
         bodySmall: GoogleFonts.interTextTheme().bodySmall,
         bodyMedium: GoogleFonts.interTextTheme().bodyMedium,
         bodyLarge: GoogleFonts.interTextTheme().bodyLarge,
       );
 
-  static TextTheme get darkTextTheme =>
+  static TextTheme get _darkTextTheme =>
       GoogleFonts.lexendTextTheme(ThemeData.dark().textTheme).copyWith(
         bodySmall:
             GoogleFonts.interTextTheme(ThemeData.dark().textTheme).bodySmall,
@@ -73,67 +62,63 @@ class AppTheme {
             GoogleFonts.interTextTheme(ThemeData.dark().textTheme).bodyLarge,
       );
 
-  static SnackBarThemeData snackBarTheme = SnackBarThemeData(
-    behavior: SnackBarBehavior.floating,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-  );
-
-  static ElevatedButtonThemeData elevatedButtonTheme = ElevatedButtonThemeData(
-    style: ButtonStyle(
-      textStyle: WidgetStateProperty.all(
-        const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      elevation: WidgetStateProperty.all(0),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide.none,
+  static SnackBarThemeData get _snackBarTheme => SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
-      ),
-      backgroundColor: WidgetStateProperty.all(
-        primaryColor,
-      ),
-      foregroundColor: WidgetStateProperty.all(
-        Colors.white,
-      ),
-      padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      ),
-    ),
-  );
+      );
 
-  static InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
-    border: const OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(15)),
-      borderSide: BorderSide.none,
-    ),
-    focusedBorder: const OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(15)),
-      borderSide: BorderSide(color: Colors.blue, width: 2),
-    ),
-    filled: true,
-    fillColor: Colors.grey.shade200,
-    contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-    alignLabelWithHint: true,
-  );
+  static ElevatedButtonThemeData _elevatedButtonTheme(Color color) =>
+      ElevatedButtonThemeData(
+        style: ButtonStyle(
+          textStyle: WidgetStateProperty.all(
+            const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          elevation: WidgetStateProperty.all(0),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: BorderSide.none,
+            ),
+          ),
+          backgroundColor: WidgetStateProperty.all(color),
+          foregroundColor: WidgetStateProperty.all(Colors.white),
+          padding: WidgetStateProperty.all(
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          ),
+        ),
+      );
 
-  static ChipThemeData chipTheme = ChipThemeData(
-    padding: const EdgeInsets.all(8),
-    shape: const RoundedRectangleBorder(
-      side: BorderSide.none,
-      borderRadius: BorderRadius.all(Radius.circular(100)),
-    ),
-    side: BorderSide.none,
-    backgroundColor: lightColorScheme.primary.withValues(alpha: 0.25),
-    labelStyle: TextStyle(
-      fontSize: 12,
-      color: lightColorScheme.primary,
-    ),
-    iconTheme: IconThemeData(
-      color: lightColorScheme.primary,
-      size: 16,
-    ),
-  );
+  static InputDecorationTheme get _inputDecorationTheme => InputDecorationTheme(
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(color: Colors.blue, width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.grey.shade200,
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        alignLabelWithHint: true,
+      );
+
+  static ChipThemeData _chipTheme(ColorScheme scheme, bool dark) => ChipThemeData(
+        padding: const EdgeInsets.all(8),
+        shape: const RoundedRectangleBorder(
+          side: BorderSide.none,
+          borderRadius: BorderRadius.all(Radius.circular(100)),
+        ),
+        side: BorderSide.none,
+        backgroundColor:
+            dark ? scheme.onPrimary : scheme.primary.withAlpha(64),
+        labelStyle: TextStyle(
+          fontSize: 12,
+          color: scheme.primary,
+        ),
+        iconTheme: IconThemeData(color: scheme.primary, size: 16),
+      );
 }

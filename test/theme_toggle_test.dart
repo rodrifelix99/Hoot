@@ -7,6 +7,7 @@ import 'package:hoot/pages/settings/controllers/settings_controller.dart';
 import 'package:hoot/pages/settings/views/settings_view.dart';
 import 'package:hoot/services/theme_service.dart';
 import 'package:hoot/theme/theme.dart';
+import 'package:hoot/util/enums/app_colors.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -59,7 +60,7 @@ void main() {
   testWidgets('Selecting dark mode updates theme', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final themeService = ThemeService();
-    await themeService.loadThemeMode();
+    await themeService.loadThemeSettings();
     Get.put(themeService);
     Get.put<AuthService>(FakeAuthService());
     Get.put(SettingsController());
@@ -68,8 +69,8 @@ void main() {
       Obx(() => GetMaterialApp(
             translations: AppTranslations(),
             locale: const Locale('en'),
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
+            theme: AppTheme.lightTheme(themeService.appColor.value.color),
+            darkTheme: AppTheme.darkTheme(themeService.appColor.value.color),
             themeMode: themeService.themeMode.value,
             home: const SettingsView(),
           )),
