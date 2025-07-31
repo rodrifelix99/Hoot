@@ -40,6 +40,12 @@ class FeedView extends GetView<FeedController> {
             icon: const Icon(Icons.feed_outlined),
             text: 'subscribeToSeeHoots'.tr,
           ),
+          noMoreItemsIndicatorBuilder: (_) => const Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(
+              child: Text('Made in Portugal 🇵🇹'),
+            ),
+          ),
         ),
       );
     });
