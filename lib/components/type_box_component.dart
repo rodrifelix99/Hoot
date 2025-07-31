@@ -50,10 +50,18 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
 
     final bubble = Container(
       width: 200,
-      height: 100,
+      height: 200,
+      margin: const EdgeInsets.only(bottom: 32, right: 20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(32),
         gradient: gradient,
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.25),
+            blurRadius: 16,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       clipBehavior: Clip.hardEdge,
       child: Stack(
@@ -70,9 +78,9 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
             ),
           ),
           Positioned(
-            bottom: 10,
-            right: 15,
-            left: 15,
+            bottom: 16,
+            right: 16,
+            left: 16,
             child: SizedBox(
               child: Text(
                 widget.isLast
@@ -93,14 +101,21 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
     );
 
     final bubbleTail = Positioned(
-      bottom: -15,
-      left: 25,
+      bottom: 8,
+      right: 0,
       child: Container(
         width: 30,
         height: 30,
         decoration: BoxDecoration(
           gradient: gradient,
           shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.25),
+              blurRadius: 16,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
       ),
     );

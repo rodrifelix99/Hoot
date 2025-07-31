@@ -169,7 +169,7 @@ class ExploreView extends GetView<ExploreController> {
               ),
               const SizedBox(height: 16),
               SizedBox(
-                height: 100,
+                height: 200,
                 child: Obx(() => ListView.separated(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       scrollDirection: Axis.horizontal,
