@@ -134,6 +134,9 @@ class AppTranslations extends Translations {
           'requestToJoin': 'Request to join',
           'requestToJoinConfirmation':
               'Are you sure you want to request to join this feed?',
+          'cancelRequest': 'Cancel request',
+          'cancelRequestConfirmation':
+              'Are you sure you want to cancel your request to join this feed?',
           'request': 'Request',
           'requested': 'Requested',
           'noRequests': 'No requests',
@@ -478,6 +481,9 @@ class AppTranslations extends Translations {
           'requestToJoin': 'Solicitar unirse',
           'requestToJoinConfirmation':
               '¿Estás seguro de que deseas solicitar unirte a este feed?',
+          'cancelRequest': 'Cancelar solicitud',
+          'cancelRequestConfirmation':
+              '¿Estás seguro de que deseas cancelar la solicitud para unirte a este feed?',
           'request': 'Solicitud',
           'requested': 'Solicitado',
           'noRequests': 'No hay solicitudes',
@@ -825,6 +831,9 @@ class AppTranslations extends Translations {
           'requestToJoin': 'Pedir para aderir',
           'requestToJoinConfirmation':
               'Tens a certeza de que queres pedir para aderir a este feed?',
+          'cancelRequest': 'Cancelar Pedido',
+          'cancelRequestConfirmation':
+              'Tens a certeza de que queres cancelar o pedido para aderir a este feed?',
           'request': 'Pedido',
           'requested': 'Pedido',
           'noRequests': 'Sem pedidos',
@@ -1168,6 +1177,9 @@ class AppTranslations extends Translations {
           'requestToJoin': 'Solicitar Participação',
           'requestToJoinConfirmation':
               'Tem certeza de que deseja solicitar participação neste feed?',
+          'cancelRequest': 'Cancelar Solicitação',
+          'cancelRequestConfirmation':
+              'Tem certeza de que deseja cancelar a solicitação de participação deste feed?',
           'request': 'Solicitação',
           'requested': 'Solicitado',
           'noRequests': 'Sem solicitações',

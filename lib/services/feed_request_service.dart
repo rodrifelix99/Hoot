@@ -58,6 +58,17 @@ class FeedRequestService {
     });
   }
 
+  Future<void> cancel(String feedId, String userId) async {
+    final requestRef = _firestore
+        .collection('feeds')
+        .doc(feedId)
+        .collection('requests')
+        .doc(userId);
+    await _firestore.runTransaction((txn) async {
+      txn.delete(requestRef);
+    });
+  }
+
   /// Returns true if [userId] has a pending request to join the feed [feedId].
   Future<bool> exists(String feedId, String userId) async {
     final doc = await _firestore

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -12,6 +13,7 @@ import '../../../services/error_service.dart';
 import '../../../services/feed_request_service.dart';
 import '../../../services/toast_service.dart';
 import '../../../services/subscription_manager.dart';
+import '../../../services/dialog_service.dart';
 import '../../../util/routes/args/profile_args.dart';
 
 /// Loads the current user profile data and owned feeds.
@@ -134,10 +136,36 @@ class ProfileController extends GetxController {
   }
 
   /// Toggles subscription state for [feedId].
-  Future<void> toggleSubscription(String feedId) async {
+  Future<void> toggleSubscription(String feedId,
+      [BuildContext? context]) async {
     final user = _authService.currentUser;
     if (user == null) return;
-    if (requestedFeedIds.contains(feedId)) return;
+    final ctx = context ?? Get.context;
+    if (requestedFeedIds.contains(feedId)) {
+      if (ctx != null) {
+        final confirmed = await DialogService.confirm(
+          context: ctx,
+          title: 'cancelRequest'.tr,
+          message: 'cancelRequestConfirmation'.tr,
+          okLabel: 'cancelRequest'.tr,
+          cancelLabel: 'cancel'.tr,
+        );
+        if (!confirmed) return;
+      } else {
+        return;
+      }
+    } else if (subscribedFeedIds.contains(feedId)) {
+      if (ctx != null) {
+        final confirmed = await DialogService.confirm(
+          context: ctx,
+          title: 'unsubscribe'.tr,
+          message: 'unsubscribeConfirmation'.tr,
+          okLabel: 'unsubscribe'.tr,
+          cancelLabel: 'cancel'.tr,
+        );
+        if (!confirmed) return;
+      }
+    }
     try {
       final result = await _subscriptionManager.toggle(feedId, user);
       switch (result) {
@@ -146,6 +174,7 @@ class ProfileController extends GetxController {
           break;
         case SubscriptionResult.unsubscribed:
           subscribedFeedIds.remove(feedId);
+          requestedFeedIds.remove(feedId);
           break;
         case SubscriptionResult.requested:
           requestedFeedIds.add(feedId);

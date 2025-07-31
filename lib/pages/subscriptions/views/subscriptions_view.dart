@@ -8,6 +8,7 @@ import '../../../components/empty_message.dart';
 import '../../../util/routes/app_routes.dart';
 import '../../../util/routes/args/profile_args.dart';
 import 'package:hoot/services/haptic_service.dart';
+import '../../../services/dialog_service.dart';
 import '../controllers/subscriptions_controller.dart';
 import '../../../util/extensions/feed_extension.dart';
 
@@ -57,7 +58,18 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
                 trailing: IconButton(
                   icon: const Icon(Icons.cancel),
                   tooltip: 'unsubscribe'.tr,
-                  onPressed: () => controller.unsubscribeFeed(feed.id),
+                  onPressed: () async {
+                    final confirmed = await DialogService.confirm(
+                      context: context,
+                      title: 'unsubscribe'.tr,
+                      message: 'unsubscribeConfirmation'.tr,
+                      okLabel: 'unsubscribe'.tr,
+                      cancelLabel: 'cancel'.tr,
+                    );
+                    if (confirmed) {
+                      controller.unsubscribeFeed(feed.id);
+                    }
+                  },
                 ),
               ),
             );

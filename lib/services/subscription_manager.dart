@@ -45,9 +45,11 @@ class SubscriptionManager {
 
     if (isPrivate) {
       final hasRequest = await _feedRequestService.exists(feedId, user.uid);
-      if (!hasRequest) {
-        await _feedRequestService.submit(feedId, user.uid);
+      if (hasRequest) {
+        await _feedRequestService.cancel(feedId, user.uid);
+        return SubscriptionResult.unsubscribed;
       }
+      await _feedRequestService.submit(feedId, user.uid);
       return SubscriptionResult.requested;
     }
 

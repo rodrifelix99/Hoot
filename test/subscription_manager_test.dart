@@ -165,5 +165,43 @@ void main() {
           .get();
       expect(request.exists, isTrue);
     });
+
+    test('cancels request when already requested', () async {
+      final firestore = FakeFirebaseFirestore();
+      await firestore.collection('feeds').doc('f1').set({
+        'userId': 'owner',
+        'private': true,
+      });
+      await firestore.collection('users').doc('u1').set({'uid': 'u1'});
+      await firestore
+          .collection('feeds')
+          .doc('f1')
+          .collection('requests')
+          .doc('u1')
+          .set({'createdAt': Timestamp.now()});
+
+      final subscriptionService = SubscriptionService(firestore: firestore);
+      final feedRequestService = FeedRequestService(
+        firestore: firestore,
+        subscriptionService: subscriptionService,
+        authService: FakeAuthService(U(uid: 'owner')),
+      );
+      final manager = SubscriptionManager(
+        firestore: firestore,
+        subscriptionService: subscriptionService,
+        feedRequestService: feedRequestService,
+      );
+
+      final result = await manager.toggle('f1', U(uid: 'u1'));
+
+      expect(result, SubscriptionResult.unsubscribed);
+      final request = await firestore
+          .collection('feeds')
+          .doc('f1')
+          .collection('requests')
+          .doc('u1')
+          .get();
+      expect(request.exists, isFalse);
+    });
   });
 }
