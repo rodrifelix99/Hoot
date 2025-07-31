@@ -10,7 +10,7 @@ import 'package:solar_icons/solar_icons.dart';
 import '../../../util/routes/app_routes.dart';
 import '../../../util/routes/args/profile_args.dart';
 import '../controllers/explore_controller.dart';
-import 'package:hoot/services/haptic_service.dart';
+import 'package:hoot/components/scale_on_press.dart';
 
 class ExploreView extends GetView<ExploreController> {
   const ExploreView({super.key});
@@ -106,9 +106,8 @@ class ExploreView extends GetView<ExploreController> {
                     itemCount: controller.popularUsers.length,
                     itemBuilder: (context, index) {
                       final u = controller.popularUsers[index];
-                      return GestureDetector(
+                      return ScaleOnPress(
                         onTap: () {
-                          HapticService.lightImpact();
                           Get.toNamed(
                             AppRoutes.profile,
                             arguments: ProfileArgs(uid: u.uid),
@@ -179,9 +178,8 @@ class ExploreView extends GetView<ExploreController> {
                       separatorBuilder: (_, __) => const SizedBox(width: 12),
                       itemBuilder: (context, index) {
                         final type = controller.genres[index];
-                        return GestureDetector(
+                        return ScaleOnPress(
                           onTap: () {
-                            HapticService.lightImpact();
                             Get.toNamed(
                               AppRoutes.searchByGenre,
                               arguments: type,
