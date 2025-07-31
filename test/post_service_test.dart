@@ -146,6 +146,35 @@ void main() {
           1);
     });
 
+    test('reFeed returns existing id when already reFeeded', () async {
+      final firestore = FakeFirebaseFirestore();
+      final service = PostService(firestore: firestore);
+      await firestore
+          .collection('posts')
+          .doc('orig')
+          .set({'text': 'Hello', 'reFeeds': 0});
+      final original = Post(id: 'orig', text: 'Hello');
+      final feed = Feed(
+          id: 'f1', userId: 'u1', title: 'feed', description: 'd', color: Colors.blue);
+      final user = U(uid: 'u1');
+
+      final firstId =
+          await service.reFeed(original: original, targetFeed: feed, user: user);
+      final secondId =
+          await service.reFeed(original: original, targetFeed: feed, user: user);
+
+      expect(firstId, secondId);
+      expect((await firestore.collection('posts').get()).docs.length, 2);
+      final origDoc = await firestore.collection('posts').doc('orig').get();
+      expect(origDoc.get('reFeeds'), 1);
+      final reFeedDocs = await firestore
+          .collection('posts')
+          .doc('orig')
+          .collection('reFeeds')
+          .get();
+      expect(reFeedDocs.docs.length, 1);
+    });
+
     test('fetchPost returns post when found', () async {
       final firestore = FakeFirebaseFirestore();
       await firestore.collection('posts').doc('p1').set({'text': 'hello'});

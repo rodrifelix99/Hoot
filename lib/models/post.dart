@@ -14,6 +14,7 @@ class Post {
   int? likes;
   List<U> likers;
   bool reFeeded;
+  bool reFeededByMe;
   int? reFeeds;
   List<U> reFeeders;
   Post? reFeededFrom;
@@ -33,6 +34,7 @@ class Post {
     this.likes,
     this.likers = const [],
     this.reFeeded = false,
+    this.reFeededByMe = false,
     this.reFeededFrom,
     this.reFeeds,
     this.reFeeders = const [],
@@ -58,6 +60,7 @@ class Post {
       liked: json['liked'] ?? false,
       likes: json['likes'],
       reFeeded: json['reFeeded'] ?? false,
+      reFeededByMe: json['reFeededByMe'] ?? false,
       reFeeds: json['reFeeds'],
       reFeededFrom: json['reFeededFrom'] != null &&
               json['reFeededFrom'].runtimeType != String
@@ -91,6 +94,7 @@ class Post {
       liked: false,
       likes: 0,
       reFeeded: false,
+      reFeededByMe: false,
       reFeeds: 0,
       reFeededFrom: null,
       comments: 0,
@@ -120,6 +124,7 @@ class Post {
       'liked': liked,
       'likes': likes,
       'reFeeded': reFeeded,
+      'reFeededByMe': reFeededByMe,
       'reFeeds': reFeeds,
       'reFeededFrom': reFeededFrom?.toCache(),
       'comments': comments,
@@ -140,6 +145,7 @@ class Post {
       liked: json['liked'] ?? false,
       likes: json['likes'],
       reFeeded: json['reFeeded'] ?? false,
+      reFeededByMe: json['reFeededByMe'] ?? false,
       reFeeds: json['reFeeds'],
       reFeededFrom: json['reFeededFrom'] != null &&
               json['reFeededFrom'].runtimeType != String

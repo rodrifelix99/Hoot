@@ -87,6 +87,13 @@ class PostService implements BasePostService {
           .doc(uid)
           .get();
       data['liked'] = likeDoc.exists;
+      final reFeedDoc = await _firestore
+          .collection('posts')
+          .doc(id)
+          .collection('reFeeds')
+          .doc(uid)
+          .get();
+      data['reFeededByMe'] = reFeedDoc.exists;
     }
     return Post.fromJson(data);
   }
@@ -97,6 +104,17 @@ class PostService implements BasePostService {
     required Feed targetFeed,
     required U user,
   }) async {
+    final reFeedRef = _firestore
+        .collection('posts')
+        .doc(original.id)
+        .collection('reFeeds')
+        .doc(user.uid);
+    final existing = await reFeedRef.get();
+    if (existing.exists) {
+      final existingId = existing.data()?['postId'];
+      if (existingId is String) return existingId;
+    }
+
     final newId = newPostId();
 
     final feedData = targetFeed.toJson()
@@ -116,6 +134,11 @@ class PostService implements BasePostService {
       'createdAt': FieldValue.serverTimestamp(),
     });
 
+    await reFeedRef.set({
+      'postId': newId,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
     await _firestore
         .collection('posts')
         .doc(original.id)
@@ -126,6 +149,20 @@ class PostService implements BasePostService {
 
   @override
   Future<void> deletePost(String id) async {
-    await _firestore.collection('posts').doc(id).delete();
+    final postRef = _firestore.collection('posts').doc(id);
+    final snap = await postRef.get();
+    if (snap.exists && (snap.data()?['reFeeded'] == true)) {
+      final originalId = snap.data()?['reFeededFrom']?['id'];
+      final uid = snap.data()?['userId'];
+      if (originalId != null && uid != null) {
+        await _firestore
+            .collection('posts')
+            .doc(originalId)
+            .collection('reFeeds')
+            .doc(uid)
+            .delete();
+      }
+    }
+    await postRef.delete();
   }
 }

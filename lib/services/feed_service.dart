@@ -77,6 +77,13 @@ class FeedService implements BaseFeedService {
           .doc(user.uid)
           .get();
       post.liked = likeDoc.exists;
+      final reFeedDoc = await _firestore
+          .collection('posts')
+          .doc(post.id)
+          .collection('reFeeds')
+          .doc(user.uid)
+          .get();
+      post.reFeededByMe = reFeedDoc.exists;
     }
 
     return PostPage(
@@ -138,6 +145,13 @@ class FeedService implements BaseFeedService {
           .doc(user.uid)
           .get();
       post.liked = likeDoc.exists;
+      final reFeedDoc = await _firestore
+          .collection('posts')
+          .doc(post.id)
+          .collection('reFeeds')
+          .doc(user.uid)
+          .get();
+      post.reFeededByMe = reFeedDoc.exists;
     }
 
     return PostPage(

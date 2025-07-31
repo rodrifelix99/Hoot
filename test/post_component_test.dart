@@ -154,4 +154,30 @@ void main() {
     expect(find.textContaining('ReHoot'), findsOneWidget);
     Get.reset();
   });
+
+  testWidgets('reFeed button disabled and green when reFeededByMe',
+      (tester) async {
+    final post = Post(id: 'p1', text: 'Hi', reFeededByMe: true);
+    final auth = FakeAuthService(U(uid: 'u1'));
+    final service = FakePostService();
+
+    Get.put<AuthService>(auth);
+    Get.put<BasePostService>(service);
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        home: Scaffold(body: PostComponent(post: post)),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final iconButton = tester.widget<IconButton>(
+        find.widgetWithIcon(IconButton, SolarIconsOutline.refreshSquare));
+    expect(iconButton.onPressed, isNull);
+    final icon = tester
+        .widget<Icon>(find.widgetWithIcon(Icon, SolarIconsOutline.refreshSquare));
+    expect(icon.color, Colors.green);
+
+    Get.reset();
+  });
 }
