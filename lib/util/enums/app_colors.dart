@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum AppColor { blue, green, orange, pink, purple, red, yellow }
+enum AppColor { blue, green, orange, pink, purple, red, yellow, rainbow }
 
 extension AppColorExtension on AppColor {
   Color get color {
@@ -17,6 +17,8 @@ extension AppColorExtension on AppColor {
         return Colors.red;
       case AppColor.yellow:
         return Colors.yellow;
+      case AppColor.rainbow:
+        return Colors.teal;
       case AppColor.blue:
       return Colors.blue;
     }
