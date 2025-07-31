@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/util/extensions/feed_extension.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../controllers/edit_feed_controller.dart';
 import '../../feed/widgets/feed_form.dart';
 import '../../feed/widgets/feed_avatar_picker.dart';
@@ -24,12 +25,13 @@ class EditFeedView extends GetView<EditFeedController> {
                         height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2)),
                   )
-                : TextButton(
+                : IconButton(
                     onPressed: () async {
                       final result = await controller.save();
                       if (result) Get.back();
                     },
-                    child: Text('done'.tr),
+                    icon: Icon(SolarIconsBold.checkSquare),
+                    iconSize: 32,
                   ),
           ),
         ],

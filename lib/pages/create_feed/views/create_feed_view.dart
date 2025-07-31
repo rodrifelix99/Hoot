@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../controllers/create_feed_controller.dart';
 import '../../feed/widgets/feed_form.dart';
 import '../../feed/widgets/feed_avatar_picker.dart';
@@ -23,12 +24,13 @@ class CreateFeedView extends GetView<CreateFeedController> {
                         height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2)),
                   )
-                : TextButton(
+                : IconButton(
                     onPressed: () async {
                       final result = await controller.createFeed();
                       if (result) Get.back();
                     },
-                    child: Text('done'.tr),
+                    icon: Icon(SolarIconsBold.checkSquare),
+                    iconSize: 32,
                   ),
           ),
         ],

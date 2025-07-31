@@ -53,7 +53,7 @@ class EditProfileView extends GetView<EditProfileController> {
               user!.largeProfilePictureUrl!.isNotEmpty);
       if (avatarFile != null) {
         avatarWidget = ClipRRect(
-          borderRadius: BorderRadius.circular(32),
+          borderRadius: BorderRadius.circular(100),
           child: Image.file(
             avatarFile,
             fit: BoxFit.cover,
@@ -124,8 +124,8 @@ class EditProfileView extends GetView<EditProfileController> {
                       borderRadius: BorderRadius.circular(32),
                       boxShadow: const [
                         BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 8,
+                          color: Colors.black12,
+                          blurRadius: 16,
                           offset: Offset(0, 2),
                         ),
                       ],
@@ -136,9 +136,9 @@ class EditProfileView extends GetView<EditProfileController> {
                         if (hasAvatar)
                           Positioned.fill(
                             child: Container(
-                              decoration: BoxDecoration(
+                              decoration: ShapeDecoration(
                                 color: Colors.black26,
-                                borderRadius: BorderRadius.circular(32),
+                                shape: CircleBorder(),
                               ),
                               child: const Center(
                                 child: Icon(
@@ -167,21 +167,24 @@ class EditProfileView extends GetView<EditProfileController> {
       appBar: AppBarComponent(
         title: 'editProfile'.tr,
         actions: [
-          Obx(() => controller.saving.value
-              ? const Padding(
-                  padding: EdgeInsets.all(12),
-                  child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2)),
-                )
-              : TextButton(
-                  onPressed: () async {
-                    final result = await controller.saveProfile();
-                    if (result) Get.back();
-                  },
-                  child: Text('done'.tr),
-                ))
+          Obx(
+            () => controller.saving.value
+                ? const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2)),
+                  )
+                : IconButton(
+                    onPressed: () async {
+                      final result = await controller.saveProfile();
+                      if (result) Get.back();
+                    },
+                    icon: Icon(SolarIconsBold.checkSquare),
+                    iconSize: 32,
+                  ),
+          ),
         ],
       ),
       body: SingleChildScrollView(
