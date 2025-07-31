@@ -47,20 +47,36 @@ class CreatePostView extends GetView<CreatePostController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Obx(() {
-                  return DropdownButton2<Feed>(
-                    value: controller.selectedFeed.value,
-                    hint: Text('selectFeed'.tr),
-                    onChanged: (f) => controller.selectedFeed.value = f,
-                    isExpanded: true,
-                    items: controller.availableFeeds
-                        .map((feed) => DropdownMenuItem(
-                              value: feed,
-                              child: Text(feed.title),
-                            ))
-                        .toList(),
-                  );
-                }),
+                DropdownButtonHideUnderline(
+                  child: Obx(() {
+                    return DropdownButton2<Feed>(
+                      value: controller.selectedFeed.value,
+                      hint: Text('selectFeed'.tr),
+                      onChanged: (f) => controller.selectedFeed.value = f,
+                      isExpanded: true,
+                      dropdownStyleData: DropdownStyleData(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      buttonStyleData: ButtonStyleData(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      items: controller.availableFeeds
+                          .map((feed) => DropdownMenuItem(
+                                value: feed,
+                                child: Text(feed.title),
+                              ))
+                          .toList(),
+                    );
+                  }),
+                ),
                 const SizedBox(height: 8),
                 MentionTextField(
                   mentionKey: controller.mentionKey,

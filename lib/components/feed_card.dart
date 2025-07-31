@@ -20,6 +20,10 @@ class FeedCard extends StatelessWidget {
     final image = HashCachedImage(
       imageUrl: feed.bigAvatar ?? '',
       hash: feed.bigAvatarHash,
+      errorWidget: (context, object, _) => Image.asset(
+        'assets/images/bottom_bar_blue.jpg',
+        fit: BoxFit.cover,
+      ),
       fit: BoxFit.cover,
     );
 
@@ -100,21 +104,20 @@ class FeedCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       (feed.description?.isNotEmpty == true
                           ? feed.description!
-                          : '${feed.subscriberCount ?? 0} ${'followers'.tr}'
-                      ),
+                          : '${feed.subscriberCount ?? 0} ${'followers'.tr}'),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.white70,
-                      ),
+                            color: Colors.white70,
+                          ),
                     ),
                   ],
                 ),

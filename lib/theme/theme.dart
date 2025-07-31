@@ -17,8 +17,7 @@ class AppTheme {
       snackBarTheme: _snackBarTheme,
       elevatedButtonTheme: _elevatedButtonTheme(primaryColor),
       inputDecorationTheme: _inputDecorationTheme,
-      dropdownMenuTheme:
-          DropdownMenuThemeData(inputDecorationTheme: _inputDecorationTheme),
+      dropdownMenuTheme: _dropdownMenuTheme,
       chipTheme: _chipTheme(colorScheme, false),
     );
   }
@@ -40,11 +39,26 @@ class AppTheme {
         labelStyle: const TextStyle(color: Colors.white),
         fillColor: Colors.grey.shade800,
       ),
-      dropdownMenuTheme:
-          DropdownMenuThemeData(inputDecorationTheme: _inputDecorationTheme),
+      dropdownMenuTheme: _dropdownMenuTheme,
       chipTheme: _chipTheme(colorScheme, true),
     );
   }
+
+  static DropdownMenuThemeData get _dropdownMenuTheme => DropdownMenuThemeData(
+        inputDecorationTheme: _inputDecorationTheme,
+    menuStyle: MenuStyle(
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+          backgroundColor: WidgetStateProperty.all(Colors.white),
+          elevation: WidgetStateProperty.all(8),
+          padding: WidgetStateProperty.all(
+            const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          ),
+        ),
+      );
 
   static TextTheme get _lightTextTheme => GoogleFonts.lexendTextTheme().copyWith(
         bodySmall: GoogleFonts.interTextTheme().bodySmall,
