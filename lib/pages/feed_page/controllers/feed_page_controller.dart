@@ -11,8 +11,10 @@ import '../../../services/feed_request_service.dart';
 import '../../../services/subscription_manager.dart';
 import '../../../services/error_service.dart';
 import '../../../services/toast_service.dart';
+import '../../../util/routes/args/feed_page_args.dart';
 
 class FeedPageController extends GetxController {
+  final FeedPageArgs? args;
   final AuthService _authService;
   final BaseFeedService _feedService;
   final SubscriptionService _subscriptionService;
@@ -20,6 +22,7 @@ class FeedPageController extends GetxController {
   final SubscriptionManager _subscriptionManager;
 
   FeedPageController({
+    this.args,
     AuthService? authService,
     BaseFeedService? feedService,
     SubscriptionService? subscriptionService,
@@ -47,17 +50,12 @@ class FeedPageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    final args = Get.arguments;
-    if (args is Feed) {
-      feed.value = args;
+    final a = args;
+    if (a?.feed != null) {
+      feed.value = a!.feed;
       _initState();
-    } else if (args is Map && args['feed'] is Feed) {
-      feed.value = args['feed'];
-      _initState();
-    } else if (args is String) {
-      _loadFeed(args);
-    } else if (args is Map && args['id'] is String) {
-      _loadFeed(args['id']);
+    } else if (a?.feedId != null) {
+      _loadFeed(a!.feedId!);
     }
   }
 

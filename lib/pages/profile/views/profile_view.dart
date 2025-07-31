@@ -10,6 +10,8 @@ import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import '../../../util/routes/app_routes.dart';
+import '../../../util/routes/args/profile_args.dart';
+import '../../../util/routes/args/feed_page_args.dart';
 import '../controllers/profile_controller.dart';
 import '../../../services/report_service.dart';
 import '../../../services/toast_service.dart';
@@ -29,14 +31,8 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
-    final args = Get.arguments;
-    String? uid;
-    if (args is String) {
-      uid = args;
-    } else if (args is Map && args['uid'] is String) {
-      uid = args['uid'] as String;
-    }
-    controller = Get.find<ProfileController>(tag: uid ?? 'current');
+    final args = Get.arguments as ProfileArgs?;
+    controller = Get.find<ProfileController>(tag: args?.uid ?? 'current');
   }
 
   Future<void> reportUser(BuildContext context) async {
@@ -217,7 +213,7 @@ class _ProfileViewState extends State<ProfileView> {
                             HapticService.lightImpact();
                             Get.toNamed(
                               AppRoutes.feed,
-                              arguments: feed.id,
+                              arguments: FeedPageArgs(feedId: feed.id),
                             );
                           },
                           splashColor: Colors.white.withAlpha(50),

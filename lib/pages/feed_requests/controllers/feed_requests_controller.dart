@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../models/feed_join_request.dart';
 import '../../../services/feed_request_service.dart';
 import '../../../util/routes/app_routes.dart';
+import '../../../util/routes/args/profile_args.dart';
 
 class FeedRequestsController extends GetxController {
   final FeedRequestService _service;
@@ -42,6 +43,6 @@ class FeedRequestsController extends GetxController {
   }
 
   void openProfile(String userId) {
-    Get.toNamed(AppRoutes.profile, arguments: userId);
+    Get.toNamed(AppRoutes.profile, arguments: ProfileArgs(uid: userId));
   }
 }

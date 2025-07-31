@@ -1,16 +1,12 @@
 import 'package:get/get.dart';
 import '../controllers/profile_controller.dart';
+import '../../../util/routes/args/profile_args.dart';
 
 class ProfileBinding extends Bindings {
   @override
   void dependencies() {
-    final args = Get.arguments;
-    String? uid;
-    if (args is String) {
-      uid = args;
-    } else if (args is Map && args['uid'] is String) {
-      uid = args['uid'] as String;
-    }
-    Get.lazyPut(() => ProfileController(), tag: uid ?? 'current');
+    final args = Get.arguments as ProfileArgs?;
+    Get.lazyPut(() => ProfileController(args: args),
+        tag: args?.uid ?? 'current');
   }
 }

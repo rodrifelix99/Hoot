@@ -7,6 +7,7 @@ import 'package:hoot/util/extensions/feed_extension.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/post_component.dart';
 import '../../../util/routes/app_routes.dart';
+import '../../../util/routes/args/profile_args.dart';
 import '../controllers/explore_controller.dart';
 import 'package:hoot/services/haptic_service.dart';
 
@@ -31,7 +32,10 @@ class ExploreView extends GetView<ExploreController> {
               (u) => ListTile(
                 title: Text(u.name ?? ''),
                 subtitle: Text('@${u.username ?? ''}'),
-                onTap: () => Get.toNamed(AppRoutes.profile, arguments: u.uid),
+                onTap: () => Get.toNamed(
+                  AppRoutes.profile,
+                  arguments: ProfileArgs(uid: u.uid),
+                ),
               ),
             ),
             ...controller.feedSuggestions.map(
@@ -47,7 +51,7 @@ class ExploreView extends GetView<ExploreController> {
                 subtitle: Text('feed'.tr),
                 onTap: () => Get.toNamed(
                   AppRoutes.profile,
-                  arguments: {'uid': f.userId, 'feedId': f.id},
+                  arguments: ProfileArgs(uid: f.userId, feedId: f.id),
                 ),
               ),
             ),
@@ -106,13 +110,15 @@ class ExploreView extends GetView<ExploreController> {
                       return GestureDetector(
                         onTap: () {
                           HapticService.lightImpact();
-                          Get.toNamed(AppRoutes.profile, arguments: u.uid);
+                          Get.toNamed(
+                            AppRoutes.profile,
+                            arguments: ProfileArgs(uid: u.uid),
+                          );
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: ProfileAvatarComponent(
-                            image: u.largeProfilePictureUrl ??
-                                '',
+                            image: u.largeProfilePictureUrl ?? '',
                             hash: u.bigAvatarHash ?? u.smallAvatarHash,
                             size: 80,
                           ),
@@ -147,7 +153,8 @@ class ExploreView extends GetView<ExploreController> {
                             HapticService.lightImpact();
                             Get.toNamed(
                               AppRoutes.profile,
-                              arguments: {'uid': f.userId, 'feedId': f.id},
+                              arguments:
+                                  ProfileArgs(uid: f.userId, feedId: f.id),
                             );
                           },
                           child: ListItemComponent(
@@ -219,11 +226,13 @@ class ExploreView extends GetView<ExploreController> {
                     final p = controller.topPosts[index];
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
-                      child: PostComponent(post: p,
+                      child: PostComponent(
+                        post: p,
                         margin: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 0,
-                        ),),
+                        ),
+                      ),
                     );
                   },
                 ),
