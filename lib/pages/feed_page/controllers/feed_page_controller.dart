@@ -8,6 +8,7 @@ import '../../../services/auth_service.dart';
 import '../../../services/feed_service.dart';
 import '../../../services/subscription_service.dart';
 import '../../../services/feed_request_service.dart';
+import '../../../services/subscription_manager.dart';
 import '../../../services/error_service.dart';
 import '../../../services/toast_service.dart';
 
@@ -16,18 +17,22 @@ class FeedPageController extends GetxController {
   final BaseFeedService _feedService;
   final SubscriptionService _subscriptionService;
   final FeedRequestService _feedRequestService;
+  final SubscriptionManager _subscriptionManager;
 
   FeedPageController({
     AuthService? authService,
     BaseFeedService? feedService,
     SubscriptionService? subscriptionService,
     FeedRequestService? feedRequestService,
+    SubscriptionManager? subscriptionManager,
   })  : _authService = authService ?? Get.find<AuthService>(),
         _feedService = feedService ?? Get.find<BaseFeedService>(),
         _subscriptionService =
             subscriptionService ?? Get.find<SubscriptionService>(),
         _feedRequestService =
-            feedRequestService ?? Get.find<FeedRequestService>();
+            feedRequestService ?? Get.find<FeedRequestService>(),
+        _subscriptionManager =
+            subscriptionManager ?? Get.find<SubscriptionManager>();
 
   final Rxn<Feed> feed = Rxn<Feed>();
   final RxBool loading = false.obs;
@@ -118,36 +123,22 @@ class FeedPageController extends GetxController {
     final f = feed.value;
     if (current == null || f == null) return;
     if (requested.value) return;
-    final isSub = subscribed.value;
-    if (isSub) {
-      subscribed.value = false;
-      try {
-        await _subscriptionService.unsubscribe(current.uid, f.id);
-      } catch (e, s) {
-        subscribed.value = true;
-        await ErrorService.reportError(e,
-            stack: s, message: 'errorUnsubscribing'.tr);
-      }
-    } else {
-      if (f.private == true) {
-        try {
-          await _feedRequestService.submit(f.id, current.uid);
+    try {
+      final result = await _subscriptionManager.toggle(f.id, current);
+      switch (result) {
+        case SubscriptionResult.subscribed:
+          subscribed.value = true;
+          break;
+        case SubscriptionResult.unsubscribed:
+          subscribed.value = false;
+          break;
+        case SubscriptionResult.requested:
           requested.value = true;
           ToastService.showSuccess('requestSent'.tr);
-        } catch (e, s) {
-          await ErrorService.reportError(e,
-              stack: s, message: 'errorRequestingToJoin'.tr);
-        }
-      } else {
-        subscribed.value = true;
-        try {
-          await _subscriptionService.subscribe(current.uid, f.id);
-        } catch (e, s) {
-          subscribed.value = false;
-          await ErrorService.reportError(e,
-              stack: s, message: 'errorSubscribing'.tr);
-        }
+          break;
       }
+    } catch (e, s) {
+      await ErrorService.reportError(e, stack: s);
     }
   }
 }

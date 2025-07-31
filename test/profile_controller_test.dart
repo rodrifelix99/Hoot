@@ -9,6 +9,7 @@ import 'package:hoot/models/user.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/pages/profile/controllers/profile_controller.dart';
 import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/subscription_manager.dart';
 import 'package:hoot/services/subscription_service.dart';
 import 'package:hoot/services/feed_request_service.dart';
 import 'package:hoot/services/feed_service.dart';
@@ -47,24 +48,29 @@ class FakeAuthService extends GetxService implements AuthService {
 
   @override
   Future<U?> refreshUser() async => _user;
-  
+
   @override
   Future<void> createUserDocumentIfNeeded(User user) async {}
 }
 
-class FakeSubscriptionService extends SubscriptionService {
-  final List<List<String>> subscribeCalls = [];
-  FakeSubscriptionService() : super(firestore: FakeFirebaseFirestore());
+class DummySubscriptionService extends SubscriptionService {
+  DummySubscriptionService() : super(firestore: FakeFirebaseFirestore());
 
   @override
-  Future<void> subscribe(String userId, String feedId) async {
-    subscribeCalls.add([userId, feedId]);
-  }
+  Future<Set<String>> fetchSubscriptions(String userId) async => {};
+
+  @override
+  Future<List<Feed>> fetchSubscribedFeeds(String userId) async => [];
+
+  @override
+  Future<void> subscribe(String userId, String feedId) async {}
+
+  @override
+  Future<void> unsubscribe(String userId, String feedId) async {}
 }
 
-class FakeFeedRequestService extends FeedRequestService {
-  final List<List<String>> submitCalls = [];
-  FakeFeedRequestService()
+class DummyFeedRequestService extends FeedRequestService {
+  DummyFeedRequestService()
       : super(
           firestore: FakeFirebaseFirestore(),
           subscriptionService: SubscriptionService(
@@ -74,8 +80,34 @@ class FakeFeedRequestService extends FeedRequestService {
         );
 
   @override
-  Future<void> submit(String feedId, String userId) async {
-    submitCalls.add([feedId, userId]);
+  Future<void> submit(String feedId, String userId) async {}
+
+  @override
+  Future<bool> exists(String feedId, String userId) async => false;
+}
+
+class FakeSubscriptionManager extends SubscriptionManager {
+  final SubscriptionResult result;
+  final List<List<String>> calls = [];
+  FakeSubscriptionManager(this.result)
+      : super(
+          firestore: FakeFirebaseFirestore(),
+          subscriptionService: SubscriptionService(
+            firestore: FakeFirebaseFirestore(),
+          ),
+          feedRequestService: FeedRequestService(
+            firestore: FakeFirebaseFirestore(),
+            subscriptionService: SubscriptionService(
+              firestore: FakeFirebaseFirestore(),
+            ),
+            authService: FakeAuthService(U(uid: 'owner')),
+          ),
+        );
+
+  @override
+  Future<SubscriptionResult> toggle(String feedId, U user) async {
+    calls.add([feedId, user.uid]);
+    return result;
   }
 }
 
@@ -112,26 +144,26 @@ void main() {
             private: false)
       ]);
       final auth = FakeAuthService(user);
-      final subService = FakeSubscriptionService();
-      final requestService = FakeFeedRequestService();
-      final controller = ProfileController(
-        authService: auth,
-        feedService: FakeFeedService(),
-        subscriptionService: subService,
-        feedRequestService: requestService,
-      );
-      controller.feeds.assignAll(user.feeds ?? []);
+      final manager = FakeSubscriptionManager(SubscriptionResult.subscribed);
+      final subService = DummySubscriptionService();
+      final requestService = DummyFeedRequestService();
       Get.put<AuthService>(auth);
       Get.put<SubscriptionService>(subService);
       Get.put<FeedRequestService>(requestService);
+      Get.put<SubscriptionManager>(manager);
+      final controller = ProfileController(
+        authService: auth,
+        feedService: FakeFeedService(),
+        subscriptionManager: manager,
+      );
+      controller.feeds.assignAll(user.feeds ?? []);
       Get.put<ProfileController>(controller);
 
       await controller.toggleSubscription('f1');
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
 
-      expect(subService.subscribeCalls.length, 1);
-      expect(requestService.submitCalls, isEmpty);
+      expect(manager.calls.length, 1);
       expect(controller.requestedFeedIds.contains('f1'), isFalse);
       Get.reset();
     });
@@ -145,26 +177,26 @@ void main() {
             id: 'f1', userId: 'u2', title: 'f', description: 'd', private: true)
       ]);
       final auth = FakeAuthService(user);
-      final subService = FakeSubscriptionService();
-      final requestService = FakeFeedRequestService();
-      final controller = ProfileController(
-        authService: auth,
-        feedService: FakeFeedService(),
-        subscriptionService: subService,
-        feedRequestService: requestService,
-      );
-      controller.feeds.assignAll(user.feeds ?? []);
+      final manager = FakeSubscriptionManager(SubscriptionResult.requested);
+      final subService = DummySubscriptionService();
+      final requestService = DummyFeedRequestService();
       Get.put<AuthService>(auth);
       Get.put<SubscriptionService>(subService);
       Get.put<FeedRequestService>(requestService);
+      Get.put<SubscriptionManager>(manager);
+      final controller = ProfileController(
+        authService: auth,
+        feedService: FakeFeedService(),
+        subscriptionManager: manager,
+      );
+      controller.feeds.assignAll(user.feeds ?? []);
       Get.put<ProfileController>(controller);
 
       await controller.toggleSubscription('f1');
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
 
-      expect(subService.subscribeCalls, isEmpty);
-      expect(requestService.submitCalls.length, 1);
+      expect(manager.calls.length, 1);
       expect(controller.requestedFeedIds.contains('f1'), isTrue);
       Get.reset();
     });
