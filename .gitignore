@@ -53,3 +53,4 @@ app.*.map.json
 
 # Environment files
 assets/.env
+/apply_patch.sh
