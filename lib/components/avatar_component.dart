@@ -3,7 +3,7 @@ import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:solar_icons/solar_icons.dart';
 
-class ProfileAvatarComponent extends StatefulWidget {
+class ProfileAvatarComponent extends StatelessWidget {
   final String image;
   final int size;
   final bool preview;
@@ -23,41 +23,36 @@ class ProfileAvatarComponent extends StatefulWidget {
       this.foregroundColor});
 
   @override
-  State<ProfileAvatarComponent> createState() => _ProfileAvatarComponentState();
-}
-
-class _ProfileAvatarComponentState extends State<ProfileAvatarComponent> {
-  @override
   Widget build(BuildContext context) {
-    if (widget.preview) {
+    if (preview) {
       return FullScreenWidget(
         backgroundColor: Colors.black,
         child: Center(
           child: Hero(
-            tag: widget.image,
+            tag: image,
             child: Avatar(
-              image: widget.image,
-              hash: widget.hash,
-              size: widget.size,
-              color: widget.color,
-              foregroundColor: widget.foregroundColor,
+              image: image,
+              hash: hash,
+              size: size,
+              color: color,
+              foregroundColor: foregroundColor,
             ),
           ),
         ),
       );
     } else {
       return Avatar(
-        image: widget.image,
-        hash: widget.hash,
-        size: widget.size,
-        color: widget.color,
-        foregroundColor: widget.foregroundColor,
+        image: image,
+        hash: hash,
+        size: size,
+        color: color,
+        foregroundColor: foregroundColor,
       );
     }
   }
 }
 
-class Avatar extends StatefulWidget {
+class Avatar extends StatelessWidget {
   final String image;
   final String? hash;
   final int size;
@@ -73,20 +68,15 @@ class Avatar extends StatefulWidget {
       this.foregroundColor});
 
   @override
-  State<Avatar> createState() => _AvatarState();
-}
-
-class _AvatarState extends State<Avatar> {
-  @override
   Widget build(BuildContext context) {
-    if (widget.image.isEmpty) {
+    if (image.isEmpty) {
       final bgColor =
-          widget.color ?? Theme.of(context).colorScheme.primaryContainer;
-      final fgColor = widget.foregroundColor ??
+          color ?? Theme.of(context).colorScheme.primaryContainer;
+      final fgColor = foregroundColor ??
           Theme.of(context).colorScheme.onPrimaryContainer;
       return Container(
-        height: widget.size.toDouble(),
-        width: widget.size.toDouble(),
+        height: size.toDouble(),
+        width: size.toDouble(),
         clipBehavior: Clip.hardEdge,
         decoration: ShapeDecoration(
           color: bgColor,
@@ -94,7 +84,7 @@ class _AvatarState extends State<Avatar> {
         ),
         child: Center(
           child: Icon(SolarIconsBold.linkRoundAngle,
-              color: fgColor, size: widget.size / 2),
+              color: fgColor, size: size / 2),
         ),
       );
     }
@@ -105,8 +95,8 @@ class _AvatarState extends State<Avatar> {
       ),
       clipBehavior: Clip.hardEdge,
       child: HashCachedImage(
-        imageUrl: widget.image,
-        hash: widget.hash,
+        imageUrl: image,
+        hash: hash,
         // When a blur hash is provided, `HashCachedImage` will automatically
         // render the blurred placeholder while loading. Removing the custom
         // placeholder ensures the blur hash is shown instead of an empty box.
@@ -115,8 +105,8 @@ class _AvatarState extends State<Avatar> {
           color: Theme.of(context).colorScheme.error,
         ),
         fit: BoxFit.cover,
-        height: widget.size.toDouble(),
-        width: widget.size.toDouble(),
+        height: size.toDouble(),
+        width: size.toDouble(),
       ),
     );
   }
