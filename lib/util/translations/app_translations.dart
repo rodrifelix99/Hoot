@@ -302,22 +302,6 @@ class AppTranslations extends Translations {
           'unblockUser': 'Unblock @username',
           'blockUserDescription':
               'This will block @username and they won\'t be able to see your posts or interact with you.',
-          'aboutYourData': 'About Your Data',
-          'aboutYourDataTitle1': 'Your phone number is a must',
-          'aboutYourDataDescription1':
-              'We need your phone number to verify your identity and to keep your account secure.',
-          'aboutYourDataTitle2': 'But, is it safe?',
-          'aboutYourDataDescription2':
-              'We use the latest security technology to keep your authentication data safe.',
-          'aboutYourDataTitle3': 'We encrypt your phone number',
-          'aboutYourDataDescription3':
-              'We encrypt your phone number and store it securely.',
-          'aboutYourDataTitle4': 'No one can see your phone number',
-          'aboutYourDataDescription4':
-              'No one can see your phone number, not even us, it\'s all encrypted.',
-          'aboutYourDataTitle5': 'Your data is private',
-          'aboutYourDataDescription5':
-              'We don\'t share your data with anyone unless you tell us to.',
           'selectFeed': 'Select a feed to hoot to',
           'addImage': 'Add Image',
           'addVideo': 'Add Video',
@@ -661,22 +645,6 @@ class AppTranslations extends Translations {
           'unblockUser': 'Desbloquear a @username',
           'blockUserDescription':
               'Esto bloqueará a @username y no podrán ver tus publicaciones ni interactuar contigo.',
-          'aboutYourData': 'Acerca de tus Datos',
-          'aboutYourDataTitle1': 'Tu número de teléfono es necesario',
-          'aboutYourDataDescription1':
-              'Necesitamos tu número de teléfono para verificar tu identidad y mantener segura tu cuenta.',
-          'aboutYourDataTitle2': '¿Pero, es seguro?',
-          'aboutYourDataDescription2':
-              'Utilizamos la última tecnología de seguridad para mantener seguros tus datos de autenticación.',
-          'aboutYourDataTitle3': 'Pero, ¿y la privacidad?',
-          'aboutYourDataDescription3':
-              'Encriptamos tu número de teléfono y lo almacenamos de manera segura.',
-          'aboutYourDataTitle4': 'Nadie puede ver tu número de teléfono',
-          'aboutYourDataDescription4':
-              'Nadie puede ver tu número de teléfono, ni siquiera nosotros, está todo encriptado.',
-          'aboutYourDataTitle5': 'Tus datos son privados',
-          'aboutYourDataDescription5':
-              'No compartimos tus datos con nadie a menos que nos lo digas.',
           'selectFeed': 'Selecciona un feed para hootear',
           'addImage': 'Agregar Imagen',
           'addVideo': 'Agregar Video',
@@ -1021,22 +989,6 @@ class AppTranslations extends Translations {
           'unblockUser': 'Desbloquear @username',
           'blockUserDescription':
               'Isto irá bloquear @username e eles não poderão ver as tuas publicações nem interagir contigo.',
-          'aboutYourData': 'Sobre os Teus Dados',
-          'aboutYourDataTitle1': 'O teu número de telefone é necessário',
-          'aboutYourDataDescription1':
-              'Precisamos do teu número de telefone para verificar a tua identidade e manter a tua conta segura.',
-          'aboutYourDataTitle2': 'Mas, é seguro?',
-          'aboutYourDataDescription2':
-              'Usamos a mais recente tecnologia de segurança para manter os teus dados de autenticação seguros.',
-          'aboutYourDataTitle3': 'Mas, e a privacidade?',
-          'aboutYourDataDescription3':
-              'Encriptamos o teu número de telefone e armazenamo-lo de forma segura.',
-          'aboutYourDataTitle4': 'Ninguém pode ver o teu número de telefone',
-          'aboutYourDataDescription4':
-              'Ninguém pode ver o teu número de telefone, nem mesmo nós, está tudo encriptado.',
-          'aboutYourDataTitle5': 'Os teus dados são privados',
-          'aboutYourDataDescription5':
-              'Não partilhamos os teus dados com ninguém a menos que nos digas.',
           'selectFeed': 'Seleciona um feed para hootear',
           'addImage': 'Adicionar Imagem',
           'addVideo': 'Adicionar Vídeo',
@@ -1378,22 +1330,6 @@ class AppTranslations extends Translations {
           'unblockUser': 'Desbloquear @username',
           'blockUserDescription':
               'Isso bloqueará @username e eles não poderão ver suas postagens nem interagir com você.',
-          'aboutYourData': 'Sobre seus Dados',
-          'aboutYourDataTitle1': 'Seu número de telefone é necessário',
-          'aboutYourDataDescription1':
-              'Precisamos do seu número de telefone para verificar sua identidade e manter sua conta segura.',
-          'aboutYourDataTitle2': 'Mas, é seguro?',
-          'aboutYourDataDescription2':
-              'Usamos a mais recente tecnologia de segurança para manter seus dados de autenticação seguros.',
-          'aboutYourDataTitle3': 'E quanto à privacidade?',
-          'aboutYourDataDescription3':
-              'Nós criptografamos seu número de telefone e o armazenamos de forma segura.',
-          'aboutYourDataTitle4': 'Ninguém pode ver seu número de telefone',
-          'aboutYourDataDescription4':
-              'Ninguém pode ver seu número de telefone, nem mesmo nós, está tudo criptografado.',
-          'aboutYourDataTitle5': 'Seus dados são privados',
-          'aboutYourDataDescription5':
-              'Nós não compartilhamos seus dados com ninguém, a menos que você nos diga.',
           'selectFeed': 'Selecione um feed para hootear',
           'addImage': 'Adicionar Imagem',
           'addVideo': 'Adicionar Vídeo',
