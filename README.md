@@ -65,8 +65,10 @@ app loads this file at startup to configure services like Tenor.
 
 ## Running Tests
 
-Widget and model tests are located under the `test/` directory. Fetch all
-dependencies and run the tests with:
+Widget and model tests are located under the `test/` directory. Make sure to
+run `flutter pub get` to install dependencies before executing `flutter test`.
+The suite uses mocked Firebase services via the `fake_cloud_firestore` and
+`firebase_auth_mocks` packages, so no emulator setup is required.
 
 ```bash
 flutter pub get
