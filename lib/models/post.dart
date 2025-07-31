@@ -22,6 +22,12 @@ class Post {
   DateTime? createdAt;
   DateTime? updatedAt;
 
+  String get smallAvatar => feed?.smallAvatar ?? user?.smallProfilePictureUrl ?? '';
+  String get largeAvatar => feed?.bigAvatar ?? user?.largeProfilePictureUrl ?? '';
+
+  String get smallAvatarHash => feed?.smallAvatarHash ?? user?.smallAvatarHash ?? '';
+  String get largeAvatarHash => feed?.bigAvatarHash ?? user?.bigAvatarHash ?? '';
+
   Post({
     required this.id,
     this.text,

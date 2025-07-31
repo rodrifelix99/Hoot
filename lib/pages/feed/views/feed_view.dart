@@ -4,7 +4,6 @@ import 'package:hoot/components/post_component.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/empty_message.dart';
-import 'package:hoot/components/shimmer_skeletons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../models/post.dart';
 import '../controllers/feed_controller.dart';
@@ -26,8 +25,7 @@ class FeedView extends GetView<FeedController> {
               vertical: 8,
             ),
           ),
-          firstPageProgressIndicatorBuilder: (_) =>
-              const ShimmerListTile(hasSubtitle: true),
+          firstPageProgressIndicatorBuilder: (_) => Center(child: CircularProgressIndicator()),
           newPageProgressIndicatorBuilder: (_) => const Padding(
             padding: EdgeInsets.all(16),
             child: Center(child: CircularProgressIndicator()),
@@ -41,9 +39,12 @@ class FeedView extends GetView<FeedController> {
             text: 'subscribeToSeeHoots'.tr,
           ),
           noMoreItemsIndicatorBuilder: (_) => const Padding(
-            padding: EdgeInsets.all(16),
-            child: Center(
-              child: Text('Made in Portugal 🇵🇹'),
+            padding: EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+            child: Opacity(
+              opacity: 0.75,
+              child: Center(
+                child: Text('Made in Portugal 🇵🇹'),
+              ),
             ),
           ),
         ),

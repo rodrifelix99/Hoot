@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
-import 'package:hoot/components/list_item_component.dart';
+import 'package:hoot/components/feed_card.dart';
 import 'package:hoot/components/type_box_component.dart';
 import 'package:hoot/util/extensions/feed_extension.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/post_component.dart';
+import 'package:hoot/util/routes/args/feed_page_args.dart';
 import '../../../util/routes/app_routes.dart';
 import '../../../util/routes/args/profile_args.dart';
 import '../controllers/explore_controller.dart';
@@ -140,39 +141,19 @@ class ExploreView extends GetView<ExploreController> {
               SizedBox(
                 height: 200,
                 child: Obx(
-                  () => ListView.builder(
+                  () => ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: controller.topFeeds.length,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    separatorBuilder: (_, __) => const SizedBox(width: 16),
                     itemBuilder: (context, index) {
-                      final f = controller.topFeeds[index];
-                      return SizedBox(
-                        width: 250,
-                        child: GestureDetector(
-                          onTap: () {
-                            HapticService.lightImpact();
-                            Get.toNamed(
-                              AppRoutes.profile,
-                              arguments:
-                                  ProfileArgs(uid: f.userId, feedId: f.id),
-                            );
-                          },
-                          child: ListItemComponent(
-                            leading: ProfileAvatarComponent(
-                              image: f.bigAvatar ?? '',
-                              hash: f.bigAvatarHash ?? f.smallAvatarHash,
-                              size: 100,
-                              color: f.color,
-                              foregroundColor: f.foregroundColor,
-                            ),
-                            title: f.title,
-                            subtitle:
-                                '${f.subscriberCount ?? 0} ${'followers'.tr}',
-                            backgroundColor: f.color,
-                            foregroundColor: f.foregroundColor,
-                          ),
-                        ),
-                      );
+                      final feed = controller.topFeeds[index];
+                      return FeedCard(feed: feed, onTap: () {
+                        Get.toNamed(
+                          AppRoutes.feed,
+                          arguments: FeedPageArgs(feed: feed),
+                        );
+                      });
                     },
                   ),
                 ),

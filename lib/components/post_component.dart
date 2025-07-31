@@ -273,9 +273,8 @@ class _PostComponentState extends State<PostComponent> {
                           }
                         },
                         child: ProfileAvatarComponent(
-                          image: _post.user?.smallProfilePictureUrl ?? '',
-                          hash: _post.user?.smallAvatarHash ??
-                              _post.user?.bigAvatarHash,
+                          image: _post.smallAvatar,
+                          hash: _post.smallAvatarHash,
                           size: 40,
                         ),
                       ),
