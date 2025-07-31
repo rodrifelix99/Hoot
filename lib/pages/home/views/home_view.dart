@@ -40,13 +40,12 @@ class HomeView extends GetView<HomeController> {
           body: Stack(
             fit: StackFit.expand,
             children: [
-              Obx(() => Image.asset(
-                    Get.find<ThemeService>()
-                        .appColor
-                        .value
-                        .asset,
-                    fit: BoxFit.cover,
-                  )),
+              Obx(
+                () => Image.asset(
+                  Get.find<ThemeService>().appColor.value.asset,
+                  fit: BoxFit.cover,
+                ),
+              ),
               SafeArea(
                 top: false,
                 child: AnimatedContainer(
@@ -181,8 +180,7 @@ class HomeView extends GetView<HomeController> {
                             child: Container(
                               padding: const EdgeInsets.all(2),
                               decoration: BoxDecoration(
-                                color:
-                                    Colors.white,
+                                color: Colors.white,
                                 shape: BoxShape.circle,
                               ),
                               constraints: const BoxConstraints(
