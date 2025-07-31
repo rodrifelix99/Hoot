@@ -96,6 +96,7 @@ class _PostComponentState extends State<PostComponent> {
   Future<void> _reFeed() async {
     final user = _authService.currentUser;
     if (user == null) return;
+    if (_post.reFeededByMe) return;
     final feeds = user.feeds ?? [];
     if (feeds.isEmpty) {
       ToastService.showError('youNeedToCreateAFeedFirst'.tr);
@@ -112,6 +113,7 @@ class _PostComponentState extends State<PostComponent> {
     await _postService.reFeed(original: _post, targetFeed: feed, user: user);
     setState(() {
       _post.reFeeds = (_post.reFeeds ?? 0) + 1;
+      _post.reFeededByMe = true;
     });
     ToastService.showSuccess('newReHoot'.tr);
   }
@@ -377,9 +379,12 @@ class _PostComponentState extends State<PostComponent> {
                       ),
                       IconButton(
                         visualDensity: VisualDensity.compact,
-                        icon: const Icon(SolarIconsOutline.refreshSquare),
+                        icon: Icon(
+                          SolarIconsOutline.refreshSquare,
+                          color: _post.reFeededByMe ? Colors.green : null,
+                        ),
                         iconSize: 20,
-                        onPressed: _reFeed,
+                        onPressed: _post.reFeededByMe ? null : _reFeed,
                       ),
                       if ((_post.reFeeds ?? 0) > 0)
                         Padding(
