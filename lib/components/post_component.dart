@@ -18,6 +18,7 @@ import '../services/report_service.dart';
 import '../util/mention_utils.dart';
 import '../util/extensions/datetime_extension.dart';
 import '../services/haptic_service.dart';
+import '../util/routes/args/profile_args.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
@@ -208,7 +209,10 @@ class _PostComponentState extends State<PostComponent> {
                   horizontal: 16,
                 ),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(100),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .surfaceContainer
+                      .withAlpha(100),
                   border: Border(
                     bottom: BorderSide(
                       color: Theme.of(context).dividerColor.withAlpha(25),
@@ -228,13 +232,14 @@ class _PostComponentState extends State<PostComponent> {
                           if (_post.reFeededFrom?.user != null)
                             TextSpan(
                               text:
-                              '@${_post.reFeededFrom!.user!.username ?? ''}',
+                                  '@${_post.reFeededFrom!.user!.username ?? ''}',
                               style: const TextStyle(color: Colors.blue),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
                                   if (_post.reFeededFrom?.id != null) {
-                                    Get.toNamed(AppRoutes.post,
-                                        arguments: {'id': _post.reFeededFrom!.id});
+                                    Get.toNamed(AppRoutes.post, arguments: {
+                                      'id': _post.reFeededFrom!.id
+                                    });
                                   }
                                 },
                             )
@@ -257,7 +262,10 @@ class _PostComponentState extends State<PostComponent> {
                         onTap: () {
                           HapticService.lightImpact();
                           if (_post.user != null) {
-                            Get.toNamed(AppRoutes.profile, arguments: _post.user!.uid);
+                            Get.toNamed(
+                              AppRoutes.profile,
+                              arguments: ProfileArgs(uid: _post.user!.uid),
+                            );
                           }
                         },
                         child: ProfileAvatarComponent(
@@ -272,7 +280,10 @@ class _PostComponentState extends State<PostComponent> {
                         GestureDetector(
                           onTap: () {
                             HapticService.lightImpact();
-                            Get.toNamed(AppRoutes.profile, arguments: _post.user!.uid);
+                            Get.toNamed(
+                              AppRoutes.profile,
+                              arguments: ProfileArgs(uid: _post.user!.uid),
+                            );
                           },
                           child: NameComponent(
                             user: _post.user!,

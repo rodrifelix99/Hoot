@@ -12,9 +12,11 @@ import '../../../services/error_service.dart';
 import '../../../services/feed_request_service.dart';
 import '../../../services/toast_service.dart';
 import '../../../services/subscription_manager.dart';
+import '../../../util/routes/args/profile_args.dart';
 
 /// Loads the current user profile data and owned feeds.
 class ProfileController extends GetxController {
+  final ProfileArgs? args;
   final AuthService _authService;
   final BaseFeedService _feedService;
   final SubscriptionService _subscriptionService;
@@ -22,12 +24,15 @@ class ProfileController extends GetxController {
   final SubscriptionManager _subscriptionManager;
 
   ProfileController({
+    this.args,
     AuthService? authService,
     BaseFeedService? feedService,
     SubscriptionService? subscriptionService,
     FeedRequestService? feedRequestService,
     SubscriptionManager? subscriptionManager,
-  })  : _authService = authService ?? Get.find<AuthService>(),
+  })  : uid = args?.uid,
+        initialFeedId = args?.feedId,
+        _authService = authService ?? Get.find<AuthService>(),
         _feedService = feedService ?? Get.find<BaseFeedService>(),
         _subscriptionService =
             subscriptionService ?? Get.find<SubscriptionService>(),
@@ -50,17 +55,6 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    final args = Get.arguments;
-    if (args is String) {
-      uid = args;
-    } else if (args is Map) {
-      if (args['uid'] is String) {
-        uid = args['uid'] as String;
-      }
-      if (args['feedId'] is String) {
-        initialFeedId = args['feedId'] as String;
-      }
-    }
     loadProfile();
   }
 

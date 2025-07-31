@@ -6,6 +6,7 @@ import '../../../components/avatar_component.dart';
 import '../../../components/name_component.dart';
 import '../../../components/empty_message.dart';
 import '../../../util/routes/app_routes.dart';
+import '../../../util/routes/args/profile_args.dart';
 import '../../../services/dialog_service.dart';
 
 class SubscribersView extends GetView<SubscribersController> {
@@ -34,7 +35,10 @@ class SubscribersView extends GetView<SubscribersController> {
           itemBuilder: (context, index) {
             final user = controller.subscribers[index];
             return ListTile(
-              onTap: () => Get.toNamed(AppRoutes.profile, arguments: user.uid),
+              onTap: () => Get.toNamed(
+                AppRoutes.profile,
+                arguments: ProfileArgs(uid: user.uid),
+              ),
               leading: ProfileAvatarComponent(
                 image: user.smallProfilePictureUrl ?? '',
                 hash: user.smallAvatarHash ?? user.bigAvatarHash,

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../services/auth_service.dart';
 import '../util/routes/app_routes.dart';
+import '../util/routes/args/profile_args.dart';
 
 /// Parses [text] and returns spans where @username mentions are highlighted
 /// in blue and tappable to open the mentioned user's profile.
@@ -26,7 +27,8 @@ List<TextSpan> parseMentions(String text) {
         ..onTap = () async {
           final user = await authService.fetchUserByUsername(username);
           if (user != null) {
-            Get.toNamed(AppRoutes.profile, arguments: user.uid);
+            Get.toNamed(AppRoutes.profile,
+                arguments: ProfileArgs(uid: user.uid));
           }
         },
     ));
