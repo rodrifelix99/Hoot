@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:hoot/models/feed.dart';
-import 'package:hoot/services/haptic_service.dart';
+import 'package:hoot/components/scale_on_press.dart';
 
 class FeedCard extends StatelessWidget {
   final Feed feed;
@@ -27,11 +27,8 @@ class FeedCard extends StatelessWidget {
       fit: BoxFit.cover,
     );
 
-    return GestureDetector(
-      onTap: () {
-        HapticService.lightImpact();
-        onTap();
-      },
+    return ScaleOnPress(
+      onTap: onTap,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
