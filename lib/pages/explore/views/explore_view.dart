@@ -40,7 +40,6 @@ class ExploreView extends GetView<ExploreController> {
                   image: f.smallAvatar ?? f.bigAvatar ?? '',
                   hash: f.smallAvatarHash ?? f.bigAvatarHash,
                   size: 40,
-                  radius: 20,
                   color: f.color,
                   foregroundColor: f.foregroundColor,
                 ),
@@ -116,7 +115,6 @@ class ExploreView extends GetView<ExploreController> {
                                 '',
                             hash: u.bigAvatarHash ?? u.smallAvatarHash,
                             size: 80,
-                            radius: 16,
                           ),
                         ),
                       );
@@ -157,7 +155,6 @@ class ExploreView extends GetView<ExploreController> {
                               image: f.bigAvatar ?? '',
                               hash: f.bigAvatarHash ?? f.smallAvatarHash,
                               size: 100,
-                              radius: 16,
                               color: f.color,
                               foregroundColor: f.foregroundColor,
                             ),

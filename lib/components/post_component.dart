@@ -246,7 +246,6 @@ class _PostComponentState extends State<PostComponent> {
                       hash: _post.user?.smallAvatarHash ??
                           _post.user?.bigAvatarHash,
                       size: 40,
-                      radius: 12,
                     ),
                   ),
                   const SizedBox(width: 8),

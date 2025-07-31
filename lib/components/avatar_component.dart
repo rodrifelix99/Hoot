@@ -1,4 +1,3 @@
-import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:hash_cached_image/hash_cached_image.dart';
@@ -10,7 +9,6 @@ class ProfileAvatarComponent extends StatefulWidget {
   final bool preview;
   final String url;
   final String? hash;
-  final double radius;
   final Color? color;
   final Color? foregroundColor;
 
@@ -21,7 +19,6 @@ class ProfileAvatarComponent extends StatefulWidget {
       this.preview = false,
       this.url = '',
       this.hash,
-      this.radius = -1,
       this.color,
       this.foregroundColor});
 
@@ -42,7 +39,6 @@ class _ProfileAvatarComponentState extends State<ProfileAvatarComponent> {
               image: widget.image,
               hash: widget.hash,
               size: widget.size,
-              radius: widget.radius,
               color: widget.color,
               foregroundColor: widget.foregroundColor,
             ),
@@ -54,7 +50,6 @@ class _ProfileAvatarComponentState extends State<ProfileAvatarComponent> {
         image: widget.image,
         hash: widget.hash,
         size: widget.size,
-        radius: widget.radius,
         color: widget.color,
         foregroundColor: widget.foregroundColor,
       );
@@ -66,7 +61,6 @@ class Avatar extends StatefulWidget {
   final String image;
   final String? hash;
   final int size;
-  final double radius;
   final Color? color;
   final Color? foregroundColor;
 
@@ -75,7 +69,6 @@ class Avatar extends StatefulWidget {
       required this.image,
       this.hash,
       required this.size,
-      required this.radius,
       this.color,
       this.foregroundColor});
 
@@ -97,13 +90,7 @@ class _AvatarState extends State<Avatar> {
         clipBehavior: Clip.hardEdge,
         decoration: ShapeDecoration(
           color: bgColor,
-          shape: SmoothRectangleBorder(
-            borderRadius: SmoothBorderRadius(
-              cornerRadius:
-                  widget.radius == -1 ? widget.size / 3 : widget.radius,
-              cornerSmoothing: 1.25,
-            ),
-          ),
+          shape: CircleBorder(),
         ),
         child: Center(
           child: Icon(SolarIconsBold.linkRoundAngle,
@@ -114,13 +101,7 @@ class _AvatarState extends State<Avatar> {
 
     return Container(
       decoration: ShapeDecoration(
-        shape: SmoothRectangleBorder(
-          borderRadius: SmoothBorderRadius(
-            cornerRadius:
-                widget.radius == -1 ? widget.size / 3 : widget.radius,
-            cornerSmoothing: 1.25,
-          ),
-        ),
+        shape: CircleBorder(),
       ),
       clipBehavior: Clip.hardEdge,
       child: HashCachedImage(

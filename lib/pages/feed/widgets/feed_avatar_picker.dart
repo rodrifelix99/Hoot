@@ -44,7 +44,6 @@ class FeedAvatarPicker extends StatelessWidget {
         image: imageUrl!,
         hash: hash,
         size: 120,
-        radius: 32,
         color: color,
         foregroundColor: foregroundColor,
       );

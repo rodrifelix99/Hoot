@@ -48,7 +48,6 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
                   image: feed.bigAvatar ?? '',
                   hash: feed.bigAvatarHash ?? feed.smallAvatarHash,
                   size: 100,
-                  radius: 25,
                   color: feed.color,
                   foregroundColor: feed.foregroundColor,
                 ),

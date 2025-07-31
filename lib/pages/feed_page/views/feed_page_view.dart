@@ -62,7 +62,6 @@ class FeedPageView extends GetView<FeedPageController> {
             image: feed.bigAvatar ?? '',
             hash: feed.bigAvatarHash ?? feed.smallAvatarHash,
             size: 120,
-            radius: 32,
             color: feed.color,
             foregroundColor: feed.foregroundColor,
           ),

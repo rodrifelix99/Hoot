@@ -66,7 +66,6 @@ class EditProfileView extends GetView<EditProfileController> {
           image: user?.largeProfilePictureUrl ?? '',
           hash: user?.bigAvatarHash ?? user?.smallAvatarHash,
           size: 120,
-          radius: 32,
         );
       }
 

@@ -115,7 +115,6 @@ class _ProfileViewState extends State<ProfileView> {
                       image: user.largeProfilePictureUrl ?? '',
                       hash: user.bigAvatarHash ?? user.smallAvatarHash,
                       size: 120,
-                      radius: 16,
                     ),
                   ),
                 ),

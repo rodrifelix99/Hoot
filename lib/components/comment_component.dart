@@ -16,7 +16,6 @@ class CommentComponent extends StatelessWidget {
         image: comment.user?.smallProfilePictureUrl ?? '',
         hash: comment.user?.smallAvatarHash ?? comment.user?.bigAvatarHash,
         size: 32,
-        radius: 16,
       ),
       title: comment.user != null
           ? NameComponent(user: comment.user!, size: 14)

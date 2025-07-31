@@ -38,7 +38,6 @@ class FeedRequestsView extends GetView<FeedRequestsController> {
                 image: user.smallProfilePictureUrl ?? '',
                 hash: user.smallAvatarHash ?? user.bigAvatarHash,
                 size: 40,
-                radius: 20,
               ),
               title: NameComponent(user: user, size: 16),
               trailing: Row(
