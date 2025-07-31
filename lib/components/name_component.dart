@@ -72,7 +72,7 @@ class NameComponent extends StatelessWidget {
                             size: size.toDouble(),
                           )
                         : Image.asset(
-                            'assets/images/verified.gif',
+                            'assets/images/verified.png',
                             width: size.toDouble(),
                             height: size.toDouble(),
                           )),
