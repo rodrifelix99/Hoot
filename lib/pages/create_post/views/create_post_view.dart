@@ -122,10 +122,12 @@ class CreatePostView extends GetView<CreatePostController> {
               child: Obx(() {
                 final loading = controller.publishing.value;
                 if (loading) {
-                  return const SizedBox(
-                    width: 32,
-                    height: 32,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                  return Center(
+                    child: const SizedBox(
+                      width: 32,
+                      height: 32,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
                   );
                 }
                 return ElevatedButton(
