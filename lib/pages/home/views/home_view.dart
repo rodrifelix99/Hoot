@@ -11,6 +11,8 @@ import '../../notifications/controllers/notifications_controller.dart';
 import '../../profile/views/profile_view.dart';
 import '../controllers/home_controller.dart';
 import 'package:hoot/services/haptic_service.dart';
+import 'package:hoot/services/theme_service.dart';
+import 'package:hoot/util/enums/app_colors.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -38,10 +40,13 @@ class HomeView extends GetView<HomeController> {
           body: Stack(
             fit: StackFit.expand,
             children: [
-              Image.asset(
-                'assets/images/bottom_bar_blue.jpg',
-                fit: BoxFit.cover,
-              ),
+              Obx(() => Image.asset(
+                    Get.find<ThemeService>()
+                        .appColor
+                        .value
+                        .asset,
+                    fit: BoxFit.cover,
+                  )),
               SafeArea(
                 top: false,
                 child: AnimatedContainer(

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hoot/pages/login/controllers/login_controller.dart';
 import 'package:hoot/pages/login/views/login_view.dart';
 import 'package:hoot/theme/theme.dart';
+import 'package:hoot/util/enums/app_colors.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -69,7 +70,7 @@ void main() {
       GetMaterialApp(
         translations: AppTranslations(),
         locale: const Locale('en'),
-        theme: AppTheme.lightTheme,
+        theme: AppTheme.lightTheme(AppColor.blue.color),
         home: const LoginView(),
       ),
     );

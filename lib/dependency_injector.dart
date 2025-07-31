@@ -23,7 +23,7 @@ class DependencyInjector {
     Get.put(SubscriptionManager(), permanent: true);
     Get.put(QuickActionsService(), permanent: true);
     final theme = Get.put(ThemeService(), permanent: true);
-    await theme.loadThemeMode();
+    await theme.loadThemeSettings();
     await Get.find<QuickActionsService>().init();
   }
 }

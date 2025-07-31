@@ -17,6 +17,8 @@ import 'package:hoot/pages/profile/bindings/profile_binding.dart';
 import 'package:hoot/pages/profile/views/profile_view.dart';
 import 'package:hoot/pages/settings/bindings/settings_binding.dart';
 import 'package:hoot/pages/settings/views/settings_view.dart';
+import 'package:hoot/pages/app_color/bindings/app_color_binding.dart';
+import 'package:hoot/pages/app_color/views/app_color_view.dart';
 import 'package:hoot/pages/edit_profile/bindings/edit_profile_binding.dart';
 import 'package:hoot/pages/edit_profile/views/edit_profile_view.dart';
 import 'package:hoot/pages/search/bindings/search_binding.dart';
@@ -95,6 +97,12 @@ class AppPages {
       name: AppRoutes.settings,
       page: () => const SettingsView(),
       binding: SettingsBinding(),
+      middlewares: [AuthMiddleware()],
+    ),
+    GetPage(
+      name: AppRoutes.appColor,
+      page: () => const AppColorView(),
+      binding: AppColorBinding(),
       middlewares: [AuthMiddleware()],
     ),
     GetPage<ProfileArgs>(
