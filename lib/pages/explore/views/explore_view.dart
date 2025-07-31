@@ -7,6 +7,7 @@ import 'package:hoot/util/extensions/feed_extension.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/util/routes/args/feed_page_args.dart';
+import 'package:solar_icons/solar_icons.dart';
 import '../../../util/routes/app_routes.dart';
 import '../../../util/routes/args/profile_args.dart';
 import '../controllers/explore_controller.dart';
@@ -79,7 +80,7 @@ class ExploreView extends GetView<ExploreController> {
                   controller: controller.searchController,
                   decoration: InputDecoration(
                     hintText: 'searchPlaceholder'.tr,
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: const Icon(SolarIconsOutline.magnifier),
                   ),
                   textCapitalization: TextCapitalization.sentences,
                   onChanged: controller.search,

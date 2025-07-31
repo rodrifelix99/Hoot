@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/services/haptic_service.dart';
@@ -15,6 +16,10 @@ class FeedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String content = feed.description ?? '';
+    if (content.isEmpty) {
+      content = '${feed.subscriberCount ?? 0} ${'followers'.tr}';
+    }
     return GestureDetector(
       onTap: () {
         HapticService.lightImpact();
@@ -57,7 +62,7 @@ class FeedCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      feed.description ?? feed.subscriberCount.toString(),
+                      content,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.white70,
                       ),
