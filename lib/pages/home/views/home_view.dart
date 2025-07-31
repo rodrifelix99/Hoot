@@ -112,7 +112,10 @@ class HomeView extends GetView<HomeController> {
                             ? Colors.white
                             : Colors.white.withAlpha(175),
                       ),
-                      onPressed: () => controller.changeIndex(0),
+                      onPressed: () {
+                        HapticService.lightImpact();
+                        controller.changeIndex(0);
+                      },
                     ),
                   ),
                   FadeInUp(
@@ -130,7 +133,10 @@ class HomeView extends GetView<HomeController> {
                             ? Colors.white
                             : Colors.white.withAlpha(175),
                       ),
-                      onPressed: () => controller.changeIndex(1),
+                      onPressed: () {
+                        HapticService.lightImpact();
+                        controller.changeIndex(1);
+                      },
                     ),
                   ),
                   FadeInUp(
@@ -145,7 +151,10 @@ class HomeView extends GetView<HomeController> {
                           SolarIconsBold.addSquare,
                           color: Colors.white.withAlpha(175),
                         ),
-                        onPressed: () => Get.toNamed(AppRoutes.createPost),
+                        onPressed: () {
+                          HapticService.lightImpact();
+                          Get.toNamed(AppRoutes.createPost);
+                        },
                       ),
                     ),
                   ),
@@ -167,7 +176,10 @@ class HomeView extends GetView<HomeController> {
                                 ? Colors.white
                                 : Colors.white.withAlpha(175),
                           ),
-                          onPressed: () => controller.changeIndex(2),
+                          onPressed: () {
+                            HapticService.lightImpact();
+                            controller.changeIndex(2);
+                          },
                         ),
                       ),
                       if (unread > 0)
@@ -214,7 +226,10 @@ class HomeView extends GetView<HomeController> {
                             ? Colors.white
                             : Colors.white.withAlpha(175),
                       ),
-                      onPressed: () => controller.changeIndex(3),
+                      onPressed: () {
+                        HapticService.lightImpact();
+                        controller.changeIndex(3);
+                      },
                     ),
                   ),
                 ],
