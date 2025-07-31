@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/appbar_component.dart';
-import 'package:hoot/pages/about_your_data.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -25,16 +24,8 @@ class _TermsOfServiceState extends State<TermsOfService> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarComponent(
+      appBar: const AppBarComponent(
         title: 'Terms of Service',
-        actions: [
-          IconButton(
-            icon: const Icon(SolarIconsOutline.shieldPlus),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const AboutYourDataPage()));
-            },
-          ),
-        ],
       ),
       body: WebViewWidget(controller: _controller),
     );
