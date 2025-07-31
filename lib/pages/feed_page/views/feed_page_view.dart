@@ -15,7 +15,7 @@ import '../../../util/extensions/feed_extension.dart';
 class FeedPageView extends GetView<FeedPageController> {
   const FeedPageView({super.key});
 
-  Widget _buildFab(Feed? feed) {
+  Widget _buildFab(BuildContext context, Feed? feed) {
     if (feed == null) return const SizedBox.shrink();
     if (controller.isOwner) {
       return FloatingActionButton(
@@ -213,7 +213,7 @@ class FeedPageView extends GetView<FeedPageController> {
         appBar: AppBarComponent(
           title: feed?.title ?? '',
         ),
-        floatingActionButton: _buildFab(feed),
+        floatingActionButton: _buildFab(context, feed),
         body: _buildBody(context),
       );
     });
