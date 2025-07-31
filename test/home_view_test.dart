@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,9 +14,11 @@ import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/notification_service.dart';
 import 'package:hoot/services/feed_request_service.dart';
 import 'package:hoot/services/subscription_service.dart';
+import 'package:hoot/services/theme_service.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/translations/app_translations.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
   final U _user;
@@ -84,6 +87,9 @@ class TestNotificationsController extends NotificationsController {
 
 void main() {
   testWidgets('HomeView displays unread count badge', (tester) async {
+    final themeService = ThemeService();
+    await themeService.loadThemeSettings();
+    Get.put(themeService);
     Get.put<AuthService>(FakeAuthService(U(uid: 'u1', username: 't')));
     Get.put(HomeController());
     final n = TestNotificationsController();
@@ -98,6 +104,9 @@ void main() {
   });
 
   testWidgets('swiping left opens create post page', (tester) async {
+    final themeService = ThemeService();
+    await themeService.loadThemeSettings();
+    Get.put(themeService);
     Get.put<AuthService>(FakeAuthService(U(uid: 'u1', username: 't')));
     Get.put(HomeController());
     Get.put<NotificationsController>(TestNotificationsController());
@@ -121,6 +130,37 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('create post page'), findsOneWidget);
+    Get.reset();
+  });
+
+  testWidgets('tapping bottom bar icon triggers haptic feedback',
+      (tester) async {
+    final calls = <MethodCall>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        calls.add(call);
+        return null;
+      },
+    );
+
+    final themeService = ThemeService();
+    await themeService.loadThemeSettings();
+    Get.put(themeService);
+    Get.put<AuthService>(FakeAuthService(U(uid: 'u1', username: 't')));
+    Get.put(HomeController());
+    Get.put<NotificationsController>(TestNotificationsController());
+
+    await tester.pumpWidget(const GetMaterialApp(home: HomeView()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(SolarIconsOutline.compass));
+    await tester.pump();
+
+    expect(calls.any((c) => c.method == 'HapticFeedback.vibrate'), isTrue);
+
+    tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, null);
     Get.reset();
   });
 }
