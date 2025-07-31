@@ -30,78 +30,93 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(15),
-      child: widget.isSkeleton
-          ? ShimmerLoading(
-              isLoading: widget.isSkeleton,
-              skeleton: Container(
-                width: 200,
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      color.withValues(alpha: 0.6),
-                      color.withValues(alpha: 0.9),
-                    ],
-                  ),
-                ),
-              ),
-              child: Container(),
-            )
-          : Container(
-              width: 200,
-              height: 100,
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    color.withValues(alpha: 0.6),
-                    color.withValues(alpha: 0.9),
-                  ],
-                ),
-              ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: -20,
-                    left: -25,
-                    child: Icon(
-                      widget.isLast
-                          ? Icons.more_vert_rounded
-                          : FeedTypeExtension.toIcon(widget.type),
-                      color: Colors.white.withValues(alpha: 0.2),
-                      size: 150,
+    final gradient = LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        color.withValues(alpha: 0.6),
+        color.withValues(alpha: 0.9),
+      ],
+    );
+
+    final bubbleSkeleton = Container(
+      width: 200,
+      height: 100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: gradient,
+      ),
+    );
+
+    final bubble = Container(
+      width: 200,
+      height: 100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: gradient,
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: Stack(
+        children: [
+          Positioned(
+            top: -20,
+            left: -25,
+            child: Icon(
+              widget.isLast
+                  ? Icons.more_vert_rounded
+                  : FeedTypeExtension.toIcon(widget.type),
+              color: Colors.white.withValues(alpha: 0.2),
+              size: 150,
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            right: 15,
+            left: 15,
+            child: SizedBox(
+              child: Text(
+                widget.isLast
+                    ? 'discoverMoreFeeds'.tr
+                    : FeedTypeExtension.toTranslatedString(
+                        context, widget.type),
+                textAlign: TextAlign.right,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.9),
+                      fontSize: MediaQuery.of(context).size.width * 0.06,
+                      fontWeight: FontWeight.w400,
                     ),
-                  ),
-                  Positioned(
-                    bottom: 10,
-                    right: 15,
-                    left: 15,
-                    child: SizedBox(
-                      child: Text(
-                        widget.isLast
-                            ? 'discoverMoreFeeds'.tr
-                            : FeedTypeExtension.toTranslatedString(
-                                context, widget.type),
-                        textAlign: TextAlign.right,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: Colors.white.withValues(alpha: 0.9),
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.06,
-                              fontWeight: FontWeight.w400,
-                            ),
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
+          ),
+        ],
+      ),
     );
+
+    final bubbleTail = Positioned(
+      bottom: -15,
+      left: 25,
+      child: Container(
+        width: 30,
+        height: 30,
+        decoration: BoxDecoration(
+          gradient: gradient,
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+
+    return widget.isSkeleton
+        ? ShimmerLoading(
+            isLoading: widget.isSkeleton,
+            skeleton: bubbleSkeleton,
+            child: const SizedBox(),
+          )
+        : Stack(
+            clipBehavior: Clip.none,
+            children: [
+              bubble,
+              bubbleTail,
+            ],
+          );
   }
 }
