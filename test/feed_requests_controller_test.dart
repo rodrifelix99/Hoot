@@ -42,13 +42,13 @@ class FakeAuthService extends GetxService implements AuthService {
 class FakeFeedRequestService extends FeedRequestService {
   List<String> acceptCalls = [];
   List<String> rejectCalls = [];
-  List<String> fetchCalls = [];
+  int fetchMineCalls = 0;
   List<FeedJoinRequest> requests = [];
   FakeFeedRequestService()
       : super(
-          firestore: FakeFirebaseFirestore(),
-          subscriptionService: SubscriptionService(firestore: FakeFirebaseFirestore()),
-          authService: FakeAuthService());
+            firestore: FakeFirebaseFirestore(),
+            subscriptionService: SubscriptionService(firestore: FakeFirebaseFirestore()),
+            authService: FakeAuthService());
   @override
   Future<void> accept(String feedId, String userId) async {
     acceptCalls.add(userId);
@@ -58,8 +58,8 @@ class FakeFeedRequestService extends FeedRequestService {
     rejectCalls.add(userId);
   }
   @override
-  Future<List<FeedJoinRequest>> fetchRequests(String feedId) async {
-    fetchCalls.add(feedId);
+  Future<List<FeedJoinRequest>> fetchRequestsForMyFeeds() async {
+    fetchMineCalls++;
     return requests;
   }
   @override
@@ -75,31 +75,31 @@ void main() {
 
   test('loadRequests populates list', () async {
     final service = FakeFeedRequestService();
-    service.requests = [FeedJoinRequest(user: U(uid: 'u1'), createdAt: DateTime.now())];
-    final controller = FeedRequestsController(service: service);
-    controller.feedId = "f1";
+    service.requests = [
+      FeedJoinRequest(feedId: 'f1', user: U(uid: 'u1'), createdAt: DateTime.now()),
+      FeedJoinRequest(feedId: 'f2', user: U(uid: 'u2'), createdAt: DateTime.now()),
+    ];
+    final controller = FeedRequestsController(service: service, authService: FakeAuthService());
     await controller.loadRequests();
-    expect(service.fetchCalls, contains("f1"));
-    expect(controller.requests.length, 1);
+    expect(service.fetchMineCalls, 1);
+    expect(controller.requests.length, 2);
   });
   test('accept removes request', () async {
     final service = FakeFeedRequestService();
-    service.requests = [FeedJoinRequest(user: U(uid: 'u1'), createdAt: DateTime.now())];
-    final controller = FeedRequestsController(service: service);
-    controller.feedId = 'f1';
+    service.requests = [FeedJoinRequest(feedId: 'f1', user: U(uid: 'u1'), createdAt: DateTime.now())];
+    final controller = FeedRequestsController(service: service, authService: FakeAuthService());
     controller.requests.assignAll(service.requests);
-    await controller.accept('u1');
+    await controller.accept('f1', 'u1');
     expect(service.acceptCalls, ['u1']);
     expect(controller.requests.isEmpty, isTrue);
   });
 
   test('reject removes request', () async {
     final service = FakeFeedRequestService();
-    service.requests = [FeedJoinRequest(user: U(uid: 'u1'), createdAt: DateTime.now())];
-    final controller = FeedRequestsController(service: service);
-    controller.feedId = 'f1';
+    service.requests = [FeedJoinRequest(feedId: 'f1', user: U(uid: 'u1'), createdAt: DateTime.now())];
+    final controller = FeedRequestsController(service: service, authService: FakeAuthService());
     controller.requests.assignAll(service.requests);
-    await controller.reject('u1');
+    await controller.reject('f1', 'u1');
     expect(service.rejectCalls, ['u1']);
     expect(controller.requests.isEmpty, isTrue);
   });

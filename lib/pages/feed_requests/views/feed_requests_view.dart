@@ -32,6 +32,7 @@ class FeedRequestsView extends GetView<FeedRequestsController> {
           itemBuilder: (context, index) {
             final request = controller.requests[index];
             final user = request.user;
+            final title = controller.feedTitles[request.feedId] ?? request.feedId;
             return ListTile(
               onTap: () => controller.openProfile(user.uid),
               leading: ProfileAvatarComponent(
@@ -40,18 +41,21 @@ class FeedRequestsView extends GetView<FeedRequestsController> {
                 size: 40,
               ),
               title: NameComponent(user: user, size: 16),
+              subtitle: Text(title),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
                     icon: const Icon(Icons.check),
                     tooltip: 'approve'.tr,
-                    onPressed: () => controller.accept(user.uid),
+                    onPressed: () =>
+                        controller.accept(request.feedId, user.uid),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
                     tooltip: 'reject'.tr,
-                    onPressed: () => controller.reject(user.uid),
+                    onPressed: () =>
+                        controller.reject(request.feedId, user.uid),
                   ),
                 ],
               ),
