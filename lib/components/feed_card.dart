@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hash_cached_image/hash_cached_image.dart';
+import 'package:blur/blur.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/services/haptic_service.dart';
 
@@ -37,18 +38,28 @@ class FeedCard extends StatelessWidget {
                 hash: feed.bigAvatarHash,
                 fit: BoxFit.cover,
               ),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black12,
-                      Colors.black87,
-                    ],
+              Positioned.fill(
+                child: Blur(
+                  blur: 8,
+                  blurColor: Colors.black,
+                  colorOpacity: 0.3,
+                  overlay: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black87,
+                        ],
+                      ),
+                    ),
                   ),
+                  child: const SizedBox.shrink(),
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,

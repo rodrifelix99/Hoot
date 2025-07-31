@@ -47,6 +47,7 @@ dependencies:
   google_sign_in: ^6.3.0
   hash_cached_image: ^0.0.2
   blurhash: ^1.2.0
+  blur: ^4.0.2
   image_picker: ^1.0.0
   firebase_storage: ^12.4.10
   image: ^4.5.4
