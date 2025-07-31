@@ -23,6 +23,12 @@ class FakeAuthService extends GetxService implements AuthService {
   U? get currentUser => U(uid: 'u1');
 
   @override
+  Stream<U?> get currentUserStream => Stream.value(U(uid: 'u1'));
+
+  @override
+  Rxn<U> get currentUserRx => (Rxn<U>()..value = U(uid: 'u1'));
+
+  @override
   Future<U?> fetchUser() async => currentUser;
 
   @override
@@ -48,7 +54,7 @@ class FakeAuthService extends GetxService implements AuthService {
 
   @override
   Future<U?> refreshUser() async => currentUser;
-  
+
   @override
   Future<void> createUserDocumentIfNeeded(User user) async {}
 }
