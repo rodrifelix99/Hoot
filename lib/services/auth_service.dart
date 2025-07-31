@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
+import 'package:get/get.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 import '../models/user.dart';
@@ -16,7 +17,7 @@ class AuthService {
       : _auth = auth ?? FirebaseAuth.instance,
         _firestore = firestore ?? FirebaseFirestore.instance;
 
-  U? _currentUser;
+  Rxn<U> _currentUser = Rxn<U>();
   bool _fetched = false;
 
   /// Forces refetch of the current user from Firestore.
@@ -27,36 +28,36 @@ class AuthService {
 
   /// Returns the cached [U] if available or fetches it from Firestore.
   Future<U?> fetchUser() async {
-    if (_fetched) return _currentUser;
+    if (_fetched) return _currentUser.value;
     _fetched = true;
     final firebaseUser = _auth.currentUser;
     if (firebaseUser == null) {
-      _currentUser = null;
+      _currentUser.value = null;
       return null;
     }
 
     final doc =
         await _firestore.collection('users').doc(firebaseUser.uid).get();
     if (doc.exists) {
-      _currentUser = U.fromJson(doc.data()!);
+      _currentUser.value = U.fromJson(doc.data()!);
       final subs = await _firestore
           .collection('users')
           .doc(firebaseUser.uid)
           .collection('subscriptions')
           .get();
-      _currentUser!.subscriptionCount = subs.docs.length;
+      _currentUser.value!.subscriptionCount = subs.docs.length;
 
       final feedsSnapshot = await _firestore
           .collection('feeds')
           .where('userId', isEqualTo: firebaseUser.uid)
           .get();
-      _currentUser!.feeds = feedsSnapshot.docs
+      _currentUser.value!.feeds = feedsSnapshot.docs
           .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
           .toList();
     } else {
-      _currentUser = null;
+      _currentUser.value = null;
     }
-    return _currentUser;
+    return _currentUser.value;
   }
 
   /// Fetches a user by [uid] from Firestore.
@@ -117,7 +118,9 @@ class AuthService {
     return snapshot.docs.map((d) => U.fromJson(d.data())).toList();
   }
 
-  U? get currentUser => _currentUser;
+  U? get currentUser => _currentUser.value;
+  Stream<U?> get currentUserStream => _currentUser.stream;
+  Rxn<U> get currentUserRx => _currentUser;
 
   /// Creates a Firestore document for [user] if none exists.
   Future<void> _createUserDocumentIfNeeded(User user) async {
@@ -142,7 +145,7 @@ class AuthService {
 
   /// Signs out the current user and clears cached data.
   Future<void> signOut() async {
-    _currentUser = null;
+    _currentUser.value = null;
     _fetched = false;
     await _auth.signOut();
   }
@@ -205,7 +208,7 @@ class AuthService {
     if (user == null) return;
     await _firestore.collection('users').doc(user.uid).delete();
     await user.delete();
-    _currentUser = null;
+    _currentUser.value = null;
     _fetched = false;
   }
 }
