@@ -378,13 +378,26 @@ class _PostComponentState extends State<PostComponent> {
                       const Spacer(
                         flex: 2,
                       ),
-                      IconButton(
-                        icon: Icon(
-                          SolarIconsOutline.refreshSquare,
-                          color: _post.reFeededByMe ? Colors.green : null,
-                        ),
-                        iconSize: 20,
-                        onPressed: _post.reFeededByMe ? null : _reFeed,
+                      Builder(
+                        builder: (context) {
+                          final bool isPrivateFeed =
+                              _post.reFeeded
+                                  ? _post.reFeededFrom?.feed?.private ?? false
+                                  : _post.feed?.private ?? false;
+                          return Opacity(
+                            opacity: isPrivateFeed ? 0.5 : 1,
+                            child: IconButton(
+                              icon: Icon(
+                                SolarIconsOutline.refreshSquare,
+                                color: _post.reFeededByMe ? Colors.green : null,
+                              ),
+                              iconSize: 20,
+                              onPressed: (_post.reFeededByMe || isPrivateFeed)
+                                  ? null
+                                  : _reFeed,
+                            ),
+                          );
+                        },
                       ),
                       if ((_post.reFeeds ?? 0) > 0)
                         Padding(
