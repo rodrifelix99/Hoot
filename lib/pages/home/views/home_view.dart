@@ -39,7 +39,7 @@ class HomeView extends GetView<HomeController> {
             fit: StackFit.expand,
             children: [
               Image.asset(
-                'assets/images/home_background.jpg',
+                'assets/images/bottom_bar_blue.jpg',
                 fit: BoxFit.cover,
               ),
               SafeArea(
