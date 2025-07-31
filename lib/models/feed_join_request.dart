@@ -2,13 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'user.dart';
 
 class FeedJoinRequest {
+  final String feedId;
   final U user;
   final DateTime createdAt;
 
-  FeedJoinRequest({required this.user, required this.createdAt});
+  FeedJoinRequest({required this.feedId, required this.user, required this.createdAt});
 
   factory FeedJoinRequest.fromJson(Map<String, dynamic> json) {
     return FeedJoinRequest(
+      feedId: json['feedId'] ?? '',
       user: U.fromJson(json['user']),
       createdAt: json['createdAt'] is Timestamp
           ? (json['createdAt'] as Timestamp).toDate()

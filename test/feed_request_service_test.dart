@@ -232,9 +232,41 @@ void main() {
       final result = await service.fetchRequests('f1');
 
       expect(result.length, 11);
+      expect(result.first.feedId, 'f1');
       expect(result.first.user.uid, 'u10');
       expect(result.last.user.uid, 'u0');
       expect(result.first.createdAt.isAfter(result.last.createdAt), isTrue);
+    });
+
+    test('fetchRequestsForMyFeeds aggregates requests', () async {
+      final firestore = FakeFirebaseFirestore();
+      await firestore.collection('feeds').doc('f1').set({'userId': 'owner'});
+      await firestore.collection('feeds').doc('f2').set({'userId': 'owner'});
+      await firestore.collection('users').doc('u1').set({'uid': 'u1'});
+      await firestore.collection('users').doc('u2').set({'uid': 'u2'});
+      await firestore
+          .collection('feeds')
+          .doc('f1')
+          .collection('requests')
+          .doc('u1')
+          .set({'createdAt': Timestamp.now()});
+      await firestore
+          .collection('feeds')
+          .doc('f2')
+          .collection('requests')
+          .doc('u2')
+          .set({'createdAt': Timestamp.now()});
+
+      final service = FeedRequestService(
+        firestore: firestore,
+        subscriptionService: SubscriptionService(firestore: firestore),
+        authService: FakeAuthService(U(uid: 'owner')),
+      );
+
+      final result = await service.fetchRequestsForMyFeeds();
+
+      expect(result.length, 2);
+      expect(result.map((r) => r.feedId).toSet(), {'f1', 'f2'});
     });
   });
 }

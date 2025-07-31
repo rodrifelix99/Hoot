@@ -95,10 +95,27 @@ class FeedRequestService {
     return snapshot.docs
         .where((d) => users.containsKey(d.id))
         .map((d) => FeedJoinRequest(
+              feedId: feedId,
               user: users[d.id]!,
               createdAt: (d.data()['createdAt'] as Timestamp).toDate(),
             ))
         .toList();
+  }
+
+  /// Returns all pending join requests for feeds owned by the current user.
+  Future<List<FeedJoinRequest>> fetchRequestsForMyFeeds() async {
+    final user = _authService.currentUser;
+    if (user == null) return [];
+    final feedsSnapshot = await _firestore
+        .collection('feeds')
+        .where('userId', isEqualTo: user.uid)
+        .get();
+    final List<FeedJoinRequest> all = [];
+    for (final doc in feedsSnapshot.docs) {
+      final requests = await fetchRequests(doc.id);
+      all.addAll(requests);
+    }
+    return all;
   }
 
   /// Returns the number of pending requests for the current user's feeds.

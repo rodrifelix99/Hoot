@@ -2,44 +2,52 @@ import 'package:get/get.dart';
 
 import '../../../models/feed_join_request.dart';
 import '../../../services/feed_request_service.dart';
+import '../../../services/auth_service.dart';
 import '../../../util/routes/app_routes.dart';
 import '../../../util/routes/args/profile_args.dart';
 
 class FeedRequestsController extends GetxController {
   final FeedRequestService _service;
+  final AuthService _authService;
 
-  FeedRequestsController({FeedRequestService? service})
-      : _service = service ?? Get.find<FeedRequestService>();
+  FeedRequestsController({FeedRequestService? service, AuthService? authService})
+      : _service = service ?? Get.find<FeedRequestService>(),
+        _authService = authService ?? Get.find<AuthService>();
 
-  late String feedId;
   final RxList<FeedJoinRequest> requests = <FeedJoinRequest>[].obs;
+  final RxMap<String, String> feedTitles = <String, String>{}.obs;
   final RxBool loading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    feedId = Get.arguments as String;
     loadRequests();
   }
 
   Future<void> loadRequests() async {
     loading.value = true;
     try {
-      final result = await _service.fetchRequests(feedId);
+      final result = await _service.fetchRequestsForMyFeeds();
       requests.assignAll(result);
+      final user = await _authService.fetchUser();
+      if (user?.feeds != null) {
+        feedTitles.assignAll({for (final f in user!.feeds!) f.id: f.title});
+      }
     } finally {
       loading.value = false;
     }
   }
 
-  Future<void> accept(String userId) async {
+  Future<void> accept(String feedId, String userId) async {
     await _service.accept(feedId, userId);
-    requests.removeWhere((r) => r.user.uid == userId);
+    requests.removeWhere(
+        (r) => r.user.uid == userId && r.feedId == feedId);
   }
 
-  Future<void> reject(String userId) async {
+  Future<void> reject(String feedId, String userId) async {
     await _service.reject(feedId, userId);
-    requests.removeWhere((r) => r.user.uid == userId);
+    requests.removeWhere(
+        (r) => r.user.uid == userId && r.feedId == feedId);
   }
 
   void openProfile(String userId) {
