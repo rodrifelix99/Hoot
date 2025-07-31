@@ -177,9 +177,14 @@ class _PostComponentState extends State<PostComponent> {
   Widget build(BuildContext context) {
     return Container(
       margin: widget.margin,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withAlpha(75),
+          width: 0.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: Theme.of(context).shadowColor.withAlpha(25),
@@ -194,183 +199,199 @@ class _PostComponentState extends State<PostComponent> {
           _openPostDetails();
         },
         borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (_post.reFeeded)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
+        child: Column(
+          children: [
+            if (_post.reFeeded)
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 16,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(100),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Theme.of(context).dividerColor.withAlpha(25),
+                      width: 0.5,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(SolarIconsOutline.refreshSquare, size: 16),
+                    const SizedBox(width: 4),
+                    RichText(
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.bodySmall,
+                        children: [
+                          TextSpan(text: '${'reHootOf'.tr} '),
+                          if (_post.reFeededFrom?.user != null)
+                            TextSpan(
+                              text:
+                              '@${_post.reFeededFrom!.user!.username ?? ''}',
+                              style: const TextStyle(color: Colors.blue),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  if (_post.reFeededFrom?.id != null) {
+                                    Get.toNamed(AppRoutes.post,
+                                        arguments: {'id': _post.reFeededFrom!.id});
+                                  }
+                                },
+                            )
+                          else
+                            const TextSpan(text: '@...'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      const Icon(SolarIconsOutline.refreshSquare, size: 16),
-                      const SizedBox(width: 4),
-                      RichText(
-                        text: TextSpan(
-                          style: Theme.of(context).textTheme.bodySmall,
-                          children: [
-                            TextSpan(text: '${'reHootOf'.tr} '),
-                            if (_post.reFeededFrom?.user != null)
-                              TextSpan(
-                                text:
-                                    '@${_post.reFeededFrom!.user!.username ?? ''}',
-                                style: const TextStyle(color: Colors.blue),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    if (_post.reFeededFrom?.id != null) {
-                                      Get.toNamed(AppRoutes.post,
-                                          arguments: {'id': _post.reFeededFrom!.id});
-                                    }
-                                  },
-                              )
-                            else
-                              const TextSpan(text: '@...'),
-                          ],
+                      GestureDetector(
+                        onTap: () {
+                          HapticService.lightImpact();
+                          if (_post.user != null) {
+                            Get.toNamed(AppRoutes.profile, arguments: _post.user!.uid);
+                          }
+                        },
+                        child: ProfileAvatarComponent(
+                          image: _post.user?.smallProfilePictureUrl ?? '',
+                          hash: _post.user?.smallAvatarHash ??
+                              _post.user?.bigAvatarHash,
+                          size: 40,
                         ),
+                      ),
+                      const SizedBox(width: 8),
+                      if (_post.user != null)
+                        GestureDetector(
+                          onTap: () {
+                            HapticService.lightImpact();
+                            Get.toNamed(AppRoutes.profile, arguments: _post.user!.uid);
+                          },
+                          child: NameComponent(
+                            user: _post.user!,
+                            size: 16,
+                            feedName: _post.feed?.title ?? '',
+                          ),
+                        ),
+                      const Spacer(),
+                      if (_post.createdAt != null)
+                        Text(
+                          _post.createdAt!.timeAgo(),
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      const SizedBox(width: 4),
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(Icons.more_vert_rounded),
+                        onPressed: _showOptions,
                       ),
                     ],
                   ),
-                ),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      HapticService.lightImpact();
-                      if (_post.user != null) {
-                        Get.toNamed(AppRoutes.profile, arguments: _post.user!.uid);
-                      }
-                    },
-                    child: ProfileAvatarComponent(
-                      image: _post.user?.smallProfilePictureUrl ?? '',
-                      hash: _post.user?.smallAvatarHash ??
-                          _post.user?.bigAvatarHash,
-                      size: 40,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  if (_post.user != null)
-                    GestureDetector(
-                      onTap: () {
-                        HapticService.lightImpact();
-                        Get.toNamed(AppRoutes.profile, arguments: _post.user!.uid);
-                      },
-                      child: NameComponent(
-                        user: _post.user!,
-                        size: 16,
-                        feedName: _post.feed?.title ?? '',
+                  if (_post.text != null && _post.text!.isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    RichText(
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.headlineSmall,
+                        children: parseMentions(_post.text!),
                       ),
                     ),
-                  const Spacer(),
-                  if (_post.createdAt != null)
-                    Text(
-                      _post.createdAt!.timeAgo(),
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  const SizedBox(width: 4),
-                  IconButton(
-                    visualDensity: VisualDensity.compact,
-                    icon: const Icon(Icons.more_vert_rounded),
-                    onPressed: _showOptions,
-                  ),
+                  ],
+                  if (_post.media != null && _post.media!.isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    if (_post.media!.length == 1)
+                      AspectRatio(
+                        aspectRatio: 1,
+                        child: ImageComponent(
+                          url: _post.media!.first,
+                          hash: _post.hashes != null && _post.hashes!.isNotEmpty
+                              ? _post.hashes!.first
+                              : null,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          radius: 16,
+                        ),
+                      )
+                    else
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: Get.width - 32,
+                        ),
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 4,
+                            mainAxisSpacing: 4,
+                            childAspectRatio: 1,
+                          ),
+                          itemCount: _post.media!.length,
+                          itemBuilder: (context, i) {
+                            return ImageComponent(
+                              url: _post.media![i],
+                              hash: _post.hashes != null &&
+                                      i < _post.hashes!.length
+                                  ? _post.hashes![i]
+                                  : null,
+                              fit: BoxFit.cover,
+                              radius: 8,
+                            );
+                          },
+                        ),
+                      ),
+                  ],
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Spacer(),
+                      LikeButtonComponent(
+                        liked: _post.liked,
+                        onTap: _toggleLike,
+                      ),
+                      if ((_post.likes ?? 0) > 0)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Text('${_post.likes ?? 0}'),
+                        ),
+                      const Spacer(
+                        flex: 2,
+                      ),
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(SolarIconsOutline.refreshSquare),
+                        iconSize: 20,
+                        onPressed: _reFeed,
+                      ),
+                      if ((_post.reFeeds ?? 0) > 0)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Text('${_post.reFeeds ?? 0}'),
+                        ),
+                      const Spacer(
+                        flex: 2,
+                      ),
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(SolarIconsOutline.chatRoundLine),
+                        iconSize: 20,
+                        onPressed: _openPostDetails,
+                      ),
+                      Text('${_post.comments ?? 0}'),
+                      const Spacer(),
+                    ],
+                  )
                 ],
               ),
-              if (_post.text != null && _post.text!.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                RichText(
-                  text: TextSpan(
-                    style: Theme.of(context).textTheme.headlineSmall,
-                    children: parseMentions(_post.text!),
-                  ),
-                ),
-              ],
-              if (_post.media != null && _post.media!.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                if (_post.media!.length == 1)
-                  AspectRatio(
-                    aspectRatio: 1,
-                    child: ImageComponent(
-                      url: _post.media!.first,
-                      hash: _post.hashes != null && _post.hashes!.isNotEmpty
-                          ? _post.hashes!.first
-                          : null,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      radius: 16,
-                    ),
-                  )
-                else
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: Get.width - 32,
-                    ),
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 4,
-                        mainAxisSpacing: 4,
-                        childAspectRatio: 1,
-                      ),
-                      itemCount: _post.media!.length,
-                      itemBuilder: (context, i) {
-                        return ImageComponent(
-                          url: _post.media![i],
-                          hash: _post.hashes != null &&
-                                  i < _post.hashes!.length
-                              ? _post.hashes![i]
-                              : null,
-                          fit: BoxFit.cover,
-                          radius: 8,
-                        );
-                      },
-                    ),
-                  ),
-              ],
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Spacer(),
-                  LikeButtonComponent(
-                    liked: _post.liked,
-                    onTap: _toggleLike,
-                  ),
-                  if ((_post.likes ?? 0) > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Text('${_post.likes ?? 0}'),
-                    ),
-                  const Spacer(
-                    flex: 2,
-                  ),
-                  IconButton(
-                    visualDensity: VisualDensity.compact,
-                    icon: const Icon(SolarIconsOutline.refreshSquare),
-                    iconSize: 20,
-                    onPressed: _reFeed,
-                  ),
-                  if ((_post.reFeeds ?? 0) > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Text('${_post.reFeeds ?? 0}'),
-                    ),
-                  const Spacer(
-                    flex: 2,
-                  ),
-                  IconButton(
-                    visualDensity: VisualDensity.compact,
-                    icon: const Icon(SolarIconsOutline.chatRoundLine),
-                    iconSize: 20,
-                    onPressed: _openPostDetails,
-                  ),
-                  Text('${_post.comments ?? 0}'),
-                  const Spacer(),
-                ],
-              )
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
