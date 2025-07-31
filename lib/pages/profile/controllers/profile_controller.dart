@@ -11,6 +11,7 @@ import '../../../services/subscription_service.dart';
 import '../../../services/error_service.dart';
 import '../../../services/feed_request_service.dart';
 import '../../../services/toast_service.dart';
+import '../../../services/subscription_manager.dart';
 
 /// Loads the current user profile data and owned feeds.
 class ProfileController extends GetxController {
@@ -18,18 +19,22 @@ class ProfileController extends GetxController {
   final BaseFeedService _feedService;
   final SubscriptionService _subscriptionService;
   final FeedRequestService _feedRequestService;
+  final SubscriptionManager _subscriptionManager;
 
   ProfileController({
     AuthService? authService,
     BaseFeedService? feedService,
     SubscriptionService? subscriptionService,
     FeedRequestService? feedRequestService,
+    SubscriptionManager? subscriptionManager,
   })  : _authService = authService ?? Get.find<AuthService>(),
         _feedService = feedService ?? Get.find<BaseFeedService>(),
         _subscriptionService =
             subscriptionService ?? Get.find<SubscriptionService>(),
         _feedRequestService =
-            feedRequestService ?? Get.find<FeedRequestService>();
+            feedRequestService ?? Get.find<FeedRequestService>(),
+        _subscriptionManager =
+            subscriptionManager ?? Get.find<SubscriptionManager>();
 
   final Rxn<U> user = Rxn<U>();
   final RxList<Feed> feeds = <Feed>[].obs;
@@ -77,8 +82,8 @@ class ProfileController extends GetxController {
         final subs = await _subscriptionService
             .fetchSubscriptions(_authService.currentUser!.uid);
         subscribedFeedIds.addAll(subs);
-        final reqResults = await Future.wait(
-            feeds.map((f) => _feedRequestService.exists(f.id, _authService.currentUser!.uid)));
+        final reqResults = await Future.wait(feeds.map((f) =>
+            _feedRequestService.exists(f.id, _authService.currentUser!.uid)));
         for (var i = 0; i < feeds.length; i++) {
           if (reqResults[i]) requestedFeedIds.add(feeds[i].id);
         }
@@ -136,40 +141,25 @@ class ProfileController extends GetxController {
 
   /// Toggles subscription state for [feedId].
   Future<void> toggleSubscription(String feedId) async {
-    final userId = _authService.currentUser?.uid;
-    if (userId == null) return;
+    final user = _authService.currentUser;
+    if (user == null) return;
     if (requestedFeedIds.contains(feedId)) return;
-    final subscribed = subscribedFeedIds.contains(feedId);
-    if (subscribed) {
-      subscribedFeedIds.remove(feedId);
-      try {
-        await _subscriptionService.unsubscribe(userId, feedId);
-      } catch (e, s) {
-        subscribedFeedIds.add(feedId);
-        await ErrorService.reportError(e,
-            stack: s, message: 'errorUnsubscribing'.tr);
-      }
-    } else {
-      final feed = feeds.firstWhere((f) => f.id == feedId);
-      if (feed.private == true) {
-        try {
-          await _feedRequestService.submit(feedId, userId);
+    try {
+      final result = await _subscriptionManager.toggle(feedId, user);
+      switch (result) {
+        case SubscriptionResult.subscribed:
+          subscribedFeedIds.add(feedId);
+          break;
+        case SubscriptionResult.unsubscribed:
+          subscribedFeedIds.remove(feedId);
+          break;
+        case SubscriptionResult.requested:
           requestedFeedIds.add(feedId);
           ToastService.showSuccess('requestSent'.tr);
-        } catch (e, s) {
-          await ErrorService.reportError(e,
-              stack: s, message: 'errorRequestingToJoin'.tr);
-        }
-      } else {
-        subscribedFeedIds.add(feedId);
-        try {
-          await _subscriptionService.subscribe(userId, feedId);
-        } catch (e, s) {
-          subscribedFeedIds.remove(feedId);
-          await ErrorService.reportError(e,
-              stack: s, message: 'errorSubscribing'.tr);
-        }
+          break;
       }
+    } catch (e, s) {
+      await ErrorService.reportError(e, stack: s);
     }
   }
 
