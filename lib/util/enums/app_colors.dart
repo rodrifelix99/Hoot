@@ -18,10 +18,9 @@ extension AppColorExtension on AppColor {
       case AppColor.yellow:
         return Colors.yellow;
       case AppColor.blue:
-      default:
-        return Colors.blue;
+      return Colors.blue;
     }
   }
 
-  String get asset => 'assets/images/bottom_bar_${name}.jpg';
+  String get asset => 'assets/images/bottom_bar_$name.jpg';
 }
