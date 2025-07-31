@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/util/routes/args/profile_args.dart';
 import 'package:hoot/services/haptic_service.dart';
 import '../controllers/search_by_genre_controller.dart';
 import '../../../components/list_item_component.dart';
@@ -30,7 +31,7 @@ class SearchByGenreView extends GetView<SearchByGenreController> {
                   HapticService.lightImpact();
                   Get.toNamed(
                     AppRoutes.profile,
-                    arguments: {'uid': feed.userId, 'feedId': feed.id},
+                    arguments: ProfileArgs(uid: feed.userId, feedId: feed.id),
                   );
                 },
                 child: ListItemComponent(

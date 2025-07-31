@@ -7,6 +7,7 @@ import 'package:hoot/components/list_item_component.dart';
 import 'package:hoot/util/extensions/datetime_extension.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../../../util/routes/app_routes.dart';
+import '../../../util/routes/args/profile_args.dart';
 import '../controllers/notifications_controller.dart';
 import 'package:hoot/services/haptic_service.dart';
 
@@ -84,8 +85,11 @@ class NotificationsView extends GetView<NotificationsController> {
                       }
                       break;
                     case 3:
-                      Get.toNamed(AppRoutes.profile, arguments: user.uid);
-                    break;
+                      Get.toNamed(
+                        AppRoutes.profile,
+                        arguments: ProfileArgs(uid: user.uid),
+                      );
+                      break;
                   }
                 },
                 child: Padding(
@@ -98,7 +102,10 @@ class NotificationsView extends GetView<NotificationsController> {
                     leading: GestureDetector(
                       onTap: () {
                         HapticService.lightImpact();
-                        Get.toNamed(AppRoutes.profile, arguments: user.uid);
+                        Get.toNamed(
+                          AppRoutes.profile,
+                          arguments: ProfileArgs(uid: user.uid),
+                        );
                       },
                       child: ProfileAvatarComponent(
                         image: user.largeProfilePictureUrl ?? '',

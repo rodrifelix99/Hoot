@@ -6,6 +6,7 @@ import '../../../components/avatar_component.dart';
 import '../../../components/list_item_component.dart';
 import '../../../components/empty_message.dart';
 import '../../../util/routes/app_routes.dart';
+import '../../../util/routes/args/profile_args.dart';
 import 'package:hoot/services/haptic_service.dart';
 import '../controllers/subscriptions_controller.dart';
 import '../../../util/extensions/feed_extension.dart';
@@ -40,7 +41,7 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
                 HapticService.lightImpact();
                 Get.toNamed(
                   AppRoutes.profile,
-                  arguments: {'uid': feed.userId, 'feedId': feed.id},
+                  arguments: ProfileArgs(uid: feed.userId, feedId: feed.id),
                 );
               },
               child: ListItemComponent(
@@ -52,8 +53,7 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
                   foregroundColor: feed.foregroundColor,
                 ),
                 title: feed.title,
-                subtitle:
-                    '${feed.subscriberCount ?? 0} ${'followers'.tr}',
+                subtitle: '${feed.subscriberCount ?? 0} ${'followers'.tr}',
                 trailing: IconButton(
                   icon: const Icon(Icons.cancel),
                   tooltip: 'unsubscribe'.tr,
