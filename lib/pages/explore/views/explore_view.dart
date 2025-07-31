@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/feed_card.dart';
 import 'package:hoot/components/type_box_component.dart';
-import 'package:hoot/util/extensions/feed_extension.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/util/routes/args/feed_page_args.dart';
@@ -46,8 +45,6 @@ class ExploreView extends GetView<ExploreController> {
                   image: f.smallAvatar ?? f.bigAvatar ?? '',
                   hash: f.smallAvatarHash ?? f.bigAvatarHash,
                   size: 40,
-                  color: f.color,
-                  foregroundColor: f.foregroundColor,
                 ),
                 title: Text(f.title),
                 subtitle: Text('feed'.tr),
@@ -99,7 +96,7 @@ class ExploreView extends GetView<ExploreController> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               SizedBox(
                 height: 80,
                 child: Obx(
@@ -123,6 +120,13 @@ class ExploreView extends GetView<ExploreController> {
                             image: u.largeProfilePictureUrl ?? '',
                             hash: u.bigAvatarHash ?? u.smallAvatarHash,
                             size: 80,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.15),
+                                blurRadius: 16,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
                         ),
                       );
@@ -130,7 +134,7 @@ class ExploreView extends GetView<ExploreController> {
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 42),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
@@ -188,7 +192,7 @@ class ExploreView extends GetView<ExploreController> {
                       },
                     )),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(

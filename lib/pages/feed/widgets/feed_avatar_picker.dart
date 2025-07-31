@@ -44,8 +44,6 @@ class FeedAvatarPicker extends StatelessWidget {
         image: imageUrl!,
         hash: hash,
         size: 120,
-        color: color,
-        foregroundColor: foregroundColor,
       );
     } else {
       avatarWidget = ClipRRect(

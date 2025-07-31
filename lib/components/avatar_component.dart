@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:hash_cached_image/hash_cached_image.dart';
-import 'package:solar_icons/solar_icons.dart';
 
 class ProfileAvatarComponent extends StatelessWidget {
   final String image;
@@ -9,18 +8,17 @@ class ProfileAvatarComponent extends StatelessWidget {
   final bool preview;
   final String url;
   final String? hash;
-  final Color? color;
-  final Color? foregroundColor;
+  final List<BoxShadow>? boxShadow;
 
-  const ProfileAvatarComponent(
-      {super.key,
-      required this.image,
-      required this.size,
-      this.preview = false,
-      this.url = '',
-      this.hash,
-      this.color,
-      this.foregroundColor});
+  const ProfileAvatarComponent({
+    super.key,
+    required this.image,
+    required this.size,
+    this.preview = false,
+    this.url = '',
+    this.hash,
+    this.boxShadow,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +32,7 @@ class ProfileAvatarComponent extends StatelessWidget {
               image: image,
               hash: hash,
               size: size,
-              color: color,
-              foregroundColor: foregroundColor,
+              boxShadow: boxShadow,
             ),
           ),
         ),
@@ -45,8 +42,7 @@ class ProfileAvatarComponent extends StatelessWidget {
         image: image,
         hash: hash,
         size: size,
-        color: color,
-        foregroundColor: foregroundColor,
+        boxShadow: boxShadow,
       );
     }
   }
@@ -56,35 +52,30 @@ class Avatar extends StatelessWidget {
   final String image;
   final String? hash;
   final int size;
-  final Color? color;
-  final Color? foregroundColor;
+  final List<BoxShadow>? boxShadow;
 
-  const Avatar(
-      {super.key,
-      required this.image,
-      this.hash,
-      required this.size,
-      this.color,
-      this.foregroundColor});
+  const Avatar({
+    super.key,
+    required this.image,
+    this.hash,
+    required this.size,
+    this.boxShadow,
+  });
 
   @override
   Widget build(BuildContext context) {
     if (image.isEmpty) {
-      final bgColor =
-          color ?? Theme.of(context).colorScheme.primaryContainer;
-      final fgColor = foregroundColor ??
-          Theme.of(context).colorScheme.onPrimaryContainer;
       return Container(
         height: size.toDouble(),
         width: size.toDouble(),
         clipBehavior: Clip.hardEdge,
         decoration: ShapeDecoration(
-          color: bgColor,
           shape: CircleBorder(),
+          shadows: boxShadow,
         ),
-        child: Center(
-          child: Icon(SolarIconsBold.linkRoundAngle,
-              color: fgColor, size: size / 2),
+        child: Image.asset(
+          'assets/images/avatar.png',
+          fit: BoxFit.cover,
         ),
       );
     }
@@ -92,17 +83,18 @@ class Avatar extends StatelessWidget {
     return Container(
       decoration: ShapeDecoration(
         shape: CircleBorder(),
+        shadows: boxShadow,
       ),
-      clipBehavior: Clip.hardEdge,
+      clipBehavior: Clip.antiAlias,
       child: HashCachedImage(
         imageUrl: image,
         hash: hash,
         // When a blur hash is provided, `HashCachedImage` will automatically
         // render the blurred placeholder while loading. Removing the custom
         // placeholder ensures the blur hash is shown instead of an empty box.
-        errorWidget: (context, error, stackTrace) => Icon(
-          Icons.error,
-          color: Theme.of(context).colorScheme.error,
+        errorWidget: (context, error, stackTrace) => Image.asset(
+          'assets/images/avatar.png',
+          fit: BoxFit.cover,
         ),
         fit: BoxFit.cover,
         height: size.toDouble(),

@@ -10,7 +10,6 @@ import '../../../models/post.dart';
 import '../../../models/feed.dart';
 import '../../../util/routes/app_routes.dart';
 import '../controllers/feed_page_controller.dart';
-import '../../../util/extensions/feed_extension.dart';
 
 class FeedPageView extends GetView<FeedPageController> {
   const FeedPageView({super.key});
@@ -67,8 +66,6 @@ class FeedPageView extends GetView<FeedPageController> {
             image: feed.bigAvatar ?? '',
             hash: feed.bigAvatarHash ?? feed.smallAvatarHash,
             size: 120,
-            color: feed.color,
-            foregroundColor: feed.foregroundColor,
           ),
           const SizedBox(height: 8),
           Text(

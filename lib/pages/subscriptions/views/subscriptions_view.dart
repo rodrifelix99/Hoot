@@ -10,7 +10,6 @@ import '../../../util/routes/args/profile_args.dart';
 import 'package:hoot/services/haptic_service.dart';
 import '../../../services/dialog_service.dart';
 import '../controllers/subscriptions_controller.dart';
-import '../../../util/extensions/feed_extension.dart';
 
 class SubscriptionsView extends GetView<SubscriptionsController> {
   const SubscriptionsView({super.key});
@@ -50,8 +49,6 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
                   image: feed.bigAvatar ?? '',
                   hash: feed.bigAvatarHash ?? feed.smallAvatarHash,
                   size: 100,
-                  color: feed.color,
-                  foregroundColor: feed.foregroundColor,
                 ),
                 title: feed.title,
                 subtitle: '${feed.subscriberCount ?? 0} ${'followers'.tr}',
