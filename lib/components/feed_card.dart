@@ -39,23 +39,30 @@ class FeedCard extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
               Positioned.fill(
-                child: Blur(
-                  blur: 8,
-                  blurColor: Colors.black,
-                  colorOpacity: 0.3,
-                  overlay: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black87,
-                        ],
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0, end: 8),
+                  duration: const Duration(milliseconds: 800),
+                  curve: Curves.easeOut,
+                  builder: (context, value, _) {
+                    return Blur(
+                      blur: value,
+                      blurColor: Colors.black,
+                      colorOpacity: 0.3,
+                      overlay: Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black87,
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  child: const SizedBox.shrink(),
+                      child: const SizedBox.shrink(),
+                    );
+                  },
                 ),
               ),
               Padding(
