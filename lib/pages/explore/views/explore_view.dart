@@ -138,14 +138,13 @@ class ExploreView extends GetView<ExploreController> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
-              const SizedBox(height: 8),
               SizedBox(
                 height: 200,
                 child: Obx(
                   () => ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: controller.topFeeds.length,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.all(16),
                     separatorBuilder: (_, __) => const SizedBox(width: 16),
                     itemBuilder: (context, index) {
                       final feed = controller.topFeeds[index];
@@ -161,13 +160,12 @@ class ExploreView extends GetView<ExploreController> {
               ),
               const SizedBox(height: 32),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.all(16),
                 child: Text(
                   'popularTypes'.tr,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
-              const SizedBox(height: 16),
               SizedBox(
                 height: 200,
                 child: Obx(() => ListView.separated(
