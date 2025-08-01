@@ -11,6 +11,8 @@ import 'package:hoot/pages/home/bindings/home_binding.dart';
 import 'package:hoot/pages/home/views/home_view.dart';
 import 'package:hoot/pages/invitation/bindings/invitation_binding.dart';
 import 'package:hoot/pages/invitation/views/invitation_view.dart';
+import 'package:hoot/pages/notifications_permission/bindings/notification_permission_binding.dart';
+import 'package:hoot/pages/notifications_permission/views/notification_permission_view.dart';
 import 'package:hoot/pages/create_post/bindings/create_post_binding.dart';
 import 'package:hoot/pages/create_post/views/create_post_view.dart';
 import 'package:hoot/pages/profile/bindings/profile_binding.dart';
@@ -79,6 +81,12 @@ class AppPages {
       name: AppRoutes.invitation,
       page: () => const InvitationView(),
       binding: InvitationBinding(),
+      middlewares: [AuthMiddleware()],
+    ),
+    GetPage(
+      name: AppRoutes.notificationsPermission,
+      page: () => const NotificationPermissionView(),
+      binding: NotificationPermissionBinding(),
       middlewares: [AuthMiddleware()],
     ),
     GetPage(
