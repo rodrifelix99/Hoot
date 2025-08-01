@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 import 'package:hoot/models/hoot_notification.dart';
-import 'package:hoot/models/feed_join_request.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/notification_service.dart';
