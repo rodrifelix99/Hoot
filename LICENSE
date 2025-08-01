@@ -1,46 +1,48 @@
-# HOOT CONTRIBUTOR LICENSE AGREEMENT (HCLA)
+HOOT CONTRIBUTOR LICENSE AGREEMENT (HCLA)
 
-**Copyright © 2025 Hoot. All rights reserved.**
+Copyright © 2025 Hoot. All rights reserved.
 
-### 1. Grant of Contribution Rights
+1. Grant of Contribution Rights
 
-By submitting any code, documentation, designs, ideas, translations, tests, or other materials (“Contribution”) to the Hoot project (the “Project”), you hereby grant Hoot and its designated maintainers and affiliates (“Project Owners”) a perpetual, worldwide, royalty-free, irrevocable, non-exclusive right and license to:
+By submitting any code, documentation, designs, translations, ideas, tests, or other materials (“Contribution”) to the Hoot project (“Project”), you grant Hoot and its maintainers (“Project Owners”) a perpetual, worldwide, royalty-free, irrevocable, non-exclusive license to:
 
-* Use, reproduce, display, perform, modify, adapt, publish, sublicense, and create derivative works of the Contribution;
-* Incorporate the Contribution into the Project or any other software;
-* Distribute the Contribution as part of the Project, in whole or in part, under any license, including but not limited to proprietary or open-source licenses, at the sole discretion of the Project Owners.
+- Use, reproduce, display, perform, modify, adapt, publish, sublicense, and create derivative works of your Contribution;
+- Incorporate your Contribution into the Project or other software;
+- Distribute your Contribution as part of the Project under any license, including proprietary or open-source, at the sole discretion of the Project Owners.
 
 You waive all moral rights to the Contribution to the fullest extent permitted by applicable law.
 
-### 2. Contributor Representations
+2. Contributor Representations
 
-By submitting a Contribution, you represent and warrant that:
+By submitting a Contribution, you confirm that:
 
-* You are legally entitled to make the Contribution;
-* The Contribution is your original work or you have the right to submit it;
-* The Contribution does not contain any confidential information, trade secrets, or infringe any third-party rights;
-* The Contribution is not subject to any license or restriction that would conflict with the rights granted under this agreement.
+- You are legally entitled to make the Contribution;
+- The Contribution is your original work or you have the right to submit it;
+- The Contribution does not contain confidential or third-party proprietary information;
+- The Contribution does not violate any law or the rights of any person or entity.
 
-You agree to indemnify and hold harmless the Project Owners against any liability, loss, or damage arising from any breach of these representations.
+You agree to indemnify and hold harmless the Project Owners from any liability, damages, or claims arising from your breach of this section.
 
-### 3. Use Restrictions
+3. Use Restrictions
 
-Except as expressly permitted in Section 1, **no other rights are granted.** Specifically:
+No rights are granted beyond what is explicitly described in Section 1. Specifically:
 
-* You **may not** use, reproduce, copy, modify, distribute, or sublicense the Project or any part of it;
-* You **may not** create derivative works based on the Project or use it in any commercial or non-commercial product;
-* You **may not** host, mirror, or repackage the Project or its codebase in any form.
+- You may not use, copy, modify, distribute, or sublicense the Project for any purpose other than submitting Contributions;
+- You may not create derivative works based on the Project;
+- You may not incorporate any part of the Project into another product, tool, or service;
+- You may not rehost, resell, mirror, or republish the Project.
 
-Use is strictly limited to submitting Contributions **back to this Project**.
+Use of the Project is strictly limited to contribution purposes only.
 
-### 4. Termination
+4. Termination
 
-This license is effective unless and until terminated by the Project Owners. Your rights under this license will automatically terminate without notice if you fail to comply with any term. Upon termination, you must immediately cease all use of the software, including your Contributions if not merged into the main project.
+This license terminates automatically if you fail to comply with its terms. Upon termination, all rights granted to you under this license will cease, and you must discontinue use of the Project and any unmerged Contributions.
 
-### 5. No Warranty
+5. Disclaimer of Warranty
 
-THE PROJECT AND ALL CONTRIBUTIONS ARE PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, OR NON-INFRINGEMENT. THE PROJECT OWNERS SHALL NOT BE LIABLE FOR ANY DAMAGES OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE PROJECT, THE CONTRIBUTIONS, OR THIS LICENSE.
+THE PROJECT AND ALL CONTRIBUTIONS ARE PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. THE PROJECT OWNERS SHALL NOT BE LIABLE FOR ANY DAMAGES OR OTHER LIABILITY ARISING FROM OR IN CONNECTION WITH THE PROJECT, YOUR CONTRIBUTION, OR THIS LICENSE.
 
-### 6. Governing Law
+6. Governing Law
 
-This agreement shall be governed by and construed in accordance with the laws of Portugal, without regard to its conflict of law principles. All disputes shall be subject to the exclusive jurisdiction of the courts located in Lisbon.
+This Agreement shall be governed by and interpreted in accordance with the laws of Portugal. Any legal disputes shall be exclusively handled by the courts of Lisbon, Portugal.
+
