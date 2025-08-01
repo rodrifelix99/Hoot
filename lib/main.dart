@@ -9,6 +9,7 @@ import 'package:hoot/dependency_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:hoot/theme/theme.dart';
 import 'package:hoot/util/enums/app_colors.dart';
 import 'package:hoot/util/translations/app_translations.dart';
@@ -28,6 +29,11 @@ void main() {
 
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
+    );
+    await FirebaseAppCheck.instance.activate(
+      webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+      androidProvider: AndroidProvider.playIntegrity,
+      appleProvider: AppleProvider.deviceCheck,
     );
     await DependencyInjector.init();
     final quickActions = Get.find<QuickActionsService>();
