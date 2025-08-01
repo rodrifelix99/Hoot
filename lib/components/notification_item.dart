@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hash_cached_image/hash_cached_image.dart';
 
 import 'package:hoot/components/scale_on_press.dart';

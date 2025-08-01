@@ -15,7 +15,7 @@ class LoginView extends GetView<LoginController> {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/login/bg.jpg',
+              'assets/images/bg.jpg',
               fit: BoxFit.cover,
             ),
           ),
