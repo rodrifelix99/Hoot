@@ -24,6 +24,15 @@ export const onNotificationCreated = onDocumentCreated(
     const user = data.user;
     const username = user?.username ? `@${user.username}` : "Someone";
     const avatar = user?.bigAvatar as string | undefined;
+
+    const trimmedData: Record<string, unknown> = {
+      type: data.type,
+    };
+    if (data.postId) trimmedData.postId = data.postId;
+    if (data.feed?.id) trimmedData.feedId = data.feed.id;
+    if (user?.uid) trimmedData.uid = user.uid;
+    if (user?.username) trimmedData.username = user.username;
+    if (user?.bigAvatar) trimmedData.bigAvatar = user.bigAvatar;
     const bodyTemplates: Record<number, string> = {
       0: `${username} liked your post`,
       1: `${username} commented on your post`,
@@ -46,7 +55,7 @@ export const onNotificationCreated = onDocumentCreated(
       "contents": {
         "en": body,
       },
-      "data": data,
+      "data": trimmedData,
     };
     if (avatar) {
       (payload as Record<string, unknown>)["chrome_web_image"] = avatar;
