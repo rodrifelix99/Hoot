@@ -39,6 +39,8 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
               'assets/images/top_bar.png',
               fit: BoxFit.cover,
               alignment: Alignment.topCenter,
+              width: double.infinity,
+              height: double.infinity,
             ),
           ),
         ),
