@@ -17,6 +17,7 @@ export const onNotificationCreated = onDocumentCreated(
       2: "New Mention",
       3: "New Subscriber",
       4: "New ReHoot",
+      5: "Friend Joined",
     };
     const title = titles[data.type as number];
     if (!title) return;
@@ -39,6 +40,7 @@ export const onNotificationCreated = onDocumentCreated(
       2: `${username} mentioned you in a comment`,
       3: `${username} subscribed to your feed`,
       4: `${username} reFeeded your post`,
+      5: `${username} joined Hoot using your invite code`,
     };
     const body =
       bodyTemplates[data.type as number] ?? "You have a new notification";
