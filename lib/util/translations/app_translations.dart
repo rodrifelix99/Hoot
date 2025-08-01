@@ -344,6 +344,9 @@ class AppTranslations extends Translations {
           'findFriendsFromContacts': 'Find friends from your contacts list',
           'contactsPermission':
               'We need your permission to access your contacts',
+          'enableNotifications': 'Enable Notifications',
+          'notificationsPermission':
+              'Stay updated by enabling push notifications',
           'contacts': 'Contacts',
           'refresh': 'Refresh',
           'report': 'Report',
@@ -695,6 +698,9 @@ class AppTranslations extends Translations {
           'findFriendsFromContacts': 'Buscar amigos en tu lista de contactos',
           'contactsPermission':
               'Necesitamos tu permiso para acceder a tus contactos',
+          'enableNotifications': 'Activar Notificaciones',
+          'notificationsPermission':
+              'Mantente al día activando las notificaciones',
           'contacts': 'Contactos',
           'refresh': 'Actualizar',
           'report': 'Reportar',
@@ -1048,6 +1054,9 @@ class AppTranslations extends Translations {
               'Encontrar amigos a partir da tua lista de contactos',
           'contactsPermission':
               'Precisamos da tua permissão para aceder aos teus contactos',
+          'enableNotifications': 'Ativar Notificações',
+          'notificationsPermission':
+              'Fica a par de tudo ativando as notificações',
           'contacts': 'Contactos',
           'refresh': 'Atualizar',
           'report': 'Reportar',
@@ -1397,6 +1406,9 @@ class AppTranslations extends Translations {
               'Encontrar amigos na sua lista de contatos',
           'contactsPermission':
               'Precisamos da sua permissão para acessar seus contatos',
+          'enableNotifications': 'Ativar Notificações',
+          'notificationsPermission':
+              'Mantenha-se atualizado ativando as notificações',
           'contacts': 'Contatos',
           'refresh': 'Atualizar',
           'report': 'Denunciar',

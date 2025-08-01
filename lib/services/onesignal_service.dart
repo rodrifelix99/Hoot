@@ -18,4 +18,9 @@ class OneSignalService extends GetxService {
   Future<bool> requestPermission() {
     return OneSignal.Notifications.requestPermission(true);
   }
+
+  /// Returns whether requesting permission will show a prompt.
+  Future<bool> canRequestPermission() {
+    return OneSignal.Notifications.canRequest();
+  }
 }

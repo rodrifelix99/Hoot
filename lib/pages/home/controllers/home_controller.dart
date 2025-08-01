@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:screen_corner_radius/screen_corner_radius.dart';
 import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/onesignal_service.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/pages/notifications/controllers/notifications_controller.dart';
 
@@ -35,6 +36,12 @@ class HomeController extends GetxController {
     }
     if (user.isUninvited) {
       Get.offAllNamed(AppRoutes.invitation);
+    }
+
+    final oneSignal = Get.find<OneSignalService>();
+    await oneSignal.login(user.uid);
+    if (await oneSignal.canRequestPermission()) {
+      Get.toNamed(AppRoutes.notificationsPermission);
     }
     _setRadius();
   }
