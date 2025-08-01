@@ -35,40 +35,36 @@ export const onNotificationCreated = onDocumentCreated(
       bodyTemplates[data.type as number] ?? "You have a new notification";
 
     const payload: Record<string, unknown> = {
-      app_id: appId,
-      include_aliases: {
-        external_id: [userId],
+      "app_id": appId,
+      "include_aliases": {
+        "external_id": [userId],
       },
-      headings: {
+        "target_channel": "push",
+      "headings": {
         en: title,
       },
-      contents: {
-        en: body,
+      "contents": {
+        "en": body,
       },
-      data,
+      "data": data,
     };
     if (avatar) {
       (payload as Record<string, unknown>)["chrome_web_image"] = avatar;
     }
 
+    console.log('Going to send OneSignal payload:', JSON.stringify(payload, null, 2));
     var res = await fetch("https://api.onesignal.com/notifications?c=push", {
       method: "POST",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
-        Authorization: `Key ${apiKey}`,
+        "Authorization": `Key ${apiKey}`,
       },
       body: JSON.stringify(payload),
     }).catch(() => undefined);
 
     if (!res || !res.ok) {
-      console.error("Failed to send notification", {
-        userId,
-        title,
-        body,
-        data,
-        status: res?.status,
-        statusText: res?.statusText,
-      });
+        const json = JSON.parse(await res?.text() || "{}");
+      console.error("Failed to send notification", json);
       return;
     }
   }
