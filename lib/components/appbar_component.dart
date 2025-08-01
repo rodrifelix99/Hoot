@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
@@ -21,10 +22,27 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 0,
       centerTitle: false,
-      backgroundColor: backgroundColor,
+      backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.surface,
       foregroundColor: foregroundColor,
       scrolledUnderElevation: elevationDuringScroll,
-      shadowColor: Theme.of(context).colorScheme.surface.withValues(alpha: .25),
+      shadowColor: Theme.of(context).colorScheme.shadow.withAlpha(50),
+      surfaceTintColor: Theme.of(context).colorScheme.surface,
+      flexibleSpace: FadeInDown(
+        duration: const Duration(milliseconds: 1000),
+        delay: const Duration(milliseconds: 500),
+        child: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: RotatedBox(
+            quarterTurns: 2,
+            child: Image.asset(
+              'assets/images/top_bar.png',
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter,
+            ),
+          ),
+        ),
+      ),
       title: title != null
           ? PreferredSize(
               preferredSize: preferredSize,

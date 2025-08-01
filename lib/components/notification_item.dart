@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:hash_cached_image/hash_cached_image.dart';
 
 import 'package:hoot/components/scale_on_press.dart';
 import 'package:hoot/components/avatar_component.dart';
@@ -28,115 +27,64 @@ class NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = HashCachedImage(
-      imageUrl: avatarUrl,
-      hash: avatarHash,
-      errorWidget: (context, _, __) => Image.asset(
-        'assets/images/avatar.png',
-        fit: BoxFit.cover,
-      ),
-      fit: BoxFit.cover,
-    );
-
     return ScaleOnPress(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        height: 100,
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).colorScheme.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Theme.of(context).dividerColor.withAlpha(75),
+            width: 0.5,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.25),
+              color: Theme.of(context).shadowColor.withAlpha(10),
               blurRadius: 8,
-              offset: const Offset(0, 0),
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         clipBehavior: Clip.antiAlias,
-        child: Stack(
-          fit: StackFit.expand,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            image,
-            Positioned.fill(
-              child: ShaderMask(
-                blendMode: BlendMode.dstIn,
-                shaderCallback: (rect) {
-                  return const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black,
-                    ],
-                    stops: [0.35, 0.75],
-                  ).createShader(rect);
-                },
-                child: ImageFiltered(
-                  imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                  child: image,
-                ),
+            ProfileAvatarComponent(
+                image: avatarUrl,
+                hash: avatarHash,
+                size: 60,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall,
+                  ),
+                ],
               ),
             ),
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [Colors.transparent, Colors.black54],
-                  stops: [0.3, 1.0],
-                ),
+            if (trailing != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: trailing!,
               ),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: onAvatarTap,
-                  behavior: HitTestBehavior.opaque,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: ProfileAvatarComponent(
-                      image: avatarUrl,
-                      hash: avatarHash,
-                      size: 60,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subtitle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(color: Colors.white70),
-                      ),
-                    ],
-                  ),
-                ),
-                if (trailing != null)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: trailing!,
-                  ),
-              ],
-            ),
           ],
         ),
       ),
