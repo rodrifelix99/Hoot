@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:hoot/models/hoot_notification.dart';
 import 'package:hoot/models/user.dart';
@@ -22,6 +24,8 @@ class NotificationsController extends GetxController {
             feedRequestService ?? Get.find<FeedRequestService>();
 
   final RxList<HootNotification> notifications = <HootNotification>[].obs;
+  final Rx<PagingState<DocumentSnapshot?, HootNotification>> state =
+      PagingState<DocumentSnapshot?, HootNotification>().obs;
   final RxInt unreadCount = 0.obs;
   final RxInt requestCount = 0.obs;
   final RxList<U> requestUsers = <U>[].obs;
@@ -32,7 +36,7 @@ class NotificationsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadNotifications();
+    _loadInitialNotifications();
     _loadRequestCount();
     _loadRequestUsers();
     _listenUnreadCount();
@@ -45,7 +49,7 @@ class NotificationsController extends GetxController {
   }
 
   Future<void> refreshNotifications() async {
-    await _loadNotifications();
+    await _loadInitialNotifications();
     await _loadRequestCount();
     await _loadRequestUsers();
   }
@@ -71,16 +75,50 @@ class NotificationsController extends GetxController {
     unreadCount.value = 0;
   }
 
-  Future<void> _loadNotifications() async {
+  Future<void> _loadInitialNotifications() async {
     final uid = _authService.currentUser?.uid;
     if (uid == null) return;
     loading.value = true;
+    state.value = state.value.reset();
     try {
-      final result = await _notificationService.fetchNotifications(uid);
-      notifications.assignAll(result);
-      unreadCount.value = result.where((n) => !n.read).length;
+      final page = await _notificationService.fetchNotifications(uid);
+      state.value = state.value.copyWith(
+        pages: [page.notifications],
+        keys: [page.lastDoc],
+        hasNextPage: page.hasMore,
+        isLoading: false,
+      );
+      notifications.assignAll(page.notifications);
+      unreadCount.value =
+          page.notifications.where((n) => !n.read).length;
     } finally {
       loading.value = false;
+    }
+  }
+
+  Future<void> fetchNext() async {
+    final uid = _authService.currentUser?.uid;
+    if (uid == null) return;
+    final current = state.value;
+    if (current.isLoading || !current.hasNextPage) return;
+
+    state.value = current.copyWith(isLoading: true, error: null);
+    try {
+      final page = await _notificationService.fetchNotifications(
+        uid,
+        startAfter: current.keys?.last,
+      );
+      state.value = state.value.copyWith(
+        pages: [...?current.pages, page.notifications],
+        keys: [...?current.keys, page.lastDoc],
+        hasNextPage: page.hasMore,
+        isLoading: false,
+      );
+      notifications.addAll(page.notifications);
+      unreadCount.value =
+          notifications.where((n) => !n.read).length;
+    } finally {
+      state.value = state.value.copyWith(isLoading: false);
     }
   }
 

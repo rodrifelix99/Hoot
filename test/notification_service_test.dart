@@ -54,12 +54,13 @@ void main() {
         'createdAt': newer,
       });
 
-      final result = await service.fetchNotifications('u1');
+      final page = await service.fetchNotifications('u1');
 
-      expect(result.length, 2);
-      expect(result.first.type, 1);
-      expect(result.last.type, 0);
+      expect(page.notifications.length, 2);
+      expect(page.notifications.first.type, 1);
+      expect(page.notifications.last.type, 0);
     });
+
 
     test('markAllAsRead updates unread notifications', () async {
       final firestore = FakeFirebaseFirestore();

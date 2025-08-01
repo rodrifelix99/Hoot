@@ -8,6 +8,8 @@ import 'package:hoot/models/user.dart';
 import 'package:hoot/pages/notifications/controllers/notifications_controller.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/notification_service.dart';
+import 'package:hoot/services/notification_service.dart' show NotificationPage;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hoot/services/feed_request_service.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -54,7 +56,12 @@ class FakeNotificationService extends GetxService
   @override
   Stream<int> unreadCountStream(String userId) => FakeUnreadStream(fakeSub);
   @override
-  Future<List<HootNotification>> fetchNotifications(String userId) async => [];
+  Future<NotificationPage> fetchNotifications(
+    String userId, {
+    DocumentSnapshot? startAfter,
+    int limit = 10,
+  }) async =>
+      NotificationPage(notifications: []);
   @override
   Future<void> createNotification(
       String userId, Map<String, dynamic> data) async {}
