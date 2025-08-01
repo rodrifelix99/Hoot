@@ -1,6 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/util/routes/args/feed_page_args.dart';
+import 'package:hoot/util/routes/args/profile_args.dart';
 
 import 'package:hoot/services/onesignal_service.dart';
 
@@ -99,5 +104,38 @@ void main() {
     expect(calls, hasLength(1));
     expect(calls.first.method, 'OneSignal#requestPermission');
     expect(calls.first.arguments, {'fallbackToSettings': true});
+  });
+
+  testWidgets('click event opens correct route', (tester) async {
+    final service = OneSignalService();
+    await service.init();
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        getPages: [
+          GetPage(name: '/', page: () => const Placeholder()),
+          GetPage(
+            name: AppRoutes.post,
+            page: () => const Scaffold(body: Text('post page')),
+          ),
+        ],
+      ),
+    );
+
+    final codec = const StandardMethodCodec();
+    final event = {
+      'notification': {
+        'notificationId': 'n1',
+        'additionalData': {'postId': 'p1'},
+      },
+      'result': {'action_id': null, 'url': null}
+    };
+    final data =
+        codec.encodeMethodCall(MethodCall('OneSignal#onClickNotification', event));
+    messenger.handlePlatformMessage(notifChannel.name, data, (_) {});
+
+    await tester.pumpAndSettle();
+
+    expect(find.text('post page'), findsOneWidget);
   });
 }
