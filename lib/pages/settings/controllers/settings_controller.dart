@@ -4,12 +4,12 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
-import '../../../services/auth_service.dart';
-import '../../../services/dialog_service.dart';
-import '../../../services/error_service.dart';
-import '../../../services/toast_service.dart';
-import '../../../services/theme_service.dart';
-import '../../../util/routes/app_routes.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/dialog_service.dart';
+import 'package:hoot/services/error_service.dart';
+import 'package:hoot/services/toast_service.dart';
+import 'package:hoot/services/theme_service.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 
 class SettingsController extends GetxController {
   final _auth = Get.find<AuthService>();

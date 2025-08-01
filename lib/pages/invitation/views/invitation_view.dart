@@ -3,7 +3,7 @@ import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controllers/invitation_controller.dart';
+import 'package:hoot/pages/invitation/controllers/invitation_controller.dart';
 
 class InvitationView extends GetView<InvitationController> {
   const InvitationView({super.key});

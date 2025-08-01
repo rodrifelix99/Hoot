@@ -8,14 +8,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 
-import '../../../models/feed.dart';
-import '../../../models/post.dart';
-import '../../../services/error_service.dart';
-import '../../../services/toast_service.dart';
-import '../../../services/post_service.dart';
-import '../../../services/auth_service.dart';
-import '../../../services/storage_service.dart';
-import '../../../services/user_service.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/models/post.dart';
+import 'package:hoot/services/error_service.dart';
+import 'package:hoot/services/toast_service.dart';
+import 'package:hoot/services/post_service.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/storage_service.dart';
+import 'package:hoot/services/user_service.dart';
 
 /// Manages state for creating a new post.
 class CreatePostController extends GetxController {

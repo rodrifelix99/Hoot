@@ -5,7 +5,7 @@ import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/services/haptic_service.dart';
-import '../controllers/edit_profile_controller.dart';
+import 'package:hoot/pages/edit_profile/controllers/edit_profile_controller.dart';
 
 class EditProfileView extends GetView<EditProfileController> {
   const EditProfileView({super.key});

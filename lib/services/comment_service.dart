@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/comment.dart';
+import 'package:hoot/models/comment.dart';
 
 class CommentPage {
   CommentPage({required this.comments, this.lastDoc, this.hasMore = false});

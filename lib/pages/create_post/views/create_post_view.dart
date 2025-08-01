@@ -8,11 +8,11 @@ import 'package:hoot/components/post_media_preview.dart';
 import 'package:hoot/components/mention_text_field.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../controllers/create_post_controller.dart';
+import 'package:hoot/pages/create_post/controllers/create_post_controller.dart';
 import 'package:hoot/components/url_preview_component.dart';
 import 'package:hoot/models/feed.dart';
-import '../../home/controllers/home_controller.dart';
-import '../../feed/controllers/feed_controller.dart';
+import 'package:hoot/pages/home/controllers/home_controller.dart';
+import 'package:hoot/pages/feed/controllers/feed_controller.dart';
 
 class CreatePostView extends GetView<CreatePostController> {
   const CreatePostView({super.key});

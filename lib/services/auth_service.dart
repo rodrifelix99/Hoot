@@ -5,8 +5,8 @@ import 'package:meta/meta.dart';
 import 'package:get/get.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
-import '../models/user.dart';
-import '../models/feed.dart';
+import 'package:hoot/models/user.dart';
+import 'package:hoot/models/feed.dart';
 
 /// Provides authentication helpers for the application.
 class AuthService {

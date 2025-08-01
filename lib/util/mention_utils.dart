@@ -2,9 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../services/auth_service.dart';
-import '../util/routes/app_routes.dart';
-import '../util/routes/args/profile_args.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/util/routes/args/profile_args.dart';
 
 /// Parses [text] and returns spans where @username mentions are highlighted
 /// in blue and tappable to open the mentioned user's profile.

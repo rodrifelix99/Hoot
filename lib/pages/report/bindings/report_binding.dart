@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../controllers/report_controller.dart';
+import 'package:hoot/pages/report/controllers/report_controller.dart';
 
 class ReportBinding extends Bindings {
   @override

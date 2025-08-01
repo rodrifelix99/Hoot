@@ -15,9 +15,9 @@ import 'package:hoot/util/translations/app_translations.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'services/theme_service.dart';
-import 'services/quick_actions_service.dart';
-import 'firebase_options.dart';
+import 'package:hoot/services/theme_service.dart';
+import 'package:hoot/services/quick_actions_service.dart';
+import 'package:hoot/firebase_options.dart';
 
 void main() {
   runZonedGuarded(() async {

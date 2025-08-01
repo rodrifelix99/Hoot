@@ -129,7 +129,8 @@ class ListItemComponent extends StatelessWidget {
                     child: ImageFilter.isShaderFilterSupported
                         ? LiquidGlass(
                             shape: LiquidRoundedRectangle(
-                              borderRadius: Radius.circular(leadingRadius ?? 25),
+                              borderRadius:
+                                  Radius.circular(leadingRadius ?? 25),
                             ),
                             child: leading!,
                           )

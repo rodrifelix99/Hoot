@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import '../../../services/theme_service.dart';
-import '../../../util/enums/app_colors.dart';
+import 'package:hoot/services/theme_service.dart';
+import 'package:hoot/util/enums/app_colors.dart';
 
 class AppColorController extends GetxController {
   final _theme = Get.find<ThemeService>();

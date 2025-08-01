@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-import 'subscription_service.dart';
-import '../models/user.dart';
-import '../models/feed_join_request.dart';
+import 'package:hoot/services/subscription_service.dart';
+import 'package:hoot/models/user.dart';
+import 'package:hoot/models/feed_join_request.dart';
 import 'dart:math' as math;
-import 'auth_service.dart';
+import 'package:hoot/services/auth_service.dart';
 
 class FeedRequestService {
   final FirebaseFirestore _firestore;

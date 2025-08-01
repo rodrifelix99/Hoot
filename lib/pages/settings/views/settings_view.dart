@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/settings_controller.dart';
+import 'package:hoot/pages/settings/controllers/settings_controller.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 

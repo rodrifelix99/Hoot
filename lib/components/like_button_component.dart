@@ -62,9 +62,8 @@ class _LikeButtonComponentState extends State<LikeButtonComponent>
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = widget.liked
-        ? Colors.red
-        : Theme.of(context).iconTheme.color;
+    final iconColor =
+        widget.liked ? Colors.red : Theme.of(context).iconTheme.color;
     return GestureDetector(
       onTap: () {
         HapticService.lightImpact();

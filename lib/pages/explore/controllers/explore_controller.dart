@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../models/feed.dart';
-import '../../../models/post.dart';
-import '../../../models/user.dart';
-import '../../../util/enums/feed_types.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/models/post.dart';
+import 'package:hoot/models/user.dart';
+import 'package:hoot/util/enums/feed_types.dart';
 
 /// Controller in charge of fetching data for the explore page.
 class ExploreController extends GetxController {

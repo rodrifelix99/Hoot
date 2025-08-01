@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import '../controllers/profile_controller.dart';
-import '../../../util/routes/args/profile_args.dart';
+import 'package:hoot/pages/profile/controllers/profile_controller.dart';
+import 'package:hoot/util/routes/args/profile_args.dart';
 
 class ProfileBinding extends Bindings {
   @override

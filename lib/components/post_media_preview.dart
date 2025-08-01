@@ -89,8 +89,8 @@ class PostMediaPreview extends StatelessWidget {
                           color: Colors.black54,
                           shape: BoxShape.circle,
                         ),
-                        child:
-                        const Icon(SolarIconsOutline.cropMinimalistic, size: 16, color: Colors.white),
+                        child: const Icon(SolarIconsOutline.cropMinimalistic,
+                            size: 16, color: Colors.white),
                       ),
                     ),
                   ),

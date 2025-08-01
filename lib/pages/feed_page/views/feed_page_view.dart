@@ -6,10 +6,10 @@ import 'package:hoot/components/post_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import '../../../models/post.dart';
-import '../../../models/feed.dart';
-import '../../../util/routes/app_routes.dart';
-import '../controllers/feed_page_controller.dart';
+import 'package:hoot/models/post.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/pages/feed_page/controllers/feed_page_controller.dart';
 
 class FeedPageView extends GetView<FeedPageController> {
   const FeedPageView({super.key});

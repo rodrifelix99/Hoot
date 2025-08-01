@@ -4,19 +4,19 @@ import 'package:get/get.dart';
 import 'package:hoot/util/extensions/feed_extension.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../../../models/user.dart';
+import 'package:hoot/models/user.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/empty_message.dart';
-import '../../../util/routes/app_routes.dart';
-import '../../../util/routes/args/profile_args.dart';
-import '../../../util/routes/args/feed_page_args.dart';
-import '../controllers/profile_controller.dart';
-import '../../../services/report_service.dart';
-import '../../../services/toast_service.dart';
+import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/util/routes/args/profile_args.dart';
+import 'package:hoot/util/routes/args/feed_page_args.dart';
+import 'package:hoot/pages/profile/controllers/profile_controller.dart';
+import 'package:hoot/services/report_service.dart';
+import 'package:hoot/services/toast_service.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import '../../../services/haptic_service.dart';
+import 'package:hoot/services/haptic_service.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});

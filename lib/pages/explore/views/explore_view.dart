@@ -7,9 +7,9 @@ import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/util/routes/args/feed_page_args.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../../../util/routes/app_routes.dart';
-import '../../../util/routes/args/profile_args.dart';
-import '../controllers/explore_controller.dart';
+import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/util/routes/args/profile_args.dart';
+import 'package:hoot/pages/explore/controllers/explore_controller.dart';
 import 'package:hoot/components/scale_on_press.dart';
 
 class ExploreView extends GetView<ExploreController> {
@@ -151,12 +151,14 @@ class ExploreView extends GetView<ExploreController> {
                     separatorBuilder: (_, __) => const SizedBox(width: 16),
                     itemBuilder: (context, index) {
                       final feed = controller.topFeeds[index];
-                      return FeedCard(feed: feed, onTap: () {
-                        Get.toNamed(
-                          AppRoutes.feed,
-                          arguments: FeedPageArgs(feed: feed),
-                        );
-                      });
+                      return FeedCard(
+                          feed: feed,
+                          onTap: () {
+                            Get.toNamed(
+                              AppRoutes.feed,
+                              arguments: FeedPageArgs(feed: feed),
+                            );
+                          });
                     },
                   ),
                 ),

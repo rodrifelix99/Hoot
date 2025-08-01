@@ -4,10 +4,10 @@ import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
 import 'package:hoot/services/haptic_service.dart';
-import '../controllers/search_by_genre_controller.dart';
-import '../../../components/list_item_component.dart';
-import '../../../components/avatar_component.dart';
-import '../../../util/enums/feed_types.dart';
+import 'package:hoot/pages/search_by_genre/controllers/search_by_genre_controller.dart';
+import 'package:hoot/components/list_item_component.dart';
+import 'package:hoot/components/avatar_component.dart';
+import 'package:hoot/util/enums/feed_types.dart';
 
 class SearchByGenreView extends GetView<SearchByGenreController> {
   const SearchByGenreView({super.key});

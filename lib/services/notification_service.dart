@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/hoot_notification.dart';
+import 'package:hoot/models/hoot_notification.dart';
 
 abstract class BaseNotificationService {
   Future<List<HootNotification>> fetchNotifications(String userId);

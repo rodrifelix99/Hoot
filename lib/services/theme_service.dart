@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../util/enums/app_colors.dart';
+import 'package:hoot/util/enums/app_colors.dart';
 
 /// Service that manages theme mode and persists the user's preference.
 class ThemeService extends GetxService {

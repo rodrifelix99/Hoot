@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import '../../../models/post.dart';
-import '../../../services/feed_service.dart';
+import 'package:hoot/models/post.dart';
+import 'package:hoot/services/feed_service.dart';
 
 /// Controller responsible for fetching posts for the feed view.
 class FeedController extends GetxController {

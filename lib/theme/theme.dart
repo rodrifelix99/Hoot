@@ -46,7 +46,7 @@ class AppTheme {
 
   static DropdownMenuThemeData get _dropdownMenuTheme => DropdownMenuThemeData(
         inputDecorationTheme: _inputDecorationTheme,
-    menuStyle: MenuStyle(
+        menuStyle: MenuStyle(
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
@@ -60,7 +60,8 @@ class AppTheme {
         ),
       );
 
-  static TextTheme get _lightTextTheme => GoogleFonts.lexendTextTheme().copyWith(
+  static TextTheme get _lightTextTheme =>
+      GoogleFonts.lexendTextTheme().copyWith(
         bodySmall: GoogleFonts.interTextTheme().bodySmall,
         bodyMedium: GoogleFonts.interTextTheme().bodyMedium,
         bodyLarge: GoogleFonts.interTextTheme().bodyLarge,
@@ -120,15 +121,15 @@ class AppTheme {
         alignLabelWithHint: true,
       );
 
-  static ChipThemeData _chipTheme(ColorScheme scheme, bool dark) => ChipThemeData(
+  static ChipThemeData _chipTheme(ColorScheme scheme, bool dark) =>
+      ChipThemeData(
         padding: const EdgeInsets.all(8),
         shape: const RoundedRectangleBorder(
           side: BorderSide.none,
           borderRadius: BorderRadius.all(Radius.circular(100)),
         ),
         side: BorderSide.none,
-        backgroundColor:
-            dark ? scheme.onPrimary : scheme.primary.withAlpha(64),
+        backgroundColor: dark ? scheme.onPrimary : scheme.primary.withAlpha(64),
         labelStyle: TextStyle(
           fontSize: 12,
           color: scheme.primary,

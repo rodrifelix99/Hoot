@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/haptic_service.dart';
+import 'package:hoot/services/haptic_service.dart';
 
 /// A widget that slightly scales its child when pressed and provides
 /// light haptic feedback on tap down.

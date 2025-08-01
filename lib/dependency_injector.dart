@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
-import 'services/auth_service.dart';
-import 'services/feed_service.dart';
-import 'services/theme_service.dart';
-import 'services/post_service.dart';
-import 'services/subscription_service.dart';
-import 'services/feed_request_service.dart';
-import 'services/subscription_manager.dart';
-import 'services/quick_actions_service.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/feed_service.dart';
+import 'package:hoot/services/theme_service.dart';
+import 'package:hoot/services/post_service.dart';
+import 'package:hoot/services/subscription_service.dart';
+import 'package:hoot/services/feed_request_service.dart';
+import 'package:hoot/services/subscription_manager.dart';
+import 'package:hoot/services/quick_actions_service.dart';
 
 /// Registers global dependencies for the application.
 class DependencyInjector {

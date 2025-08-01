@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import '../controllers/feed_page_controller.dart';
-import '../../../util/routes/args/feed_page_args.dart';
+import 'package:hoot/pages/feed_page/controllers/feed_page_controller.dart';
+import 'package:hoot/util/routes/args/feed_page_args.dart';
 
 class FeedPageBinding extends Bindings {
   @override

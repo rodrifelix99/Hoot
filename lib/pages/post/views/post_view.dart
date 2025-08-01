@@ -6,11 +6,11 @@ import 'package:hoot/models/comment.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../../../components/comment_component.dart';
-import '../../../components/empty_message.dart';
-import '../../../components/mention_text_field.dart';
-import '../../../components/post_component.dart';
-import '../controllers/post_controller.dart';
+import 'package:hoot/components/comment_component.dart';
+import 'package:hoot/components/empty_message.dart';
+import 'package:hoot/components/mention_text_field.dart';
+import 'package:hoot/components/post_component.dart';
+import 'package:hoot/pages/post/controllers/post_controller.dart';
 
 class PostView extends GetView<PostController> {
   const PostView({super.key});

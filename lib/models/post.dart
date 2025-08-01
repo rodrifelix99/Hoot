@@ -22,11 +22,15 @@ class Post {
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  String get smallAvatar => feed?.smallAvatar ?? user?.smallProfilePictureUrl ?? '';
-  String get largeAvatar => feed?.bigAvatar ?? user?.largeProfilePictureUrl ?? '';
+  String get smallAvatar =>
+      feed?.smallAvatar ?? user?.smallProfilePictureUrl ?? '';
+  String get largeAvatar =>
+      feed?.bigAvatar ?? user?.largeProfilePictureUrl ?? '';
 
-  String get smallAvatarHash => feed?.smallAvatarHash ?? user?.smallAvatarHash ?? '';
-  String get largeAvatarHash => feed?.bigAvatarHash ?? user?.bigAvatarHash ?? '';
+  String get smallAvatarHash =>
+      feed?.smallAvatarHash ?? user?.smallAvatarHash ?? '';
+  String get largeAvatarHash =>
+      feed?.bigAvatarHash ?? user?.bigAvatarHash ?? '';
 
   Post({
     required this.id,
@@ -58,8 +62,7 @@ class Post {
           : json['gifs'] != null
               ? List<String>.from(json['gifs'])
               : null,
-      hashes:
-          json['hashes'] != null ? List<String>.from(json['hashes']) : null,
+      hashes: json['hashes'] != null ? List<String>.from(json['hashes']) : null,
       feedId: json['feedId'],
       feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
       user: json['user'] != null ? U.fromJson(json['user']) : null,

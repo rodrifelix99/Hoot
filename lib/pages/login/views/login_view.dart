@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart' as buttons;
 import 'package:get/get.dart';
 
-import '../controllers/login_controller.dart';
+import 'package:hoot/pages/login/controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
   const LoginView({super.key});

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/feed.dart';
-import '../models/user.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/models/user.dart';
 
 class SubscriptionService {
   final FirebaseFirestore _firestore;

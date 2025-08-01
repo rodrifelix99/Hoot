@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/contacts_controller.dart';
+import 'package:hoot/pages/contacts/controllers/contacts_controller.dart';
 
 class ContactsView extends GetView<ContactsController> {
   const ContactsView({super.key});

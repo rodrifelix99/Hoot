@@ -5,8 +5,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../models/post.dart';
-import '../controllers/feed_controller.dart';
+import 'package:hoot/models/post.dart';
+import 'package:hoot/pages/feed/controllers/feed_controller.dart';
 
 class FeedView extends GetView<FeedController> {
   const FeedView({super.key});
@@ -25,7 +25,8 @@ class FeedView extends GetView<FeedController> {
               vertical: 8,
             ),
           ),
-          firstPageProgressIndicatorBuilder: (_) => Center(child: CircularProgressIndicator()),
+          firstPageProgressIndicatorBuilder: (_) =>
+              Center(child: CircularProgressIndicator()),
           newPageProgressIndicatorBuilder: (_) => const Padding(
             padding: EdgeInsets.all(16),
             child: Center(child: CircularProgressIndicator()),

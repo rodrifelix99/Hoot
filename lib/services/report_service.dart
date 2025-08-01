@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-import 'auth_service.dart';
+import 'package:hoot/services/auth_service.dart';
 
 /// Provides helpers to submit user and post reports.
 abstract class BaseReportService {
