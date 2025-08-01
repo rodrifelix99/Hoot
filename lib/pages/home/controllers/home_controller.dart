@@ -36,6 +36,7 @@ class HomeController extends GetxController {
     }
     if (user.isUninvited) {
       Get.offAllNamed(AppRoutes.invitation);
+      return;
     }
 
     final oneSignal = Get.find<OneSignalService>();
