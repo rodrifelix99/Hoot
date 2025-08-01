@@ -445,8 +445,8 @@ export const onNotificationCreated = onDocumentCreated(
     const data = event.data?.data();
     if (!data) return;
 
-    const appId = process.env.ONESIGNAL_APP_ID;
-    const apiKey = process.env.ONESIGNAL_API_KEY;
+    const appId = '3dab4dd7-168b-4059-af79-51a7264f3da2';
+    const apiKey = 'os_v2_app_hwvu3vywrnaftl3zkgtsmtz5uja7k7ademaeh5mpi6g5gzhkxon3xc7nfleqrrak7mahyveb2gvhy472lz53m6piz7sqqra65cndrrq';
     if (!appId || !apiKey) return;
 
     const titles: Record<number, string> = {
