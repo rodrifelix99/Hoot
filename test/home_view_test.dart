@@ -16,6 +16,7 @@ import 'package:hoot/services/feed_request_service.dart';
 import 'package:hoot/services/subscription_service.dart';
 import 'package:hoot/services/theme_service.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/models/feed_join_request.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -74,6 +75,9 @@ class FakeFeedRequestService extends FeedRequestService {
 
   @override
   Future<int> pendingRequestCount() async => 0;
+
+  @override
+  Future<List<FeedJoinRequest>> fetchRequestsForMyFeeds() async => [];
 }
 
 class TestNotificationsController extends NotificationsController {

@@ -17,7 +17,10 @@ import 'package:hoot/models/feed_join_request.dart';
 class FakeStreamSubscription<T> implements StreamSubscription<T> {
   bool canceled = false;
   @override
-  Future<void> cancel() async {canceled = true;}
+  Future<void> cancel() async {
+    canceled = true;
+  }
+
   @override
   void onData(void Function(T data)? handleData) {}
   @override
@@ -38,12 +41,14 @@ class FakeUnreadStream extends Stream<int> {
   final FakeStreamSubscription<int> sub;
   FakeUnreadStream(this.sub);
   @override
-  StreamSubscription<int> listen(void Function(int)? onData, {Function? onError, void Function()? onDone, bool? cancelOnError}) {
+  StreamSubscription<int> listen(void Function(int)? onData,
+      {Function? onError, void Function()? onDone, bool? cancelOnError}) {
     return sub;
   }
 }
 
-class FakeNotificationService extends GetxService implements BaseNotificationService {
+class FakeNotificationService extends GetxService
+    implements BaseNotificationService {
   final FakeStreamSubscription<int> fakeSub;
   FakeNotificationService(this.fakeSub);
   @override
@@ -51,7 +56,8 @@ class FakeNotificationService extends GetxService implements BaseNotificationSer
   @override
   Future<List<HootNotification>> fetchNotifications(String userId) async => [];
   @override
-  Future<void> createNotification(String userId, Map<String, dynamic> data) async {}
+  Future<void> createNotification(
+      String userId, Map<String, dynamic> data) async {}
   @override
   Future<void> markAsRead(String userId, String notificationId) async {}
   @override
@@ -62,12 +68,15 @@ class FakeFeedRequestService extends FeedRequestService {
   FakeFeedRequestService()
       : super(
             firestore: FakeFirebaseFirestore(),
-            subscriptionService: SubscriptionService(firestore: FakeFirebaseFirestore()),
+            subscriptionService:
+                SubscriptionService(firestore: FakeFirebaseFirestore()),
             authService: FakeAuthService(U(uid: 'u1')));
   @override
   Future<int> pendingRequestCount() async => 0;
   @override
   Future<List<FeedJoinRequest>> fetchRequests(String feedId) async => [];
+  @override
+  Future<List<FeedJoinRequest>> fetchRequestsForMyFeeds() async => [];
   @override
   Future<void> submit(String feedId, String userId) async {}
   @override

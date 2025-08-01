@@ -50,19 +50,22 @@ class FakeAuthService extends GetxService implements AuthService {
 class FakeFeedService implements BaseFeedService {
   PostPage? nextPage;
   @override
-  Future<PostPage> fetchSubscribedPosts({DocumentSnapshot? startAfter, int limit = 10}) async {
+  Future<PostPage> fetchSubscribedPosts(
+      {DocumentSnapshot? startAfter, int limit = 10}) async {
     return PostPage(posts: []);
   }
 
   @override
-  Future<PostPage> fetchFeedPosts(String feedId, {DocumentSnapshot? startAfter, int limit = 10}) async {
+  Future<PostPage> fetchFeedPosts(String feedId,
+      {DocumentSnapshot? startAfter, int limit = 10}) async {
     return nextPage ?? PostPage(posts: []);
   }
 }
 
 class FakeSubscriptionService extends SubscriptionService {
   final Set<String> subs;
-  FakeSubscriptionService(this.subs) : super(firestore: FakeFirebaseFirestore());
+  FakeSubscriptionService(this.subs)
+      : super(firestore: FakeFirebaseFirestore());
   @override
   Future<Set<String>> fetchSubscriptions(String userId) async => subs;
 }
@@ -70,7 +73,11 @@ class FakeSubscriptionService extends SubscriptionService {
 class FakeFeedRequestService extends FeedRequestService {
   bool existsResult = false;
   FakeFeedRequestService()
-      : super(firestore: FakeFirebaseFirestore(), subscriptionService: SubscriptionService(firestore: FakeFirebaseFirestore()), authService: FakeAuthService(null));
+      : super(
+            firestore: FakeFirebaseFirestore(),
+            subscriptionService:
+                SubscriptionService(firestore: FakeFirebaseFirestore()),
+            authService: FakeAuthService(null));
   @override
   Future<List<FeedJoinRequest>> fetchRequests(String feedId) async => [];
   @override
@@ -83,6 +90,8 @@ class FakeFeedRequestService extends FeedRequestService {
   Future<bool> exists(String feedId, String userId) async => existsResult;
   @override
   Future<int> pendingRequestCount() async => 0;
+  @override
+  Future<List<FeedJoinRequest>> fetchRequestsForMyFeeds() async => [];
 }
 
 class FakeSubscriptionManager extends SubscriptionManager {
@@ -91,8 +100,13 @@ class FakeSubscriptionManager extends SubscriptionManager {
   FakeSubscriptionManager(this.result)
       : super(
           firestore: FakeFirebaseFirestore(),
-          subscriptionService: SubscriptionService(firestore: FakeFirebaseFirestore()),
-          feedRequestService: FeedRequestService(firestore: FakeFirebaseFirestore(), subscriptionService: SubscriptionService(firestore: FakeFirebaseFirestore()), authService: FakeAuthService(null)),
+          subscriptionService:
+              SubscriptionService(firestore: FakeFirebaseFirestore()),
+          feedRequestService: FeedRequestService(
+              firestore: FakeFirebaseFirestore(),
+              subscriptionService:
+                  SubscriptionService(firestore: FakeFirebaseFirestore()),
+              authService: FakeAuthService(null)),
         );
   @override
   Future<SubscriptionResult> toggle(String feedId, U user) async {
@@ -111,7 +125,13 @@ void main() {
     final requestService = FakeFeedRequestService();
     final manager = FakeSubscriptionManager(SubscriptionResult.subscribed);
     final controller = FeedPageController(
-      args: FeedPageArgs(feed: Feed(id: 'f1', userId: 'u2', nsfw: true, title: 't', description: 'd')),
+      args: FeedPageArgs(
+          feed: Feed(
+              id: 'f1',
+              userId: 'u2',
+              nsfw: true,
+              title: 't',
+              description: 'd')),
       authService: auth,
       feedService: feedService,
       subscriptionService: subService,
@@ -130,7 +150,8 @@ void main() {
     final requestService = FakeFeedRequestService();
     final manager = FakeSubscriptionManager(SubscriptionResult.requested);
     final controller = FeedPageController(
-      args: FeedPageArgs(feed: Feed(id: 'f1', userId: 'u2', title: 't', description: 'd')),
+      args: FeedPageArgs(
+          feed: Feed(id: 'f1', userId: 'u2', title: 't', description: 'd')),
       authService: auth,
       feedService: feedService,
       subscriptionService: subService,
@@ -147,14 +168,17 @@ void main() {
     final user = U(uid: 'u1');
     final auth = FakeAuthService(user);
     final feedService = FakeFeedService();
-    feedService.nextPage = PostPage(posts: [Post(id: 'p1', user: user, text: 'hello')]);
+    feedService.nextPage =
+        PostPage(posts: [Post(id: 'p1', user: user, text: 'hello')]);
     final controller = FeedPageController(
-      args: FeedPageArgs(feed: Feed(id: 'f1', userId: 'u2', title: 't', description: 'd')),
+      args: FeedPageArgs(
+          feed: Feed(id: 'f1', userId: 'u2', title: 't', description: 'd')),
       authService: auth,
       feedService: feedService,
       subscriptionService: FakeSubscriptionService({}),
       feedRequestService: FakeFeedRequestService(),
-      subscriptionManager: FakeSubscriptionManager(SubscriptionResult.subscribed),
+      subscriptionManager:
+          FakeSubscriptionManager(SubscriptionResult.subscribed),
     );
     controller.onInit();
     await controller.fetchNext();
