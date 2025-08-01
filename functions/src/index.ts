@@ -7,3 +7,4 @@ export * from "./triggers/onSubscriptionCreated";
 export * from "./triggers/onPostDeleted";
 export * from "./triggers/onUserUpdated";
 export * from "./triggers/onFeedUpdated";
+export * from "./triggers/onInvitationUsed";
