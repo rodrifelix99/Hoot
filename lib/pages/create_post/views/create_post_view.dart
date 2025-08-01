@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
+import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/post_media_preview.dart';
 import 'package:hoot/components/mention_text_field.dart';
 import 'package:hoot/util/routes/app_routes.dart';
@@ -39,134 +40,151 @@ class CreatePostView extends GetView<CreatePostController> {
       appBar: AppBarComponent(
         title: 'createPost'.tr,
       ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                DropdownButtonHideUnderline(
-                  child: Obx(() {
-                    return DropdownButton2<Feed>(
-                      value: controller.selectedFeed.value,
-                      hint: Text('selectFeed'.tr),
-                      onChanged: (f) => controller.selectedFeed.value = f,
-                      isExpanded: true,
-                      dropdownStyleData: DropdownStyleData(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(16),
+      body: Obx(() {
+        int feedCount = controller.availableFeeds.length;
+        if (feedCount == 0) {
+          return Center(
+            child: NothingToShowComponent(
+              imageAsset: 'assets/images/image_8.png',
+              title: 'First, create a feed',
+              text:
+                  'To Hoot, you need to create a feed first. You can create a feed from your profile page or by clicking the button below.',
+              buttonText: 'createFeed'.tr,
+              buttonAction: () => Get.toNamed(AppRoutes.createFeed),
+            ),
+          );
+        }
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  DropdownButtonHideUnderline(
+                    child: Obx(() {
+                      return DropdownButton2<Feed>(
+                        value: controller.selectedFeed.value,
+                        hint: Text('selectFeed'.tr),
+                        onChanged: (f) => controller.selectedFeed.value = f,
+                        isExpanded: true,
+                        dropdownStyleData: DropdownStyleData(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                         ),
-                      ),
-                      buttonStyleData: ButtonStyleData(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(16),
+                        buttonStyleData: ButtonStyleData(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                         ),
-                      ),
-                      items: controller.availableFeeds
-                          .map((feed) => DropdownMenuItem(
-                                value: feed,
-                                child: Text(feed.title),
-                              ))
-                          .toList(),
+                        items: controller.availableFeeds
+                            .map((feed) => DropdownMenuItem(
+                                  value: feed,
+                                  child: Text(feed.title),
+                                ))
+                            .toList(),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 8),
+                  MentionTextField(
+                    mentionKey: controller.mentionKey,
+                    suggestions: controller.mentionSuggestions,
+                    maxLength: 280,
+                    minLines: 5,
+                    maxLines: 10,
+                    hintText: 'postPlaceholder'.tr,
+                    onSearchChanged: controller.searchUsers,
+                    onChanged: (v) => controller.textController.text = v,
+                  ),
+                  const SizedBox(height: 16),
+                  Obx(() => PostMediaPreview(
+                        imageFiles: controller.imageFiles,
+                        gifUrl: controller.gifUrl.value,
+                        onOpenViewer: _openViewer,
+                        onRemoveImage: controller.removeImage,
+                        onCropImage: controller.cropImage,
+                        onRemoveGif: () => controller.gifUrl.value = null,
+                      )),
+                  Obx(() {
+                    final disableImages = controller.gifUrl.value != null ||
+                        controller.imageFiles.length >= 4;
+                    final disableGif = controller.imageFiles.isNotEmpty;
+                    return Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(SolarIconsBold.gallery),
+                          onPressed:
+                              disableImages ? null : controller.pickImage,
+                          tooltip: 'addImage'.tr,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.gif_box_rounded),
+                          onPressed: disableGif ? null : () => pickGif(context),
+                          tooltip: 'addGif'.tr,
+                        ),
+                      ],
                     );
                   }),
-                ),
-                const SizedBox(height: 8),
-                MentionTextField(
-                  mentionKey: controller.mentionKey,
-                  suggestions: controller.mentionSuggestions,
-                  maxLength: 280,
-                  minLines: 5,
-                  maxLines: 10,
-                  hintText: 'postPlaceholder'.tr,
-                  onSearchChanged: controller.searchUsers,
-                  onChanged: (v) => controller.textController.text = v,
-                ),
-                const SizedBox(height: 16),
-                Obx(() => PostMediaPreview(
-                      imageFiles: controller.imageFiles,
-                      gifUrl: controller.gifUrl.value,
-                      onOpenViewer: _openViewer,
-                      onRemoveImage: controller.removeImage,
-                      onCropImage: controller.cropImage,
-                      onRemoveGif: () => controller.gifUrl.value = null,
-                    )),
-                Obx(() {
-                  final disableImages = controller.gifUrl.value != null ||
-                      controller.imageFiles.length >= 4;
-                  final disableGif = controller.imageFiles.isNotEmpty;
-                  return Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(SolarIconsBold.gallery),
-                        onPressed: disableImages ? null : controller.pickImage,
-                        tooltip: 'addImage'.tr,
+                  Builder(builder: (_) {
+                    final url = controller.linkUrl;
+                    if (url != null) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child:
+                            UrlPreviewComponent(url: url, isClickable: false),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: MediaQuery.of(context).padding.bottom + 16,
+              left: 16,
+              right: 16,
+              child: Hero(
+                tag: 'createHootButton',
+                child: Obx(() {
+                  final loading = controller.publishing.value;
+                  if (loading) {
+                    return Center(
+                      child: const SizedBox(
+                        width: 32,
+                        height: 32,
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.gif_box_rounded),
-                        onPressed: disableGif ? null : () => pickGif(context),
-                        tooltip: 'addGif'.tr,
-                      ),
-                    ],
-                  );
-                }),
-                Builder(builder: (_) {
-                  final url = controller.linkUrl;
-                  if (url != null) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: UrlPreviewComponent(url: url, isClickable: false),
                     );
                   }
-                  return const SizedBox.shrink();
-                }),
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: MediaQuery.of(context).padding.bottom + 16,
-            left: 16,
-            right: 16,
-            child: Hero(
-              tag: 'createHootButton',
-              child: Obx(() {
-                final loading = controller.publishing.value;
-                if (loading) {
-                  return Center(
-                    child: const SizedBox(
-                      width: 32,
-                      height: 32,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
+                  return ElevatedButton(
+                    onPressed: () async {
+                      final post = await controller.publish();
+                      if (post != null) {
+                        // Return to the feed after publishing
+                        if (Get.isRegistered<HomeController>()) {
+                          Get.find<HomeController>().changeIndex(0);
+                        }
+                        if (Get.isRegistered<FeedController>()) {
+                          Get.find<FeedController>().refresh();
+                        }
+                        Get.back();
+                      }
+                    },
+                    child: Text('publish'.tr),
                   );
-                }
-                return ElevatedButton(
-                  onPressed: () async {
-                    final post = await controller.publish();
-                    if (post != null) {
-                      // Return to the feed after publishing
-                      if (Get.isRegistered<HomeController>()) {
-                        Get.find<HomeController>().changeIndex(0);
-                      }
-                      if (Get.isRegistered<FeedController>()) {
-                        Get.find<FeedController>().refresh();
-                      }
-                      Get.back();
-                    }
-                  },
-                  child: Text('publish'.tr),
-                );
-              }),
+                }),
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
     );
   }
 }

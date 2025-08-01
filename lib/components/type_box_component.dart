@@ -100,12 +100,32 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
       ),
     );
 
-    final bubbleTail = Positioned(
-      bottom: 8,
-      right: 0,
+    final bubbleTailMiddle = Positioned(
+      bottom: 4,
+      right: 4,
       child: Container(
         width: 30,
         height: 30,
+        decoration: BoxDecoration(
+          gradient: gradient,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.25),
+              blurRadius: 16,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    final bubbleTail = Positioned(
+      bottom: 0,
+      right: 0,
+      child: Container(
+        width: 16,
+        height: 16,
         decoration: BoxDecoration(
           gradient: gradient,
           shape: BoxShape.circle,
@@ -130,6 +150,7 @@ class _TypeBoxComponentState extends State<TypeBoxComponent> {
             clipBehavior: Clip.none,
             children: [
               bubble,
+              bubbleTailMiddle,
               bubbleTail,
             ],
           );
