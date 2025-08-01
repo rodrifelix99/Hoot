@@ -81,6 +81,8 @@ The backend includes a trigger named `onAuthUserDeleted` that runs whenever a Fi
 
 Another trigger, `onNotificationCreated`, sends a push notification via OneSignal whenever a new notification document is added for a user. Set the environment variables `ONESIGNAL_APP_ID` and `ONESIGNAL_API_KEY` in your Firebase project so this function can authenticate with the OneSignal API.
 
+Cloud Functions are built for Node.js 22 (see `functions/package.json`). Run `npm install` inside the `functions/` directory before executing `npm run build` or `firebase deploy`.
+
 ## Contributing
 
 Read the [contributing guidelines](CONTRIBUTING.md) for information on preferred patterns and example usage of services.

@@ -1,9 +1,9 @@
-import { onUserDeleted } from "firebase-functions/v2/auth";
+import { auth } from "firebase-functions/v1";
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../config";
 
-export const onAuthUserDeleted = onUserDeleted(async (event) => {
-  const uid = event.data.uid;
+export const onAuthUserDeleted = auth.user().onDelete(async (user) => {
+  const uid = user.uid;
 
   // Remove the main user document if it still exists.
   await db.collection("users").doc(uid).delete().catch(() => undefined);
