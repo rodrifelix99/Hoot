@@ -459,14 +459,35 @@ export const onNotificationCreated = onDocumentCreated(
     const title = titles[data.type as number];
     if (!title) return;
 
-    const bodies: Record<number, string> = {
-        0: "Someone liked your post",
-        1: "Someone commented on your post",
-        2: "Someone mentioned you in a comment",
-        3: "Someone subscribed to your feed",
-        4: "Someone reFeeded your post",
+    const user = data.user;
+    const username = user?.username ? `@${user.username}` : "Someone";
+    const avatar = user?.bigAvatar as string | undefined;
+    const bodyTemplates: Record<number, string> = {
+      0: `${username} liked your post`,
+      1: `${username} commented on your post`,
+      2: `${username} mentioned you in a comment`,
+      3: `${username} subscribed to your feed`,
+      4: `${username} reFeeded your post`,
     };
-    const body = bodies[data.type as number] || "You have a new notification";
+    const body =
+      bodyTemplates[data.type as number] ?? "You have a new notification";
+
+    const payload: Record<string, unknown> = {
+      app_id: appId,
+      include_aliases: {
+        external_id: [userId],
+      },
+      headings: {
+        en: title,
+      },
+      contents: {
+        en: body,
+      },
+      data,
+    };
+    if (avatar) {
+      (payload as Record<string, unknown>)["chrome_web_image"] = avatar;
+    }
 
     await fetch("https://api.onesignal.com/notifications?c=push", {
       method: "POST",
@@ -474,19 +495,7 @@ export const onNotificationCreated = onDocumentCreated(
         "Content-Type": "application/json; charset=utf-8",
         Authorization: `Key ${apiKey}`,
       },
-      body: JSON.stringify({
-        app_id: appId,
-        include_aliases: {
-            external_id: [userId],
-        },
-        headings: {
-            en: title
-        },
-        contents: {
-            en: body
-        },
-        data,
-      }),
+      body: JSON.stringify(payload),
     }).catch(() => undefined);
   }
 );
