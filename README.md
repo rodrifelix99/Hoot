@@ -91,4 +91,6 @@ Read the [contributing guidelines](CONTRIBUTING.md) for information on preferred
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project uses the [Hoot Contributor License](LICENSE). The license permits
+submitting improvements to this repository but does not grant permission to use
+or redistribute the code for other purposes.
