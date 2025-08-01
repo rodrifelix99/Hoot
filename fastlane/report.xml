@@ -5,42 +5,42 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Switch to increment_build_number_in_pubspec lane" time="0.000374">
+      <testcase classname="fastlane.lanes" name="0: Switch to increment_build_number_in_pubspec lane" time="0.000114">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: Switch to flutter lane" time="0.000114">
+      <testcase classname="fastlane.lanes" name="1: Switch to flutter lane" time="0.000146">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: Flutter clean" time="18.393044">
+      <testcase classname="fastlane.lanes" name="2: Flutter clean" time="12.989362">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: Switch to flutter lane" time="0.000295">
+      <testcase classname="fastlane.lanes" name="3: Switch to flutter lane" time="0.000133">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: Pub Get" time="6.503751">
+      <testcase classname="fastlane.lanes" name="4: Pub Get" time="5.365135">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: Switch to build_ios lane" time="0.00014">
+      <testcase classname="fastlane.lanes" name="5: Switch to build_ios lane" time="0.000119">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="6: Switch to flutter lane" time="6.3e-05">
+      <testcase classname="fastlane.lanes" name="6: Switch to flutter lane" time="6.5e-05">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="7: Build" time="285.016084">
+      <testcase classname="fastlane.lanes" name="7: Build" time="294.189573">
         
           <failure message="/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/actions/actions_helper.rb:67:in &apos;Fastlane::Actions.execute_action&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/fast_file.rb:224:in &apos;Fastlane::FastFile.sh&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/fast_file.rb:214:in &apos;Fastlane::FastFile#sh&apos;&#10;Fastfile:9:in &apos;block in Fastlane::FastFile#parsing_binding&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/lane.rb:41:in &apos;Fastlane::Lane#call&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/runner.rb:204:in &apos;Fastlane::Runner#try_switch_to_lane&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/runner.rb:146:in &apos;Fastlane::Runner#trigger_action_by_name&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/fast_file.rb:159:in &apos;Fastlane::FastFile#method_missing&apos;&#10;Fastfile:49:in &apos;block in Fastlane::FastFile#parsing_binding&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/lane.rb:41:in &apos;Fastlane::Lane#call&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/runner.rb:204:in &apos;Fastlane::Runner#try_switch_to_lane&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/runner.rb:146:in &apos;Fastlane::Runner#trigger_action_by_name&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/fast_file.rb:159:in &apos;Fastlane::FastFile#method_missing&apos;&#10;Fastfile:117:in &apos;block in Fastlane::FastFile#parsing_binding&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/lane.rb:41:in &apos;Fastlane::Lane#call&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/runner.rb:49:in &apos;block in Fastlane::Runner#execute&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/runner.rb:45:in &apos;Dir.chdir&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/runner.rb:45:in &apos;Fastlane::Runner#execute&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/lane_manager.rb:46:in &apos;Fastlane::LaneManager.cruise_lane&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/command_line_handler.rb:34:in &apos;Fastlane::CommandLineHandler.handle&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/commands_generator.rb:110:in &apos;block (2 levels) in Fastlane::CommandsGenerator#run&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/commander-4.6.0/lib/commander/command.rb:187:in &apos;Commander::Command#call&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/commander-4.6.0/lib/commander/command.rb:157:in &apos;Commander::Command#run&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/commander-4.6.0/lib/commander/runner.rb:444:in &apos;Commander::Runner#run_active_command&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane_core/lib/fastlane_core/ui/fastlane_runner.rb:124:in &apos;Commander::Runner#run!&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/commander-4.6.0/lib/commander/delegates.rb:18:in &apos;Commander::Delegates#run!&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/commands_generator.rb:363:in &apos;Fastlane::CommandsGenerator#run&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/commands_generator.rb:43:in &apos;Fastlane::CommandsGenerator.start&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/fastlane/lib/fastlane/cli_tools_distributor.rb:123:in &apos;Fastlane::CLIToolsDistributor.take_off&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/gems/fastlane-2.228.0/bin/fastlane:23:in &apos;&lt;top (required)&gt;&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/bin/fastlane:25:in &apos;Kernel#load&apos;&#10;/opt/homebrew/lib/ruby/gems/3.4.0/bin/fastlane:25:in &apos;&lt;top (required)&gt;&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/3.4.0/bundler/cli/exec.rb:59:in &apos;Kernel.load&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/3.4.0/bundler/cli/exec.rb:59:in &apos;Bundler::CLI::Exec#kernel_load&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/3.4.0/bundler/cli/exec.rb:23:in &apos;Bundler::CLI::Exec#run&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/3.4.0/bundler/cli.rb:452:in &apos;Bundler::CLI#exec&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/3.4.0/bundler/vendor/thor/lib/thor/command.rb:28:in &apos;Bundler::Thor::Command#run&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/3.4.0/bundler/vendor/thor/lib/thor/invocation.rb:127:in &apos;Bundler::Thor::Invocation#invoke_command&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/3.4.0/bundler/vendor/thor/lib/thor.rb:538:in &apos;Bundler::Thor.dispatch&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/3.4.0/bundler/cli.rb:35:in &apos;Bundler::CLI.dispatch&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/3.4.0/bundler/vendor/thor/lib/thor/base.rb:584:in &apos;Bundler::Thor::Base::ClassMethods#start&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/3.4.0/bundler/cli.rb:29:in &apos;Bundler::CLI.start&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/gems/3.4.0/gems/bundler-2.6.9/exe/bundle:28:in &apos;block in &lt;top (required)&gt;&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/3.4.0/bundler/friendly_errors.rb:117:in &apos;Bundler.with_friendly_errors&apos;&#10;/opt/homebrew/Cellar/ruby/3.4.4/lib/ruby/gems/3.4.0/gems/bundler-2.6.9/exe/bundle:20:in &apos;&lt;top (required)&gt;&apos;&#10;/opt/homebrew/opt/ruby/bin/bundle:25:in &apos;Kernel#load&apos;&#10;/opt/homebrew/opt/ruby/bin/bundle:25:in &apos;&lt;main&gt;&apos;&#10;&#10;Build failed." />
         

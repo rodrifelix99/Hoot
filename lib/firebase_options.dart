@@ -66,12 +66,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCgT_ZOnvk5-WcbQcIT9KY1YJ-Sn0iPM-Y',
-    appId: '1:889498016095:ios:e768c47952ab3420967eea',
+    appId: '1:889498016095:ios:7ead74dec9ca9d7b967eea',
     messagingSenderId: '889498016095',
     projectId: 'hoot-9f14f',
     storageBucket: 'hoot-9f14f.firebasestorage.app',
-    iosClientId:
-        '889498016095-t9qt1bl16fj3qrb4hq3ps1jngn3utkmr.apps.googleusercontent.com',
-    iosBundleId: 'com.hoot.app.hoot',
+    iosClientId: '889498016095-jdoo20hv12e94bb46h732ij6snn7i1sr.apps.googleusercontent.com',
+    iosBundleId: 'com.hoot.app.hoot.OneSignalNotificationServiceExtension',
   );
+
 }

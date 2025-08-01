@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "889498016095-t9qt1bl16fj3qrb4hq3ps1jngn3utkmr.apps.googleusercontent.com",
+              "client_id": "889498016095-jdoo20hv12e94bb46h732ij6snn7i1sr.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.hoot.app.hoot"
+                "bundle_id": "com.hoot.app.hoot.OneSignalNotificationServiceExtension"
               }
             }
           ]
