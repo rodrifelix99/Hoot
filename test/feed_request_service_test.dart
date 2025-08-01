@@ -76,6 +76,7 @@ void main() {
           .doc('u1')
           .get();
       expect(req.exists, isTrue);
+      expect(req.data()!.containsKey('createdAt'), isTrue);
     });
 
     test('accept subscribes user and removes request', () async {
@@ -267,6 +268,27 @@ void main() {
 
       expect(result.length, 2);
       expect(result.map((r) => r.feedId).toSet(), {'f1', 'f2'});
+    });
+
+    test('fetchRequestsForMyFeeds returns request after submit', () async {
+      final firestore = FakeFirebaseFirestore();
+      await firestore.collection('feeds').doc('f1').set({'userId': 'owner'});
+      await firestore.collection('users').doc('u1').set({'uid': 'u1'});
+
+      final service = FeedRequestService(
+        firestore: firestore,
+        subscriptionService: SubscriptionService(firestore: firestore),
+        authService: FakeAuthService(U(uid: 'owner')),
+      );
+
+      await service.submit('f1', 'u1');
+
+      final result = await service.fetchRequestsForMyFeeds();
+
+      expect(result.length, 1);
+      expect(result.first.feedId, 'f1');
+      expect(result.first.user.uid, 'u1');
+      expect(result.first.createdAt, isNotNull);
     });
   });
 }

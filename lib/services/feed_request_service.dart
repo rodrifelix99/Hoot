@@ -28,10 +28,11 @@ class FeedRequestService {
         .collection('requests')
         .doc(userId);
     await _firestore.runTransaction((txn) async {
-      txn.set(
-        requestRef,
-        _authService.currentUser?.toCache(),
-      );
+      final userData = _authService.currentUser?.toCache() ?? {};
+      txn.set(requestRef, {
+        ...userData,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
     });
   }
 
