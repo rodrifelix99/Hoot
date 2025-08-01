@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -30,7 +29,7 @@ class NotificationItem extends StatelessWidget {
     return ScaleOnPress(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surfaceContainerLowest,
@@ -54,7 +53,7 @@ class NotificationItem extends StatelessWidget {
             ProfileAvatarComponent(
                 image: avatarUrl,
                 hash: avatarHash,
-                size: 60,
+                size: 50,
             ),
             const SizedBox(width: 16),
             Expanded(
