@@ -24,6 +24,7 @@ Private feeds generate subscription requests that the feed owner can accept or d
 Users can follow one another; notifications inform them of new followers or unsubscribes, as indicated by translation keys like “newFollower” and “newUnfollower”
 
 Feeds can be subscribed to or unsubscribed from. Notifications also cover events such as subscription requests and likes on posts
+Invite owners receive a notification when someone joins using their code
 
 ## Explore and search
 The Explore page highlights top feeds, new feeds, and popular feed genres. Users can search by username or browse feeds by genre using dedicated pages
