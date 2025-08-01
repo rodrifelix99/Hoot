@@ -59,6 +59,7 @@ lane :deploy do
     deploy_google_play
     #deploy_huawei
     deploy_ios
+    publish_github_release
 end
 
 desc "Deploy to Google Play Store"
@@ -121,5 +122,27 @@ lane :deploy_testflight do
         ipa: "./build/ios/ipa/hoot.ipa",
         team_id: "125395078",
         skip_waiting_for_build_processing: true,
+    )
+    publish_github_release(prerelease: true)
+end
+
+desc "Tag and publish a GitHub release"
+lane :publish_github_release do |options|
+    # Determine the version from pubspec.yaml
+    pubspec_path = File.expand_path('../pubspec.yaml', __dir__)
+    version_line = File.read(pubspec_path).match(/version:\s*(.*)/)[1].strip
+    tag = "v#{version_line}"
+    add_git_tag(tag: tag)
+    push_git_tags
+
+    changelog = changelog_from_git_commits
+    github_release(
+      repository_name: "your-org/Hoot",
+      tag_name: tag,
+      name: tag,
+      description: changelog,
+      commitish: 'main',
+      api_token: 'GITHUB_TOKEN_PLACEHOLDER',
+      prerelease: options && options[:prerelease]
     )
 end
