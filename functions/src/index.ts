@@ -11,7 +11,11 @@ import {setGlobalOptions} from "firebase-functions";
 
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore, FieldValue} from "firebase-admin/firestore";
-import {onDocumentCreated, onDocumentDeleted, onDocumentWritten} from "firebase-functions/v2/firestore";
+import {
+  onDocumentCreated,
+  onDocumentDeleted,
+  onDocumentWritten,
+} from "firebase-functions/v2/firestore";
 import {onUserDeleted} from "firebase-functions/v2/auth";
 
 // Start writing functions
@@ -433,4 +437,41 @@ export const onAuthUserDeleted = onUserDeleted(async (event) => {
 
   // EU GDPR: ensure complete personal data removal after account deletion.
 });
+
+export const onNotificationCreated = onDocumentCreated(
+  "users/{userId}/notifications/{notificationId}",
+  async (event) => {
+    const { userId } = event.params;
+    const data = event.data?.data();
+    if (!data) return;
+
+    const appId = process.env.ONESIGNAL_APP_ID;
+    const apiKey = process.env.ONESIGNAL_API_KEY;
+    if (!appId || !apiKey) return;
+
+    const titles: Record<number, string> = {
+      0: "New Like",
+      1: "New Comment",
+      2: "New Mention",
+      3: "New Subscriber",
+      4: "New ReHoot",
+    };
+    const title = titles[data.type as number];
+    if (!title) return;
+
+    await fetch("https://onesignal.com/api/v1/notifications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        Authorization: `Basic ${apiKey}`,
+      },
+      body: JSON.stringify({
+        app_id: appId,
+        include_external_user_ids: [userId],
+        contents: { en: title },
+        data,
+      }),
+    }).catch(() => undefined);
+  }
+);
 
