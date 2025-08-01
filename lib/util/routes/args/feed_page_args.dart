@@ -1,4 +1,4 @@
-import '../../../models/feed.dart';
+import 'package:hoot/models/feed.dart';
 
 class FeedPageArgs {
   final Feed? feed;

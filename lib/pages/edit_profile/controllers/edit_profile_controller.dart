@@ -9,11 +9,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 import 'package:blurhash/blurhash.dart';
 
-import '../../../services/auth_service.dart';
-import '../../../services/error_service.dart';
-import '../../../services/toast_service.dart';
-import '../../../services/user_service.dart';
-import '../../../models/user.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/error_service.dart';
+import 'package:hoot/services/toast_service.dart';
+import 'package:hoot/services/user_service.dart';
+import 'package:hoot/models/user.dart';
 
 class EditProfileController extends GetxController {
   final AuthService _authService;

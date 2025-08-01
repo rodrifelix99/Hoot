@@ -7,18 +7,18 @@ import 'package:hoot/models/post.dart';
 import 'package:get/get.dart';
 import 'package:flutter/gestures.dart';
 import 'package:solar_icons/solar_icons.dart';
-import 'like_button_component.dart';
+import 'package:hoot/components/like_button_component.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import '../util/routes/app_routes.dart';
-import '../services/post_service.dart';
-import '../services/auth_service.dart';
-import '../services/dialog_service.dart';
-import '../services/toast_service.dart';
-import '../services/report_service.dart';
-import '../util/mention_utils.dart';
-import '../util/extensions/datetime_extension.dart';
-import '../services/haptic_service.dart';
-import '../util/routes/args/profile_args.dart';
+import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/services/post_service.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/dialog_service.dart';
+import 'package:hoot/services/toast_service.dart';
+import 'package:hoot/services/report_service.dart';
+import 'package:hoot/util/mention_utils.dart';
+import 'package:hoot/util/extensions/datetime_extension.dart';
+import 'package:hoot/services/haptic_service.dart';
+import 'package:hoot/util/routes/args/profile_args.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
@@ -380,10 +380,9 @@ class _PostComponentState extends State<PostComponent> {
                       ),
                       Builder(
                         builder: (context) {
-                          final bool isPrivateFeed =
-                              _post.reFeeded
-                                  ? _post.reFeededFrom?.feed?.private ?? false
-                                  : _post.feed?.private ?? false;
+                          final bool isPrivateFeed = _post.reFeeded
+                              ? _post.reFeededFrom?.feed?.private ?? false
+                              : _post.feed?.private ?? false;
                           return Opacity(
                             opacity: isPrivateFeed ? 0.5 : 1,
                             child: IconButton(

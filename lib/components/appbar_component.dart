@@ -14,7 +14,7 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.elevationDuringScroll,
-});
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +25,21 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
       foregroundColor: foregroundColor,
       scrolledUnderElevation: elevationDuringScroll,
       shadowColor: Theme.of(context).colorScheme.surface.withValues(alpha: .25),
-      title: title != null ? PreferredSize(
-        preferredSize: preferredSize,
-        child: Text(
-          title!,
-          overflow: TextOverflow.fade,
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-            color: foregroundColor ?? Theme.of(context).colorScheme.primary,
-            fontWeight: FontWeight.w900,
-            fontSize: 32,
-          ),
-        ),
-      ) : null,
+      title: title != null
+          ? PreferredSize(
+              preferredSize: preferredSize,
+              child: Text(
+                title!,
+                overflow: TextOverflow.fade,
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      color: foregroundColor ??
+                          Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 32,
+                    ),
+              ),
+            )
+          : null,
       actions: actions,
     );
   }

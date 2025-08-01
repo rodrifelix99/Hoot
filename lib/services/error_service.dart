@@ -6,8 +6,8 @@ class ErrorService {
   ErrorService._();
 
   /// Logs [error] to Crashlytics and shows a toast with [message].
-  static Future<void> reportError(dynamic error, {String? message,
-      StackTrace? stack}) async {
+  static Future<void> reportError(dynamic error,
+      {String? message, StackTrace? stack}) async {
     await FirebaseCrashlytics.instance.recordError(
       error,
       stack ?? StackTrace.current,
@@ -16,5 +16,3 @@ class ErrorService {
     ToastService.showError(message ?? error.toString());
   }
 }
-
-

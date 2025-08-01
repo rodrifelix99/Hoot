@@ -10,9 +10,9 @@ import 'package:blurhash/blurhash.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 
-import '../../../services/error_service.dart';
-import '../../../services/auth_service.dart';
-import '../../../util/routes/app_routes.dart';
+import 'package:hoot/services/error_service.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 
 class AvatarController extends GetxController {
   final _auth = Get.find<AuthService>();

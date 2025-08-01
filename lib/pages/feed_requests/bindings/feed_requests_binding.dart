@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../controllers/feed_requests_controller.dart';
+import 'package:hoot/pages/feed_requests/controllers/feed_requests_controller.dart';
 
 class FeedRequestsBinding extends Bindings {
   @override

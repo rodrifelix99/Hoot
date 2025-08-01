@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/report_controller.dart';
+import 'package:hoot/pages/report/controllers/report_controller.dart';
 
 class ReportView extends GetView<ReportController> {
   const ReportView({super.key});

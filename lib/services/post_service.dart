@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/post.dart';
-import '../models/user.dart';
-import '../models/feed.dart';
-import 'auth_service.dart';
-
+import 'package:hoot/models/post.dart';
+import 'package:hoot/models/user.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/services/auth_service.dart';
 
 /// Base interface for creating posts in Firestore.
 abstract class BasePostService {

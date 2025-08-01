@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../controllers/post_controller.dart';
+import 'package:hoot/pages/post/controllers/post_controller.dart';
 
 class PostBinding extends Bindings {
   @override

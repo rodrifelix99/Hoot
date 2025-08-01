@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
 import 'package:quick_actions/quick_actions.dart';
-import '../util/routes/app_routes.dart';
-import '../pages/home/controllers/home_controller.dart';
+import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/pages/home/controllers/home_controller.dart';
 
 class QuickActionsService extends GetxService {
   final QuickActions _quickActions = const QuickActions();
@@ -11,7 +11,8 @@ class QuickActionsService extends GetxService {
   Future<void> init() async {
     _quickActions.initialize((type) {
       _pendingAction = type;
-      WidgetsBinding.instance.addPostFrameCallback((_) => handlePendingAction());
+      WidgetsBinding.instance
+          .addPostFrameCallback((_) => handlePendingAction());
     });
     await _quickActions.setShortcutItems(<ShortcutItem>[
       const ShortcutItem(

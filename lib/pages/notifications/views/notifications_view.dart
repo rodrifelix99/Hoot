@@ -5,9 +5,9 @@ import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/notification_item.dart';
 import 'package:hoot/util/extensions/datetime_extension.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../../../util/routes/app_routes.dart';
-import '../../../util/routes/args/profile_args.dart';
-import '../controllers/notifications_controller.dart';
+import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/util/routes/args/profile_args.dart';
+import 'package:hoot/pages/notifications/controllers/notifications_controller.dart';
 import 'package:hoot/services/haptic_service.dart';
 
 class NotificationsView extends GetView<NotificationsController> {
@@ -77,12 +77,14 @@ class NotificationsView extends GetView<NotificationsController> {
                     case 1:
                     case 2:
                       if (n.postId != null) {
-                        Get.toNamed(AppRoutes.post, arguments: {'id': n.postId});
+                        Get.toNamed(AppRoutes.post,
+                            arguments: {'id': n.postId});
                       }
                       break;
                     case 4:
                       if (n.postId != null) {
-                        Get.toNamed(AppRoutes.post, arguments: {'id': n.postId});
+                        Get.toNamed(AppRoutes.post,
+                            arguments: {'id': n.postId});
                       }
                       break;
                     case 3:

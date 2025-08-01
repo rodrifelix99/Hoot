@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-import '../models/post.dart';
-import 'auth_service.dart';
+import 'package:hoot/models/post.dart';
+import 'package:hoot/services/auth_service.dart';
 
 /// Page of posts along with pagination data.
 class PostPage {

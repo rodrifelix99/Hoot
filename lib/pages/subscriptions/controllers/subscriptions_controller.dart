@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 
-import '../../../models/feed.dart';
-import '../../../services/auth_service.dart';
-import '../../../services/subscription_service.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/subscription_service.dart';
 
 /// Controller that loads the feeds the current user is subscribed to.
 class SubscriptionsController extends GetxController {

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/user.dart';
+import 'package:hoot/models/user.dart';
 
 /// Provides helpers to update and query user documents.
 abstract class BaseUserService {

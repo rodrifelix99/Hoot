@@ -4,7 +4,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:hoot/services/haptic_service.dart';
 
-import '../../../util/enums/feed_types.dart';
+import 'package:hoot/util/enums/feed_types.dart';
 
 /// Reusable form widget for creating or editing feeds.
 class FeedForm extends StatelessWidget {

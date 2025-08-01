@@ -2,9 +2,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../../services/auth_service.dart';
-import '../../../services/toast_service.dart';
-import '../../../services/user_service.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/toast_service.dart';
+import 'package:hoot/services/user_service.dart';
 
 /// Manages the state of the welcome flow including form controllers
 /// and Firestore updates.

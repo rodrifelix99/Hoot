@@ -8,13 +8,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image/image.dart' as img;
 import 'package:blurhash/blurhash.dart';
 
-import '../../../models/feed.dart';
-import '../../../services/auth_service.dart';
-import '../../../services/error_service.dart';
-import '../../../services/toast_service.dart';
-import '../../profile/controllers/profile_controller.dart';
-import '../../../util/enums/feed_types.dart';
-import '../../../services/dialog_service.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/error_service.dart';
+import 'package:hoot/services/toast_service.dart';
+import 'package:hoot/pages/profile/controllers/profile_controller.dart';
+import 'package:hoot/util/enums/feed_types.dart';
+import 'package:hoot/services/dialog_service.dart';
 
 class EditFeedController extends GetxController {
   final FirebaseFirestore _firestore;

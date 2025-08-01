@@ -1,4 +1,4 @@
-import 'feed.dart';
+import 'package:hoot/models/feed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class U {

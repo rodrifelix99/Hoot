@@ -70,8 +70,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '889498016095',
     projectId: 'hoot-9f14f',
     storageBucket: 'hoot-9f14f.firebasestorage.app',
-    iosClientId: '889498016095-t9qt1bl16fj3qrb4hq3ps1jngn3utkmr.apps.googleusercontent.com',
+    iosClientId:
+        '889498016095-t9qt1bl16fj3qrb4hq3ps1jngn3utkmr.apps.googleusercontent.com',
     iosBundleId: 'com.hoot.app.hoot',
   );
-
 }

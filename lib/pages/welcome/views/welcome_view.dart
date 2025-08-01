@@ -1,12 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:hoot/services/haptic_service.dart';
 
-import '../../avatar/controllers/avatar_controller.dart';
-import '../controllers/welcome_controller.dart';
+import 'package:hoot/pages/avatar/controllers/avatar_controller.dart';
+import 'package:hoot/pages/welcome/controllers/welcome_controller.dart';
 
 class WelcomeView extends StatefulWidget {
   const WelcomeView({super.key, this.initialIndex = 0});

@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-import '../models/user.dart';
-import 'feed_request_service.dart';
-import 'subscription_service.dart';
+import 'package:hoot/models/user.dart';
+import 'package:hoot/services/feed_request_service.dart';
+import 'package:hoot/services/subscription_service.dart';
 
 /// Possible outcomes when toggling a feed subscription.
 enum SubscriptionResult { subscribed, unsubscribed, requested }

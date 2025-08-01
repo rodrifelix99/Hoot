@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../components/appbar_component.dart';
-import '../../../util/enums/app_colors.dart';
-import '../controllers/app_color_controller.dart';
+import 'package:hoot/components/appbar_component.dart';
+import 'package:hoot/util/enums/app_colors.dart';
+import 'package:hoot/pages/app_color/controllers/app_color_controller.dart';
 
 class AppColorView extends GetView<AppColorController> {
   const AppColorView({super.key});

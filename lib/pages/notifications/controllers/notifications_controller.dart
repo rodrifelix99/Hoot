@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:get/get.dart';
 
-import '../../../models/hoot_notification.dart';
-import '../../../services/auth_service.dart';
-import '../../../services/notification_service.dart';
-import '../../../services/feed_request_service.dart';
+import 'package:hoot/models/hoot_notification.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/notification_service.dart';
+import 'package:hoot/services/feed_request_service.dart';
 
 class NotificationsController extends GetxController {
   final AuthService _authService;

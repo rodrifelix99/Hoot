@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/error_service.dart';
-import '../../../util/routes/app_routes.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 
 class LoginController extends GetxController {
   final _auth = Get.find<AuthService>();

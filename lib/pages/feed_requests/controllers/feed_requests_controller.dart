@@ -1,16 +1,17 @@
 import 'package:get/get.dart';
 
-import '../../../models/feed_join_request.dart';
-import '../../../services/feed_request_service.dart';
-import '../../../services/auth_service.dart';
-import '../../../util/routes/app_routes.dart';
-import '../../../util/routes/args/profile_args.dart';
+import 'package:hoot/models/feed_join_request.dart';
+import 'package:hoot/services/feed_request_service.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/util/routes/args/profile_args.dart';
 
 class FeedRequestsController extends GetxController {
   final FeedRequestService _service;
   final AuthService _authService;
 
-  FeedRequestsController({FeedRequestService? service, AuthService? authService})
+  FeedRequestsController(
+      {FeedRequestService? service, AuthService? authService})
       : _service = service ?? Get.find<FeedRequestService>(),
         _authService = authService ?? Get.find<AuthService>();
 
@@ -40,14 +41,12 @@ class FeedRequestsController extends GetxController {
 
   Future<void> accept(String feedId, String userId) async {
     await _service.accept(feedId, userId);
-    requests.removeWhere(
-        (r) => r.user.uid == userId && r.feedId == feedId);
+    requests.removeWhere((r) => r.user.uid == userId && r.feedId == feedId);
   }
 
   Future<void> reject(String feedId, String userId) async {
     await _service.reject(feedId, userId);
-    requests.removeWhere(
-        (r) => r.user.uid == userId && r.feedId == feedId);
+    requests.removeWhere((r) => r.user.uid == userId && r.feedId == feedId);
   }
 
   void openProfile(String userId) {

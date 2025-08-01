@@ -2,11 +2,11 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../../services/auth_service.dart';
-import '../../../services/invitation_service.dart';
-import '../../../services/toast_service.dart';
-import '../../../services/error_service.dart';
-import '../../../util/routes/app_routes.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/invitation_service.dart';
+import 'package:hoot/services/toast_service.dart';
+import 'package:hoot/services/error_service.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 
 class InvitationController extends GetxController {
   final InvitationService _invitationService;

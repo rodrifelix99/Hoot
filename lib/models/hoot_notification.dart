@@ -31,7 +31,8 @@ class HootNotification {
       read: map['read'],
       createdAt: map['createdAt'] is Timestamp
           ? (map['createdAt'] as Timestamp).toDate()
-          : DateTime.fromMillisecondsSinceEpoch(map['createdAt']['_seconds'] * 1000),
+          : DateTime.fromMillisecondsSinceEpoch(
+              map['createdAt']['_seconds'] * 1000),
     );
   }
 }

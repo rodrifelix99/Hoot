@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../util/routes/app_routes.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 
 /// Middleware that redirects unauthenticated users to the login page.
 class AuthMiddleware extends GetMiddleware {

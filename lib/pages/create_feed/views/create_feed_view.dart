@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../controllers/create_feed_controller.dart';
-import '../../feed/widgets/feed_form.dart';
-import '../../feed/widgets/feed_avatar_picker.dart';
+import 'package:hoot/pages/create_feed/controllers/create_feed_controller.dart';
+import 'package:hoot/pages/feed/widgets/feed_form.dart';
+import 'package:hoot/pages/feed/widgets/feed_avatar_picker.dart';
 
 class CreateFeedView extends GetView<CreateFeedController> {
   const CreateFeedView({super.key});

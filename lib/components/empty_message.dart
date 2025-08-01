@@ -14,8 +14,10 @@ class NothingToShowComponent extends StatelessWidget {
     required this.text,
     this.buttonText,
     this.buttonAction,
-    this.imageAsset, this.title,
-  }) : assert(icon != null || imageAsset != null, 'Either icon or imageAsset must be provided');
+    this.imageAsset,
+    this.title,
+  }) : assert(icon != null || imageAsset != null,
+            'Either icon or imageAsset must be provided');
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +33,12 @@ class NothingToShowComponent extends StatelessWidget {
               height: 100.0,
             )
           else if (icon != null)
-          Icon(icon?.icon,
-              size: 100.0,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.5)),
+            Icon(icon?.icon,
+                size: 100.0,
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.5)),
           if (title != null) ...[
             const SizedBox(height: 10.0),
             Text(

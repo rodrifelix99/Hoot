@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-import '../../../models/user.dart';
-import '../../../services/subscription_service.dart';
+import 'package:hoot/models/user.dart';
+import 'package:hoot/services/subscription_service.dart';
 
 class SubscribersController extends GetxController {
   final SubscriptionService _subscriptionService;

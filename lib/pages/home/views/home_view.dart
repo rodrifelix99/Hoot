@@ -4,12 +4,12 @@ import 'package:get/get.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:solar_icons/solar_icons.dart';
 
-import '../../explore/views/explore_view.dart';
-import '../../feed/views/feed_view.dart';
-import '../../notifications/views/notifications_view.dart';
-import '../../notifications/controllers/notifications_controller.dart';
-import '../../profile/views/profile_view.dart';
-import '../controllers/home_controller.dart';
+import 'package:hoot/pages/explore/views/explore_view.dart';
+import 'package:hoot/pages/feed/views/feed_view.dart';
+import 'package:hoot/pages/notifications/views/notifications_view.dart';
+import 'package:hoot/pages/notifications/controllers/notifications_controller.dart';
+import 'package:hoot/pages/profile/views/profile_view.dart';
+import 'package:hoot/pages/home/controllers/home_controller.dart';
 import 'package:hoot/services/haptic_service.dart';
 import 'package:hoot/services/theme_service.dart';
 import 'package:hoot/util/enums/app_colors.dart';

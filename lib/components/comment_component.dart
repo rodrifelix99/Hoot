@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/models/comment.dart';
-import '../util/mention_utils.dart';
-import '../util/extensions/datetime_extension.dart';
+import 'package:hoot/util/mention_utils.dart';
+import 'package:hoot/util/extensions/datetime_extension.dart';
 
 class CommentComponent extends StatelessWidget {
   final Comment comment;

@@ -5,12 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 
-import '../../../models/post.dart';
-import '../../../models/comment.dart';
-import '../../../services/comment_service.dart';
-import '../../../services/auth_service.dart';
-import '../../../services/user_service.dart';
-import '../../../services/post_service.dart';
+import 'package:hoot/models/post.dart';
+import 'package:hoot/models/comment.dart';
+import 'package:hoot/services/comment_service.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/user_service.dart';
+import 'package:hoot/services/post_service.dart';
 
 class PostController extends GetxController {
   final Rx<Post> post = Post.empty().obs;
@@ -29,10 +29,13 @@ class PostController extends GetxController {
         _postService = postService ?? Get.find<BasePostService>(),
         _userService = userService;
 
-  final Rx<PagingState<DocumentSnapshot?, Comment>> commentsState = PagingState<DocumentSnapshot?, Comment>().obs;
+  final Rx<PagingState<DocumentSnapshot?, Comment>> commentsState =
+      PagingState<DocumentSnapshot?, Comment>().obs;
   final TextEditingController commentController = TextEditingController();
-  final GlobalKey<FlutterMentionsState> commentKey = GlobalKey<FlutterMentionsState>();
-  final RxList<Map<String, dynamic>> mentionSuggestions = <Map<String, dynamic>>[].obs;
+  final GlobalKey<FlutterMentionsState> commentKey =
+      GlobalKey<FlutterMentionsState>();
+  final RxList<Map<String, dynamic>> mentionSuggestions =
+      <Map<String, dynamic>>[].obs;
   final RxBool postingComment = false.obs;
   final RxBool showSendButton = false.obs;
 
@@ -90,7 +93,8 @@ class PostController extends GetxController {
         isLoading: false,
       );
     } catch (e) {
-      commentsState.value = commentsState.value.copyWith(error: e, isLoading: false);
+      commentsState.value =
+          commentsState.value.copyWith(error: e, isLoading: false);
       FirebaseCrashlytics.instance.recordError(
         e,
         null,
@@ -153,7 +157,8 @@ class PostController extends GetxController {
       } else {
         final first = List<Comment>.from(pages.first);
         first.insert(0, newComment);
-        commentsState.value = commentsState.value.copyWith(pages: [first, ...pages.skip(1)]);
+        commentsState.value =
+            commentsState.value.copyWith(pages: [first, ...pages.skip(1)]);
       }
       post.value.comments = (post.value.comments ?? 0) + 1;
       post.refresh();

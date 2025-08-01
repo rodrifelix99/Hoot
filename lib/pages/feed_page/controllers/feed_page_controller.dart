@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import '../../../models/feed.dart';
-import '../../../models/post.dart';
-import '../../../services/auth_service.dart';
-import '../../../services/feed_service.dart';
-import '../../../services/subscription_service.dart';
-import '../../../services/feed_request_service.dart';
-import '../../../services/subscription_manager.dart';
-import '../../../services/error_service.dart';
-import '../../../services/toast_service.dart';
-import '../../../services/dialog_service.dart';
-import '../../../util/routes/args/feed_page_args.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/models/post.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/feed_service.dart';
+import 'package:hoot/services/subscription_service.dart';
+import 'package:hoot/services/feed_request_service.dart';
+import 'package:hoot/services/subscription_manager.dart';
+import 'package:hoot/services/error_service.dart';
+import 'package:hoot/services/toast_service.dart';
+import 'package:hoot/services/dialog_service.dart';
+import 'package:hoot/util/routes/args/feed_page_args.dart';
 
 class FeedPageController extends GetxController {
   final FeedPageArgs? args;

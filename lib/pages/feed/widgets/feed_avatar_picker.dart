@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/services/haptic_service.dart';
 
-import '../../../components/avatar_component.dart';
+import 'package:hoot/components/avatar_component.dart';
 
 class FeedAvatarPicker extends StatelessWidget {
   final File? file;

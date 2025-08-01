@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
-import '../controllers/subscribers_controller.dart';
-import '../../../components/avatar_component.dart';
-import '../../../components/name_component.dart';
-import '../../../components/empty_message.dart';
-import '../../../util/routes/app_routes.dart';
-import '../../../util/routes/args/profile_args.dart';
-import '../../../services/dialog_service.dart';
+import 'package:hoot/pages/subscribers/controllers/subscribers_controller.dart';
+import 'package:hoot/components/avatar_component.dart';
+import 'package:hoot/components/name_component.dart';
+import 'package:hoot/components/empty_message.dart';
+import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/util/routes/args/profile_args.dart';
+import 'package:hoot/services/dialog_service.dart';
 
 class SubscribersView extends GetView<SubscribersController> {
   const SubscribersView({super.key});
