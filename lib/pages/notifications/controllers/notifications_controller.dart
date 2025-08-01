@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 import 'package:hoot/models/hoot_notification.dart';
+import 'package:hoot/models/feed_join_request.dart';
+import 'package:hoot/models/user.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/notification_service.dart';
 import 'package:hoot/services/feed_request_service.dart';
@@ -23,6 +25,7 @@ class NotificationsController extends GetxController {
   final RxList<HootNotification> notifications = <HootNotification>[].obs;
   final RxInt unreadCount = 0.obs;
   final RxInt requestCount = 0.obs;
+  final RxList<U> requestUsers = <U>[].obs;
   final RxBool loading = false.obs;
 
   StreamSubscription<int>? _unreadSub;
@@ -32,6 +35,7 @@ class NotificationsController extends GetxController {
     super.onInit();
     _loadNotifications();
     _loadRequestCount();
+    _loadRequestUsers();
     _listenUnreadCount();
   }
 
@@ -44,6 +48,7 @@ class NotificationsController extends GetxController {
   Future<void> refreshNotifications() async {
     await _loadNotifications();
     await _loadRequestCount();
+    await _loadRequestUsers();
   }
 
   Future<void> markAllAsRead() async {
@@ -90,5 +95,13 @@ class NotificationsController extends GetxController {
 
   Future<void> _loadRequestCount() async {
     requestCount.value = await _feedRequestService.pendingRequestCount();
+  }
+
+  Future<void> _loadRequestUsers() async {
+    final requests = await _feedRequestService.fetchRequestsForMyFeeds();
+    final sorted = [...requests]
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    requestUsers.value =
+        sorted.map((r) => r.user).take(3).toList(growable: false);
   }
 }

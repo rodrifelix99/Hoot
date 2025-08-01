@@ -12,6 +12,8 @@ import 'package:hoot/services/subscription_service.dart';
 import 'package:hoot/util/translations/app_translations.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/models/hoot_notification.dart';
+import 'package:hoot/models/feed_join_request.dart';
+import 'package:hoot/components/avatar_component.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
@@ -60,7 +62,8 @@ class FakeAuthService extends GetxService implements AuthService {
 
 class FakeFeedRequestService extends FeedRequestService {
   final int count;
-  FakeFeedRequestService(this.count)
+  final List<FeedJoinRequest> preview;
+  FakeFeedRequestService(this.count, [this.preview = const []])
       : super(
             firestore: FakeFirebaseFirestore(),
             subscriptionService: SubscriptionService(
@@ -70,6 +73,9 @@ class FakeFeedRequestService extends FeedRequestService {
 
   @override
   Future<int> pendingRequestCount() async => count;
+
+  @override
+  Future<List<FeedJoinRequest>> fetchRequestsForMyFeeds() async => preview;
 }
 
 class TestNotificationsController extends NotificationsController {
@@ -173,6 +179,38 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Subscriber Requests (2)'), findsOneWidget);
+    Get.reset();
+  });
+
+  testWidgets('Displays requester avatars in feed requests button',
+      (tester) async {
+    final requests = [
+      FeedJoinRequest(
+          feedId: 'f1', user: U(uid: 'u2'), createdAt: DateTime.now()),
+      FeedJoinRequest(
+          feedId: 'f2', user: U(uid: 'u3'), createdAt: DateTime.now()),
+    ];
+    final controller = TestNotificationsController(
+      authService: FakeAuthService(U(uid: 'u1')),
+      notificationService:
+          NotificationService(firestore: FakeFirebaseFirestore()),
+      feedRequestService: FakeFeedRequestService(2, requests),
+    );
+    controller.loading.value = false;
+    controller.requestCount.value = 2;
+    controller.requestUsers.assignAll(requests.map((r) => r.user));
+    Get.put<NotificationsController>(controller);
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        translations: AppTranslations(),
+        locale: const Locale('en'),
+        home: const NotificationsView(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ProfileAvatarComponent), findsNWidgets(2));
     Get.reset();
   });
 }

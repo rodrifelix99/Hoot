@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/notification_item.dart';
+import 'package:hoot/components/avatar_stack.dart';
 import 'package:hoot/util/extensions/datetime_extension.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/util/routes/app_routes.dart';
@@ -113,7 +114,7 @@ class NotificationsView extends GetView<NotificationsController> {
                 onTap: () => Get.toNamed(AppRoutes.feedRequests),
                 title: Text('subscriberRequestsCount'.trParams(
                     {'count': controller.requestCount.value.toString()})),
-                leading: Icon(SolarIconsBold.tickerStar),
+                leading: AvatarStack(users: controller.requestUsers.toList()),
                 trailing: const Icon(Icons.chevron_right),
               ),
             Expanded(
