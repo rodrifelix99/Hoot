@@ -71,14 +71,14 @@ class CreatePostView extends GetView<CreatePostController> {
                         dropdownStyleData: DropdownStyleData(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface,
+                            color: Theme.of(context).colorScheme.surfaceContainerLowest,
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
                         buttonStyleData: ButtonStyleData(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
+                            color: Theme.of(context).inputDecorationTheme.fillColor,
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
