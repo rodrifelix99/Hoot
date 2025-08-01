@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
-import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/empty_message.dart';
-import 'package:hoot/components/list_item_component.dart';
+import 'package:hoot/components/notification_item.dart';
 import 'package:hoot/util/extensions/datetime_extension.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../../../util/routes/app_routes.dart';
@@ -66,7 +65,11 @@ class NotificationsView extends GetView<NotificationsController> {
                 default:
                   text = '';
               }
-              return GestureDetector(
+              return NotificationItem(
+                avatarUrl: user.largeProfilePictureUrl ?? '',
+                avatarHash: user.bigAvatarHash ?? user.smallAvatarHash,
+                title: text,
+                subtitle: n.createdAt.timeAgo(),
                 onTap: () {
                   HapticService.lightImpact();
                   switch (n.type) {
@@ -74,14 +77,12 @@ class NotificationsView extends GetView<NotificationsController> {
                     case 1:
                     case 2:
                       if (n.postId != null) {
-                        Get.toNamed(AppRoutes.post,
-                            arguments: {'id': n.postId});
+                        Get.toNamed(AppRoutes.post, arguments: {'id': n.postId});
                       }
                       break;
                     case 4:
                       if (n.postId != null) {
-                        Get.toNamed(AppRoutes.post,
-                            arguments: {'id': n.postId});
+                        Get.toNamed(AppRoutes.post, arguments: {'id': n.postId});
                       }
                       break;
                     case 3:
@@ -92,31 +93,13 @@ class NotificationsView extends GetView<NotificationsController> {
                       break;
                   }
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                  ),
-                  child: ListItemComponent(
-                    small: true,
-                    leadingRadius: 16,
-                    leading: GestureDetector(
-                      onTap: () {
-                        HapticService.lightImpact();
-                        Get.toNamed(
-                          AppRoutes.profile,
-                          arguments: ProfileArgs(uid: user.uid),
-                        );
-                      },
-                      child: ProfileAvatarComponent(
-                        image: user.largeProfilePictureUrl ?? '',
-                        hash: user.bigAvatarHash ?? user.smallAvatarHash,
-                        size: 60,
-                      ),
-                    ),
-                    title: text,
-                    subtitle: n.createdAt.timeAgo(),
-                  ),
-                ),
+                onAvatarTap: () {
+                  HapticService.lightImpact();
+                  Get.toNamed(
+                    AppRoutes.profile,
+                    arguments: ProfileArgs(uid: user.uid),
+                  );
+                },
               );
             },
           );
