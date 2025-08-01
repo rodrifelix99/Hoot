@@ -87,6 +87,11 @@ class TestNotificationsController extends NotificationsController {
             authService: authService,
             notificationService: notificationService,
             feedRequestService: feedRequestService);
+
+  @override
+  void onInit() {
+    // Override to avoid fetching data from services during tests.
+  }
 }
 
 void main() {
@@ -154,6 +159,39 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Tester reFeeded your hoot'), findsOneWidget);
+    Get.reset();
+  });
+
+  testWidgets('NotificationsView shows friend joined notification',
+      (tester) async {
+    final controller = TestNotificationsController(
+      authService: FakeAuthService(U(uid: 'u1')),
+      notificationService:
+          NotificationService(firestore: FakeFirebaseFirestore()),
+      feedRequestService: FakeFeedRequestService(0),
+    );
+    controller.loading.value = false;
+    controller.notifications.assignAll([
+      HootNotification(
+        id: 'n3',
+        user: U(uid: 'u2', username: 'Tester'),
+        type: 5,
+        read: false,
+        createdAt: DateTime.now(),
+      ),
+    ]);
+    Get.put<NotificationsController>(controller);
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        translations: AppTranslations(),
+        locale: const Locale('en'),
+        home: const NotificationsView(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tester joined Hoot using your invite code'), findsOneWidget);
     Get.reset();
   });
 
