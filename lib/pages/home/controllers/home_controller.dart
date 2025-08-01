@@ -50,7 +50,9 @@ class HomeController extends GetxController {
   void changeIndex(int index) {
     selectedIndex.value = index;
     if (index == 2 && Get.isRegistered<NotificationsController>()) {
-      Get.find<NotificationsController>().markAllAsRead();
+      final controller = Get.find<NotificationsController>();
+      controller.refreshNotifications();
+      controller.markAllAsRead();
     }
   }
 }
