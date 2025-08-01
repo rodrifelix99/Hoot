@@ -1,11 +1,46 @@
-Hoot Contributor License
+# HOOT CONTRIBUTOR LICENSE AGREEMENT (HCLA)
 
-Copyright (c) 2025 Hoot
+**Copyright © 2025 Hoot. All rights reserved.**
 
-All rights reserved.
+### 1. Grant of Contribution Rights
 
-Permission is granted to submit contributions to this project. The project owners may incorporate, modify, or redistribute contributed code at their sole discretion.
+By submitting any code, documentation, designs, ideas, translations, tests, or other materials (“Contribution”) to the Hoot project (the “Project”), you hereby grant Hoot and its designated maintainers and affiliates (“Project Owners”) a perpetual, worldwide, royalty-free, irrevocable, non-exclusive right and license to:
 
-No other rights are granted. You may not use, copy, modify, or distribute this software except for the purpose of contributing changes back to this project.
+* Use, reproduce, display, perform, modify, adapt, publish, sublicense, and create derivative works of the Contribution;
+* Incorporate the Contribution into the Project or any other software;
+* Distribute the Contribution as part of the Project, in whole or in part, under any license, including but not limited to proprietary or open-source licenses, at the sole discretion of the Project Owners.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+You waive all moral rights to the Contribution to the fullest extent permitted by applicable law.
+
+### 2. Contributor Representations
+
+By submitting a Contribution, you represent and warrant that:
+
+* You are legally entitled to make the Contribution;
+* The Contribution is your original work or you have the right to submit it;
+* The Contribution does not contain any confidential information, trade secrets, or infringe any third-party rights;
+* The Contribution is not subject to any license or restriction that would conflict with the rights granted under this agreement.
+
+You agree to indemnify and hold harmless the Project Owners against any liability, loss, or damage arising from any breach of these representations.
+
+### 3. Use Restrictions
+
+Except as expressly permitted in Section 1, **no other rights are granted.** Specifically:
+
+* You **may not** use, reproduce, copy, modify, distribute, or sublicense the Project or any part of it;
+* You **may not** create derivative works based on the Project or use it in any commercial or non-commercial product;
+* You **may not** host, mirror, or repackage the Project or its codebase in any form.
+
+Use is strictly limited to submitting Contributions **back to this Project**.
+
+### 4. Termination
+
+This license is effective unless and until terminated by the Project Owners. Your rights under this license will automatically terminate without notice if you fail to comply with any term. Upon termination, you must immediately cease all use of the software, including your Contributions if not merged into the main project.
+
+### 5. No Warranty
+
+THE PROJECT AND ALL CONTRIBUTIONS ARE PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, OR NON-INFRINGEMENT. THE PROJECT OWNERS SHALL NOT BE LIABLE FOR ANY DAMAGES OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE PROJECT, THE CONTRIBUTIONS, OR THIS LICENSE.
+
+### 6. Governing Law
+
+This agreement shall be governed by and construed in accordance with the laws of Portugal, without regard to its conflict of law principles. All disputes shall be subject to the exclusive jurisdiction of the courts located in Lisbon.
