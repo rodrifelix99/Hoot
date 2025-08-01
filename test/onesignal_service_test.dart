@@ -4,8 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hoot/util/routes/app_routes.dart';
-import 'package:hoot/util/routes/args/feed_page_args.dart';
-import 'package:hoot/util/routes/args/profile_args.dart';
 
 import 'package:hoot/services/onesignal_service.dart';
 
