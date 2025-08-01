@@ -2,8 +2,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:hoot/models/hoot_notification.dart';
 
+class NotificationPage {
+  NotificationPage({
+    required this.notifications,
+    this.lastDoc,
+    this.hasMore = false,
+  });
+
+  final List<HootNotification> notifications;
+  final DocumentSnapshot? lastDoc;
+  final bool hasMore;
+}
+
 abstract class BaseNotificationService {
-  Future<List<HootNotification>> fetchNotifications(String userId);
+  Future<NotificationPage> fetchNotifications(
+    String userId, {
+    DocumentSnapshot? startAfter,
+    int limit = 10,
+  });
   Future<void> createNotification(String userId, Map<String, dynamic> data);
   Future<void> markAsRead(String userId, String notificationId);
   Stream<int> unreadCountStream(String userId);
@@ -17,16 +33,33 @@ class NotificationService implements BaseNotificationService {
       : _firestore = firestore ?? FirebaseFirestore.instance;
 
   @override
-  Future<List<HootNotification>> fetchNotifications(String userId) async {
-    final snapshot = await _firestore
+  Future<NotificationPage> fetchNotifications(
+    String userId, {
+    DocumentSnapshot? startAfter,
+    int limit = 10,
+  }) async {
+    var query = _firestore
         .collection('users')
         .doc(userId)
         .collection('notifications')
         .orderBy('createdAt', descending: true)
-        .get();
-    return snapshot.docs
+        .limit(limit);
+
+    if (startAfter != null) {
+      query = query.startAfterDocument(startAfter);
+    }
+
+    final snapshot = await query.get();
+
+    final notifications = snapshot.docs
         .map((d) => HootNotification.fromJson({'id': d.id, ...d.data()}))
         .toList();
+
+    return NotificationPage(
+      notifications: notifications,
+      lastDoc: snapshot.docs.isNotEmpty ? snapshot.docs.last : null,
+      hasMore: snapshot.docs.length == limit,
+    );
   }
 
   @override
