@@ -35,12 +35,13 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  firebase_core: ^3.15.2
-  firebase_auth: ^5.7.0
-  cloud_functions: ^5.6.2
-  firebase_crashlytics: ^4.3.10
-  cloud_firestore: ^5.6.12
+  firebase_core: ^4.0.0
+  firebase_auth: ^6.0.0
+  cloud_functions: ^6.0.0
+  firebase_crashlytics: ^5.0.0
+  cloud_firestore: ^6.0.0
   card_swiper: ^3.0.1
+  firebase_app_check: ^0.4.0
   google_fonts: ^6.2.1
   flutter_signin_button: ^2.0.0
   sign_in_with_apple: ^7.0.1
@@ -49,7 +50,7 @@ dependencies:
   blurhash: ^1.2.0
   blur: ^4.0.2
   image_picker: ^1.0.0
-  firebase_storage: ^12.4.10
+  firebase_storage: ^13.0.0
   image: ^4.5.4
   full_screen_image_null_safe: ^2.0.0
   animations: ^2.0.7
@@ -76,7 +77,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   infinite_scroll_pagination: ^5.1.0
   flutter_mentions: ^2.0.1
-  fake_cloud_firestore: ^3.1.0
+  fake_cloud_firestore: ^4.0.0
   liquid_glass_renderer: ^0.1.1-dev.10
   uuid: any
   figma_squircle: ^0.6.3
@@ -87,7 +88,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  firebase_auth_mocks: ^0.14.2
+  firebase_auth_mocks: ^0.15.0
   google_sign_in_mocks: ^0.3.0
   
   # The "flutter_lints" package below contains a set of recommended lints to
