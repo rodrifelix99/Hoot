@@ -51,7 +51,7 @@ export const onNotificationCreated = onDocumentCreated(
       (payload as Record<string, unknown>)["chrome_web_image"] = avatar;
     }
 
-    await fetch("https://api.onesignal.com/notifications?c=push", {
+    var res = await fetch("https://api.onesignal.com/notifications?c=push", {
       method: "POST",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -59,5 +59,17 @@ export const onNotificationCreated = onDocumentCreated(
       },
       body: JSON.stringify(payload),
     }).catch(() => undefined);
+
+    if (!res || !res.ok) {
+      console.error("Failed to send notification", {
+        userId,
+        title,
+        body,
+        data,
+        status: res?.status,
+        statusText: res?.statusText,
+      });
+      return;
+    }
   }
 );
