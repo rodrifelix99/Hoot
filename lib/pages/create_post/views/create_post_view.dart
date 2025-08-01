@@ -46,9 +46,8 @@ class CreatePostView extends GetView<CreatePostController> {
           return Center(
             child: NothingToShowComponent(
               imageAsset: 'assets/images/image_8.png',
-              title: 'First, create a feed',
-              text:
-                  'To Hoot, you need to create a feed first. You can create a feed from your profile page or by clicking the button below.',
+              title: 'createFeedFirstTitle'.tr,
+              text: 'createFeedFirstDescription'.tr,
               buttonText: 'createFeed'.tr,
               buttonAction: () => Get.toNamed(AppRoutes.createFeed),
             ),

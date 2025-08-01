@@ -121,6 +121,9 @@ class AppTranslations extends Translations {
               'You can create a new feed by clicking the + button',
           'whatIsAFeed':
               'Feeds let you group hoots by topic. Create your first feed using the + button above!',
+          'createFeedFirstTitle': 'First, create a feed',
+          'createFeedFirstDescription':
+              'To Hoot, you need to create a feed first. You can create a feed from your profile page or by clicking the button below.',
           'newSubscriber': '@username subscribed to @feedName',
           'unsubscribe': 'Unsubscribe',
           'unsubscribeConfirmation':
@@ -468,6 +471,9 @@ class AppTranslations extends Translations {
               'Puedes crear un nuevo feed haciendo clic en el botón +',
           'whatIsAFeed':
               'Los feeds te permiten agrupar hoots por tema. ¡Crea tu primer feed usando el botón + de arriba!',
+          'createFeedFirstTitle': 'Primero, crea un feed',
+          'createFeedFirstDescription':
+              'Para hootear necesitas crear un feed primero. Puedes crearlo desde tu perfil o haciendo clic en el botón de abajo.',
           'newSubscriber': '@username se suscribió a @feedName',
           'unsubscribe': 'Cancelar Suscripción',
           'unsubscribeConfirmation':
@@ -818,6 +824,9 @@ class AppTranslations extends Translations {
           'createFeedMessage': 'Podes criar um novo feed clicando no botão +',
           'whatIsAFeed':
               'Os feeds permitem agrupar hoots por tema. Cria o teu primeiro feed usando o botão + acima!',
+          'createFeedFirstTitle': 'Primeiro, cria um feed',
+          'createFeedFirstDescription':
+              'Para hootar precisas de criar um feed primeiro. Podes fazê-lo a partir do teu perfil ou clicando no botão abaixo.',
           'newSubscriber': '@username subscreveu @feedName',
           'unsubscribe': 'Cancelar Subscrição',
           'unsubscribeConfirmation':
@@ -1165,6 +1174,9 @@ class AppTranslations extends Translations {
               'Você pode criar um novo feed clicando no botão +',
           'whatIsAFeed':
               'Os feeds permitem agrupar hoots por tema. Crie seu primeiro feed usando o botão + acima!',
+          'createFeedFirstTitle': 'Primeiro, crie um feed',
+          'createFeedFirstDescription':
+              'Para hootar você precisa criar um feed primeiro. Você pode fazer isso a partir do seu perfil ou clicando no botão abaixo.',
           'newSubscriber': '@username se inscreveu em @feedName',
           'unsubscribe': 'Cancelar Inscrição',
           'unsubscribeConfirmation':
