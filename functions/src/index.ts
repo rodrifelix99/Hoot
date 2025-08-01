@@ -459,16 +459,32 @@ export const onNotificationCreated = onDocumentCreated(
     const title = titles[data.type as number];
     if (!title) return;
 
-    await fetch("https://onesignal.com/api/v1/notifications", {
+    const bodies: Record<number, string> = {
+        0: "Someone liked your post",
+        1: "Someone commented on your post",
+        2: "Someone mentioned you in a comment",
+        3: "Someone subscribed to your feed",
+        4: "Someone reFeeded your post",
+    };
+    const body = bodies[data.type as number] || "You have a new notification";
+
+    await fetch("https://api.onesignal.com/notifications?c=push", {
       method: "POST",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
-        Authorization: `Basic ${apiKey}`,
+        Authorization: `Key ${apiKey}`,
       },
       body: JSON.stringify({
         app_id: appId,
-        include_external_user_ids: [userId],
-        contents: { en: title },
+        include_aliases: {
+            external_id: [userId],
+        },
+        headings: {
+            en: title
+        },
+        contents: {
+            en: body
+        },
         data,
       }),
     }).catch(() => undefined);
