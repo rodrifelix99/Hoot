@@ -63,6 +63,10 @@ class NotificationsView extends GetView<NotificationsController> {
                   text = 'userReFeededYourHoot'
                       .trParams({'username': user.username ?? ''});
                   break;
+                case 5:
+                  text = 'friendJoined'
+                      .trParams({'username': user.username ?? ''});
+                  break;
                 default:
                   text = '';
               }
