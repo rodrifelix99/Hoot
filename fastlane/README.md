@@ -77,6 +77,14 @@ Deploy iOS
 
 Deploy to TestFlight
 
+### publish_github_release
+
+```sh
+[bundle exec] fastlane publish_github_release
+```
+
+Tag and publish a GitHub release
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

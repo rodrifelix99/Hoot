@@ -33,7 +33,7 @@ void main() {
     await FirebaseAppCheck.instance.activate(
       webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
       androidProvider: AndroidProvider.playIntegrity,
-      appleProvider: AppleProvider.deviceCheck,
+      appleProvider: AppleProvider.appAttestWithDeviceCheckFallback,
     );
     await DependencyInjector.init();
     final quickActions = Get.find<QuickActionsService>();

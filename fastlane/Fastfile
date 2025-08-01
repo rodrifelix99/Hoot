@@ -128,21 +128,25 @@ end
 
 desc "Tag and publish a GitHub release"
 lane :publish_github_release do |options|
-    # Determine the version from pubspec.yaml
     pubspec_path = File.expand_path('../pubspec.yaml', __dir__)
     version_line = File.read(pubspec_path).match(/version:\s*(.*)/)[1].strip
     tag = "v#{version_line}"
     add_git_tag(tag: tag)
     push_git_tags
 
+    if options && options[:prerelease]
+        tag = "#{tag}-pre"
+    end
+
     changelog = changelog_from_git_commits
-    github_release(
-      repository_name: "your-org/Hoot",
+    set_github_release(
+      repository_name: "rodrifelix99/Hoot",
+      api_token: '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',
       tag_name: tag,
       name: tag,
       description: changelog,
-      commitish: 'main',
-      api_token: 'GITHUB_TOKEN_PLACEHOLDER',
-      prerelease: options && options[:prerelease]
+      commitish: 'master',
+      is_prerelease: options && options[:prerelease],
+      # upload_assets: ["./build/ios/ipa/hoot.ipa", "./build/app/outputs/bundle/release/app-release.aab"]
     )
 end
