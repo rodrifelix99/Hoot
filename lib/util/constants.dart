@@ -1,3 +1,6 @@
+const kDefaultFetchLimit = 10;
+const kUserChunkSize = 10;
+
 const kInvitationFadeDuration = Duration(milliseconds: 500);
 const kInvitationExtendedFadeDuration = Duration(milliseconds: 1000);
 const kInvitationCrossFadeDuration = Duration(milliseconds: 300);
@@ -13,6 +16,10 @@ const kMaxImageDimension = 1080;
 const kJpegQuality = 85;
 const kBlurHashX = 4;
 const kBlurHashY = 3;
+const kSmallAvatarSize = 48;
+const kBigAvatarSize = 512;
+const kLargeImageDimension = 1024;
+const kBannerHeight = kLargeImageDimension;
 const kWelcomeUsernameStep = 1;
 const kWelcomeAvatarStep = 2;
 // Search by genre constants

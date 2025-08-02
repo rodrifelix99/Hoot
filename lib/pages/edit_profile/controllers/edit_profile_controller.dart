@@ -14,6 +14,7 @@ import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/toast_service.dart';
 import 'package:hoot/services/user_service.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/util/constants.dart';
 
 class EditProfileController extends GetxController {
   final AuthService _authService;
@@ -89,15 +90,19 @@ class EditProfileController extends GetxController {
         final bytes = await file.readAsBytes();
         final decoded = img.decodeImage(bytes);
         if (decoded != null) {
-          final small = img.copyResizeCropSquare(decoded, size: 48);
-          final big = img.copyResizeCropSquare(decoded, size: 512);
-          final banner = img.copyResize(decoded, height: 1024);
+          final small =
+              img.copyResizeCropSquare(decoded, size: kSmallAvatarSize);
+          final big = img.copyResizeCropSquare(decoded, size: kBigAvatarSize);
+          final banner = img.copyResize(decoded, height: kBannerHeight);
           final smallData = Uint8List.fromList(img.encodeJpg(small));
           final bigData = Uint8List.fromList(img.encodeJpg(big));
           final bannerData = Uint8List.fromList(img.encodeJpg(banner));
-          bannerHash = await BlurHash.encode(bannerData, 4, 3);
-          smallAvatarHash = await BlurHash.encode(smallData, 4, 3);
-          bigAvatarHash = await BlurHash.encode(bigData, 4, 3);
+          bannerHash =
+              await BlurHash.encode(bannerData, kBlurHashX, kBlurHashY);
+          smallAvatarHash =
+              await BlurHash.encode(smallData, kBlurHashX, kBlurHashY);
+          bigAvatarHash =
+              await BlurHash.encode(bigData, kBlurHashX, kBlurHashY);
           final storageRef =
               FirebaseStorage.instance.ref().child('avatars').child(uid);
           final smallRef = storageRef.child('small_avatar.jpg');

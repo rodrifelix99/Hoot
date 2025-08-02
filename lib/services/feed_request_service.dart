@@ -6,6 +6,7 @@ import 'package:hoot/models/user.dart';
 import 'package:hoot/models/feed_join_request.dart';
 import 'dart:math' as math;
 import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/util/constants.dart';
 
 class FeedRequestService {
   final FirebaseFirestore _firestore;
@@ -91,7 +92,7 @@ class FeedRequestService {
     final ids = snapshot.docs.map((d) => d.id).toList();
     if (ids.isEmpty) return [];
 
-    const chunkSize = 10;
+    const chunkSize = kUserChunkSize;
     final Map<String, U> users = {};
     for (var i = 0; i < ids.length; i += chunkSize) {
       final chunk = ids.sublist(i, math.min(i + chunkSize, ids.length));
