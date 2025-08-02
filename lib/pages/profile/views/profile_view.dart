@@ -96,22 +96,18 @@ class _ProfileViewState extends State<ProfileView> {
                 left: 16,
                 right: 16,
                 child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(32),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: ProfileAvatarComponent(
-                      image: user.largeProfilePictureUrl ?? '',
-                      hash: user.bigAvatarHash ?? user.smallAvatarHash,
-                      size: 120,
-                    ),
+                  child: ProfileAvatarComponent(
+                    image: user.largeProfilePictureUrl ?? '',
+                    hash: user.bigAvatarHash ?? user.smallAvatarHash,
+                    size: 120,
+                    preview: true,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                 ),
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
+import 'package:get/get.dart';
 import 'package:hash_cached_image/hash_cached_image.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 
 class ProfileAvatarComponent extends StatelessWidget {
   final String image;
@@ -20,20 +21,26 @@ class ProfileAvatarComponent extends StatelessWidget {
     this.boxShadow,
   });
 
+  void _openViewer() {
+    Get.toNamed(
+      AppRoutes.photoViewer,
+      arguments: {'imageUrl': image},
+      preventDuplicates: false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (preview) {
-      return FullScreenWidget(
-        backgroundColor: Colors.black,
-        child: Center(
-          child: Hero(
-            tag: image,
-            child: Avatar(
-              image: image,
-              hash: hash,
-              size: size,
-              boxShadow: boxShadow,
-            ),
+      return GestureDetector(
+        onTap: _openViewer,
+        child: Hero(
+          tag: image + size.toString(),
+          child: Avatar(
+            image: image,
+            hash: hash,
+            size: size,
+            boxShadow: boxShadow,
           ),
         ),
       );
