@@ -200,6 +200,7 @@ class CreatePostController extends GetxController {
         id: postId,
         text: text.isEmpty ? null : text,
         media: imageUrls ?? (gifUrl.value != null ? [gifUrl.value!] : null),
+        url: linkUrl.value,
         feedId: feed.id,
         feed: feed,
         user: user,
