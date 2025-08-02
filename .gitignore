@@ -53,4 +53,5 @@ app.*.map.json
 
 # Environment files
 assets/.env
+ios/Runner/GoogleService-Info.plist
 /apply_patch.sh
