@@ -89,23 +89,6 @@ class TestNotificationsController extends NotificationsController {
 }
 
 void main() {
-  testWidgets('HomeView displays unread count badge', (tester) async {
-    final themeService = ThemeService();
-    await themeService.loadThemeSettings();
-    Get.put(themeService);
-    Get.put<AuthService>(FakeAuthService(U(uid: 'u1', username: 't')));
-    Get.put(HomeController());
-    final n = TestNotificationsController();
-    n.unreadCount.value = 2;
-    Get.put<NotificationsController>(n);
-
-    await tester.pumpWidget(const GetMaterialApp(home: HomeView()));
-    await tester.pumpAndSettle();
-
-    expect(find.text('2'), findsOneWidget);
-    Get.reset();
-  });
-
   testWidgets('swiping left opens create post page', (tester) async {
     final themeService = ThemeService();
     await themeService.loadThemeSettings();

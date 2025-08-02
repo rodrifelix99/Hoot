@@ -310,7 +310,9 @@ class _PostComponentState extends State<PostComponent> {
                       if (_post.createdAt != null)
                         Text(
                           _post.createdAt!.timeAgo(),
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       const SizedBox(width: 4),
                       IconButton(
