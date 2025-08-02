@@ -29,6 +29,7 @@ class EditProfileController extends GetxController {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
+  final TextEditingController websiteController = TextEditingController();
   final RxnString selectedCity = RxnString();
 
   final Rx<File?> avatarFile = Rx<File?>(null);
@@ -44,6 +45,7 @@ class EditProfileController extends GetxController {
       nameController.text = u.name ?? '';
       bioController.text = u.bio ?? '';
       locationController.text = u.location ?? '';
+      websiteController.text = u.website ?? '';
       selectedCity.value = u.location;
     }
   }
@@ -65,6 +67,7 @@ class EditProfileController extends GetxController {
     final name = nameController.text.trim();
     final bio = bioController.text.trim();
     final location = selectedCity.value ?? locationController.text.trim();
+    final website = websiteController.text.trim();
 
     if (name.length < 3) {
       ToastService.showError('displayNameTooShort'.tr);
@@ -121,6 +124,7 @@ class EditProfileController extends GetxController {
         'displayName': name,
         'bio': bio,
         if (location.isNotEmpty) 'location': location,
+        'website': website,
         if (bannerUrl != null) 'banner': bannerUrl,
         if (bannerHash != null) 'bannerHash': bannerHash,
         if (smallAvatarUrl != null) 'smallAvatar': smallAvatarUrl,
@@ -134,6 +138,7 @@ class EditProfileController extends GetxController {
         u.name = name;
         u.bio = bio;
         if (location.isNotEmpty) u.location = location;
+        u.website = website;
         if (bannerUrl != null) u.bannerPictureUrl = bannerUrl;
         if (bannerHash != null) u.bannerHash = bannerHash;
         if (smallAvatarUrl != null) u.smallProfilePictureUrl = smallAvatarUrl;
@@ -157,6 +162,7 @@ class EditProfileController extends GetxController {
     nameController.dispose();
     bioController.dispose();
     locationController.dispose();
+    websiteController.dispose();
     super.onClose();
   }
 
