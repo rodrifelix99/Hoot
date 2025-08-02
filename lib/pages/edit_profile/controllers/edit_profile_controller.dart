@@ -76,7 +76,7 @@ class EditProfileController extends GetxController {
 
     saving.value = true;
     try {
-      final uid = FirebaseAuth.instance.currentUser?.uid;
+      final uid = _authService.currentUser?.uid;
       if (uid == null) return false;
 
       String? smallAvatarUrl;
