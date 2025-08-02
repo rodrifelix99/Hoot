@@ -14,48 +14,52 @@ class SettingsView extends GetView<SettingsController> {
       appBar: AppBarComponent(
         title: 'settings'.tr,
       ),
+      extendBodyBehindAppBar: true,
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(vertical: 8),
         itemCount: 3,
         itemBuilder: (context, index) {
           switch (index) {
             case 0:
-              return _buildSection(
-                context,
-                title: 'appearance'.tr,
-                children: [
-                  Obx(
-                    () => ListTile(
-                      leading: Icon(SolarIconsOutline.moonStars),
-                      title: Text('darkMode'.tr),
-                      trailing: DropdownButton<ThemeMode>(
-                        key: const Key('themeModeDropdown'),
-                        value: controller.themeMode,
-                        onChanged: controller.updateThemeMode,
-                        items: [
-                          DropdownMenuItem(
-                            value: ThemeMode.system,
-                            child: Text('syncedWithSystem'.tr),
-                          ),
-                          DropdownMenuItem(
-                            value: ThemeMode.light,
-                            child: Text('light'.tr),
-                          ),
-                          DropdownMenuItem(
-                            value: ThemeMode.dark,
-                            child: Text('dark'.tr),
-                          ),
-                        ],
+              return SafeArea(
+                bottom: false,
+                child: _buildSection(
+                  context,
+                  title: 'appearance'.tr,
+                  children: [
+                    Obx(
+                      () => ListTile(
+                        leading: Icon(SolarIconsOutline.moonStars),
+                        title: Text('darkMode'.tr),
+                        trailing: DropdownButton<ThemeMode>(
+                          key: const Key('themeModeDropdown'),
+                          value: controller.themeMode,
+                          onChanged: controller.updateThemeMode,
+                          items: [
+                            DropdownMenuItem(
+                              value: ThemeMode.system,
+                              child: Text('syncedWithSystem'.tr),
+                            ),
+                            DropdownMenuItem(
+                              value: ThemeMode.light,
+                              child: Text('light'.tr),
+                            ),
+                            DropdownMenuItem(
+                              value: ThemeMode.dark,
+                              child: Text('dark'.tr),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  ListTile(
-                    leading: const Icon(SolarIconsOutline.palette2),
-                    title: Text('appColor'.tr),
-                    trailing: const Icon(SolarIconsOutline.arrowRight),
-                    onTap: () => Get.toNamed(AppRoutes.appColor),
-                  ),
-                ],
+                    ListTile(
+                      leading: const Icon(SolarIconsOutline.palette2),
+                      title: Text('appColor'.tr),
+                      trailing: const Icon(SolarIconsOutline.arrowRight),
+                      onTap: () => Get.toNamed(AppRoutes.appColor),
+                    ),
+                  ],
+                ),
               );
             case 1:
               return _buildSection(
@@ -97,27 +101,45 @@ class SettingsView extends GetView<SettingsController> {
                 ],
               );
             default:
-              return _buildSection(
-                context,
-                title: 'about'.tr,
-                children: [
-                  ExpansionTile(
-                    leading: const Icon(SolarIconsOutline.heartAngle),
-                    title: Text('messageFromCreator'.tr),
-                    childrenPadding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    children: [
-                      Text('hootMightBeBuggy'.tr),
-                    ],
-                  ),
-                  Obx(
-                    () => ListTile(
-                      leading: const Icon(SolarIconsOutline.infoSquare),
-                      title: Text('version'.tr),
-                      subtitle: Text(controller.version.value),
+              return SafeArea(
+                top: false,
+                child: _buildSection(
+                  context,
+                  title: 'about'.tr,
+                  children: [
+                    ExpansionTile(
+                      leading: const Icon(SolarIconsOutline.heartAngle),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      title: Text('messageFromCreator'.tr),
+                      childrenPadding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      children: [
+                        Text(
+                          'hootMightBeBuggy'.tr,
+                          textAlign: TextAlign.justify,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: 16),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.asset(
+                            'assets/images/felix.jpg',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    Obx(
+                      () => ListTile(
+                        leading: const Icon(SolarIconsOutline.infoSquare),
+                        title: Text('version'.tr),
+                        subtitle: Text(controller.version.value),
+                      ),
+                    ),
+                  ],
+                ),
               );
           }
         },
@@ -138,6 +160,9 @@ class SettingsView extends GetView<SettingsController> {
           ),
         ),
         ListView.separated(
+          padding: EdgeInsets.only(
+            bottom: 32,
+          ),
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) => children[index],
