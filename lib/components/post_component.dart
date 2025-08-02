@@ -7,6 +7,7 @@ import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
 import 'package:get/get.dart';
 import 'package:flutter/gestures.dart';
+import 'package:hoot/util/routes/args/feed_page_args.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/components/like_button_component.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
@@ -266,10 +267,10 @@ class _PostComponentState extends State<PostComponent> {
                       GestureDetector(
                         onTap: () {
                           HapticService.lightImpact();
-                          if (_post.user != null) {
+                          if (_post.feed != null) {
                             Get.toNamed(
-                              AppRoutes.profile,
-                              arguments: ProfileArgs(uid: _post.user!.uid),
+                              AppRoutes.feed,
+                              arguments: FeedPageArgs(feed: _post.feed),
                             );
                           }
                         },

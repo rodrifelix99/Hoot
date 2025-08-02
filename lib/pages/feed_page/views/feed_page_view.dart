@@ -59,33 +59,36 @@ class FeedPageView extends GetView<FeedPageController> {
         color: color.withOpacity(0.2),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ProfileAvatarComponent(
-            image: feed.bigAvatar ?? '',
-            hash: feed.bigAvatarHash ?? feed.smallAvatarHash,
-            size: 120,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            feed.title,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          if (feed.description != null && feed.description!.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(feed.description!),
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ProfileAvatarComponent(
+              image: feed.bigAvatar ?? '',
+              hash: feed.bigAvatarHash ?? feed.smallAvatarHash,
+              size: 120,
             ),
-          TextButton.icon(
-            onPressed: () => Get.toNamed(
-              AppRoutes.subscribers,
-              arguments: feed.id,
+            const SizedBox(height: 8),
+            Text(
+              feed.title,
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
-            icon: const Icon(Icons.group_outlined),
-            label: Text('${feed.subscriberCount ?? 0} ${'followers'.tr}'),
-          ),
-        ],
+            if (feed.description != null && feed.description!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(feed.description!),
+              ),
+            TextButton.icon(
+              onPressed: () => Get.toNamed(
+                AppRoutes.subscribers,
+                arguments: feed.id,
+              ),
+              icon: const Icon(Icons.group_outlined),
+              label: Text('${feed.subscriberCount ?? 0} ${'followers'.tr}'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -210,6 +213,7 @@ class FeedPageView extends GetView<FeedPageController> {
         appBar: AppBarComponent(
           title: feed?.title ?? '',
         ),
+        extendBodyBehindAppBar: true,
         floatingActionButton: _buildFab(context, feed),
         body: _buildBody(context),
       );
