@@ -55,5 +55,6 @@ fastlane/
 
 # Environment files
 assets/.env
+ios/Runner/GoogleService-Info.plist
 android/app/google-services.json
 /apply_patch.sh
