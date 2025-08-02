@@ -71,14 +71,18 @@ class CreatePostView extends GetView<CreatePostController> {
                         dropdownStyleData: DropdownStyleData(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerLowest,
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
                         buttonStyleData: ButtonStyleData(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).inputDecorationTheme.fillColor,
+                            color: Theme.of(context)
+                                .inputDecorationTheme
+                                .fillColor,
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
@@ -100,7 +104,7 @@ class CreatePostView extends GetView<CreatePostController> {
                     maxLines: 10,
                     hintText: 'postPlaceholder'.tr,
                     onSearchChanged: controller.searchUsers,
-                    onChanged: (v) => controller.textController.text = v,
+                    onChanged: controller.onTextChanged,
                   ),
                   const SizedBox(height: 16),
                   Obx(() => PostMediaPreview(
@@ -131,8 +135,8 @@ class CreatePostView extends GetView<CreatePostController> {
                       ],
                     );
                   }),
-                  Builder(builder: (_) {
-                    final url = controller.linkUrl;
+                  Obx(() {
+                    final url = controller.linkUrl.value;
                     if (url != null) {
                       return Padding(
                         padding: const EdgeInsets.only(top: 8.0),
