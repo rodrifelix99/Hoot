@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/notification_permission_controller.dart';
+import 'package:hoot/pages/notifications_permission/controllers/notification_permission_controller.dart';
 
 class NotificationPermissionView
     extends GetView<NotificationPermissionController> {

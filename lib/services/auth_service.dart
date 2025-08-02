@@ -17,7 +17,7 @@ class AuthService {
       : _auth = auth ?? FirebaseAuth.instance,
         _firestore = firestore ?? FirebaseFirestore.instance;
 
-  Rxn<U> _currentUser = Rxn<U>();
+  final Rxn<U> _currentUser = Rxn<U>();
   bool _fetched = false;
 
   /// Forces refetch of the current user from Firestore.

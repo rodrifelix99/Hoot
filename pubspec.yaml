@@ -85,6 +85,7 @@ dependencies:
   screen_corner_radius: ^2.0.0
   onesignal_flutter: ^5.3.4
 
+  meta: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

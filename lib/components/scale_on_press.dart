@@ -10,12 +10,12 @@ class ScaleOnPress extends StatefulWidget {
   final double scale;
 
   const ScaleOnPress({
-    Key? key,
+    super.key,
     required this.child,
     this.onTap,
     this.duration = const Duration(milliseconds: 100),
     this.scale = 0.95,
-  }) : super(key: key);
+  });
 
   @override
   State<ScaleOnPress> createState() => _ScaleOnPressState();

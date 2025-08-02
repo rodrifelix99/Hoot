@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../controllers/notification_permission_controller.dart';
+import 'package:hoot/pages/notifications_permission/controllers/notification_permission_controller.dart';
 
 class NotificationPermissionBinding extends Bindings {
   @override
