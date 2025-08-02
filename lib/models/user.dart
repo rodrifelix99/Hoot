@@ -11,8 +11,6 @@ class U {
   String? bigAvatarHash;
   String? bannerPictureUrl;
   String? bannerHash;
-  double? radius;
-  String? color;
   String? musicUrl;
   String? bio;
   String? location;
@@ -42,8 +40,6 @@ class U {
     this.bigAvatarHash,
     this.bannerPictureUrl,
     this.bannerHash,
-    this.radius,
-    this.color,
     this.musicUrl,
     this.bio,
     this.location,
@@ -86,8 +82,6 @@ class U {
       bigAvatarHash: json['bigAvatarHash'],
       bannerPictureUrl: json['banner'],
       bannerHash: json['bannerHash'],
-      radius: double.tryParse(json['radius'].toString()),
-      color: json['color'],
       musicUrl: json['music'],
       bio: json['bio'],
       location: json['location'],
@@ -121,8 +115,6 @@ class U {
       'bigAvatarHash': bigAvatarHash,
       'banner': bannerPictureUrl,
       'bannerHash': bannerHash,
-      'radius': radius,
-      'color': color,
       'music': musicUrl,
       'bio': bio,
       'location': location,
@@ -146,8 +138,6 @@ class U {
         'bigAvatarHash': bigAvatarHash,
         'banner': bannerPictureUrl,
         'bannerHash': bannerHash,
-        'radius': radius,
-        'color': color,
         'music': musicUrl,
         'bio': bio,
         'location': location,
