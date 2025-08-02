@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "text": "Hello from mock feed!",
+    "feedId": "feed1",
+    "feed": {
+      "id": "feed1",
+      "userId": "user1",
+      "title": "General",
+      "description": "Mock feed for testing",
+      "color": "4280391411"
+    },
+    "user": {
+      "uid": "user1",
+      "displayName": "Mock User",
+      "username": "mockuser"
+    },
+    "likes": 0
+  }
+]
