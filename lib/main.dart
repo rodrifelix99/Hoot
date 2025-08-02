@@ -64,6 +64,11 @@ void main() {
               translations: AppTranslations(),
               locale: Get.deviceLocale,
               fallbackLocale: const Locale('en', 'US'),
+              builder: (context, child) => GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                child: child,
+              ),
             ),
           ),
         ),
