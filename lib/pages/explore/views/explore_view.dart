@@ -31,6 +31,11 @@ class ExploreView extends GetView<ExploreController> {
           children: [
             ...controller.userSuggestions.map(
               (u) => ListTile(
+                leading: ProfileAvatarComponent(
+                  image: u.largeProfilePictureUrl ?? '',
+                  hash: u.bigAvatarHash ?? u.smallAvatarHash,
+                  size: 40,
+                ),
                 title: Text(u.name ?? ''),
                 subtitle: Text('@${u.username ?? ''}'),
                 onTap: () => Get.toNamed(
@@ -79,7 +84,8 @@ class ExploreView extends GetView<ExploreController> {
                     hintText: 'searchPlaceholder'.tr,
                     prefixIcon: const Icon(SolarIconsOutline.magnifier),
                   ),
-                  textCapitalization: TextCapitalization.sentences,
+                  textCapitalization: TextCapitalization.none,
+                  keyboardType: TextInputType.emailAddress,
                   onChanged: controller.search,
                 ),
               ),
