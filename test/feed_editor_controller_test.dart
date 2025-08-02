@@ -5,14 +5,17 @@ import 'package:toastification/toastification.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:hoot/pages/create_feed/controllers/create_feed_controller.dart';
-import 'package:hoot/util/enums/feed_types.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hoot/models/feed.dart';
+import 'package:hoot/models/user.dart';
+import 'package:hoot/pages/feed_editor/controllers/feed_editor_controller.dart';
 import 'package:hoot/pages/profile/controllers/profile_controller.dart';
 import 'package:hoot/services/auth_service.dart';
-import 'package:hoot/models/user.dart';
 import 'package:hoot/services/feed_service.dart';
 import 'package:hoot/services/subscription_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hoot/services/feed_request_service.dart';
+import 'package:hoot/services/subscription_manager.dart';
+import 'package:hoot/util/enums/feed_types.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
   final U _user;
@@ -84,13 +87,13 @@ void main() {
 
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
-    final controller = CreateFeedController(
+    final controller = FeedEditorController(
         firestore: firestore, userId: 'u1', authService: auth);
     controller.titleController.text = 'My Feed';
     controller.descriptionController.text = 'Desc';
     controller.selectedType.value = FeedType.music;
 
-    final result = await controller.createFeed();
+    final result = await controller.submit();
     await tester.pump(const Duration(seconds: 4));
     await tester.pumpAndSettle();
 
@@ -108,11 +111,11 @@ void main() {
 
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
-    final controller = CreateFeedController(
+    final controller = FeedEditorController(
         firestore: firestore, userId: 'u1', authService: auth);
     controller.selectedType.value = FeedType.music;
 
-    final result = await controller.createFeed();
+    final result = await controller.submit();
     await tester.pump(const Duration(seconds: 4));
     await tester.pumpAndSettle();
 
@@ -128,11 +131,11 @@ void main() {
 
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
-    final controller = CreateFeedController(
+    final controller = FeedEditorController(
         firestore: firestore, userId: 'u1', authService: auth);
     controller.titleController.text = 'Feed';
 
-    final result = await controller.createFeed();
+    final result = await controller.submit();
     await tester.pump(const Duration(seconds: 4));
     await tester.pumpAndSettle();
 
@@ -152,16 +155,30 @@ void main() {
     final subService = SubscriptionService(
       firestore: firestore,
     );
+    final feedRequestService = FeedRequestService(
+      firestore: firestore,
+      subscriptionService: subService,
+      authService: auth,
+    );
+    final subManager = SubscriptionManager(
+      firestore: firestore,
+      subscriptionService: subService,
+      feedRequestService: feedRequestService,
+    );
     final profile = ProfileController(
       authService: auth,
       feedService: FakeFeedService(),
       subscriptionService: subService,
+      feedRequestService: feedRequestService,
+      subscriptionManager: subManager,
     );
     Get.put<AuthService>(auth);
     Get.put<SubscriptionService>(subService);
+    Get.put<FeedRequestService>(feedRequestService);
+    Get.put<SubscriptionManager>(subManager);
     Get.put<ProfileController>(profile);
 
-    final controller = CreateFeedController(
+    final controller = FeedEditorController(
         firestore: firestore,
         userId: 'u1',
         authService: auth,
@@ -169,7 +186,7 @@ void main() {
     controller.titleController.text = 'My Feed';
     controller.selectedType.value = FeedType.music;
 
-    final result = await controller.createFeed();
+    final result = await controller.submit();
     await tester.pump(const Duration(seconds: 4));
     await tester.pumpAndSettle();
 
@@ -187,12 +204,12 @@ void main() {
 
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
-    final controller = CreateFeedController(
+    final controller = FeedEditorController(
         firestore: firestore, userId: 'u1', authService: auth);
     controller.titleController.text = 'My Feed';
     controller.selectedType.value = FeedType.music;
 
-    final result = await controller.createFeed();
+    final result = await controller.submit();
     await tester.pump(const Duration(seconds: 4));
     await tester.pumpAndSettle();
 
@@ -206,5 +223,48 @@ void main() {
         .get();
     expect(subs.docs.length, 1);
     expect(subs.docs.first.id, feedId);
+  });
+
+  testWidgets('submit updates existing feed', (tester) async {
+    await tester.pumpWidget(const ToastificationWrapper(
+      child: MaterialApp(home: Scaffold(body: SizedBox())),
+    ));
+
+    final firestore = FakeFirebaseFirestore();
+    await firestore.collection('feeds').doc('f1').set({
+      'title': 'Old',
+      'description': 'Old desc',
+      'color': Colors.blue.value.toString(),
+      'type': 'music',
+      'private': false,
+      'nsfw': false,
+      'userId': 'u1',
+    });
+    final feed = Feed(
+      id: 'f1',
+      userId: 'u1',
+      title: 'Old',
+      description: 'Old desc',
+      color: Colors.blue,
+      type: FeedType.music,
+      private: false,
+      nsfw: false,
+      subscriberCount: 0,
+    );
+    final user = U(uid: 'u1', feeds: [feed]);
+    final auth = FakeAuthService(user);
+
+    final controller = FeedEditorController(
+        firestore: firestore, authService: auth, feed: feed, userId: 'u1');
+    controller.onInit();
+    controller.titleController.text = 'New';
+
+    final result = await controller.submit();
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pumpAndSettle();
+
+    expect(result, isTrue);
+    final doc = await firestore.collection('feeds').doc('f1').get();
+    expect(doc.get('title'), 'New');
   });
 }

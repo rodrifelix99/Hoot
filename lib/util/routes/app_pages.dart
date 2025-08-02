@@ -27,8 +27,7 @@ import 'package:hoot/pages/search/bindings/search_binding.dart';
 import 'package:hoot/pages/search/views/search_view.dart';
 import 'package:hoot/pages/search_by_genre/bindings/search_by_genre_binding.dart';
 import 'package:hoot/pages/search_by_genre/views/search_by_genre_view.dart';
-import 'package:hoot/pages/create_feed/bindings/create_feed_binding.dart';
-import 'package:hoot/pages/edit_feed/bindings/edit_feed_binding.dart';
+import 'package:hoot/pages/feed_editor/bindings/feed_editor_binding.dart';
 import 'package:hoot/pages/feed_editor/views/feed_editor_view.dart';
 import 'package:hoot/pages/feed_requests/bindings/feed_requests_binding.dart';
 import 'package:hoot/pages/feed_requests/views/feed_requests_view.dart';
@@ -139,13 +138,13 @@ class AppPages {
     GetPage(
       name: AppRoutes.createFeed,
       page: () => const FeedEditorView(),
-      binding: CreateFeedBinding(),
+      binding: FeedEditorBinding(),
       middlewares: [AuthMiddleware()],
     ),
     GetPage(
       name: AppRoutes.editFeed,
       page: () => const FeedEditorView(),
-      binding: EditFeedBinding(),
+      binding: FeedEditorBinding(),
       middlewares: [AuthMiddleware()],
     ),
     GetPage(
