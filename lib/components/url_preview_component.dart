@@ -24,10 +24,26 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
   @override
   void initState() {
     super.initState();
-    _getOgp().then((value) => setState(() {
-          _ogp = value;
-          _isLoading = false;
-        }));
+    _loadOgp();
+  }
+
+  void _loadOgp() {
+    setState(() => _isLoading = true);
+    _getOgp().then((value) {
+      if (!mounted) return;
+      setState(() {
+        _ogp = value;
+        _isLoading = false;
+      });
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant UrlPreviewComponent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.url != widget.url) {
+      _loadOgp();
+    }
   }
 
   Future<OgpData> _getOgp() async {

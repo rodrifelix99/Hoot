@@ -165,6 +165,7 @@ class EditProfileView extends GetView<EditProfileController> {
                     TypeAheadField<String>(
                       controller: controller.locationController,
                       suggestionsCallback: controller.searchCities,
+                      direction: VerticalDirection.up,
                       builder: (context, textController, focusNode) {
                         return TextField(
                           controller: textController,
