@@ -17,8 +17,6 @@ import 'package:toastification/toastification.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:hoot/services/theme_service.dart';
-import 'package:hoot/services/quick_actions_service.dart';
-import 'package:hoot/services/onesignal_service.dart';
 import 'package:hoot/firebase_options.dart';
 
 void main() {
@@ -36,8 +34,6 @@ void main() {
       appleProvider: AppleProvider.appAttestWithDeviceCheckFallback,
     );
     await DependencyInjector.init();
-    final quickActions = Get.find<QuickActionsService>();
-    final oneSignal = Get.find<OneSignalService>();
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
@@ -73,8 +69,6 @@ void main() {
         ),
       ),
     );
-    quickActions.handlePendingAction();
-    oneSignal.handlePendingNotification();
     FlutterNativeSplash.remove();
   }, (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack);
