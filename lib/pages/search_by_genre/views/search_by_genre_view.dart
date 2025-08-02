@@ -12,6 +12,7 @@ import 'package:hoot/util/routes/args/profile_args.dart';
 import 'package:hoot/services/haptic_service.dart';
 import 'package:hoot/pages/search_by_genre/controllers/search_by_genre_controller.dart';
 import 'package:hoot/util/enums/feed_types.dart';
+import 'package:hoot/util/constants.dart';
 
 class SearchByGenreView extends GetView<SearchByGenreController> {
   const SearchByGenreView({super.key});
@@ -31,16 +32,16 @@ class SearchByGenreView extends GetView<SearchByGenreController> {
           fit: StackFit.expand,
           children: [
             Positioned(
-              bottom: -8,
-              right: -32,
+              bottom: kGenreBannerBottomOffset,
+              right: kGenreBannerRightOffset,
               child: RotatedBox(
-                quarterTurns: 3,
+                quarterTurns: kGenreBannerQuarterTurns,
                 child: Opacity(
-                  opacity: 0.25,
+                  opacity: kGenreTitleOpacity,
                   child: Text(
                     title,
                     style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                          fontSize: 120,
+                          fontSize: kGenreTitleFontSize,
                         ),
                     textAlign: TextAlign.center,
                   ),
@@ -92,7 +93,7 @@ class SearchByGenreView extends GetView<SearchByGenreController> {
                   firstPageProgressIndicatorBuilder: (_) =>
                       const Center(child: CircularProgressIndicator()),
                   newPageProgressIndicatorBuilder: (_) => const Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(kGenreProgressIndicatorPadding),
                     child: Center(child: CircularProgressIndicator()),
                   ),
                   firstPageErrorIndicatorBuilder: (_) => NothingToShowComponent(

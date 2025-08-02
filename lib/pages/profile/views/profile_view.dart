@@ -346,59 +346,58 @@ class _ProfileViewState extends State<ProfileView> {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(child: buildHeader(user)),
-            SliverToBoxAdapter(child: Padding(
-              padding: const EdgeInsets.all(16.0).copyWith(
-                top: 8,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (user.location != null && user.location!.isNotEmpty)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          SolarIconsBold.mapPoint,
-                          size: 16,
-                          color:
-                          Theme.of(context).colorScheme.onSurfaceVariant,
+            SliverToBoxAdapter(child: SizedBox(height: 16)),
+            SliverToBoxAdapter(child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 16,
+              runSpacing: 8,
+              children: [
+                if (user.location != null && user.location!.isNotEmpty)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        SolarIconsBold.mapPoint,
+                        size: 16,
+                        color:
+                        Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        user.location!,
+                        style: Get.textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurfaceVariant,
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          user.location!,
-                          style: Get.textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurfaceVariant,
-                          ),
+                      ),
+                    ],
+                  ),
+                if (user.website != null && user.website!.isNotEmpty)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        SolarIconsBold.global,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        cleanUpUrl(user.website!),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Get.textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurfaceVariant,
                         ),
-                      ],
-                    ),
-                  if (user.website != null && user.website!.isNotEmpty)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          SolarIconsBold.shieldNetwork,
-                          size: 16,
-                          color:
-                          Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          cleanUpUrl(user.website!),
-                          style: Get.textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                ],
-              ),
+                      ),
+                    ],
+                  ),
+              ],
             )),
-            const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            const SliverToBoxAdapter(child: SizedBox(height: 32)),
             if (controller.feeds.isEmpty)
               SliverToBoxAdapter(
                 child: controller.isCurrentUser
