@@ -65,7 +65,7 @@ void main() {
               locale: Get.deviceLocale,
               fallbackLocale: const Locale('en', 'US'),
               builder: (context, child) => GestureDetector(
-                behavior: HitTestBehavior.translucent,
+                behavior: HitTestBehavior.opaque,
                 onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
                 child: child,
               ),
