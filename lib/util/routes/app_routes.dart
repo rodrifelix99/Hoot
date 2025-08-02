@@ -13,8 +13,8 @@ class AppRoutes {
   static const editProfile = '/edit_profile';
   static const search = '/search';
   static const searchByGenre = '/search_by_genre';
-  static const createFeed = '/create_feed';
-  static const editFeed = '/edit_feed';
+  static const createFeed = '/create_feed'; // FeedEditorView (creation)
+  static const editFeed = '/edit_feed'; // FeedEditorView (editing)
   static const feedRequests = '/feed_requests';
   static const subscriptions = '/subscriptions';
   static const subscribers = '/subscribers';
