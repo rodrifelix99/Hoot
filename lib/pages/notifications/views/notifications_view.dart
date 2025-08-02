@@ -5,7 +5,6 @@ import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/notification_item.dart';
 import 'package:hoot/components/avatar_stack.dart';
 import 'package:hoot/util/extensions/datetime_extension.dart';
-import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
 import 'package:hoot/pages/notifications/controllers/notifications_controller.dart';
@@ -28,8 +27,9 @@ class NotificationsView extends GetView<NotificationsController> {
         if (controller.notifications.isEmpty) {
           list = Center(
             child: NothingToShowComponent(
-              icon: const Icon(SolarIconsBold.bellOff),
-              text: 'noNotifications'.tr,
+              imageAsset: 'assets/images/notification.webp',
+              title: 'noNotifications'.tr,
+              text: 'noNotificationsText'.tr,
               buttonText: 'refresh'.tr,
               buttonAction: controller.refreshNotifications,
             ),

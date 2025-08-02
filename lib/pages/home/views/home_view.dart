@@ -46,6 +46,10 @@ class HomeView extends GetView<HomeController> {
                   fit: BoxFit.cover,
                 ),
               ),
+              if (Theme.of(context).brightness == Brightness.dark)
+                Container(
+                  color: Colors.black.withAlpha(125),
+                ),
               SafeArea(
                 top: false,
                 child: AnimatedContainer(
