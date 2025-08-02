@@ -17,6 +17,7 @@ import 'package:hoot/services/dialog_service.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/toast_service.dart';
 import 'package:hoot/util/enums/feed_types.dart';
+import 'package:hoot/util/constants.dart';
 
 /// Controller for creating and editing feeds.
 class FeedEditorController extends GetxController {
@@ -135,12 +136,14 @@ class FeedEditorController extends GetxController {
       final bytes = await file.readAsBytes();
       final decoded = img.decodeImage(bytes);
       if (decoded != null) {
-        final small = img.copyResizeCropSquare(decoded, size: 48);
-        final big = img.copyResizeCropSquare(decoded, size: 1024);
+        final small = img.copyResizeCropSquare(decoded, size: kSmallAvatarSize);
+        final big =
+            img.copyResizeCropSquare(decoded, size: kLargeImageDimension);
         final smallData = Uint8List.fromList(img.encodeJpg(small));
         final bigData = Uint8List.fromList(img.encodeJpg(big));
-        smallAvatarHash = await BlurHash.encode(smallData, 4, 3);
-        bigAvatarHash = await BlurHash.encode(bigData, 4, 3);
+        smallAvatarHash =
+            await BlurHash.encode(smallData, kBlurHashX, kBlurHashY);
+        bigAvatarHash = await BlurHash.encode(bigData, kBlurHashX, kBlurHashY);
         final storageRef = FirebaseStorage.instance
             .ref()
             .child('feed_avatars')
@@ -222,12 +225,14 @@ class FeedEditorController extends GetxController {
       final bytes = await file.readAsBytes();
       final decoded = img.decodeImage(bytes);
       if (decoded != null) {
-        final small = img.copyResizeCropSquare(decoded, size: 48);
-        final big = img.copyResizeCropSquare(decoded, size: 1024);
+        final small = img.copyResizeCropSquare(decoded, size: kSmallAvatarSize);
+        final big =
+            img.copyResizeCropSquare(decoded, size: kLargeImageDimension);
         final smallData = Uint8List.fromList(img.encodeJpg(small));
         final bigData = Uint8List.fromList(img.encodeJpg(big));
-        smallAvatarHash = await BlurHash.encode(smallData, 4, 3);
-        bigAvatarHash = await BlurHash.encode(bigData, 4, 3);
+        smallAvatarHash =
+            await BlurHash.encode(smallData, kBlurHashX, kBlurHashY);
+        bigAvatarHash = await BlurHash.encode(bigData, kBlurHashX, kBlurHashY);
         final storageRef = FirebaseStorage.instance
             .ref()
             .child('feed_avatars')
