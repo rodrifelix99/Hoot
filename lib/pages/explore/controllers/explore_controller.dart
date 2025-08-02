@@ -141,7 +141,8 @@ class ExploreController extends GetxController {
   /// Searches for users and feeds matching [query].
   Future<void> search(String value) async {
     query.value = value;
-    if (value.isEmpty) {
+    final lower = value.toLowerCase();
+    if (lower.isEmpty) {
       userSuggestions.clear();
       feedSuggestions.clear();
       return;
@@ -152,14 +153,14 @@ class ExploreController extends GetxController {
       final futures = await Future.wait([
         _firestore
             .collection('users')
-            .where('username', isGreaterThanOrEqualTo: value)
-            .where('username', isLessThanOrEqualTo: '$value\uf8ff')
+            .where('usernameLowercase', isGreaterThanOrEqualTo: lower)
+            .where('usernameLowercase', isLessThanOrEqualTo: '$lower\uf8ff')
             .limit(5)
             .get(),
         _firestore
             .collection('feeds')
-            .where('title', isGreaterThanOrEqualTo: value)
-            .where('title', isLessThanOrEqualTo: '$value\uf8ff')
+            .where('titleLowercase', isGreaterThanOrEqualTo: lower)
+            .where('titleLowercase', isLessThanOrEqualTo: '$lower\uf8ff')
             .limit(5)
             .get(),
       ]);
