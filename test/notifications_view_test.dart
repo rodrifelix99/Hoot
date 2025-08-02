@@ -89,9 +89,6 @@ class TestNotificationsController extends NotificationsController {
             authService: authService,
             notificationService: notificationService,
             feedRequestService: feedRequestService);
-
-  @override
-  void onInit() {}
 }
 
 void main() {
