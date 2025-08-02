@@ -15,9 +15,11 @@ void main() {
       'uid': 'u1',
       'displayName': 'Tester',
       'username': 'tester',
+      'usernameLowercase': 'tester',
     });
     await firestore.collection('feeds').doc('f1').set({
       'title': 'test feed',
+      'titleLowercase': 'test feed',
       'description': 'D',
       'color': '0',
       'type': 'music',
@@ -36,9 +38,10 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
-    await tester.enterText(find.byType(TextField), 'test');
+    await tester.enterText(find.byType(TextField), 'TEST');
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 
@@ -58,6 +61,7 @@ void main() {
       'uid': 'u1',
       'displayName': 'Tester',
       'username': 'tester',
+      'usernameLowercase': 'tester',
     });
 
     Get.put(ExploreController(firestore: firestore));
@@ -79,9 +83,10 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
-    await tester.enterText(find.byType(TextField), 'test');
+    await tester.enterText(find.byType(TextField), 'TEST');
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 
