@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:hoot/models/post.dart';
 import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/util/constants.dart';
 
 /// Page of posts along with pagination data.
 class PostPage {
@@ -17,13 +18,13 @@ class PostPage {
 abstract class BaseFeedService {
   Future<PostPage> fetchSubscribedPosts({
     DocumentSnapshot? startAfter,
-    int limit = 10,
+    int limit = kDefaultFetchLimit,
   });
 
   Future<PostPage> fetchFeedPosts(
     String feedId, {
     DocumentSnapshot? startAfter,
-    int limit = 10,
+    int limit = kDefaultFetchLimit,
   });
 }
 
@@ -40,7 +41,7 @@ class FeedService implements BaseFeedService {
   @override
   Future<PostPage> fetchSubscribedPosts({
     DocumentSnapshot? startAfter,
-    int limit = 10,
+    int limit = kDefaultFetchLimit,
   }) async {
     final user = _authService.currentUser;
     if (user == null) return PostPage(posts: [], hasMore: false);
@@ -97,7 +98,7 @@ class FeedService implements BaseFeedService {
   Future<PostPage> fetchFeedPosts(
     String feedId, {
     DocumentSnapshot? startAfter,
-    int limit = 10,
+    int limit = kDefaultFetchLimit,
   }) async {
     final user = _authService.currentUser;
     if (user == null) {

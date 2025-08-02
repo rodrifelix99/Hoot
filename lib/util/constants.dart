@@ -1,3 +1,6 @@
+const kDefaultFetchLimit = 10;
+const kUserChunkSize = 10;
+
 const kInvitationFadeDuration = Duration(milliseconds: 500);
 const kInvitationExtendedFadeDuration = Duration(milliseconds: 1000);
 const kInvitationCrossFadeDuration = Duration(milliseconds: 300);
