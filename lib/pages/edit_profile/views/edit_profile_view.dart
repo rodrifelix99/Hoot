@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
-import 'package:hoot/components/avatar_component.dart';
+import 'package:hoot/components/image_component.dart';
+import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/services/haptic_service.dart';
 import 'package:hoot/pages/edit_profile/controllers/edit_profile_controller.dart';
@@ -11,69 +14,132 @@ class EditProfileView extends GetView<EditProfileController> {
 
   Widget _buildHeader(BuildContext context) {
     return Obx(() {
-      final avatarFile = controller.avatarFile.value;
+      final bannerFile = controller.avatarFile.value;
       final user = controller.user;
+      final hasBanner = bannerFile != null ||
+          (user?.bannerPictureUrl != null &&
+              user!.bannerPictureUrl!.isNotEmpty);
 
-      Widget avatarWidget;
-      final hasAvatar = avatarFile != null ||
-          (user?.largeProfilePictureUrl != null &&
-              user!.largeProfilePictureUrl!.isNotEmpty);
-      if (avatarFile != null) {
-        avatarWidget = ClipRRect(
-          borderRadius: BorderRadius.circular(100),
-          child: Image.file(
-            avatarFile,
-            fit: BoxFit.cover,
-            width: 120,
-            height: 120,
-          ),
-        );
-      } else {
-        avatarWidget = ProfileAvatarComponent(
-          image: user?.largeProfilePictureUrl ?? '',
-          hash: user?.bigAvatarHash ?? user?.smallAvatarHash,
-          size: 120,
-        );
-      }
-
-      return Center(
-        child: GestureDetector(
-          onTap: () {
-            HapticService.lightImpact();
-            controller.pickAvatar();
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(32),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 16,
-                  offset: Offset(0, 2),
+      return GestureDetector(
+        onTap: () {
+          HapticService.lightImpact();
+          controller.pickAvatar();
+        },
+        child: AspectRatio(
+          aspectRatio: 0.7,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              if (bannerFile != null)
+                Image.file(
+                  bannerFile,
+                  fit: BoxFit.cover,
+                )
+              else if (user?.bannerPictureUrl != null &&
+                  user!.bannerPictureUrl!.isNotEmpty)
+                IgnorePointer(
+                  child: ImageComponent(
+                    url: user.bannerPictureUrl!,
+                    hash: user.bannerHash,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              else
+                Container(
+                  width: double.infinity,
+                  height: 500,
+                  color: Theme.of(context).colorScheme.primaryContainer,
                 ),
-              ],
-            ),
-            child: Stack(
-              children: [
-                avatarWidget,
-                if (hasAvatar)
-                  Positioned.fill(
-                    child: Container(
-                      decoration: ShapeDecoration(
-                        color: Colors.black26,
-                        shape: CircleBorder(),
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          SolarIconsBold.cameraAdd,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                      ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 32)
+                      .copyWith(top: 150),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Theme.of(context).colorScheme.surface,
+                        Theme.of(context).colorScheme.surface.withAlpha(0),
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
                     ),
                   ),
-              ],
-            ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Glassify(
+                        settings: LiquidGlassSettings(
+                          blur: 16,
+                          glassColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black54
+                                  : Colors.white38,
+                        ),
+                        child: TextField(
+                          controller: controller.nameController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'displayName'.tr,
+                            counterText: '',
+                          ),
+                          style: Get.textTheme.displayLarge?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 64,
+                          ),
+                          maxLines: 3,
+                          textAlign: TextAlign.center,
+                          textCapitalization: TextCapitalization.sentences,
+                          maxLength: 50,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '@${user?.username ?? ''}',
+                        style: Get.textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: TextField(
+                          controller: controller.bioController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'bio'.tr,
+                            counterText: '',
+                          ),
+                          textCapitalization: TextCapitalization.sentences,
+                          maxLines: 3,
+                          maxLength: 160,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              if (hasBanner)
+                Positioned(
+                  top: 16,
+                  right: 16,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.black45,
+                      shape: BoxShape.circle,
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    child: const Icon(
+                      SolarIconsBold.cameraAdd,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       );
@@ -107,28 +173,7 @@ class EditProfileView extends GetView<EditProfileController> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildHeader(context),
-            const SizedBox(height: 16),
-            TextField(
-              controller: controller.nameController,
-              decoration: InputDecoration(labelText: 'displayName'.tr),
-              textCapitalization: TextCapitalization.sentences,
-              maxLength: 50,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: controller.bioController,
-              decoration: InputDecoration(labelText: 'bio'.tr),
-              textCapitalization: TextCapitalization.sentences,
-              maxLines: 3,
-              maxLength: 160,
-            ),
-          ],
-        ),
+        child: _buildHeader(context),
       ),
     );
   }
