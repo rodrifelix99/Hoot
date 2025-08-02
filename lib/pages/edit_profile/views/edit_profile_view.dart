@@ -160,7 +160,7 @@ class EditProfileView extends GetView<EditProfileController> {
                           controller: textController,
                           focusNode: focusNode,
                           decoration: InputDecoration(
-                            hintText: 'location'.tr,
+                            hintText: 'searchCity'.tr,
                           ),
                         );
                       },
