@@ -43,14 +43,6 @@ flutter run
 flutter test
 ```
 
-## Cloud Functions
-
-The backend includes a trigger named `onAuthUserDeleted` that runs whenever a Firebase Auth user is removed. It deletes the user's Firestore document along with posts, subscriptions and notifications to satisfy EU data deletion rules.
-
-Another trigger, `onNotificationCreated`, sends a push notification via OneSignal whenever a new notification document is added for a user. Set `ONESIGNAL_APP_ID` and `ONESIGNAL_API_KEY` in your Firebase project so this function can authenticate with the OneSignal API.
-
-Cloud Functions are built for Node.js 22 (see `functions/package.json`). Run `npm install` inside the `functions/` directory before executing `npm run build` or `firebase deploy`.
-
 ## Contributing
 
 Read the [contributing guidelines](CONTRIBUTING.md) for information on preferred patterns and example usage of services.
