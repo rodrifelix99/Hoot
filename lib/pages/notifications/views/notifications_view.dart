@@ -77,18 +77,8 @@ class NotificationsView extends GetView<NotificationsController> {
                       return ListItem(
                         avatarUrl: user.largeProfilePictureUrl ?? '',
                         avatarHash: user.bigAvatarHash ?? user.smallAvatarHash,
-                        title: Text(
-                          text,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        subtitle: Text(
-                          n.createdAt.timeAgo(),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
+                        title: Text(text),
+                        subtitle: Text(n.createdAt.timeAgo()),
                         onTap: () {
                           HapticService.lightImpact();
                           switch (n.type) {

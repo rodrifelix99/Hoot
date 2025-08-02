@@ -7,7 +7,9 @@ class ListItem extends StatelessWidget {
   final String avatarUrl;
   final String? avatarHash;
   final Widget title;
-  final Widget? subtitle;
+  final TextStyle? titleStyle;
+  final Widget subtitle;
+  final TextStyle? subtitleStyle;
   final VoidCallback? onTap;
   final VoidCallback? onAvatarTap;
   final Widget? trailing;
@@ -60,11 +62,21 @@ class ListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  title,
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 4),
-                    subtitle!,
-                  ],
+                  DefaultTextStyle(
+                    style:
+                        titleStyle ?? Theme.of(context).textTheme.titleMedium!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    child: title,
+                  ),
+                  const SizedBox(height: 4),
+                  DefaultTextStyle(
+                    style:
+                        subtitleStyle ?? Theme.of(context).textTheme.bodySmall!,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    child: subtitle,
+                  ),
                 ],
               ),
             ),

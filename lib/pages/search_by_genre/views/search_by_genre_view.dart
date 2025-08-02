@@ -84,15 +84,8 @@ class SearchByGenreView extends GetView<SearchByGenreController> {
                         title: Text(
                           feed.title,
                           style: Theme.of(context).textTheme.titleLarge,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                        subtitle: Text(
-                          content,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
+                        subtitle: Text(content),
                       ),
                     );
                   },

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/pages/feed_requests/controllers/feed_requests_controller.dart';
-import 'package:hoot/components/avatar_component.dart';
-import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/empty_message.dart';
+import 'package:hoot/components/name_component.dart';
+import 'package:hoot/components/notification_item.dart';
 
 class FeedRequestsView extends GetView<FeedRequestsController> {
   const FeedRequestsView({super.key});
@@ -34,13 +34,10 @@ class FeedRequestsView extends GetView<FeedRequestsController> {
             final user = request.user;
             final title =
                 controller.feedTitles[request.feedId] ?? request.feedId;
-            return ListTile(
+            return ListItem(
               onTap: () => controller.openProfile(user.uid),
-              leading: ProfileAvatarComponent(
-                image: user.smallProfilePictureUrl ?? '',
-                hash: user.smallAvatarHash ?? user.bigAvatarHash,
-                size: 40,
-              ),
+              avatarUrl: user.smallProfilePictureUrl ?? '',
+              avatarHash: user.smallAvatarHash ?? user.bigAvatarHash,
               title: NameComponent(user: user, size: 16),
               subtitle: Text(title),
               trailing: Row(
