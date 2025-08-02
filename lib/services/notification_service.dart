@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:hoot/models/hoot_notification.dart';
+import 'package:hoot/util/constants.dart';
 
 class NotificationPage {
   NotificationPage({
@@ -18,7 +19,7 @@ abstract class BaseNotificationService {
   Future<NotificationPage> fetchNotifications(
     String userId, {
     DocumentSnapshot? startAfter,
-    int limit = 10,
+    int limit = kDefaultFetchLimit,
   });
   Future<void> createNotification(String userId, Map<String, dynamic> data);
   Future<void> markAsRead(String userId, String notificationId);
@@ -36,7 +37,7 @@ class NotificationService implements BaseNotificationService {
   Future<NotificationPage> fetchNotifications(
     String userId, {
     DocumentSnapshot? startAfter,
-    int limit = 10,
+    int limit = kDefaultFetchLimit,
   }) async {
     var query = _firestore
         .collection('users')
