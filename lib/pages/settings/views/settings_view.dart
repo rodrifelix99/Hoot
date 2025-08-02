@@ -13,10 +13,9 @@ class SettingsView extends GetView<SettingsController> {
       appBar: AppBarComponent(
         title: 'settings'.tr,
       ),
-      body: ListView.separated(
+      body: ListView.builder(
         padding: const EdgeInsets.symmetric(vertical: 8),
         itemCount: 3,
-        separatorBuilder: (_, __) => const SizedBox(height: 24),
         itemBuilder: (context, index) {
           switch (index) {
             case 0:
@@ -135,7 +134,7 @@ class SettingsView extends GetView<SettingsController> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             title,
-            style: Theme.of(context).textTheme.titleSmall,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
         ListView.separated(
