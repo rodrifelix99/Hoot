@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 
-import 'package:hoot/components/avatar_component.dart';
-import 'package:hoot/components/list_item_component.dart';
+import 'package:hoot/components/notification_item.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
@@ -36,7 +35,11 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
           itemCount: controller.feeds.length,
           itemBuilder: (context, index) {
             final feed = controller.feeds[index];
-            return GestureDetector(
+            return ListItem(
+              avatarUrl: feed.bigAvatar ?? '',
+              avatarHash: feed.bigAvatarHash ?? feed.smallAvatarHash,
+              title: feed.title,
+              subtitle: '${feed.subscriberCount ?? 0} ${'followers'.tr}',
               onTap: () {
                 HapticService.lightImpact();
                 Get.toNamed(
@@ -44,30 +47,21 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
                   arguments: ProfileArgs(uid: feed.userId, feedId: feed.id),
                 );
               },
-              child: ListItemComponent(
-                leading: ProfileAvatarComponent(
-                  image: feed.bigAvatar ?? '',
-                  hash: feed.bigAvatarHash ?? feed.smallAvatarHash,
-                  size: 100,
-                ),
-                title: feed.title,
-                subtitle: '${feed.subscriberCount ?? 0} ${'followers'.tr}',
-                trailing: IconButton(
-                  icon: const Icon(Icons.cancel),
-                  tooltip: 'unsubscribe'.tr,
-                  onPressed: () async {
-                    final confirmed = await DialogService.confirm(
-                      context: context,
-                      title: 'unsubscribe'.tr,
-                      message: 'unsubscribeConfirmation'.tr,
-                      okLabel: 'unsubscribe'.tr,
-                      cancelLabel: 'cancel'.tr,
-                    );
-                    if (confirmed) {
-                      controller.unsubscribeFeed(feed.id);
-                    }
-                  },
-                ),
+              trailing: IconButton(
+                icon: const Icon(Icons.cancel),
+                tooltip: 'unsubscribe'.tr,
+                onPressed: () async {
+                  final confirmed = await DialogService.confirm(
+                    context: context,
+                    title: 'unsubscribe'.tr,
+                    message: 'unsubscribeConfirmation'.tr,
+                    okLabel: 'unsubscribe'.tr,
+                    cancelLabel: 'cancel'.tr,
+                  );
+                  if (confirmed) {
+                    controller.unsubscribeFeed(feed.id);
+                  }
+                },
               ),
             );
           },

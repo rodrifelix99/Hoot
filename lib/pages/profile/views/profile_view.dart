@@ -9,7 +9,6 @@ import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/empty_message.dart';
-import 'package:hoot/components/url_preview_component.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
 import 'package:hoot/util/routes/args/feed_page_args.dart';
@@ -158,38 +157,6 @@ class _ProfileViewState extends State<ProfileView> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                  if (user.location != null && user.location!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            SolarIconsBold.mapPoint,
-                            size: 16,
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            user.location!,
-                            style: Get.textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (user.website != null && user.website!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: UrlPreviewComponent(
-                        url: user.website!,
-                        isClickable: true,
-                      ),
-                    ),
                 ],
               ),
             ),
@@ -197,6 +164,15 @@ class _ProfileViewState extends State<ProfileView> {
         ],
       ),
     );
+  }
+
+  String cleanUpUrl(String url) {
+    String uri = url;
+    uri = url.replaceAll('www.', '');
+    uri = uri.replaceAll('http://', '');
+    uri = uri.replaceAll('https://', '');
+    uri = uri.replaceAll(RegExp(r'\/$'), ''); // Remove trailing slash
+    return uri;
   }
 
   Widget buildFeedGrid(BuildContext context) {
@@ -370,7 +346,59 @@ class _ProfileViewState extends State<ProfileView> {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(child: buildHeader(user)),
-            const SliverToBoxAdapter(child: SizedBox(height: 32)),
+            SliverToBoxAdapter(child: Padding(
+              padding: const EdgeInsets.all(16.0).copyWith(
+                top: 8,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  if (user.location != null && user.location!.isNotEmpty)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          SolarIconsBold.mapPoint,
+                          size: 16,
+                          color:
+                          Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          user.location!,
+                          style: Get.textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  if (user.website != null && user.website!.isNotEmpty)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          SolarIconsBold.shieldNetwork,
+                          size: 16,
+                          color:
+                          Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          cleanUpUrl(user.website!),
+                          style: Get.textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            )),
+            const SliverToBoxAdapter(child: SizedBox(height: 16)),
             if (controller.feeds.isEmpty)
               SliverToBoxAdapter(
                 child: controller.isCurrentUser
