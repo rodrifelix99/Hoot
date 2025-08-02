@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image/image.dart' as img;
 import 'package:blurhash/blurhash.dart';
+import 'package:hoot/util/constants.dart';
 
 /// Interface for uploading post media to Firebase Storage.
 class UploadedPostImage {
@@ -38,12 +39,14 @@ class StorageService implements BaseStorageService {
       final decoded = img.decodeImage(data);
       if (decoded != null) {
         img.Image processed = decoded;
-        // Resize if the image is larger than 1080px on either side.
-        if (processed.width > 1080 || processed.height > 1080) {
-          processed = img.copyResize(processed, width: 1080);
+        // Resize if the image is larger than [kMaxImageDimension] on either side.
+        if (processed.width > kMaxImageDimension ||
+            processed.height > kMaxImageDimension) {
+          processed = img.copyResize(processed, width: kMaxImageDimension);
         }
-        data = Uint8List.fromList(img.encodeJpg(processed, quality: 85));
-        hash = await BlurHash.encode(data, 4, 3);
+        data =
+            Uint8List.fromList(img.encodeJpg(processed, quality: kJpegQuality));
+        hash = await BlurHash.encode(data, kBlurHashX, kBlurHashY);
       }
 
       await ref.putData(data, SettableMetadata(contentType: 'image/jpeg'));
