@@ -24,7 +24,7 @@ class PostView extends GetView<PostController> {
         children: [
           Positioned.fill(
             child: RefreshIndicator(
-              onRefresh: () => Future.sync(() => controller.refresh()),
+              onRefresh: controller.refresh,
               child: CustomScrollView(
                 slivers: [
                   Obx(() {
