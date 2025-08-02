@@ -153,12 +153,14 @@ class ExploreController extends GetxController {
       final futures = await Future.wait([
         _firestore
             .collection('users')
+            .orderBy('usernameLowercase')
             .where('usernameLowercase', isGreaterThanOrEqualTo: lower)
             .where('usernameLowercase', isLessThanOrEqualTo: '$lower\uf8ff')
             .limit(5)
             .get(),
         _firestore
             .collection('feeds')
+            .orderBy('titleLowercase')
             .where('titleLowercase', isGreaterThanOrEqualTo: lower)
             .where('titleLowercase', isLessThanOrEqualTo: '$lower\uf8ff')
             .limit(5)
