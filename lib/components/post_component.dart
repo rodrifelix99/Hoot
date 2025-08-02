@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/name_component.dart';
+import 'package:hoot/components/url_preview_component.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
 import 'package:get/get.dart';
@@ -316,6 +317,10 @@ class _PostComponentState extends State<PostComponent> {
                         children: parseMentions(_post.text!),
                       ),
                     ),
+                  ],
+                  if (_post.url != null) ...[
+                    const SizedBox(height: 16),
+                    UrlPreviewComponent(url: _post.url!),
                   ],
                   if (_post.media != null && _post.media!.isNotEmpty) ...[
                     const SizedBox(height: 16),
