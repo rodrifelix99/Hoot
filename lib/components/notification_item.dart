@@ -8,7 +8,7 @@ class ListItem extends StatelessWidget {
   final String? avatarHash;
   final Widget title;
   final TextStyle? titleStyle;
-  final Widget subtitle;
+  final Widget? subtitle;
   final TextStyle? subtitleStyle;
   final VoidCallback? onTap;
   final VoidCallback? onAvatarTap;
@@ -22,7 +22,7 @@ class ListItem extends StatelessWidget {
     this.subtitle,
     this.onTap,
     this.onAvatarTap,
-    this.trailing,
+    this.trailing, this.titleStyle, this.subtitleStyle,
   });
 
   @override
@@ -69,14 +69,16 @@ class ListItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     child: title,
                   ),
-                  const SizedBox(height: 4),
-                  DefaultTextStyle(
-                    style:
-                        subtitleStyle ?? Theme.of(context).textTheme.bodySmall!,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    child: subtitle,
-                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 4),
+                    DefaultTextStyle(
+                      style:
+                      subtitleStyle ?? Theme.of(context).textTheme.bodySmall!,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      child: subtitle!,
+                    ),
+                  ],
                 ],
               ),
             ),
