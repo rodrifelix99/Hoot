@@ -59,32 +59,45 @@ class AvatarController extends GetxController {
         if (decoded != null) {
           final small = img.copyResizeCropSquare(decoded, size: 48);
           final big = img.copyResizeCropSquare(decoded, size: 512);
+          final banner = img.copyResize(decoded, height: 1024);
 
           final smallData = Uint8List.fromList(img.encodeJpg(small));
           final bigData = Uint8List.fromList(img.encodeJpg(big));
+          final bannerData = Uint8List.fromList(img.encodeJpg(banner));
 
           final smallHash = await BlurHash.encode(smallData, 4, 3);
           final bigHash = await BlurHash.encode(bigData, 4, 3);
+          final bannerHash = await BlurHash.encode(bannerData, 4, 3);
 
-          final storageRef =
+          final avatarRef =
               FirebaseStorage.instance.ref().child('avatars').child(uid);
-
-          final smallRef = storageRef.child('small_avatar.jpg');
-          final bigRef = storageRef.child('big_avatar.jpg');
+          final smallRef = avatarRef.child('small_avatar.jpg');
+          final bigRef = avatarRef.child('big_avatar.jpg');
 
           await smallRef.putData(
               smallData, SettableMetadata(contentType: 'image/jpeg'));
           await bigRef.putData(
               bigData, SettableMetadata(contentType: 'image/jpeg'));
 
+          final bannerRef = FirebaseStorage.instance
+              .ref()
+              .child('banners')
+              .child(uid)
+              .child('banner.jpg');
+          await bannerRef.putData(
+              bannerData, SettableMetadata(contentType: 'image/jpeg'));
+
           final smallUrl = await smallRef.getDownloadURL();
           final bigUrl = await bigRef.getDownloadURL();
+          final bannerUrl = await bannerRef.getDownloadURL();
 
           await FirebaseFirestore.instance.collection('users').doc(uid).set({
             'smallAvatar': smallUrl,
             'bigAvatar': bigUrl,
             'smallAvatarHash': smallHash,
             'bigAvatarHash': bigHash,
+            'banner': bannerUrl,
+            'bannerHash': bannerHash,
           }, SetOptions(merge: true));
 
           final user = _auth.currentUser;
@@ -93,6 +106,8 @@ class AvatarController extends GetxController {
             user.largeProfilePictureUrl = bigUrl;
             user.smallAvatarHash = smallHash;
             user.bigAvatarHash = bigHash;
+            user.bannerPictureUrl = bannerUrl;
+            user.bannerHash = bannerHash;
           }
         }
       }

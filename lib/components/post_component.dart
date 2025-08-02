@@ -310,7 +310,9 @@ class _PostComponentState extends State<PostComponent> {
                       if (_post.createdAt != null)
                         Text(
                           _post.createdAt!.timeAgo(),
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       const SizedBox(width: 4),
                       IconButton(
@@ -428,6 +430,7 @@ class _PostComponentState extends State<PostComponent> {
                         onPressed: _openPostDetails,
                       ),
                       Text('${_post.comments ?? 0}'),
+                      const SizedBox(width: 8),
                       const Spacer(),
                     ],
                   )
