@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:hoot/components/scale_on_press.dart';
@@ -7,9 +6,9 @@ import 'package:hoot/components/avatar_component.dart';
 class ListItem extends StatelessWidget {
   final String avatarUrl;
   final String? avatarHash;
-  final String title;
+  final Widget title;
   final TextStyle? titleStyle;
-  final String subtitle;
+  final Widget subtitle;
   final TextStyle? subtitleStyle;
   final VoidCallback? onTap;
   final VoidCallback? onAvatarTap;
@@ -55,9 +54,9 @@ class ListItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ProfileAvatarComponent(
-                image: avatarUrl,
-                hash: avatarHash,
-                size: 50,
+              image: avatarUrl,
+              hash: avatarHash,
+              size: 50,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -65,20 +64,20 @@ class ListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
+                  DefaultTextStyle(
+                    style:
+                        titleStyle ?? Theme.of(context).textTheme.titleMedium!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: titleStyle ?? Theme.of(context).textTheme.titleMedium,
+                    child: title,
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    subtitle,
+                  DefaultTextStyle(
+                    style:
+                        subtitleStyle ?? Theme.of(context).textTheme.bodySmall!,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: subtitleStyle ?? Theme.of(context)
-                        .textTheme
-                        .bodySmall,
+                    child: subtitle,
                   ),
                 ],
               ),

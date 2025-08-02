@@ -77,8 +77,8 @@ class NotificationsView extends GetView<NotificationsController> {
                       return ListItem(
                         avatarUrl: user.largeProfilePictureUrl ?? '',
                         avatarHash: user.bigAvatarHash ?? user.smallAvatarHash,
-                        title: text,
-                        subtitle: n.createdAt.timeAgo(),
+                        title: Text(text),
+                        subtitle: Text(n.createdAt.timeAgo()),
                         onTap: () {
                           HapticService.lightImpact();
                           switch (n.type) {
@@ -130,7 +130,8 @@ class NotificationsView extends GetView<NotificationsController> {
                       text: 'noNotificationsText'.tr,
                     ),
                     noMoreItemsIndicatorBuilder: (_) => const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 32, horizontal: 16),
                       child: Opacity(
                         opacity: 0.75,
                         child: Center(

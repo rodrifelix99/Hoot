@@ -81,9 +81,11 @@ class SearchByGenreView extends GetView<SearchByGenreController> {
                         },
                         avatarUrl: feed.bigAvatar ?? feed.smallAvatar ?? '',
                         avatarHash: feed.bigAvatarHash ?? feed.smallAvatarHash,
-                        title: feed.title,
-                        titleStyle: Theme.of(context).textTheme.titleLarge,
-                        subtitle: content,
+                        title: Text(
+                          feed.title,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        subtitle: Text(content),
                       ),
                     );
                   },
