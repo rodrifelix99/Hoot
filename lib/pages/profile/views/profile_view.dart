@@ -165,7 +165,7 @@ class _ProfileViewState extends State<ProfileView> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Theme.of(context).colorScheme.outline.withAlpha(25),
+                        color: Theme.of(context).colorScheme.outline.withAlpha(50),
                         width: 1,
                       ),
                       color: Theme.of(context).colorScheme.surfaceContainer,
@@ -182,6 +182,12 @@ class _ProfileViewState extends State<ProfileView> {
                           width: double.infinity,
                           height: double.infinity,
                           fit: BoxFit.cover,
+                        ).blurred(
+                          blur: 16,
+                          blurColor: Theme.of(context)
+                              .colorScheme
+                              .surface,
+                          colorOpacity: 0.25,
                         ),
                         Center(
                           child: Icon(
@@ -192,12 +198,6 @@ class _ProfileViewState extends State<ProfileView> {
                                 .onSurface
                                 .withAlpha(125),
                           ),
-                        ).frosted(
-                          blur: 16,
-                          frostColor: Theme.of(context)
-                              .colorScheme
-                              .surface,
-                          frostOpacity: 0.25,
                         ),
                       ],
                     ),
@@ -214,20 +214,23 @@ class _ProfileViewState extends State<ProfileView> {
                   children: [
                     Positioned.fill(
                       child: HashCachedImage(
-                        imageUrl: feed.bigAvatar ??
-                            controller.user.value?.largeProfilePictureUrl ??
+                        imageUrl: feed.smallAvatar ??
+                            controller.user.value?.smallProfilePictureUrl ??
                             '',
                         hash: feed.bigAvatarHash ??
                             controller.user.value?.bigAvatarHash,
                         width: double.infinity,
                         height: double.infinity,
                         fit: BoxFit.cover,
+                      ).blurred(
+                        blur: 16,
+                        blurColor: color,
+                        colorOpacity: 0.5,
                       ),
                     ),
                     Positioned.fill(
-                      child: Container(
+                      child: Padding(
                         padding: const EdgeInsets.all(16),
-                        color: color.withAlpha(200),
                         child: InkWell(
                           onTap: () {
                             HapticService.lightImpact();
