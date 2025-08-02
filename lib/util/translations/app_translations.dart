@@ -97,6 +97,7 @@ class AppTranslations extends Translations {
           'next': 'Next',
           'cancel': 'Cancel',
           'bio': 'Bio',
+          'location': 'Location',
           'done': 'Done',
           'errorEditingProfile': 'There was an error editing your profile',
           'searchPlaceholder': 'Search users and feeds',
