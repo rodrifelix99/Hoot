@@ -69,9 +69,10 @@ class _LikeButtonComponentState extends State<LikeButtonComponent>
         HapticService.lightImpact();
         widget.onTap();
       },
-      child: SizedBox(
-        width: widget.size + 20,
-        height: widget.size + 20,
+      child: Container(
+        width: widget.size + 32,
+        height: widget.size + 32,
+        color: Colors.transparent,
         child: Stack(
           clipBehavior: Clip.none,
           alignment: Alignment.center,

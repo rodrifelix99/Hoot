@@ -430,6 +430,7 @@ class _PostComponentState extends State<PostComponent> {
                         onPressed: _openPostDetails,
                       ),
                       Text('${_post.comments ?? 0}'),
+                      const SizedBox(width: 8),
                       const Spacer(),
                     ],
                   )
