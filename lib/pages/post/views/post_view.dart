@@ -23,49 +23,49 @@ class PostView extends GetView<PostController> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: Column(
-              children: [
+            child: CustomScrollView(
+              slivers: [
                 Obx(() {
                   final post = controller.post.value;
-                  return PostComponent(
-                    post: post,
-                    margin: const EdgeInsets.all(16),
+                  return SliverToBoxAdapter(
+                    child: PostComponent(
+                      post: post,
+                      margin: const EdgeInsets.all(16),
+                    ),
                   );
                 }),
-                Expanded(
-                  child: Obx(() {
-                    final state = controller.commentsState.value;
-                    return PagedListView<DocumentSnapshot?, Comment>(
-                      state: state,
-                      fetchNextPage: controller.fetchNextComments,
-                      builderDelegate: PagedChildBuilderDelegate<Comment>(
-                        itemBuilder: (context, item, index) =>
-                            CommentComponent(comment: item),
-                        firstPageProgressIndicatorBuilder: (_) =>
-                            const Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Center(child: CircularProgressIndicator()),
-                        ),
-                        newPageProgressIndicatorBuilder: (_) =>
-                            const Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Center(child: CircularProgressIndicator()),
-                        ),
-                        firstPageErrorIndicatorBuilder: (_) =>
-                            NothingToShowComponent(
-                          icon: const Icon(Icons.error_outline),
-                          text: 'somethingWentWrong'.tr,
-                        ),
-                        noItemsFoundIndicatorBuilder: (_) =>
-                            const SizedBox.shrink(),
+                Obx(() {
+                  final state = controller.commentsState.value;
+                  return PagedSliverList<DocumentSnapshot?, Comment>(
+                    state: state,
+                    fetchNextPage: controller.fetchNextComments,
+                    builderDelegate: PagedChildBuilderDelegate<Comment>(
+                      itemBuilder: (context, item, index) =>
+                          CommentComponent(comment: item),
+                      firstPageProgressIndicatorBuilder: (_) => const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(child: CircularProgressIndicator()),
                       ),
-                    );
-                  }),
+                      newPageProgressIndicatorBuilder: (_) => const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                      firstPageErrorIndicatorBuilder: (_) =>
+                          NothingToShowComponent(
+                        icon: const Icon(Icons.error_outline),
+                        text: 'somethingWentWrong'.tr,
+                      ),
+                      noItemsFoundIndicatorBuilder: (_) =>
+                          const SizedBox.shrink(),
+                    ),
+                  );
+                }),
+                SliverToBoxAdapter(
+                  child: SafeArea(child: const SizedBox(height: 32)),
                 ),
-                SafeArea(child: const SizedBox(height: 32)),
               ],
             ),
-            ),
+          ),
           Positioned(
             bottom: 16,
             left: 16,
@@ -79,8 +79,7 @@ class PostView extends GetView<PostController> {
                       suggestions: controller.mentionSuggestions,
                       hintText: 'writeSomething'.tr,
                       onSearchChanged: controller.searchUsers,
-                      onChanged: (v) =>
-                          controller.commentController.text = v,
+                      onChanged: (v) => controller.commentController.text = v,
                       maxLines: 1,
                     ),
                   ),
@@ -97,8 +96,7 @@ class PostView extends GetView<PostController> {
                               ? const Offset(2, 0)
                               : Offset.zero,
                           child: IconButton(
-                            icon: const Icon(
-                                SolarIconsBold.uploadMinimalistic),
+                            icon: const Icon(SolarIconsBold.uploadMinimalistic),
                             onPressed: controller.publishComment,
                           ),
                         )),
