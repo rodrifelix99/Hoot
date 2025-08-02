@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
@@ -6,6 +5,7 @@ import 'package:hoot/components/image_component.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/services/haptic_service.dart';
 import 'package:hoot/pages/edit_profile/controllers/edit_profile_controller.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class EditProfileView extends GetView<EditProfileController> {
   const EditProfileView({super.key});
@@ -149,14 +149,41 @@ class EditProfileView extends GetView<EditProfileController> {
               top: false,
               child: Padding(
                 padding: const EdgeInsets.all(16.0).copyWith(top: 0),
-                child: TextField(
-                  controller: controller.bioController,
-                  textCapitalization: TextCapitalization.sentences,
-                  maxLines: 3,
-                  maxLength: 160,
-                  decoration: InputDecoration(
-                    hintText: 'bio'.tr,
-                  ),
+                child: Column(
+                  children: [
+                    TypeAheadField<String>(
+                      controller: controller.locationController,
+                      suggestionsCallback: controller.searchCities,
+                      builder: (context, textController, focusNode) {
+                        return TextField(
+                          controller: textController,
+                          focusNode: focusNode,
+                          decoration: InputDecoration(
+                            hintText: 'location'.tr,
+                          ),
+                        );
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text(suggestion),
+                        );
+                      },
+                      onSelected: (suggestion) {
+                        controller.selectedCity.value = suggestion;
+                        controller.locationController.text = suggestion;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: controller.bioController,
+                      textCapitalization: TextCapitalization.sentences,
+                      maxLines: 3,
+                      maxLength: 160,
+                      decoration: InputDecoration(
+                        hintText: 'bio'.tr,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

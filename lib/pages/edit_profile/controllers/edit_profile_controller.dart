@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 import 'package:blurhash/blurhash.dart';
+import 'package:geocoding/geocoding.dart';
 
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/error_service.dart';
@@ -27,6 +28,8 @@ class EditProfileController extends GetxController {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final RxnString selectedCity = RxnString();
 
   final Rx<File?> avatarFile = Rx<File?>(null);
   final RxBool saving = false.obs;
@@ -40,6 +43,8 @@ class EditProfileController extends GetxController {
     if (u != null) {
       nameController.text = u.name ?? '';
       bioController.text = u.bio ?? '';
+      locationController.text = u.location ?? '';
+      selectedCity.value = u.location;
     }
   }
 
@@ -59,6 +64,7 @@ class EditProfileController extends GetxController {
 
     final name = nameController.text.trim();
     final bio = bioController.text.trim();
+    final location = selectedCity.value ?? locationController.text.trim();
 
     if (name.length < 3) {
       ToastService.showError('displayNameTooShort'.tr);
@@ -105,7 +111,8 @@ class EditProfileController extends GetxController {
               .child('banners')
               .child(uid)
               .child('banner.jpg');
-          await ref.putData(bannerData, SettableMetadata(contentType: 'image/jpeg'));
+          await ref.putData(
+              bannerData, SettableMetadata(contentType: 'image/jpeg'));
           bannerUrl = await ref.getDownloadURL();
         }
       }
@@ -113,6 +120,7 @@ class EditProfileController extends GetxController {
       await _userService.updateUserData(uid, {
         'displayName': name,
         'bio': bio,
+        if (location.isNotEmpty) 'location': location,
         if (bannerUrl != null) 'banner': bannerUrl,
         if (bannerHash != null) 'bannerHash': bannerHash,
         if (smallAvatarUrl != null) 'smallAvatar': smallAvatarUrl,
@@ -125,6 +133,7 @@ class EditProfileController extends GetxController {
       if (u != null) {
         u.name = name;
         u.bio = bio;
+        if (location.isNotEmpty) u.location = location;
         if (bannerUrl != null) u.bannerPictureUrl = bannerUrl;
         if (bannerHash != null) u.bannerHash = bannerHash;
         if (smallAvatarUrl != null) u.smallProfilePictureUrl = smallAvatarUrl;
@@ -147,6 +156,32 @@ class EditProfileController extends GetxController {
   void onClose() {
     nameController.dispose();
     bioController.dispose();
+    locationController.dispose();
     super.onClose();
+  }
+
+  Future<List<String>> searchCities(String query) async {
+    if (query.trim().isEmpty) return [];
+    try {
+      final locations = await locationFromAddress(query);
+      final results = <String>{};
+      for (final loc in locations) {
+        final placemarks =
+            await placemarkFromCoordinates(loc.latitude, loc.longitude);
+        for (final placemark in placemarks) {
+          final city = placemark.locality;
+          final country = placemark.country;
+          if (city != null &&
+              city.isNotEmpty &&
+              country != null &&
+              country.isNotEmpty) {
+            results.add('$city, $country');
+          }
+        }
+      }
+      return results.toList();
+    } catch (_) {
+      return [];
+    }
   }
 }
