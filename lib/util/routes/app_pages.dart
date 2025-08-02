@@ -45,6 +45,7 @@ import 'package:hoot/pages/contacts/bindings/contacts_binding.dart';
 import 'package:hoot/pages/contacts/views/contacts_view.dart';
 import 'package:hoot/pages/terms.dart';
 import 'package:hoot/pages/about_us.dart';
+import 'package:hoot/util/constants.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
 import 'package:hoot/util/routes/args/feed_page_args.dart';
@@ -65,13 +66,13 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.username,
-      page: () => const WelcomeView(initialIndex: 1),
+      page: () => const WelcomeView(initialIndex: kWelcomeUsernameStep),
       binding: UsernameBinding(),
       middlewares: [AuthMiddleware()],
     ),
     GetPage(
       name: AppRoutes.avatar,
-      page: () => const WelcomeView(initialIndex: 2),
+      page: () => const WelcomeView(initialIndex: kWelcomeAvatarStep),
       binding: AvatarBinding(),
       middlewares: [AuthMiddleware()],
     ),
