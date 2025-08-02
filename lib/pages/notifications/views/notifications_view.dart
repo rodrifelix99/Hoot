@@ -127,8 +127,15 @@ class NotificationsView extends GetView<NotificationsController> {
                       imageAsset: 'assets/images/notification.webp',
                       title: 'noNotifications'.tr,
                       text: 'noNotificationsText'.tr,
-                      buttonText: 'refresh'.tr,
-                      buttonAction: controller.refreshNotifications,
+                    ),
+                    noMoreItemsIndicatorBuilder: (_) => const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+                      child: Opacity(
+                        opacity: 0.75,
+                        child: Center(
+                          child: Text('Made in Portugal 🇵🇹'),
+                        ),
+                      ),
                     ),
                   ),
                 ),
