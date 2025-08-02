@@ -75,6 +75,16 @@ class _PostComponentState extends State<PostComponent> {
     }
   }
 
+  @override
+  void didUpdateWidget(covariant PostComponent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.post != oldWidget.post) {
+      setState(() {
+        _post = widget.post;
+      });
+    }
+  }
+
   Future<void> _toggleLike() async {
     final user = _authService.currentUser;
     if (user == null) return;
