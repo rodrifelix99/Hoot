@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/pages/subscribers/controllers/subscribers_controller.dart';
-import 'package:hoot/components/avatar_component.dart';
+import 'package:hoot/components/notification_item.dart';
 import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/util/routes/app_routes.dart';
@@ -34,16 +34,13 @@ class SubscribersView extends GetView<SubscribersController> {
           itemCount: controller.subscribers.length,
           itemBuilder: (context, index) {
             final user = controller.subscribers[index];
-            return ListTile(
+            return ListItem(
               onTap: () => Get.toNamed(
                 AppRoutes.profile,
                 arguments: ProfileArgs(uid: user.uid),
               ),
-              leading: ProfileAvatarComponent(
-                image: user.smallProfilePictureUrl ?? '',
-                hash: user.smallAvatarHash ?? user.bigAvatarHash,
-                size: 40,
-              ),
+              avatarUrl: user.smallProfilePictureUrl ?? '',
+              avatarHash: user.smallAvatarHash ?? user.bigAvatarHash,
               title: NameComponent(user: user, size: 16),
               trailing: PopupMenuButton<String>(
                 onSelected: (value) async {
