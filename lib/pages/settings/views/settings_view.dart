@@ -40,11 +40,15 @@ class SettingsView extends GetView<SettingsController> {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.palette_outlined),
             title: Text('appColor'.tr),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () => Get.toNamed(AppRoutes.appColor),
           ),
           ListTile(
+            leading: const Icon(Icons.person_outline),
             title: Text('editProfile'.tr),
+            trailing: const Icon(Icons.chevron_right),
             onTap: controller.goToEditProfile,
           ),
           ListTile(
@@ -53,20 +57,28 @@ class SettingsView extends GetView<SettingsController> {
             onTap: controller.findFriends,
           ),
           ListTile(
+            leading: const Icon(Icons.subscriptions_outlined),
             title: Text('subscriptions'.tr),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () => Get.toNamed(AppRoutes.subscriptions),
           ),
           ListTile(
+            leading: const Icon(Icons.description_outlined),
             title: Text('termsOfService'.tr),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () => Get.toNamed(AppRoutes.terms),
           ),
           ListTile(
+            leading: const Icon(Icons.delete_outline),
             title: Text('deleteAccount'.tr),
             subtitle: Text('deleteAccountDescription'.tr),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () => controller.deleteAccount(context),
           ),
           ListTile(
+            leading: const Icon(Icons.logout_outlined),
             title: Text('signOut'.tr),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () => controller.signOut(context),
           ),
           const Divider(),
