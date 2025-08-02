@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -90,8 +91,14 @@ class SettingsController extends GetxController {
       ToastService.showSuccess('deleteAccountSuccess'.tr);
       Get.offAllNamed(AppRoutes.login);
     } catch (e, s) {
-      await ErrorService.reportError(e,
-          message: 'deleteAccountFailed'.tr, stack: s);
+      if (e is FirebaseAuthException && e.code == 'requires-recent-login') {
+        await _auth.signOut();
+        ToastService.showError('deleteAccountRequiresRecentLogin'.tr);
+        Get.offAllNamed(AppRoutes.login);
+      } else {
+        await ErrorService.reportError(e,
+            message: 'deleteAccountFailed'.tr, stack: s);
+      }
     }
   }
 }

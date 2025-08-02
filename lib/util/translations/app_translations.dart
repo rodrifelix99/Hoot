@@ -315,6 +315,8 @@ class AppTranslations extends Translations {
           'deleteAccountVerify': "Type 'delete' to confirm.",
           'deleteAccountFailed': 'Failed to delete account',
           'deleteAccountSuccess': 'Account deleted successfully',
+          'deleteAccountRequiresRecentLogin':
+              'Please log in again before deleting your account',
           'blockUser': 'Block @username',
           'unblockUser': 'Unblock @username',
           'blockUserDescription':
@@ -679,6 +681,8 @@ class AppTranslations extends Translations {
           'deleteAccountVerify': "Escribe 'delete' para confirmar.",
           'deleteAccountFailed': 'No se pudo eliminar la cuenta',
           'deleteAccountSuccess': 'Cuenta eliminada exitosamente',
+          'deleteAccountRequiresRecentLogin':
+              'Inicia sesión de nuevo antes de eliminar tu cuenta',
           'blockUser': 'Bloquear a @username',
           'unblockUser': 'Desbloquear a @username',
           'blockUserDescription':
@@ -1044,6 +1048,8 @@ class AppTranslations extends Translations {
           'deleteAccountVerify': "Escreve 'delete' para confirmar.",
           'deleteAccountFailed': 'Não foi possível eliminar a conta',
           'deleteAccountSuccess': 'Conta eliminada com sucesso',
+          'deleteAccountRequiresRecentLogin':
+              'Inicia sessão novamente antes de eliminares a tua conta',
           'blockUser': 'Bloquear @username',
           'unblockUser': 'Desbloquear @username',
           'blockUserDescription':
@@ -1406,6 +1412,8 @@ class AppTranslations extends Translations {
           'deleteAccountVerify': "Digite 'delete' para confirmar.",
           'deleteAccountFailed': 'Não foi possível excluir a conta',
           'deleteAccountSuccess': 'Conta excluída com sucesso',
+          'deleteAccountRequiresRecentLogin':
+              'Faça login novamente antes de excluir sua conta',
           'blockUser': 'Bloquear @username',
           'unblockUser': 'Desbloquear @username',
           'blockUserDescription':
