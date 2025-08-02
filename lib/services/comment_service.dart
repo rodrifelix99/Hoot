@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hoot/models/comment.dart';
+import 'package:hoot/util/constants.dart';
 
 class CommentPage {
   CommentPage({required this.comments, this.lastDoc, this.hasMore = false});
@@ -13,7 +14,7 @@ abstract class BaseCommentService {
   Future<CommentPage> fetchComments(
     String postId, {
     DocumentSnapshot? startAfter,
-    int limit = 10,
+    int limit = kDefaultFetchLimit,
   });
 
   String newCommentId(String postId);
@@ -32,7 +33,7 @@ class CommentService implements BaseCommentService {
   Future<CommentPage> fetchComments(
     String postId, {
     DocumentSnapshot? startAfter,
-    int limit = 10,
+    int limit = kDefaultFetchLimit,
   }) async {
     var query = _firestore
         .collection('posts')

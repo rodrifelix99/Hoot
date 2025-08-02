@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/util/constants.dart';
 
 class SubscriptionService {
   final FirebaseFirestore _firestore;
@@ -87,7 +88,7 @@ class SubscriptionService {
     final ids = snapshot.docs.map((d) => d.id).toList();
     if (ids.isEmpty) return [];
 
-    const chunkSize = 10;
+    const chunkSize = kUserChunkSize;
     final List<U> users = [];
     for (var i = 0; i < ids.length; i += chunkSize) {
       final chunk = ids.sublist(
