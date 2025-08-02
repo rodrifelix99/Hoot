@@ -4,21 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:hoot/components/scale_on_press.dart';
 import 'package:hoot/components/avatar_component.dart';
 
-class NotificationItem extends StatelessWidget {
+class ListItem extends StatelessWidget {
   final String avatarUrl;
   final String? avatarHash;
   final String title;
+  final TextStyle? titleStyle;
   final String subtitle;
+  final TextStyle? subtitleStyle;
   final VoidCallback? onTap;
   final VoidCallback? onAvatarTap;
   final Widget? trailing;
 
-  const NotificationItem({
+  const ListItem({
     super.key,
     required this.avatarUrl,
     this.avatarHash,
     required this.title,
     required this.subtitle,
+    this.titleStyle,
+    this.subtitleStyle,
     this.onTap,
     this.onAvatarTap,
     this.trailing,
@@ -65,14 +69,14 @@ class NotificationItem extends StatelessWidget {
                     title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.titleSmall,
+                    style: titleStyle ?? Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    maxLines: 1,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context)
+                    style: subtitleStyle ?? Theme.of(context)
                         .textTheme
                         .bodySmall,
                   ),

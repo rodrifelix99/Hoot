@@ -73,7 +73,7 @@ class NotificationsView extends GetView<NotificationsController> {
                         default:
                           text = '';
                       }
-                      return NotificationItem(
+                      return ListItem(
                         avatarUrl: user.largeProfilePictureUrl ?? '',
                         avatarHash: user.bigAvatarHash ?? user.smallAvatarHash,
                         title: text,
