@@ -53,4 +53,5 @@ app.*.map.json
 
 # Environment files
 assets/.env
+lib/firebase_options.dart
 /apply_patch.sh
