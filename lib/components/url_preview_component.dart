@@ -127,10 +127,10 @@ class _UrlPreviewComponentState extends State<UrlPreviewComponent> {
                   BoxShadow(
                     color: Theme.of(context)
                         .colorScheme
-                        .secondary
-                        .withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
+                        .shadow
+                        .withAlpha(15),
+                    blurRadius: 16,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
