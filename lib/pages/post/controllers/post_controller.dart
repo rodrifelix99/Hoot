@@ -101,18 +101,19 @@ class PostController extends GetxController {
   }
 
   @override
-  void refresh() {
-    _postService.fetchPost(post.value.id).then((fetched) {
+  Future<void> refresh() async {
+    try {
+      final fetched = await _postService.fetchPost(post.value.id);
       if (fetched != null) {
         post.value = fetched;
       }
-    }).catchError((e) {
+    } catch (e) {
       FirebaseCrashlytics.instance.recordError(
         e,
         null,
         reason: 'Failed to refresh post',
       );
-    });
+    }
     commentsState.value = commentsState.value.reset();
     fetchNextComments();
   }
