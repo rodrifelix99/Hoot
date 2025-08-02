@@ -54,6 +54,9 @@ class CreatePostController extends GetxController {
   /// Selected GIF url from Tenor.
   final Rx<String?> gifUrl = Rx<String?>(null);
 
+  /// First URL found in the post text.
+  final RxnString linkUrl = RxnString();
+
   /// Feed chosen to post to.
   final Rx<Feed?> selectedFeed = Rx<Feed?>(null);
 
@@ -127,8 +130,11 @@ class CreatePostController extends GetxController {
     return match?.group(0);
   }
 
-  /// Returns the first URL in the current text field, if any.
-  String? get linkUrl => _firstUrl(textController.text);
+  /// Updates [textController] and [linkUrl] when the text changes.
+  void onTextChanged(String text) {
+    textController.text = text;
+    linkUrl.value = _firstUrl(text);
+  }
 
   /// Publishes the post to Firestore after validating the form.
   ///
@@ -185,7 +191,7 @@ class CreatePostController extends GetxController {
             if (gifUrl.value != null) 'gifs': [gifUrl.value],
             'userId': _userId,
             if (userData != null) 'user': userData,
-            'url': _firstUrl(text),
+            'url': linkUrl.value,
             'createdAt': FieldValue.serverTimestamp(),
           }..removeWhere((key, value) => value == null),
           id: postId);
@@ -209,6 +215,7 @@ class CreatePostController extends GetxController {
       mentionKey.currentState?.controller?.clear();
       imageFiles.clear();
       gifUrl.value = null;
+      linkUrl.value = null;
       selectedFeed.value = null;
       return post;
     } catch (e, s) {
