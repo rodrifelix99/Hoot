@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:hoot/components/scale_on_press.dart';
@@ -7,10 +6,8 @@ import 'package:hoot/components/avatar_component.dart';
 class ListItem extends StatelessWidget {
   final String avatarUrl;
   final String? avatarHash;
-  final String title;
-  final TextStyle? titleStyle;
-  final String subtitle;
-  final TextStyle? subtitleStyle;
+  final Widget title;
+  final Widget? subtitle;
   final VoidCallback? onTap;
   final VoidCallback? onAvatarTap;
   final Widget? trailing;
@@ -20,9 +17,7 @@ class ListItem extends StatelessWidget {
     required this.avatarUrl,
     this.avatarHash,
     required this.title,
-    required this.subtitle,
-    this.titleStyle,
-    this.subtitleStyle,
+    this.subtitle,
     this.onTap,
     this.onAvatarTap,
     this.trailing,
@@ -55,9 +50,9 @@ class ListItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ProfileAvatarComponent(
-                image: avatarUrl,
-                hash: avatarHash,
-                size: 50,
+              image: avatarUrl,
+              hash: avatarHash,
+              size: 50,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -65,21 +60,11 @@ class ListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: titleStyle ?? Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: subtitleStyle ?? Theme.of(context)
-                        .textTheme
-                        .bodySmall,
-                  ),
+                  title,
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 4),
+                    subtitle!,
+                  ],
                 ],
               ),
             ),
