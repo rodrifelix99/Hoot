@@ -9,6 +9,10 @@ const kInvitationFourthDelay = Duration(milliseconds: 4500);
 const kInvitationFifthDelay = Duration(milliseconds: 5000);
 const kInvitationSixthDelay = Duration(milliseconds: 5500);
 
+const kMaxImageDimension = 1080;
+const kJpegQuality = 85;
+const kBlurHashX = 4;
+const kBlurHashY = 3;
 const kWelcomeUsernameStep = 1;
 const kWelcomeAvatarStep = 2;
 // Search by genre constants
