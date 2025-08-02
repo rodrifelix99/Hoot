@@ -29,7 +29,6 @@ class NotificationsController extends GetxController {
   final RxInt unreadCount = 0.obs;
   final RxInt requestCount = 0.obs;
   final RxList<U> requestUsers = <U>[].obs;
-  final RxBool loading = false.obs;
 
   StreamSubscription<int>? _unreadSub;
 
@@ -78,8 +77,7 @@ class NotificationsController extends GetxController {
   Future<void> _loadInitialNotifications() async {
     final uid = _authService.currentUser?.uid;
     if (uid == null) return;
-    loading.value = true;
-    state.value = state.value.reset();
+    state.value = state.value.reset().copyWith(isLoading: true);
     try {
       final page = await _notificationService.fetchNotifications(uid);
       state.value = state.value.copyWith(
@@ -89,10 +87,9 @@ class NotificationsController extends GetxController {
         isLoading: false,
       );
       notifications.assignAll(page.notifications);
-      unreadCount.value =
-          page.notifications.where((n) => !n.read).length;
+      unreadCount.value = page.notifications.where((n) => !n.read).length;
     } finally {
-      loading.value = false;
+      state.value = state.value.copyWith(isLoading: false);
     }
   }
 
@@ -115,8 +112,7 @@ class NotificationsController extends GetxController {
         isLoading: false,
       );
       notifications.addAll(page.notifications);
-      unreadCount.value =
-          notifications.where((n) => !n.read).length;
+      unreadCount.value = notifications.where((n) => !n.read).length;
     } finally {
       state.value = state.value.copyWith(isLoading: false);
     }
