@@ -6,9 +6,7 @@ import 'package:hoot/util/extensions/feed_extension.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/models/user.dart';
-import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
-import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
@@ -71,16 +69,16 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget buildHeader(U user) {
-    return SizedBox(
-      height: 500,
+    return AspectRatio(
+      aspectRatio: 0.7,
       child: Stack(
         fit: StackFit.expand,
         children: [
           if (user.bannerPictureUrl != null &&
               user.bannerPictureUrl!.isNotEmpty)
             ImageComponent(
-              url: user.bannerPictureUrl!,
-              hash: user.bannerHash,
+              url: user.largeProfilePictureUrl!,
+              hash: user.bigAvatarHash,
               fit: BoxFit.cover,
             )
           else
@@ -94,7 +92,7 @@ class _ProfileViewState extends State<ProfileView> {
             left: 0,
             right: 0,
             child: Container(
-              padding: const EdgeInsets.all(16).copyWith(
+              padding: const EdgeInsets.symmetric(horizontal: 32).copyWith(
                 top: 150,
               ),
               decoration: BoxDecoration(
@@ -107,33 +105,42 @@ class _ProfileViewState extends State<ProfileView> {
                   end: Alignment.topCenter,
                 ),
               ),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  ProfileAvatarComponent(
-                    image: user.largeProfilePictureUrl ?? '',
-                    hash: user.bigAvatarHash ?? user.smallAvatarHash,
-                    size: 120,
-                    preview: true,
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        NameComponent(
-                          user: user,
-                          size: 24,
-                          showUsername: true,
-                        ),
-                        if (user.bio != null && user.bio!.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text(user.bio!),
-                          ),
-                      ],
+                  Glassify(
+                    settings: LiquidGlassSettings(
+                      blur: 16,
+                      glassColor: Theme.of(context).brightness == Brightness.light
+                          ? Colors.black54
+                          : Colors.white38,
+                    ),
+                    child: Text(
+                      user.name ?? '',
+                      style: Get.textTheme.displayLarge?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 64,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '@${user.username ?? ''}',
+                    style: Get.textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  if (user.bio != null && user.bio!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(user.bio!),
+                    ),
                 ],
               ),
             ),
@@ -165,7 +172,8 @@ class _ProfileViewState extends State<ProfileView> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Theme.of(context).colorScheme.outline.withAlpha(50),
+                        color:
+                            Theme.of(context).colorScheme.outline.withAlpha(50),
                         width: 1,
                       ),
                       color: Theme.of(context).colorScheme.surfaceContainer,
@@ -184,9 +192,7 @@ class _ProfileViewState extends State<ProfileView> {
                           fit: BoxFit.cover,
                         ).blurred(
                           blur: 16,
-                          blurColor: Theme.of(context)
-                              .colorScheme
-                              .surface,
+                          blurColor: Theme.of(context).colorScheme.surface,
                           colorOpacity: 0.25,
                         ),
                         Center(
@@ -315,7 +321,7 @@ class _ProfileViewState extends State<ProfileView> {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(child: buildHeader(user)),
-            const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            const SliverToBoxAdapter(child: SizedBox(height: 32)),
             if (controller.feeds.isEmpty)
               SliverToBoxAdapter(
                 child: controller.isCurrentUser

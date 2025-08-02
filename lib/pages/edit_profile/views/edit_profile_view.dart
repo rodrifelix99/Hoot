@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
-import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/services/haptic_service.dart';
@@ -12,40 +11,8 @@ class EditProfileView extends GetView<EditProfileController> {
 
   Widget _buildHeader(BuildContext context) {
     return Obx(() {
-      final bannerFile = controller.bannerFile.value;
       final avatarFile = controller.avatarFile.value;
       final user = controller.user;
-
-      Widget bannerWidget;
-      final hasBanner = bannerFile != null ||
-          (user?.bannerPictureUrl != null &&
-              user!.bannerPictureUrl!.isNotEmpty);
-      if (bannerFile != null) {
-        bannerWidget = Image.file(
-          bannerFile,
-          fit: BoxFit.cover,
-          width: double.infinity,
-          height: 300,
-        );
-      } else if (user?.bannerPictureUrl != null &&
-          user!.bannerPictureUrl!.isNotEmpty) {
-        bannerWidget = ImageComponent(
-          url: user.bannerPictureUrl!,
-          hash: user.bannerHash,
-          fit: BoxFit.cover,
-          height: 300,
-          width: double.infinity,
-          radius: 16,
-        );
-      } else {
-        bannerWidget = Container(
-          height: 300,
-          width: double.infinity,
-          color: Theme.of(context).colorScheme.primaryContainer,
-          child: Icon(Icons.photo,
-              color: Theme.of(context).colorScheme.onPrimaryContainer),
-        );
-      }
 
       Widget avatarWidget;
       final hasAvatar = avatarFile != null ||
@@ -69,93 +36,45 @@ class EditProfileView extends GetView<EditProfileController> {
         );
       }
 
-      return SizedBox(
-        height: 400,
-        child: Stack(
-          children: [
-            GestureDetector(
-              onTap: () {
-                HapticService.lightImpact();
-                controller.pickBanner();
-              },
-              child: Stack(
-                children: [
-                  Container(
-                    height: 300,
-                    width: double.infinity,
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: bannerWidget,
-                  ),
-                  if (hasBanner)
-                    Positioned.fill(
-                      child: Container(
-                        height: 300,
-                        decoration: BoxDecoration(
-                          color: Colors.black26,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            SolarIconsBold.cameraAdd,
-                            color: Colors.white,
-                            size: 30,
-                          ),
+      return Center(
+        child: GestureDetector(
+          onTap: () {
+            HapticService.lightImpact();
+            controller.pickAvatar();
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(32),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 16,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                avatarWidget,
+                if (hasAvatar)
+                  Positioned.fill(
+                    child: Container(
+                      decoration: ShapeDecoration(
+                        color: Colors.black26,
+                        shape: CircleBorder(),
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          SolarIconsBold.cameraAdd,
+                          color: Colors.white,
+                          size: 30,
                         ),
                       ),
                     ),
-                ],
-              ),
-            ),
-            Positioned(
-              top: 264,
-              left: 16,
-              right: 16,
-              child: Center(
-                child: GestureDetector(
-                  onTap: () {
-                    HapticService.lightImpact();
-                    controller.pickAvatar();
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(32),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 16,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Stack(
-                      children: [
-                        avatarWidget,
-                        if (hasAvatar)
-                          Positioned.fill(
-                            child: Container(
-                              decoration: ShapeDecoration(
-                                color: Colors.black26,
-                                shape: CircleBorder(),
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  SolarIconsBold.cameraAdd,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
                   ),
-                ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       );
     });

@@ -28,7 +28,6 @@ class EditProfileController extends GetxController {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
 
-  final Rx<File?> bannerFile = Rx<File?>(null);
   final Rx<File?> avatarFile = Rx<File?>(null);
   final RxBool saving = false.obs;
 
@@ -41,17 +40,6 @@ class EditProfileController extends GetxController {
     if (u != null) {
       nameController.text = u.name ?? '';
       bioController.text = u.bio ?? '';
-    }
-  }
-
-  Future<void> pickBanner() async {
-    try {
-      final picked = await _picker.pickImage(source: ImageSource.gallery);
-      if (picked != null) {
-        bannerFile.value = File(picked.path);
-      }
-    } catch (e, s) {
-      await ErrorService.reportError(e, stack: s);
     }
   }
 
@@ -82,31 +70,12 @@ class EditProfileController extends GetxController {
       final uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid == null) return false;
 
-      String? bannerUrl;
-      String? bannerHash;
-      if (bannerFile.value != null) {
-        final file = bannerFile.value!;
-        final bytes = await file.readAsBytes();
-        final decoded = img.decodeImage(bytes);
-        Uint8List data = bytes;
-        if (decoded != null) {
-          final resized = img.copyResize(decoded, height: 1024);
-          data = Uint8List.fromList(img.encodeJpg(resized));
-          bannerHash = await BlurHash.encode(data, 4, 3);
-        }
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('banners')
-            .child(uid)
-            .child('banner.jpg');
-        await ref.putData(data, SettableMetadata(contentType: 'image/jpeg'));
-        bannerUrl = await ref.getDownloadURL();
-      }
-
       String? smallAvatarUrl;
       String? bigAvatarUrl;
       String? smallAvatarHash;
       String? bigAvatarHash;
+      String? bannerUrl;
+      String? bannerHash;
       if (avatarFile.value != null) {
         final file = avatarFile.value!;
         final bytes = await file.readAsBytes();
@@ -114,8 +83,11 @@ class EditProfileController extends GetxController {
         if (decoded != null) {
           final small = img.copyResizeCropSquare(decoded, size: 48);
           final big = img.copyResizeCropSquare(decoded, size: 512);
+          final banner = img.copyResize(decoded, height: 1024);
           final smallData = Uint8List.fromList(img.encodeJpg(small));
           final bigData = Uint8List.fromList(img.encodeJpg(big));
+          final bannerData = Uint8List.fromList(img.encodeJpg(banner));
+          bannerHash = await BlurHash.encode(bannerData, 4, 3);
           smallAvatarHash = await BlurHash.encode(smallData, 4, 3);
           bigAvatarHash = await BlurHash.encode(bigData, 4, 3);
           final storageRef =
@@ -128,6 +100,13 @@ class EditProfileController extends GetxController {
               bigData, SettableMetadata(contentType: 'image/jpeg'));
           smallAvatarUrl = await smallRef.getDownloadURL();
           bigAvatarUrl = await bigRef.getDownloadURL();
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('banners')
+              .child(uid)
+              .child('banner.jpg');
+          await ref.putData(bannerData, SettableMetadata(contentType: 'image/jpeg'));
+          bannerUrl = await ref.getDownloadURL();
         }
       }
 
