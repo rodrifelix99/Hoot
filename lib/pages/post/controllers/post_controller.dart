@@ -114,8 +114,6 @@ class PostController extends GetxController {
         reason: 'Failed to refresh post',
       );
     }
-    commentsState.value = commentsState.value.reset();
-    fetchNextComments();
   }
 
   /// Searches users for mentions in comments.
