@@ -23,47 +23,50 @@ class PostView extends GetView<PostController> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: CustomScrollView(
-              slivers: [
-                Obx(() {
-                  final post = controller.post.value;
-                  return SliverToBoxAdapter(
-                    child: PostComponent(
-                      post: post,
-                      margin: const EdgeInsets.all(16),
-                    ),
-                  );
-                }),
-                Obx(() {
-                  final state = controller.commentsState.value;
-                  return PagedSliverList<DocumentSnapshot?, Comment>(
-                    state: state,
-                    fetchNextPage: controller.fetchNextComments,
-                    builderDelegate: PagedChildBuilderDelegate<Comment>(
-                      itemBuilder: (context, item, index) =>
-                          CommentComponent(comment: item),
-                      firstPageProgressIndicatorBuilder: (_) => const Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Center(child: CircularProgressIndicator()),
+            child: RefreshIndicator(
+              onRefresh: () => Future.sync(() => controller.refresh()),
+              child: CustomScrollView(
+                slivers: [
+                  Obx(() {
+                    final post = controller.post.value;
+                    return SliverToBoxAdapter(
+                      child: PostComponent(
+                        post: post,
+                        margin: const EdgeInsets.all(16),
                       ),
-                      newPageProgressIndicatorBuilder: (_) => const Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Center(child: CircularProgressIndicator()),
+                    );
+                  }),
+                  Obx(() {
+                    final state = controller.commentsState.value;
+                    return PagedSliverList<DocumentSnapshot?, Comment>(
+                      state: state,
+                      fetchNextPage: controller.fetchNextComments,
+                      builderDelegate: PagedChildBuilderDelegate<Comment>(
+                        itemBuilder: (context, item, index) =>
+                            CommentComponent(comment: item),
+                        firstPageProgressIndicatorBuilder: (_) => const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                        newPageProgressIndicatorBuilder: (_) => const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                        firstPageErrorIndicatorBuilder: (_) =>
+                            NothingToShowComponent(
+                          icon: const Icon(Icons.error_outline),
+                          text: 'somethingWentWrong'.tr,
+                        ),
+                        noItemsFoundIndicatorBuilder: (_) =>
+                            const SizedBox.shrink(),
                       ),
-                      firstPageErrorIndicatorBuilder: (_) =>
-                          NothingToShowComponent(
-                        icon: const Icon(Icons.error_outline),
-                        text: 'somethingWentWrong'.tr,
-                      ),
-                      noItemsFoundIndicatorBuilder: (_) =>
-                          const SizedBox.shrink(),
-                    ),
-                  );
-                }),
-                SliverToBoxAdapter(
-                  child: SafeArea(child: const SizedBox(height: 32)),
-                ),
-              ],
+                    );
+                  }),
+                  SliverToBoxAdapter(
+                    child: SafeArea(child: const SizedBox(height: 32)),
+                  ),
+                ],
+              ),
             ),
           ),
           Positioned(

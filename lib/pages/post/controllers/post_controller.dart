@@ -100,6 +100,23 @@ class PostController extends GetxController {
     }
   }
 
+  @override
+  void refresh() {
+    _postService.fetchPost(post.value.id).then((fetched) {
+      if (fetched != null) {
+        post.value = fetched;
+      }
+    }).catchError((e) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        null,
+        reason: 'Failed to refresh post',
+      );
+    });
+    commentsState.value = commentsState.value.reset();
+    fetchNextComments();
+  }
+
   /// Searches users for mentions in comments.
   Future<void> searchUsers(String query) async {
     _userService ??= UserService();
