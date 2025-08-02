@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:blur/blur.dart';
 import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:flutter/material.dart';
@@ -110,25 +111,36 @@ class _ProfileViewState extends State<ProfileView> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Glassify(
-                    settings: LiquidGlassSettings(
-                      blur: 16,
-                      glassColor:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black54
-                              : Colors.white38,
-                    ),
-                    child: Text(
-                      user.name ?? '',
-                      style: Get.textTheme.displayLarge?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 64,
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+                  ImageFilter.isShaderFilterSupported
+                      ? Glassify(
+                          settings: LiquidGlassSettings(
+                            blur: 16,
+                            glassColor:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.black54
+                                    : Colors.white38,
+                          ),
+                          child: Text(
+                            user.name ?? '',
+                            style: Get.textTheme.displayLarge?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 64,
+                            ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : Text(
+                          user.name ?? '',
+                          style: Get.textTheme.displayLarge?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 64,
+                          ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
                   const SizedBox(height: 8),
                   Text(
                     '@${user.username ?? ''}',
@@ -407,44 +419,69 @@ class _ProfileViewState extends State<ProfileView> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
-            child: LiquidGlassLayer(
-              settings: LiquidGlassSettings(
-                blur: 4,
-                glassColor: Theme.of(context).colorScheme.surface.withAlpha(50),
-              ),
-              child: Row(
-                children: [
-                  if (controller.isCurrentUser)
-                    LiquidGlass.inLayer(
-                      shape: LiquidOval(),
-                      glassContainsChild: false,
-                      child: IconButton(
-                        icon: const Icon(Icons.people_rounded),
-                        color: Colors.white,
-                        onPressed: () => Get.toNamed(
-                          AppRoutes.subscriptions,
-                          arguments: controller.user.value?.uid,
-                        ),
-                      ),
+            child: ImageFilter.isShaderFilterSupported
+                ? LiquidGlassLayer(
+                    settings: LiquidGlassSettings(
+                      blur: 4,
+                      glassColor:
+                          Theme.of(context).colorScheme.surface.withAlpha(50),
                     ),
-                  LiquidGlass.inLayer(
-                    shape: LiquidOval(),
-                    glassContainsChild: false,
-                    child: controller.isCurrentUser
-                        ? IconButton(
-                            icon: const Icon(Icons.settings),
-                            color: Colors.white,
-                            onPressed: () => Get.toNamed(AppRoutes.settings),
-                          )
-                        : IconButton(
-                            icon: const Icon(Icons.flag_outlined),
-                            color: Colors.white,
-                            onPressed: () => reportUser(context),
+                    child: Row(
+                      children: [
+                        if (controller.isCurrentUser)
+                          LiquidGlass.inLayer(
+                            shape: LiquidOval(),
+                            glassContainsChild: false,
+                            child: IconButton(
+                              icon: const Icon(Icons.people_rounded),
+                              color: Colors.white,
+                              onPressed: () => Get.toNamed(
+                                AppRoutes.subscriptions,
+                                arguments: controller.user.value?.uid,
+                              ),
+                            ),
                           ),
+                        LiquidGlass.inLayer(
+                          shape: LiquidOval(),
+                          glassContainsChild: false,
+                          child: controller.isCurrentUser
+                              ? IconButton(
+                                  icon: const Icon(Icons.settings),
+                                  color: Colors.white,
+                                  onPressed: () =>
+                                      Get.toNamed(AppRoutes.settings),
+                                )
+                              : IconButton(
+                                  icon: const Icon(Icons.flag_outlined),
+                                  color: Colors.white,
+                                  onPressed: () => reportUser(context),
+                                ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Row(
+                    children: [
+                      if (controller.isCurrentUser)
+                        IconButton(
+                          icon: const Icon(Icons.people_rounded),
+                          color: Colors.white,
+                          onPressed: () => Get.toNamed(
+                            AppRoutes.subscriptions,
+                            arguments: controller.user.value?.uid,
+                          ),
+                        ),
+                      IconButton(
+                        icon: controller.isCurrentUser
+                            ? const Icon(Icons.settings)
+                            : const Icon(Icons.flag_outlined),
+                        color: Colors.white,
+                        onPressed: () => controller.isCurrentUser
+                            ? Get.toNamed(AppRoutes.settings)
+                            : reportUser(context),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
           ),
         ],
       ),
