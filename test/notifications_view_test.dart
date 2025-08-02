@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:hoot/pages/notifications/controllers/notifications_controller.dart';
 import 'package:hoot/pages/notifications/views/notifications_view.dart';
@@ -87,6 +89,9 @@ class TestNotificationsController extends NotificationsController {
             authService: authService,
             notificationService: notificationService,
             feedRequestService: feedRequestService);
+
+  @override
+  void onInit() {}
 }
 
 void main() {
@@ -99,16 +104,22 @@ void main() {
           NotificationService(firestore: FakeFirebaseFirestore()),
       feedRequestService: FakeFeedRequestService(0),
     );
-    controller.loading.value = false;
-    controller.notifications.assignAll([
-      HootNotification(
-        id: 'n1',
-        user: U(uid: 'u2', username: 'Tester'),
-        type: 0,
-        read: false,
-        createdAt: DateTime.now(),
-      ),
-    ]);
+    final n = HootNotification(
+      id: 'n1',
+      user: U(uid: 'u2', username: 'Tester'),
+      type: 0,
+      read: false,
+      createdAt: DateTime.now(),
+    );
+    controller.notifications.assignAll([n]);
+    controller.state.value = PagingState<DocumentSnapshot?, HootNotification>(
+      pages: [
+        [n]
+      ],
+      keys: [null],
+      hasNextPage: false,
+      isLoading: false,
+    );
     Get.put<NotificationsController>(controller);
 
     await tester.pumpWidget(
@@ -131,17 +142,23 @@ void main() {
           NotificationService(firestore: FakeFirebaseFirestore()),
       feedRequestService: FakeFeedRequestService(0),
     );
-    controller.loading.value = false;
-    controller.notifications.assignAll([
-      HootNotification(
-        id: 'n2',
-        user: U(uid: 'u2', username: 'Tester'),
-        type: 4,
-        postId: 'p1',
-        read: false,
-        createdAt: DateTime.now(),
-      ),
-    ]);
+    final n = HootNotification(
+      id: 'n2',
+      user: U(uid: 'u2', username: 'Tester'),
+      type: 4,
+      postId: 'p1',
+      read: false,
+      createdAt: DateTime.now(),
+    );
+    controller.notifications.assignAll([n]);
+    controller.state.value = PagingState<DocumentSnapshot?, HootNotification>(
+      pages: [
+        [n]
+      ],
+      keys: [null],
+      hasNextPage: false,
+      isLoading: false,
+    );
     Get.put<NotificationsController>(controller);
 
     await tester.pumpWidget(
@@ -165,16 +182,22 @@ void main() {
           NotificationService(firestore: FakeFirebaseFirestore()),
       feedRequestService: FakeFeedRequestService(0),
     );
-    controller.loading.value = false;
-    controller.notifications.assignAll([
-      HootNotification(
-        id: 'n3',
-        user: U(uid: 'u2', username: 'Tester'),
-        type: 5,
-        read: false,
-        createdAt: DateTime.now(),
-      ),
-    ]);
+    final n = HootNotification(
+      id: 'n3',
+      user: U(uid: 'u2', username: 'Tester'),
+      type: 5,
+      read: false,
+      createdAt: DateTime.now(),
+    );
+    controller.notifications.assignAll([n]);
+    controller.state.value = PagingState<DocumentSnapshot?, HootNotification>(
+      pages: [
+        [n]
+      ],
+      keys: [null],
+      hasNextPage: false,
+      isLoading: false,
+    );
     Get.put<NotificationsController>(controller);
 
     await tester.pumpWidget(
@@ -186,7 +209,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Tester joined Hoot using your invite code'), findsOneWidget);
+    expect(
+        find.text('Tester joined Hoot using your invite code'), findsOneWidget);
     Get.reset();
   });
 
@@ -198,8 +222,13 @@ void main() {
           NotificationService(firestore: FakeFirebaseFirestore()),
       feedRequestService: FakeFeedRequestService(2),
     );
-    controller.loading.value = false;
     controller.requestCount.value = 2;
+    controller.state.value = PagingState<DocumentSnapshot?, HootNotification>(
+      pages: [[]],
+      keys: [null],
+      hasNextPage: false,
+      isLoading: false,
+    );
     Get.put<NotificationsController>(controller);
 
     await tester.pumpWidget(
@@ -229,9 +258,14 @@ void main() {
           NotificationService(firestore: FakeFirebaseFirestore()),
       feedRequestService: FakeFeedRequestService(2, requests),
     );
-    controller.loading.value = false;
     controller.requestCount.value = 2;
     controller.requestUsers.assignAll(requests.map((r) => r.user));
+    controller.state.value = PagingState<DocumentSnapshot?, HootNotification>(
+      pages: [[]],
+      keys: [null],
+      hasNextPage: false,
+      isLoading: false,
+    );
     Get.put<NotificationsController>(controller);
 
     await tester.pumpWidget(
