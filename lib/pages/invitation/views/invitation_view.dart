@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:hoot/pages/invitation/controllers/invitation_controller.dart';
+import 'package:hoot/util/constants.dart';
 
 class InvitationView extends GetView<InvitationController> {
   const InvitationView({super.key});
@@ -16,8 +17,8 @@ class InvitationView extends GetView<InvitationController> {
         children: [
           Positioned.fill(
             child: FadeIn(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 1000),
+              duration: kInvitationFadeDuration,
+              delay: kInvitationFirstDelay,
               child: HashCachedImage(
                 imageUrl:
                     'https://r1.ilikewallpaper.net/ipad-pro-wallpapers/download/100031/dark-blur-abstract-4k-ipad-pro-wallpaper-ilikewallpaper_com.jpg',
@@ -34,8 +35,8 @@ class InvitationView extends GetView<InvitationController> {
                   children: [
                     const Spacer(),
                     FadeInUp(
-                      duration: const Duration(milliseconds: 1000),
-                      delay: const Duration(milliseconds: 2500),
+                      duration: kInvitationExtendedFadeDuration,
+                      delay: kInvitationSecondDelay,
                       child: Text(
                         'welcome'.tr,
                         style:
@@ -49,10 +50,10 @@ class InvitationView extends GetView<InvitationController> {
                     const SizedBox(height: 16),
                     Obx(() {
                       return FadeIn(
-                        duration: const Duration(milliseconds: 500),
-                        delay: const Duration(milliseconds: 3500),
+                        duration: kInvitationFadeDuration,
+                        delay: kInvitationThirdDelay,
                         child: AnimatedCrossFade(
-                          duration: const Duration(milliseconds: 300),
+                          duration: kInvitationCrossFadeDuration,
                           crossFadeState: !controller.isCrossFade.value
                               ? CrossFadeState.showFirst
                               : CrossFadeState.showSecond,
@@ -81,8 +82,8 @@ class InvitationView extends GetView<InvitationController> {
                     }),
                     const Spacer(),
                     FadeInUp(
-                      duration: const Duration(milliseconds: 500),
-                      delay: const Duration(milliseconds: 4500),
+                      duration: kInvitationFadeDuration,
+                      delay: kInvitationFourthDelay,
                       child: Text(
                         'invitationAccessLimited'.tr,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -93,8 +94,8 @@ class InvitationView extends GetView<InvitationController> {
                     ),
                     const SizedBox(height: 16),
                     FadeInUp(
-                      duration: const Duration(milliseconds: 500),
-                      delay: const Duration(milliseconds: 5000),
+                      duration: kInvitationFadeDuration,
+                      delay: kInvitationFifthDelay,
                       child: Opacity(
                         opacity: 0.8,
                         child: TextField(
@@ -108,8 +109,8 @@ class InvitationView extends GetView<InvitationController> {
                     const SizedBox(height: 16),
                     Obx(
                       () => FadeInUp(
-                        duration: const Duration(milliseconds: 500),
-                        delay: const Duration(milliseconds: 5500),
+                        duration: kInvitationFadeDuration,
+                        delay: kInvitationSixthDelay,
                         child: ElevatedButton(
                           onPressed: controller.verifying.value
                               ? null
