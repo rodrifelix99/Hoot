@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/image_component.dart';
+import 'package:hoot/components/url_preview_component.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/services/haptic_service.dart';
 import 'package:hoot/pages/edit_profile/controllers/edit_profile_controller.dart';
@@ -171,6 +172,29 @@ class EditProfileView extends GetView<EditProfileController> {
                       onSelected: (suggestion) {
                         controller.selectedCity.value = suggestion;
                         controller.locationController.text = suggestion;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: controller.websiteController,
+                      keyboardType: TextInputType.url,
+                      decoration: InputDecoration(
+                        hintText: 'website'.tr,
+                      ),
+                    ),
+                    ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: controller.websiteController,
+                      builder: (context, value, _) {
+                        if (value.text.isEmpty) return const SizedBox.shrink();
+                        return Column(
+                          children: [
+                            const SizedBox(height: 16),
+                            UrlPreviewComponent(
+                              url: value.text,
+                              isClickable: false,
+                            ),
+                          ],
+                        );
                       },
                     ),
                     const SizedBox(height: 16),
