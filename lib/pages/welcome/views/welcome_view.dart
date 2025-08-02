@@ -288,21 +288,22 @@ class _WelcomeViewState extends State<WelcomeView> {
                           HapticService.lightImpact();
                           _avatarController.pickAvatar();
                         },
-                        child: CircleAvatar(
-                          radius: 64,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primaryContainer,
-                          backgroundImage:
-                              file != null ? FileImage(file) : null,
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          decoration: ShapeDecoration(
+                            shape: CircleBorder(),
+                          ),
+                          clipBehavior: Clip.antiAlias,
                           child: file == null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(64),
-                                  child: Image.asset(
-                                    'assets/images/avatar.png',
-                                    fit: BoxFit.cover,
-                                  ),
+                              ? Image.asset(
+                                  'assets/images/avatar.png',
+                                  fit: BoxFit.cover,
                                 )
-                              : null,
+                              : Image.file(
+                                  file,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       ),
                       const SizedBox(height: 16),
