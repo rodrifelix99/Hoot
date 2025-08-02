@@ -1,3 +1,4 @@
+[![CLA assistant](https://cla-assistant.io/readme/badge/rodrifelix99/Hoot)](https://cla-assistant.io/rodrifelix99/Hoot)
 # hoot
 
 The good old social network
