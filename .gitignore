@@ -55,6 +55,7 @@ fastlane/
 
 # Environment files
 assets/.env
+lib/firebase_options.dart
 ios/Runner/GoogleService-Info.plist
 android/app/google-services.json
 /apply_patch.sh

@@ -64,6 +64,11 @@ Hoot operates like a streamlined community platform:
 Create a `.env` file based on `.env.example` and supply your own API keys. The
 app loads this file at startup to configure services like Tenor.
 
+Firebase configuration lives in `lib/firebase_options.dart`, which is excluded
+from version control. Generate this file locally with the
+[FlutterFire CLI](https://firebase.flutter.dev/docs/cli) or provide the
+equivalent options via environment variables at runtime.
+
 ## Running Tests
 
 Widget and model tests are located under the `test/` directory. Make sure to
