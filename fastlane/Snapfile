@@ -1,8 +1,0 @@
-# Snapfile
-# Device(s) and languages for screenshots
-devices(["iPhone 14 Pro Max"])
-languages(["en-US"])
-scheme("Runner")
-workspace("ios/Runner.xcworkspace")
-output_directory("./fastlane/screenshots")
-clear_previous_screenshots(true)
