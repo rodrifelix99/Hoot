@@ -50,13 +50,10 @@ class PostController extends GetxController {
       post.value = args['post'];
       _setup();
     } else if (args is String) {
-      post.value = Post.empty();
       _loadPost(args);
     } else if (args is Map && args['id'] is String) {
-      post.value = Post.empty();
       _loadPost(args['id']);
     } else {
-      post.value = Post.empty();
       _setup();
     }
   }

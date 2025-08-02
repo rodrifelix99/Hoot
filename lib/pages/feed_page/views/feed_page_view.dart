@@ -56,7 +56,7 @@ class FeedPageView extends GetView<FeedPageController> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(8),
       ),
       child: SafeArea(

@@ -36,8 +36,8 @@ class AppColorView extends GetView<AppColorController> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              color.color.withOpacity(0.6),
-                              color.color.withOpacity(0.9),
+                              color.color.withValues(alpha: 0.6),
+                              color.color.withValues(alpha: 0.9),
                             ],
                           ),
                           border: selected == color

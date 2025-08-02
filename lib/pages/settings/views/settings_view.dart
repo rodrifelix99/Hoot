@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hoot/pages/settings/controllers/settings_controller.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/util/routes/app_routes.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 class SettingsView extends GetView<SettingsController> {
   const SettingsView({super.key});
@@ -25,6 +26,7 @@ class SettingsView extends GetView<SettingsController> {
                 children: [
                   Obx(
                     () => ListTile(
+                      leading: Icon(SolarIconsOutline.moonStars),
                       title: Text('darkMode'.tr),
                       trailing: DropdownButton<ThemeMode>(
                         key: const Key('themeModeDropdown'),
@@ -48,9 +50,9 @@ class SettingsView extends GetView<SettingsController> {
                     ),
                   ),
                   ListTile(
-                    leading: const Icon(Icons.palette_outlined),
+                    leading: const Icon(SolarIconsOutline.palette2),
                     title: Text('appColor'.tr),
-                    trailing: const Icon(Icons.chevron_right),
+                    trailing: const Icon(SolarIconsOutline.arrowRight),
                     onTap: () => Get.toNamed(AppRoutes.appColor),
                   ),
                 ],
@@ -61,39 +63,35 @@ class SettingsView extends GetView<SettingsController> {
                 title: 'account'.tr,
                 children: [
                   ListTile(
-                    leading: const Icon(Icons.person_outline),
+                    leading: const Icon(SolarIconsOutline.user),
                     title: Text('editProfile'.tr),
-                    trailing: const Icon(Icons.chevron_right),
+                    trailing: const Icon(SolarIconsOutline.arrowRight),
                     onTap: controller.goToEditProfile,
                   ),
                   ListTile(
+                    leading: const Icon(SolarIconsOutline.usersGroupRounded),
                     title: Text('findFriends'.tr),
                     subtitle: Text('findFriendsFromContacts'.tr),
+                    trailing: const Icon(SolarIconsOutline.arrowRight),
                     onTap: controller.findFriends,
                   ),
                   ListTile(
-                    leading: const Icon(Icons.subscriptions_outlined),
-                    title: Text('subscriptions'.tr),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => Get.toNamed(AppRoutes.subscriptions),
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.description_outlined),
+                    leading: const Icon(SolarIconsOutline.documents),
                     title: Text('termsOfService'.tr),
-                    trailing: const Icon(Icons.chevron_right),
+                    trailing: const Icon(SolarIconsOutline.arrowRight),
                     onTap: () => Get.toNamed(AppRoutes.terms),
                   ),
                   ListTile(
-                    leading: const Icon(Icons.delete_outline),
+                    leading: const Icon(SolarIconsOutline.trashBin2),
                     title: Text('deleteAccount'.tr),
                     subtitle: Text('deleteAccountDescription'.tr),
-                    trailing: const Icon(Icons.chevron_right),
+                    trailing: const Icon(SolarIconsOutline.arrowRight),
                     onTap: () => controller.deleteAccount(context),
                   ),
                   ListTile(
-                    leading: const Icon(Icons.logout_outlined),
+                    leading: const Icon(SolarIconsOutline.logout),
                     title: Text('signOut'.tr),
-                    trailing: const Icon(Icons.chevron_right),
+                    trailing: const Icon(SolarIconsOutline.arrowRight),
                     onTap: () => controller.signOut(context),
                   ),
                 ],
@@ -104,6 +102,7 @@ class SettingsView extends GetView<SettingsController> {
                 title: 'about'.tr,
                 children: [
                   ExpansionTile(
+                    leading: const Icon(SolarIconsOutline.heartAngle),
                     title: Text('messageFromCreator'.tr),
                     childrenPadding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 8.0),
@@ -113,6 +112,7 @@ class SettingsView extends GetView<SettingsController> {
                   ),
                   Obx(
                     () => ListTile(
+                      leading: const Icon(SolarIconsOutline.infoSquare),
                       title: Text('version'.tr),
                       subtitle: Text(controller.version.value),
                     ),
