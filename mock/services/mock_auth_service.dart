@@ -2,7 +2,8 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/services/auth_service.dart' as real;
-import 'package:hoot/mock/data/mock_user.dart';
+
+import '../data/mock_user.dart';
 
 /// Mock implementation of [AuthService] providing in-memory user data.
 class MockAuthService extends real.AuthService {

@@ -5,7 +5,8 @@ import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/services/post_service.dart';
-import 'package:hoot/mock/data/mock_user.dart';
+
+import '../data/mock_user.dart';
 
 /// Mock implementation of [BasePostService] storing posts in memory.
 class MockPostService implements BasePostService {

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hoot/models/post.dart';
 import 'package:hoot/services/feed_service.dart';
 import 'mock_post_service.dart';
 

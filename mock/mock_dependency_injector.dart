@@ -13,7 +13,7 @@ class MockDependencyInjector {
 
   /// Initializes mock services and theme settings.
   static Future<void> init() async {
-    final auth = Get.put<AuthService>(MockAuthService(), permanent: true);
+    Get.put<AuthService>(MockAuthService(), permanent: true);
     final postService = MockPostService();
     await postService.load();
     Get.put<BasePostService>(postService, permanent: true);
