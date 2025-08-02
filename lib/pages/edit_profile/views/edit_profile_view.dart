@@ -152,6 +152,16 @@ class EditProfileView extends GetView<EditProfileController> {
                 padding: const EdgeInsets.all(16.0).copyWith(top: 0),
                 child: Column(
                   children: [
+                    TextField(
+                      controller: controller.bioController,
+                      textCapitalization: TextCapitalization.sentences,
+                      maxLines: 3,
+                      maxLength: 160,
+                      decoration: InputDecoration(
+                        hintText: 'bio'.tr,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                     TypeAheadField<String>(
                       controller: controller.locationController,
                       suggestionsCallback: controller.searchCities,
@@ -196,16 +206,6 @@ class EditProfileView extends GetView<EditProfileController> {
                           ],
                         );
                       },
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: controller.bioController,
-                      textCapitalization: TextCapitalization.sentences,
-                      maxLines: 3,
-                      maxLength: 160,
-                      decoration: InputDecoration(
-                        hintText: 'bio'.tr,
-                      ),
                     ),
                   ],
                 ),

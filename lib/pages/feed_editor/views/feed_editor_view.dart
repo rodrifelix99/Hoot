@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/pages/feed_editor/controllers/feed_editor_controller.dart';
-import 'package:hoot/models/feed.dart';
 import 'package:hoot/util/extensions/feed_extension.dart';
 import 'package:solar_icons/solar_icons.dart';
-import 'package:hoot/pages/create_feed/controllers/create_feed_controller.dart';
-import 'package:hoot/pages/edit_feed/controllers/edit_feed_controller.dart';
 import 'package:hoot/pages/feed/widgets/feed_form.dart';
 import 'package:hoot/pages/feed/widgets/feed_avatar_picker.dart';
-import 'package:hoot/pages/feed/widgets/feed_form.dart';
-import 'package:solar_icons/solar_icons.dart';
 
 /// A unified view for creating and editing feeds using [FeedEditorController].
 class FeedEditorView extends StatelessWidget {
