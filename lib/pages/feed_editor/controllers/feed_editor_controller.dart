@@ -291,7 +291,7 @@ class FeedEditorController extends GetxController {
       if (index != -1) _profileController!.feeds[index] = feed!;
     }
 
-    ToastService.showSuccess('editFeed'.tr);
+    ToastService.showSuccess('feedUpdated'.tr);
     return true;
   }
 
