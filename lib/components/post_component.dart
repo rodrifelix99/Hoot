@@ -153,7 +153,7 @@ class _PostComponentState extends State<PostComponent> {
       if (!confirmed) return;
       try {
         await _postService.deletePost(_post.id);
-        ToastService.showSuccess('deletePost'.tr);
+        ToastService.showSuccess('postDeleted'.tr);
       } catch (e) {
         ToastService.showError('somethingWentWrong'.tr);
       }
@@ -324,18 +324,16 @@ class _PostComponentState extends State<PostComponent> {
                                 children: [
                                   Text(
                                     'by @${_post.user?.username ?? ''}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
                                   ),
                                   if (_post.user?.verified == true) ...[
                                     const SizedBox(width: 4),
                                     Icon(
                                       Icons.verified_rounded,
                                       size: 16,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                     ),
                                   ],
                                 ],
