@@ -18,6 +18,16 @@ class WelcomeController extends GetxController {
   WelcomeController({BaseUserService? userService})
       : _userService = userService ?? UserService();
 
+  @override
+  void onInit() {
+    final initialName =
+        _auth.currentUser?.name ?? FirebaseAuth.instance.currentUser?.displayName;
+    if (initialName != null) {
+      displayNameController.text = initialName;
+    }
+    super.onInit();
+  }
+
   /// Validates and saves the display name to Firestore.
   Future<bool> saveDisplayName() async {
     final name = displayNameController.text.trim();
