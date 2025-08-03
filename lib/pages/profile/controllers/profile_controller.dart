@@ -15,6 +15,7 @@ import 'package:hoot/services/toast_service.dart';
 import 'package:hoot/services/subscription_manager.dart';
 import 'package:hoot/services/dialog_service.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 /// Loads the current user profile data and owned feeds.
 class ProfileController extends GetxController {
@@ -184,6 +185,15 @@ class ProfileController extends GetxController {
     } catch (e, s) {
       await ErrorService.reportError(e, stack: s);
     }
+  }
+
+  Future visitUrl() async {
+    final url = user.value?.website;
+    if (url == null || url.isEmpty) {
+      ToastService.showError('noWebsite'.tr);
+      return;
+    }
+    await launchUrlString(url, mode: LaunchMode.externalApplication);
   }
 
   bool isSubscribed(String feedId) => subscribedFeedIds.contains(feedId);

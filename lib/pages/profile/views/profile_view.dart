@@ -347,7 +347,8 @@ class _ProfileViewState extends State<ProfileView> {
           slivers: [
             SliverToBoxAdapter(child: buildHeader(user)),
             SliverToBoxAdapter(child: SizedBox(height: 16)),
-            SliverToBoxAdapter(child: Wrap(
+            SliverToBoxAdapter(
+                child: Wrap(
               alignment: WrapAlignment.center,
               spacing: 16,
               runSpacing: 8,
@@ -359,41 +360,42 @@ class _ProfileViewState extends State<ProfileView> {
                       Icon(
                         SolarIconsBold.mapPoint,
                         size: 16,
-                        color:
-                        Theme.of(context).colorScheme.onSurfaceVariant,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         user.location!,
                         style: Get.textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurfaceVariant,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
                   ),
                 if (user.website != null && user.website!.isNotEmpty)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        SolarIconsBold.global,
-                        size: 16,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        cleanUpUrl(user.website!),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Get.textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurfaceVariant,
+                  GestureDetector(
+                    onTap: () {
+                      HapticService.lightImpact();
+                      controller.visitUrl();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          SolarIconsBold.global,
+                          size: 16,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 4),
+                        Text(
+                          cleanUpUrl(user.website!),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Get.textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
               ],
             )),
@@ -402,13 +404,14 @@ class _ProfileViewState extends State<ProfileView> {
               SliverToBoxAdapter(
                 child: controller.isCurrentUser
                     ? NothingToShowComponent(
-                        icon: const Icon(Icons.feed_outlined),
+                        imageAsset: 'assets/images/feed.webp',
+                        title: 'noFeedsYou'.tr,
                         text: 'whatIsAFeed'.tr,
                         buttonText: 'createFeed'.tr,
                         buttonAction: () => Get.toNamed(AppRoutes.createFeed),
                       )
                     : NothingToShowComponent(
-                        icon: const Icon(Icons.feed_outlined),
+                        imageAsset: 'assets/images/feed.webp',
                         text: 'noFeeds'.trParams({
                           'username': controller.user.value?.username ?? '',
                         }),
