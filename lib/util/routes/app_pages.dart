@@ -11,6 +11,8 @@ import 'package:hoot/pages/home/bindings/home_binding.dart';
 import 'package:hoot/pages/home/views/home_view.dart';
 import 'package:hoot/pages/staff_home/bindings/staff_home_binding.dart';
 import 'package:hoot/pages/staff_home/views/staff_home_view.dart';
+import 'package:hoot/pages/staff_reports/bindings/staff_reports_binding.dart';
+import 'package:hoot/pages/staff_reports/views/staff_reports_view.dart';
 import 'package:hoot/pages/invitation/bindings/invitation_binding.dart';
 import 'package:hoot/pages/invitation/views/invitation_view.dart';
 import 'package:hoot/pages/notifications_permission/bindings/notification_permission_binding.dart';
@@ -101,6 +103,12 @@ class AppPages {
       name: AppRoutes.staff,
       page: () => const StaffHomeView(),
       binding: StaffHomeBinding(),
+      middlewares: [AuthMiddleware(), StaffMiddleware()],
+    ),
+    GetPage(
+      name: AppRoutes.staffReports,
+      page: () => const StaffReportsView(),
+      binding: StaffReportsBinding(),
       middlewares: [AuthMiddleware(), StaffMiddleware()],
     ),
     GetPage(
