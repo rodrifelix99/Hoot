@@ -10,11 +10,13 @@ import 'package:hoot/services/dialog_service.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/toast_service.dart';
 import 'package:hoot/services/theme_service.dart';
+import 'package:hoot/services/language_service.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 
 class SettingsController extends GetxController {
   final _auth = Get.find<AuthService>();
   final _theme = Get.find<ThemeService>();
+  final _language = Get.find<LanguageService>();
 
   final version = ''.obs;
 
@@ -33,9 +35,16 @@ class SettingsController extends GetxController {
 
   ThemeMode get themeMode => _theme.themeMode.value;
 
+  Locale get locale => _language.locale.value;
+
   void updateThemeMode(ThemeMode? mode) {
     if (mode == null) return;
     _theme.updateThemeMode(mode);
+  }
+
+  void updateLocale(Locale? locale) {
+    if (locale == null) return;
+    _language.updateLocale(locale);
   }
 
   /// Signs out the user after confirmation.

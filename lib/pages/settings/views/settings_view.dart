@@ -52,6 +52,35 @@ class SettingsView extends GetView<SettingsController> {
                         ),
                       ),
                     ),
+                    Obx(
+                      () => ListTile(
+                        leading: const Icon(Icons.language),
+                        title: Text('language'.tr),
+                        trailing: DropdownButton<Locale>(
+                          key: const Key('languageDropdown'),
+                          value: controller.locale,
+                          onChanged: controller.updateLocale,
+                          items: [
+                            DropdownMenuItem(
+                              value: const Locale('en', 'US'),
+                              child: Text('english'.tr),
+                            ),
+                            DropdownMenuItem(
+                              value: const Locale('es', 'ES'),
+                              child: Text('spanish'.tr),
+                            ),
+                            DropdownMenuItem(
+                              value: const Locale('pt', 'PT'),
+                              child: Text('portuguesePortugal'.tr),
+                            ),
+                            DropdownMenuItem(
+                              value: const Locale('pt', 'BR'),
+                              child: Text('portugueseBrazil'.tr),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     ListTile(
                       leading: const Icon(SolarIconsOutline.palette2),
                       title: Text('appColor'.tr),
@@ -162,7 +191,10 @@ class SettingsView extends GetView<SettingsController> {
   Widget _buildSection(BuildContext context,
       {required String title, required List<Widget> children}) {
     // Filter out SizedBox.shrink widgets before building the section
-    final filteredChildren = children.where((child) => child is! SizedBox || (child).height != 0 || (child).width != 0 ).toList();
+    final filteredChildren = children
+        .where((child) =>
+            child is! SizedBox || (child).height != 0 || (child).width != 0)
+        .toList();
     if (filteredChildren.isEmpty) {
       return const SizedBox.shrink();
     }
