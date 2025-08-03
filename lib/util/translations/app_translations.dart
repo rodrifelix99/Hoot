@@ -227,6 +227,7 @@ class AppTranslations extends Translations {
           'deletePost': 'Delete Post',
           'deletePostConfirmation':
               'Are you sure you want to delete this post?',
+          'postDeleted': 'Post deleted',
           'deleteComment': 'Delete Comment',
           'deleteCommentConfirmation':
               'Are you sure you want to delete this comment?',
@@ -615,6 +616,7 @@ class AppTranslations extends Translations {
           'deletePost': 'Eliminar Hoot',
           'deletePostConfirmation':
               '¿Estás seguro de que deseas eliminar este hoot?',
+          'postDeleted': 'Hoot eliminado',
           'deleteComment': 'Eliminar Comentario',
           'deleteCommentConfirmation':
               '¿Estás seguro de que deseas eliminar este comentario?',
@@ -1004,6 +1006,7 @@ class AppTranslations extends Translations {
           'deletePost': 'Eliminar Hoot',
           'deletePostConfirmation':
               'Tens a certeza de que queres eliminar este hoot?',
+          'postDeleted': 'Hoot removido',
           'deleteComment': 'Eliminar Comentário',
           'deleteCommentConfirmation':
               'Tens a certeza de que queres eliminar este comentário?',
@@ -1390,6 +1393,7 @@ class AppTranslations extends Translations {
           'deletePost': 'Excluir Hoot',
           'deletePostConfirmation':
               'Tem certeza de que deseja excluir este hoot?',
+          'postDeleted': 'Hoot excluído',
           'deleteComment': 'Excluir Comentário',
           'deleteCommentConfirmation':
               'Tem certeza de que deseja excluir este comentário?',
