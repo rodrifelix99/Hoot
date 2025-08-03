@@ -324,13 +324,7 @@ class _PostComponentState extends State<PostComponent> {
                                 'by @${_post.user?.username ?? ''}',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall!
-                                          .color,
-                                    ),
+                                    .bodySmall,
                               ),
                             ],
                           ),
