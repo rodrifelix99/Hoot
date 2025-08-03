@@ -42,7 +42,9 @@ class _WelcomeViewState extends State<WelcomeView> {
     } else if (index == 1) {
       _usernameFocus.requestFocus();
     } else {
-      FocusScope.of(context).unfocus();
+      if (mounted) {
+        FocusScope.of(context).unfocus();
+      }
     }
   }
 
