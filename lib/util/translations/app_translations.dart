@@ -184,6 +184,7 @@ class AppTranslations extends Translations {
           'deleteFeed': 'Delete Feed',
           'deleteFeedConfirmation':
               'Are you sure you want to delete this feed?',
+          'feedDeleted': 'Feed deleted',
           'explore': 'Explore',
           'topFeeds': 'Top Feeds',
           'mainFeed': 'This is the main feed',
@@ -573,6 +574,7 @@ class AppTranslations extends Translations {
           'deleteFeed': 'Eliminar Feed',
           'deleteFeedConfirmation':
               '¿Estás seguro de que deseas eliminar este feed?',
+          'feedDeleted': 'Feed eliminado',
           'explore': 'Explorar',
           'topFeeds': 'Feeds Populares',
           'mainFeed': 'Este es el feed principal',
@@ -966,6 +968,7 @@ class AppTranslations extends Translations {
           'deleteFeed': 'Eliminar Feed',
           'deleteFeedConfirmation':
               'Tens a certeza de que queres eliminar este feed?',
+          'feedDeleted': 'Feed removido',
           'explore': 'Explorar',
           'topFeeds': 'Feeds Populares',
           'mainFeed': 'Este é o feed principal',
@@ -1354,6 +1357,7 @@ class AppTranslations extends Translations {
           'deleteFeed': 'Excluir Feed',
           'deleteFeedConfirmation':
               'Tem certeza de que deseja excluir este feed?',
+          'feedDeleted': 'Feed excluído',
           'explore': 'Explorar',
           'topFeeds': 'Feeds Populares',
           'mainFeed': 'Este é o feed principal',
