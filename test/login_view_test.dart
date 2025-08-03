@@ -71,7 +71,7 @@ void main() {
         translations: AppTranslations(),
         locale: const Locale('en'),
         theme: AppTheme.lightTheme(AppColor.blue.color),
-        home: const LoginView(),
+        home: const LoginView(playBackgroundVideo: false),
       ),
     );
     await tester.pumpAndSettle();
