@@ -4,10 +4,12 @@ import 'package:get/get.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/models/report.dart';
 
-/// Provides helpers to submit user and post reports.
+/// Provides helpers to submit user, post and comment reports.
 abstract class BaseReportService {
   Future<void> reportPost({required String postId, required String reason});
   Future<void> reportUser({required String userId, required String reason});
+
+  /// Reports a comment with the provided [reason].
   Future<void> reportComment(
       {required String commentId, required String reason});
   Future<List<Report>> fetchReports();
