@@ -49,11 +49,11 @@ class StatsService implements BaseStatsService {
       _firestore.collection('users').where('invitedBy', isEqualTo: '').get(),
     ]);
 
-    final usersSnapshot = results[0] as QuerySnapshot<Map<String, dynamic>>;
+    final usersSnapshot = results[0];
     // Uninvited users: combine all matching document IDs to avoid double-counting
     final Set<String> uninvitedUserIds = {};
     for (int i = 3; i <= 6; i++) {
-      final QuerySnapshot<Map<String, dynamic>> snap = results[i] as QuerySnapshot<Map<String, dynamic>>;
+      final QuerySnapshot<Map<String, dynamic>> snap = results[i];
       for (final doc in snap.docs) {
         uninvitedUserIds.add(doc.id);
       }

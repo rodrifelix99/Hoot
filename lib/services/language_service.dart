@@ -7,7 +7,7 @@ class LanguageService extends GetxService {
   static const _prefKeyLocale = 'locale';
 
   /// Currently selected locale.
-  final locale = const Locale('en', 'US').obs;
+  final Rx<Locale> locale = Get.deviceLocale?.obs ?? Rx<Locale>(const Locale('en', 'US'));
 
   /// Loads the saved locale or defaults to [Get.deviceLocale].
   Future<void> loadLocale() async {
