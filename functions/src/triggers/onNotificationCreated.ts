@@ -5,8 +5,8 @@ const onesignalApiKey = defineSecret("ONESIGNAL_API_KEY");
 const onesignalAppId = defineSecret("ONESIGNAL_APP_ID");
 
 export const onNotificationCreated = onDocumentCreated(
-  "users/{userId}/notifications/{notificationId}",
   {
+    document: "users/{userId}/notifications/{notificationId}",
     secrets: [ onesignalApiKey, onesignalAppId ]
   },
   async (event) => {
