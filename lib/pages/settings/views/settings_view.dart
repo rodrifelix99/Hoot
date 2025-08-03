@@ -162,7 +162,7 @@ class SettingsView extends GetView<SettingsController> {
   Widget _buildSection(BuildContext context,
       {required String title, required List<Widget> children}) {
     // Filter out SizedBox.shrink widgets before building the section
-    final filteredChildren = children.where((child) => child is! SizedBox || (child as SizedBox).height != 0 || (child as SizedBox).width != 0 ).toList();
+    final filteredChildren = children.where((child) => child is! SizedBox || (child).height != 0 || (child).width != 0 ).toList();
     if (filteredChildren.isEmpty) {
       return const SizedBox.shrink();
     }
