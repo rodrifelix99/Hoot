@@ -108,4 +108,55 @@ void main() {
 
     expect(await future, isFalse);
   });
+
+  testWidgets('DialogService prompt returns entered text', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: SizedBox()),
+      ),
+    );
+
+    final context = tester.element(find.byType(Scaffold));
+
+    final future = DialogService.prompt(
+      context: context,
+      title: 'Title',
+      hintText: 'Hint',
+      okLabel: 'OK',
+      cancelLabel: 'Cancel',
+    );
+
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'reason');
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+
+    expect(await future, 'reason');
+  });
+
+  testWidgets('DialogService prompt returns null on cancel', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: SizedBox()),
+      ),
+    );
+
+    final context = tester.element(find.byType(Scaffold));
+
+    final future = DialogService.prompt(
+      context: context,
+      title: 'Title',
+      hintText: 'Hint',
+      okLabel: 'OK',
+      cancelLabel: 'Cancel',
+    );
+
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+
+    expect(await future, isNull);
+  });
 }

@@ -1,4 +1,3 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +10,7 @@ import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/mention_text_field.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/pages/post/controllers/post_controller.dart';
+import 'package:hoot/services/dialog_service.dart';
 
 class PostView extends GetView<PostController> {
   const PostView({super.key});
@@ -63,49 +63,32 @@ class PostView extends GetView<PostController> {
                             ),
                             confirmDismiss: (_) async {
                               if (isOwner) {
-                                final confirmed = await showDialog<bool>(
+                                return await DialogService.confirm(
                                   context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text('deleteComment'.tr),
-                                    content:
-                                        Text('deleteCommentConfirmation'.tr),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(false),
-                                        child: Text('cancel'.tr),
-                                      ),
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(true),
-                                        child: Text('delete'.tr),
-                                      ),
-                                    ],
-                                  ),
+                                  title: 'deleteComment'.tr,
+                                  message: 'deleteCommentConfirmation'.tr,
+                                  okLabel: 'delete'.tr,
+                                  cancelLabel: 'cancel'.tr,
                                 );
-                                // If the dialog is dismissed without a result, treat as not confirmed (return false).
-                                return confirmed ?? false;
                               } else {
-                                final reasons = await showTextInputDialog(
+                                final reason = await DialogService.prompt(
                                   context: context,
                                   title: 'reportComment'.tr,
-                                  textFields: [
-                                    DialogTextField(
-                                      hintText: 'reportCommentInfo'.tr,
-                                      minLines: 3,
-                                      maxLines: 5,
-                                      maxLength: 500,
-                                      keyboardType: TextInputType.multiline,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                    ),
-                                  ],
+                                  hintText: 'reportCommentInfo'.tr,
+                                  maxLength: 500,
+                                  minLines: 3,
+                                  maxLines: 5,
+                                  keyboardType: TextInputType.multiline,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  okLabel: 'report'.tr,
+                                  cancelLabel: 'cancel'.tr,
                                 );
-                                final reason = reasons?.first;
                                 if (reason?.trim().isEmpty ?? true) {
                                   return false;
                                 }
-                                await controller.reportComment(item, reason!);
+                                await controller.reportComment(
+                                    item, reason!.trim());
                                 return false;
                               }
                             },

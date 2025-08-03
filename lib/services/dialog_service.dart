@@ -46,6 +46,39 @@ class DialogService {
     return input == expectedWord.toLowerCase();
   }
 
+  /// Prompts the user for text input and returns the entered value.
+  /// Returns null if the dialog is cancelled.
+  static Future<String?> prompt({
+    required BuildContext context,
+    required String title,
+    required String hintText,
+    int? maxLength,
+    int minLines = 1,
+    int maxLines = 1,
+    TextInputType keyboardType = TextInputType.text,
+    TextCapitalization textCapitalization = TextCapitalization.none,
+    String? okLabel,
+    String? cancelLabel,
+  }) async {
+    final result = await showTextInputDialog(
+      context: context,
+      title: title,
+      textFields: [
+        DialogTextField(
+          hintText: hintText,
+          maxLength: maxLength,
+          minLines: minLines,
+          maxLines: maxLines,
+          keyboardType: keyboardType,
+          textCapitalization: textCapitalization,
+        ),
+      ],
+      okLabel: okLabel,
+      cancelLabel: cancelLabel,
+    );
+    return result?.first;
+  }
+
   /// Shows a modal action sheet with the provided [actions].
   /// Returns the value associated with the selected action.
   static Future<T?> showActionSheet<T>({
