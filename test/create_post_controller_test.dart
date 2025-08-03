@@ -14,6 +14,7 @@ import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hoot/services/news_service.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
   final U _user;
@@ -27,9 +28,7 @@ class FakeAuthService extends GetxService implements AuthService {
   Stream<U?> get currentUserStream => Stream.value(_user);
 
   @override
-  Rxn<U> get currentUserRx =>
-      Rxn<U>()
-        ..value = _user;
+  Rxn<U> get currentUserRx => Rxn<U>()..value = _user;
 
   @override
   Future<U?> fetchUser() async => _user;
@@ -73,17 +72,26 @@ class FakeStorageService extends GetxService implements BaseStorageService {
   List<List<File>> calls = [];
 
   @override
-  Future<List<UploadedPostImage>> uploadPostImages(String postId,
-      List<File> files) async {
+  Future<List<UploadedPostImage>> uploadPostImages(
+      String postId, List<File> files) async {
     calls.add(files);
     return files
-        .map((f) =>
-        UploadedPostImage(
-            url: 'https://example.com/${f.path
-                .split('/')
-                .last}',
+        .map((f) => UploadedPostImage(
+            url: 'https://example.com/${f.path.split('/').last}',
             blurHash: 'hash'))
         .toList();
+  }
+}
+
+class FakeNewsService implements BaseNewsService {
+  final List<NewsItem> items;
+  int calls = 0;
+  FakeNewsService({this.items = const []});
+
+  @override
+  Future<List<NewsItem>> fetchTrendingNews({String? topic}) async {
+    calls++;
+    return items;
   }
 }
 
@@ -118,7 +126,8 @@ void main() {
           postService: postService,
           authService: auth,
           userId: 'u1',
-          storageService: storage);
+          storageService: storage,
+          newsService: FakeNewsService());
       controller.textController.text = 'Hello';
       expect(await controller.publish(), isNull);
       await tester.pump(const Duration(seconds: 4));
@@ -152,15 +161,19 @@ void main() {
           postService: postService,
           authService: auth,
           userId: 'u1',
-          storageService: storage);
+          storageService: storage,
+          newsService: FakeNewsService());
       controller.textController.text = 'a' * 281;
-      controller.selectedFeeds.add(Feed(
-        id: 'f1',
-        userId: 't',
-        title: 't',
-        description: 'd',
-        color: Colors.blue,
-        order: 0,),);
+      controller.selectedFeeds.add(
+        Feed(
+          id: 'f1',
+          userId: 't',
+          title: 't',
+          description: 'd',
+          color: Colors.blue,
+          order: 0,
+        ),
+      );
       expect(await controller.publish(), isNull);
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
@@ -193,16 +206,18 @@ void main() {
           postService: postService,
           authService: auth,
           userId: 'u1',
-          storageService: storage);
+          storageService: storage,
+          newsService: FakeNewsService());
       controller.selectedFeeds.add(Feed(
-          id: 'f1',
-          userId: 't',
-          title: 't',
-          description: 'd',
-          color: Colors.blue,
-          order: 0,));
-          controller.textController.text = 'Hi';
-          final result = await controller.publish();
+        id: 'f1',
+        userId: 't',
+        title: 't',
+        description: 'd',
+        color: Colors.blue,
+        order: 0,
+      ));
+      controller.textController.text = 'Hi';
+      final result = await controller.publish();
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
       expect(result, isA<Post>());
@@ -217,50 +232,51 @@ void main() {
     });
 
     testWidgets('publish creates a post for each selected feed',
-            (tester) async {
-          await tester.pumpWidget(const ToastificationWrapper(
-            child: MaterialApp(home: Scaffold(body: SizedBox())),
-          ));
-          final firestore = FakeFirebaseFirestore();
-          final postService = PostService(
-            firestore: firestore,
-          );
-          final feeds = [
-            Feed(
-                id: 'f1',
-                userId: 'u1',
-                title: 't1',
-                description: 'd1',
-                color: Colors.blue),
-            Feed(
-                id: 'f2',
-                userId: 'u1',
-                title: 't2',
-                description: 'd2',
-                color: Colors.red),
-          ];
-          final auth = FakeAuthService(U(
-              uid: 'u1',
-              name: 'Tester',
-              username: 'tester',
-              smallProfilePictureUrl: 'a.png',
-              feeds: feeds));
-          final storage = FakeStorageService();
-          final controller = CreatePostController(
-              postService: postService,
-              authService: auth,
-              userId: 'u1',
-              storageService: storage);
-          controller.selectedFeeds.assignAll(feeds);
-          controller.textController.text = 'Hi';
-          await controller.publish();
-          await tester.pump(const Duration(seconds: 4));
-          await tester.pumpAndSettle();
-          final posts = await firestore.collection('posts').get();
-          expect(posts.docs.length, 2);
-          final feedIds = posts.docs.map((e) => e.data()['feedId']).toSet();
-          expect(feedIds, {'f1', 'f2'});
-        });
+        (tester) async {
+      await tester.pumpWidget(const ToastificationWrapper(
+        child: MaterialApp(home: Scaffold(body: SizedBox())),
+      ));
+      final firestore = FakeFirebaseFirestore();
+      final postService = PostService(
+        firestore: firestore,
+      );
+      final feeds = [
+        Feed(
+            id: 'f1',
+            userId: 'u1',
+            title: 't1',
+            description: 'd1',
+            color: Colors.blue),
+        Feed(
+            id: 'f2',
+            userId: 'u1',
+            title: 't2',
+            description: 'd2',
+            color: Colors.red),
+      ];
+      final auth = FakeAuthService(U(
+          uid: 'u1',
+          name: 'Tester',
+          username: 'tester',
+          smallProfilePictureUrl: 'a.png',
+          feeds: feeds));
+      final storage = FakeStorageService();
+      final controller = CreatePostController(
+          postService: postService,
+          authService: auth,
+          userId: 'u1',
+          storageService: storage,
+          newsService: FakeNewsService());
+      controller.selectedFeeds.assignAll(feeds);
+      controller.textController.text = 'Hi';
+      await controller.publish();
+      await tester.pump(const Duration(seconds: 4));
+      await tester.pumpAndSettle();
+      final posts = await firestore.collection('posts').get();
+      expect(posts.docs.length, 2);
+      final feedIds = posts.docs.map((e) => e.data()['feedId']).toSet();
+      expect(feedIds, {'f1', 'f2'});
+    });
 
     testWidgets('images are uploaded and urls stored', (tester) async {
       await tester.pumpWidget(const ToastificationWrapper(
@@ -289,16 +305,18 @@ void main() {
           postService: postService,
           authService: auth,
           userId: 'u1',
-          storageService: storage);
+          storageService: storage,
+          newsService: FakeNewsService());
 
       controller.selectedFeeds.add(Feed(
-          id: 'f1',
-          userId: 't',
-          title: 't',
-          description: 'd',
-          color: Colors.blue,
-          order: 0,));
-          final file = File('${Directory.systemTemp.path}/img.jpg')
+        id: 'f1',
+        userId: 't',
+        title: 't',
+        description: 'd',
+        color: Colors.blue,
+        order: 0,
+      ));
+      final file = File('${Directory.systemTemp.path}/img.jpg')
         ..writeAsBytesSync([0]);
       addTearDown(() => file.deleteSync());
       controller.imageFiles.add(file);
@@ -337,12 +355,46 @@ void main() {
           postService: postService,
           authService: auth,
           userId: 'u1',
-          storageService: storage);
+          storageService: storage,
+          newsService: FakeNewsService());
       Get.put(controller);
       await tester.pump();
       expect(controller.availableFeeds.length, 1);
       expect(controller.availableFeeds.first.id, 'f1');
       Get.reset();
+    });
+
+    testWidgets('trending news loaded on init', (tester) async {
+      final firestore = FakeFirebaseFirestore();
+      final postService = PostService(
+        firestore: firestore,
+      );
+      final feed = Feed(
+          id: 'f1',
+          userId: 'u1',
+          title: 't',
+          description: 'd',
+          color: Colors.blue,
+          order: 0);
+      final auth = FakeAuthService(U(
+          uid: 'u1',
+          name: 'Tester',
+          username: 'tester',
+          smallProfilePictureUrl: 'a.png',
+          feeds: [feed]));
+      final storage = FakeStorageService();
+      final news = FakeNewsService(
+          items: [NewsItem(title: 'News 1', link: 'https://example.com')]);
+      final controller = CreatePostController(
+          postService: postService,
+          authService: auth,
+          userId: 'u1',
+          storageService: storage,
+          newsService: news);
+      controller.onInit();
+      await tester.pump();
+      expect(controller.trendingNews.length, 1);
+      expect(controller.trendingNews.first.title, 'News 1');
     });
   });
 }

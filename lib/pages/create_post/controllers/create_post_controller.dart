@@ -16,6 +16,7 @@ import 'package:hoot/services/post_service.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/storage_service.dart';
 import 'package:hoot/services/user_service.dart';
+import 'package:hoot/services/news_service.dart';
 
 /// Manages state for creating a new post.
 class CreatePostController extends GetxController {
@@ -23,6 +24,7 @@ class CreatePostController extends GetxController {
   final AuthService _authService;
   final BaseStorageService _storageService;
   BaseUserService? _userService;
+  final BaseNewsService _newsService;
   final String _userId;
 
   CreatePostController({
@@ -31,10 +33,12 @@ class CreatePostController extends GetxController {
     String? userId,
     BaseStorageService? storageService,
     BaseUserService? userService,
+    BaseNewsService? newsService,
   })  : _postService = postService ?? PostService(),
         _authService = authService ?? Get.find<AuthService>(),
         _storageService = storageService ?? StorageService(),
         _userService = userService,
+        _newsService = newsService ?? Get.find<BaseNewsService>(),
         _userId = userId ?? FirebaseAuth.instance.currentUser?.uid ?? '';
 
   /// Text entered by the user.
@@ -63,6 +67,9 @@ class CreatePostController extends GetxController {
   /// Feeds available to the user.
   final RxList<Feed> availableFeeds = <Feed>[].obs;
 
+  /// Trending news articles.
+  final RxList<NewsItem> trendingNews = <NewsItem>[].obs;
+
   /// Whether a post is currently being published.
   final RxBool publishing = false.obs;
 
@@ -72,11 +79,21 @@ class CreatePostController extends GetxController {
   void onInit() {
     super.onInit();
     _loadFeeds();
+    _loadTrendingNews();
   }
 
   Future<void> _loadFeeds() async {
     final user = await _authService.fetchUser();
     availableFeeds.assignAll(user?.feeds ?? []);
+  }
+
+  Future<void> _loadTrendingNews() async {
+    try {
+      final news = await _newsService.fetchTrendingNews();
+      trendingNews.assignAll(news);
+    } catch (e, s) {
+      await ErrorService.reportError(e, stack: s);
+    }
   }
 
   /// Searches users for the mention field.
