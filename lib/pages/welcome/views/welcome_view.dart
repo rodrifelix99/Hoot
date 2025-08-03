@@ -46,6 +46,7 @@ class _WelcomeViewState extends State<WelcomeView> {
   }
 
   void _handleFocus(int index) {
+    _currentIndex = index;
     if (index == 0) {
       _displayNameFocus.requestFocus();
     } else if (index == 1) {
@@ -202,7 +203,6 @@ class _WelcomeViewState extends State<WelcomeView> {
                 // reset to the initial page on rebuilds (e.g. when the
                 // keyboard visibility changes).
                 index: _currentIndex,
-                onIndexChanged: (i) => _currentIndex = i,
                 physics: const NeverScrollableScrollPhysics(),
                 loop: false,
                 onIndexChanged: _handleFocus,
