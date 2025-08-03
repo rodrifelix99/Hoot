@@ -63,6 +63,10 @@ class FakeAuthService extends GetxService implements AuthService {
 
   @override
   String? displayName;
+
+  @override
+  // TODO: implement isStaff
+  bool get isStaff => throw UnimplementedError();
 }
 
 class FakeStorageService extends GetxService implements BaseStorageService {
