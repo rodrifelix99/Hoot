@@ -20,8 +20,7 @@ class WelcomeController extends GetxController {
 
   @override
   void onInit() {
-    final initialName =
-        _auth.currentUser?.name ?? FirebaseAuth.instance.currentUser?.displayName;
+    final initialName = _auth.displayName;
     if (initialName != null) {
       displayNameController.text = initialName;
     }

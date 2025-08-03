@@ -13,6 +13,8 @@ class AuthService {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
 
+  String? displayName;
+
   AuthService({FirebaseAuth? auth, FirebaseFirestore? firestore})
       : _auth = auth ?? FirebaseAuth.instance,
         _firestore = firestore ?? FirebaseFirestore.instance;
@@ -175,10 +177,7 @@ class AuthService {
 
     final displayName = result.user?.displayName;
     if (displayName != null && displayName.isNotEmpty) {
-      await _firestore
-          .collection('users')
-          .doc(result.user!.uid)
-          .set({'displayName': displayName}, SetOptions(merge: true));
+      this.displayName = displayName;
     }
     _fetched = false;
     await fetchUser();
@@ -208,10 +207,7 @@ class AuthService {
 
     final displayName = result.user?.displayName;
     if (displayName != null && displayName.isNotEmpty) {
-      await _firestore
-          .collection('users')
-          .doc(result.user!.uid)
-          .set({'displayName': displayName}, SetOptions(merge: true));
+      this.displayName = displayName;
     }
     _fetched = false;
     await fetchUser();
