@@ -9,6 +9,8 @@ import 'package:hoot/pages/username/bindings/username_binding.dart';
 import 'package:hoot/pages/avatar/bindings/avatar_binding.dart';
 import 'package:hoot/pages/home/bindings/home_binding.dart';
 import 'package:hoot/pages/home/views/home_view.dart';
+import 'package:hoot/pages/staff_home/bindings/staff_home_binding.dart';
+import 'package:hoot/pages/staff_home/views/staff_home_view.dart';
 import 'package:hoot/pages/invitation/bindings/invitation_binding.dart';
 import 'package:hoot/pages/invitation/views/invitation_view.dart';
 import 'package:hoot/pages/notifications_permission/bindings/notification_permission_binding.dart';
@@ -50,6 +52,7 @@ import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
 import 'package:hoot/util/routes/args/feed_page_args.dart';
 import 'package:hoot/middleware/auth_middleware.dart';
+import 'package:hoot/middleware/staff_middleware.dart';
 
 class AppPages {
   static final List<GetPage> pages = [
@@ -93,6 +96,12 @@ class AppPages {
       page: () => const HomeView(),
       binding: HomeBinding(),
       middlewares: [AuthMiddleware()],
+    ),
+    GetPage(
+      name: AppRoutes.staff,
+      page: () => const StaffHomeView(),
+      binding: StaffHomeBinding(),
+      middlewares: [AuthMiddleware(), StaffMiddleware()],
     ),
     GetPage(
       name: AppRoutes.createPost,
