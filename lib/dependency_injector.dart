@@ -8,6 +8,7 @@ import 'package:hoot/services/feed_request_service.dart';
 import 'package:hoot/services/subscription_manager.dart';
 import 'package:hoot/services/quick_actions_service.dart';
 import 'package:hoot/services/onesignal_service.dart';
+import 'package:hoot/services/language_service.dart';
 
 /// Registers global dependencies for the application.
 class DependencyInjector {
@@ -26,6 +27,8 @@ class DependencyInjector {
     Get.put(OneSignalService(), permanent: true);
     final theme = Get.put(ThemeService(), permanent: true);
     await theme.loadThemeSettings();
+    final language = Get.put(LanguageService(), permanent: true);
+    await language.loadLocale();
     await Get.find<OneSignalService>().init();
     await Get.find<QuickActionsService>().init();
   }

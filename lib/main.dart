@@ -17,6 +17,7 @@ import 'package:toastification/toastification.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:hoot/services/theme_service.dart';
+import 'package:hoot/services/language_service.dart';
 import 'package:hoot/firebase_options.dart';
 
 void main() {
@@ -37,10 +38,11 @@ void main() {
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
+    final languageService = Get.find<LanguageService>();
     TenorGifPicker.init(
       apiKey: dotenv.env['TENOR_API_KEY'] ?? '',
-      locale: Get.locale?.toLanguageTag() ?? 'en',
-      country: Get.deviceLocale?.countryCode ?? 'US',
+      locale: languageService.locale.value.toLanguageTag(),
+      country: languageService.locale.value.countryCode ?? 'US',
     );
 
     timeago.setLocaleMessages('es', timeago.EsMessages());
@@ -62,7 +64,7 @@ void main() {
               darkTheme: AppTheme.darkTheme(themeService.appColor.value.color),
               themeMode: themeService.themeMode.value,
               translations: AppTranslations(),
-              locale: Get.deviceLocale,
+              locale: languageService.locale.value,
               fallbackLocale: const Locale('en', 'US'),
               builder: (context, child) => GestureDetector(
                 behavior: HitTestBehavior.opaque,
