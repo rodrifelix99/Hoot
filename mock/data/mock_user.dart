@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
 
-/// Sample user used by mock services.
+/// Sample feed used by mock services.
 final Feed mockFeed = Feed(
   id: 'feed1',
   userId: 'user1',
@@ -13,11 +13,17 @@ final Feed mockFeed = Feed(
   subscriberCount: 1,
 );
 
-final U mockUser = U(
-  uid: 'user1',
-  name: 'Mock User',
-  username: 'mockuser',
-  createdAt: DateTime(2020, 1, 1),
-  feeds: [mockFeed],
-  subscriptionCount: 1,
-);
+/// Generates a sample user for mock services.
+U createMockUser({DateTime? createdAt}) {
+  return U(
+    uid: 'user1',
+    name: 'Mock User',
+    username: 'mockuser',
+    createdAt: createdAt ?? DateTime(2020, 1, 1),
+    feeds: [mockFeed],
+    subscriptionCount: 1,
+  );
+}
+
+/// Default mock user instance.
+final U mockUser = createMockUser();
