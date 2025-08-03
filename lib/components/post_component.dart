@@ -126,7 +126,7 @@ class _PostComponentState extends State<PostComponent> {
       _post.reFeeds = (_post.reFeeds ?? 0) + 1;
       _post.reFeededByMe = true;
     });
-    ToastService.showSuccess('newReHoot'.tr);
+    ToastService.showSuccess('rehootPosted'.tr);
   }
 
   Future<void> _showOptions() async {
