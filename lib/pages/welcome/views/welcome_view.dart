@@ -19,6 +19,11 @@ class WelcomeView extends StatefulWidget {
 class _WelcomeViewState extends State<WelcomeView> {
   final SwiperController _controller = SwiperController();
 
+  /// Keeps track of the current index to prevent the Swiper from
+  /// jumping back to the initial index on rebuilds (e.g. when the
+  /// keyboard is closed and the view's dimensions change).
+  int _currentIndex = 0;
+
   late final AvatarController _avatarController;
   late final WelcomeController _welcomeController;
   late final FocusNode _displayNameFocus;
@@ -27,6 +32,10 @@ class _WelcomeViewState extends State<WelcomeView> {
   @override
   void initState() {
     super.initState();
+    // Preserve the initial index passed to the widget so rebuilds do not
+    // reset the Swiper to the first page.
+    _currentIndex = widget.initialIndex;
+    
     _avatarController = Get.put(AvatarController());
     _welcomeController = Get.find<WelcomeController>();
     _displayNameFocus = FocusNode();
@@ -189,7 +198,11 @@ class _WelcomeViewState extends State<WelcomeView> {
               ),
               child: Swiper(
                 controller: _controller,
-                index: widget.initialIndex,
+                // Use the tracked current index so that the Swiper does not
+                // reset to the initial page on rebuilds (e.g. when the
+                // keyboard visibility changes).
+                index: _currentIndex,
+                onIndexChanged: (i) => _currentIndex = i,
                 physics: const NeverScrollableScrollPhysics(),
                 loop: false,
                 onIndexChanged: _handleFocus,
