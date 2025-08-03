@@ -9,7 +9,6 @@ import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/mention_text_field.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/pages/post/controllers/post_controller.dart';
-import 'package:hoot/services/dialog_service.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 
 class PostView extends GetView<PostController> {
@@ -63,13 +62,27 @@ class PostView extends GetView<PostController> {
                             ),
                             confirmDismiss: (_) async {
                               if (isOwner) {
-                                return await DialogService.confirm(
+                                final confirmed = await showDialog<bool>(
                                   context: context,
-                                  title: 'deleteComment'.tr,
-                                  message: 'deleteCommentConfirmation'.tr,
-                                  okLabel: 'delete'.tr,
-                                  cancelLabel: 'cancel'.tr,
+                                  builder: (context) => AlertDialog(
+                                    title: Text('deleteComment'.tr),
+                                    content:
+                                        Text('deleteCommentConfirmation'.tr),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(false),
+                                        child: Text('cancel'.tr),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(true),
+                                        child: Text('delete'.tr),
+                                      ),
+                                    ],
+                                  ),
                                 );
+                                return confirmed ?? false;
                               } else {
                                 final reasons = await showTextInputDialog(
                                   context: context,
@@ -90,7 +103,7 @@ class PostView extends GetView<PostController> {
                                 if (reason?.trim().isEmpty ?? true) {
                                   return false;
                                 }
-                                await controller.reportComment(item, reason);
+                                await controller.reportComment(item, reason!);
                                 return false;
                               }
                             },
