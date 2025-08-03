@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/models/comment.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';

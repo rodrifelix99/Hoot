@@ -147,6 +147,7 @@ class U {
       'phoneNumber': phoneNumber,
       'birthday': birthday,
       'role': role.name,
+      'verified': verified,
     };
   }
 
@@ -164,9 +165,7 @@ class U {
         'bio': bio,
         'location': location,
         'website': website,
-        'createdAt': createdAt != null
-            ? createdAt!.millisecondsSinceEpoch.toString()
-            : null,
+        'createdAt': createdAt?.millisecondsSinceEpoch.toString(),
         'invitationCode': invitationCode,
         'invitationUses': invitationUses,
         'invitationLastReset': invitationLastReset,

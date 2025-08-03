@@ -143,12 +143,27 @@ class _ProfileViewState extends State<ProfileView> {
                           textAlign: TextAlign.center,
                         ),
                   const SizedBox(height: 8),
-                  Text(
-                    '@${user.username ?? ''}',
-                    style: Get.textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                    textAlign: TextAlign.center,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '@${user.username ?? ''}',
+                        style: Get.textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      if (user.verified ?? false)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: Image.asset(
+                            'assets/images/verified.png',
+                            width: 18,
+                            height: 18,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   if (user.bio != null && user.bio!.isNotEmpty)

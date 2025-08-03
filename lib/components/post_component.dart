@@ -320,11 +320,25 @@ class _PostComponentState extends State<PostComponent> {
                                   ),
                                 ),
                               ),
-                              Text(
-                                'by @${_post.user?.username ?? ''}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall,
+                              Row(
+                                children: [
+                                  Text(
+                                    'by @${_post.user?.username ?? ''}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall,
+                                  ),
+                                  if (_post.user?.verified == true) ...[
+                                    const SizedBox(width: 4),
+                                    Icon(
+                                      Icons.verified_rounded,
+                                      size: 16,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary,
+                                    ),
+                                  ],
+                                ],
                               ),
                             ],
                           ),
