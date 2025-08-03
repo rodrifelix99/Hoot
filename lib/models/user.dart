@@ -1,6 +1,9 @@
 import 'package:hoot/models/feed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Defines the role of a user.
+enum UserRole { user, staff }
+
 class U {
   final String uid;
   String? name;
@@ -30,6 +33,7 @@ class U {
   int? activityScore;
   int? popularityScore;
   List<Feed>? feeds;
+  UserRole role;
 
   U({
     required this.uid,
@@ -58,6 +62,7 @@ class U {
     this.activityScore = 0,
     this.popularityScore = 0,
     this.feeds,
+    this.role = UserRole.user,
   });
 
   bool get isNewUser => username == null || username!.isEmpty;
@@ -116,6 +121,7 @@ class U {
       feeds: json['feeds'] != null
           ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x)))
           : [],
+      role: json['role'] == 'staff' ? UserRole.staff : UserRole.user,
     );
   }
 
@@ -140,6 +146,7 @@ class U {
       'invitedBy': invitedBy,
       'phoneNumber': phoneNumber,
       'birthday': birthday,
+      'role': role.name,
     };
   }
 
@@ -172,6 +179,7 @@ class U {
         'activityScore': activityScore,
         'popularityScore': popularityScore,
         'feeds': feeds?.map((e) => e.toCache()).toList(),
+        'role': role.name,
       };
 
   factory U.fromCache(Map<String, dynamic> json) {
@@ -206,6 +214,7 @@ class U {
       feeds: json['feeds'] != null
           ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x)))
           : [],
+      role: json['role'] == 'staff' ? UserRole.staff : UserRole.user,
     );
   }
 }

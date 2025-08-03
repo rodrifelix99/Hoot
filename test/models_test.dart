@@ -50,7 +50,8 @@ void main() {
         'subscriptionCount': 2,
         'activityScore': 5,
         'popularityScore': 10,
-        'feeds': [feedJson]
+        'feeds': [feedJson],
+        'role': 'staff'
       };
 
       final user = U.fromJson(userJson);
@@ -65,6 +66,7 @@ void main() {
       expect(user.activityScore, 5);
       expect(user.popularityScore, 10);
       expect(user.createdAt, isNotNull);
+      expect(user.role, UserRole.staff);
 
       final json = user.toJson();
       expect(json['displayName'], 'John');
@@ -73,6 +75,7 @@ void main() {
       expect(json['invitationCode'], 'ABCDEF');
       expect(json['smallAvatarHash'], 'uhash');
       expect(json['bigAvatarHash'], 'ubhash');
+      expect(json['role'], 'staff');
 
       final cache = user.toCache();
       expect(cache['activityScore'], 5);
@@ -80,6 +83,7 @@ void main() {
       expect(cache['smallAvatarHash'], 'uhash');
       expect(cache['bigAvatarHash'], 'ubhash');
       expect(cache['createdAt'], isNotNull);
+      expect(cache['role'], 'staff');
     });
   });
 
