@@ -79,6 +79,18 @@ class SettingsView extends GetView<SettingsController> {
                     trailing: const Icon(SolarIconsOutline.arrowRight),
                     onTap: controller.findFriends,
                   ),
+                  Obx(() {
+                    if (controller.isStaff) {
+                      return ListTile(
+                        leading: const Icon(SolarIconsOutline.shieldUser),
+                        title: Text('staff'.tr),
+                        trailing: const Icon(SolarIconsOutline.arrowRight),
+                        onTap: () => Get.toNamed(AppRoutes.staff),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  }),
                   ListTile(
                     leading: const Icon(SolarIconsOutline.documents),
                     title: Text('termsOfService'.tr),
@@ -149,6 +161,11 @@ class SettingsView extends GetView<SettingsController> {
 
   Widget _buildSection(BuildContext context,
       {required String title, required List<Widget> children}) {
+    // Filter out SizedBox.shrink widgets before building the section
+    final filteredChildren = children.where((child) => child is! SizedBox || (child as SizedBox).height != 0 || (child as SizedBox).width != 0 ).toList();
+    if (filteredChildren.isEmpty) {
+      return const SizedBox.shrink();
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -165,9 +182,9 @@ class SettingsView extends GetView<SettingsController> {
           ),
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) => children[index],
+          itemBuilder: (context, index) => filteredChildren[index],
           separatorBuilder: (_, __) => const SizedBox(height: 8),
-          itemCount: children.length,
+          itemCount: filteredChildren.length,
         ),
       ],
     );

@@ -40,9 +40,24 @@ class MentionTextField extends StatelessWidget {
       onSearchChanged: (trigger, value) {
         if (trigger == '@') onSearchChanged?.call(value);
       },
+      suggestionListDecoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainer,
+        backgroundBlendMode: BlendMode.overlay,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.shadow.withAlpha(20),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+        borderRadius: BorderRadius.circular(8),
+      ),
       mentions: [
         Mention(
           trigger: '@',
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+          ),
           data: suggestions,
         ),
       ],

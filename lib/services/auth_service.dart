@@ -21,6 +21,7 @@ class AuthService {
 
   final Rxn<U> _currentUser = Rxn<U>();
   bool _fetched = false;
+  bool get isStaff => _currentUser.value?.role == UserRole.staff;
 
   /// Forces refetch of the current user from Firestore.
   Future<U?> refreshUser() {

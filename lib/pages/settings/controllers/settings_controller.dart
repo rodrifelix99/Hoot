@@ -29,6 +29,8 @@ class SettingsController extends GetxController {
     version.value = info.version;
   }
 
+  bool get isStaff => _auth.isStaff;
+
   ThemeMode get themeMode => _theme.themeMode.value;
 
   void updateThemeMode(ThemeMode? mode) {
