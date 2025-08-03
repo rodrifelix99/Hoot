@@ -187,6 +187,16 @@ class _PostComponentState extends State<PostComponent> {
     Get.toNamed(AppRoutes.post, arguments: _post);
   }
 
+  double _calculateFontSize(String text, double base) {
+    const double minFontSize = 16;
+    const int threshold = 100;
+    const int maxLength = 280;
+    if (text.length <= threshold) return base;
+    final ratio = ((text.length - threshold) / (maxLength - threshold))
+        .clamp(0.0, 1.0);
+    return base - (base - minFontSize) * ratio;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -364,7 +374,19 @@ class _PostComponentState extends State<PostComponent> {
                     const SizedBox(height: 16),
                     RichText(
                       text: TextSpan(
-                        style: Theme.of(context).textTheme.headlineSmall,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall
+                            ?.copyWith(
+                              fontSize: _calculateFontSize(
+                                _post.text!,
+                                Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall
+                                        ?.fontSize ??
+                                    20,
+                              ),
+                            ),
                         children: parseMentions(_post.text!),
                       ),
                     ),
