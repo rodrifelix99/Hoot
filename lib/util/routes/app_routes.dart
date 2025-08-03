@@ -24,6 +24,7 @@ class AppRoutes {
   static const aboutUs = '/about_us';
   static const contacts = '/contacts';
   static const staff = '/staff';
+  static const staffDashboard = '/staff_dashboard';
   static const staffReports = '/staff_reports';
   static const photoViewer = '/photo_view';
   static const appColor = '/app_color';
