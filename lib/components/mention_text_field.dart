@@ -30,6 +30,7 @@ class MentionTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterMentions(
       key: mentionKey,
+      suggestionPosition: SuggestionPosition.Top,
       maxLength: maxLength,
       minLines: minLines,
       maxLines: maxLines,
