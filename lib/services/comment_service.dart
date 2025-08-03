@@ -21,6 +21,8 @@ abstract class BaseCommentService {
 
   Future<void> createComment(String postId, Map<String, dynamic> data,
       {String? id});
+
+  Future<void> deleteComment(String postId, String commentId);
 }
 
 class CommentService implements BaseCommentService {
@@ -79,5 +81,15 @@ class CommentService implements BaseCommentService {
       txn.update(postRef, {'comments': FieldValue.increment(1)});
     });
     // Notification creation is handled server-side by Firestore triggers.
+  }
+
+  @override
+  Future<void> deleteComment(String postId, String commentId) async {
+    final postRef = _firestore.collection('posts').doc(postId);
+    final commentRef = postRef.collection('comments').doc(commentId);
+    await _firestore.runTransaction((txn) async {
+      txn.delete(commentRef);
+      txn.update(postRef, {'comments': FieldValue.increment(-1)});
+    });
   }
 }

@@ -227,8 +227,13 @@ class AppTranslations extends Translations {
           'deletePost': 'Delete Post',
           'deletePostConfirmation':
               'Are you sure you want to delete this post?',
+          'deleteComment': 'Delete Comment',
+          'deleteCommentConfirmation':
+              'Are you sure you want to delete this comment?',
           'reportPost': 'Report Post',
           'reportPostInfo': 'Why are you reporting this post?',
+          'reportComment': 'Report Comment',
+          'reportCommentInfo': 'Why are you reporting this comment?',
           'reportSent': 'Report sent',
           'general': 'General',
           'activism': 'Activism',
@@ -609,8 +614,13 @@ class AppTranslations extends Translations {
           'deletePost': 'Eliminar Hoot',
           'deletePostConfirmation':
               '¿Estás seguro de que deseas eliminar este hoot?',
+          'deleteComment': 'Eliminar Comentario',
+          'deleteCommentConfirmation':
+              '¿Estás seguro de que deseas eliminar este comentario?',
           'reportPost': 'Reportar Hoot',
           'reportPostInfo': '¿Por qué estás reportando este hoot?',
+          'reportComment': 'Reportar Comentario',
+          'reportCommentInfo': '¿Por qué estás reportando este comentario?',
           'reportSent': 'Reporte enviado',
           'general': 'General',
           'activism': 'Activismo',
@@ -992,8 +1002,13 @@ class AppTranslations extends Translations {
           'deletePost': 'Eliminar Hoot',
           'deletePostConfirmation':
               'Tens a certeza de que queres eliminar este hoot?',
+          'deleteComment': 'Eliminar Comentário',
+          'deleteCommentConfirmation':
+              'Tens a certeza de que queres eliminar este comentário?',
           'reportPost': 'Reportar Hoot',
           'reportPostInfo': 'Por que estás denunciando este hoot?',
+          'reportComment': 'Reportar Comentário',
+          'reportCommentInfo': 'Por que estás denunciando este comentário?',
           'reportSent': 'Reporte enviado',
           'general': 'Geral',
           'activism': 'Ativismo',
@@ -1372,8 +1387,13 @@ class AppTranslations extends Translations {
           'deletePost': 'Excluir Hoot',
           'deletePostConfirmation':
               'Tem certeza de que deseja excluir este hoot?',
+          'deleteComment': 'Excluir Comentário',
+          'deleteCommentConfirmation':
+              'Tem certeza de que deseja excluir este comentário?',
           'reportPost': 'Denunciar Hoot',
           'reportPostInfo': 'Por que você está denunciando este hoot?',
+          'reportComment': 'Denunciar Comentário',
+          'reportCommentInfo': 'Por que você está denunciando este comentário?',
           'reportSent': 'Denúncia enviada',
           'general': 'Geral',
           'activism': 'Ativismo',
