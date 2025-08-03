@@ -13,6 +13,7 @@ import 'package:hoot/components/url_preview_component.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/pages/home/controllers/home_controller.dart';
 import 'package:hoot/pages/feed/controllers/feed_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CreatePostView extends GetView<CreatePostController> {
   const CreatePostView({super.key});
@@ -187,6 +188,39 @@ class CreatePostView extends GetView<CreatePostController> {
                           tooltip: 'addGif'.tr,
                         ),
                       ],
+                    );
+                  }),
+                  Obx(() {
+                    final news = controller.trendingNews.take(5).toList();
+                    if (news.isEmpty) return const SizedBox.shrink();
+                    return Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerLowest,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: news
+                            .map((n) => GestureDetector(
+                                  onTap: () => launchUrl(Uri.parse(n.link)),
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 4),
+                                    child: Text(
+                                      n.title,
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                      ),
                     );
                   }),
                   Obx(() {

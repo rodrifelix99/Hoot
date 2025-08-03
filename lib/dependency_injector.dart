@@ -9,6 +9,7 @@ import 'package:hoot/services/subscription_manager.dart';
 import 'package:hoot/services/quick_actions_service.dart';
 import 'package:hoot/services/onesignal_service.dart';
 import 'package:hoot/services/language_service.dart';
+import 'package:hoot/services/news_service.dart';
 
 /// Registers global dependencies for the application.
 class DependencyInjector {
@@ -29,6 +30,7 @@ class DependencyInjector {
     await theme.loadThemeSettings();
     final language = Get.put(LanguageService(), permanent: true);
     await language.loadLocale();
+    Get.put<BaseNewsService>(NewsService(), permanent: true);
     await Get.find<OneSignalService>().init();
     await Get.find<QuickActionsService>().init();
   }
