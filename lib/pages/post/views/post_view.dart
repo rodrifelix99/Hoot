@@ -63,7 +63,7 @@ class PostView extends GetView<PostController> {
                     );
                   }),
                   SliverToBoxAdapter(
-                    child: SafeArea(child: const SizedBox(height: 32)),
+                    child: SafeArea(child: const SizedBox(height: 120)),
                   ),
                 ],
               ),
