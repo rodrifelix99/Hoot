@@ -71,6 +71,9 @@ class NotificationsView extends GetView<NotificationsController> {
                           text = 'friendJoined'
                               .trParams({'username': user.username ?? ''});
                           break;
+                        case 6:
+                          text = 'newReport'.tr;
+                          break;
                         default:
                           text = '';
                       }
@@ -101,6 +104,9 @@ class NotificationsView extends GetView<NotificationsController> {
                                 AppRoutes.profile,
                                 arguments: ProfileArgs(uid: user.uid),
                               );
+                              break;
+                            case 6:
+                              Get.toNamed(AppRoutes.staffReports);
                               break;
                           }
                         },
