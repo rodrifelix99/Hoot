@@ -81,6 +81,7 @@ class PostView extends GetView<PostController> {
                                     ],
                                   ),
                                 );
+                                // If the dialog is dismissed without a result, treat as not confirmed (return false).
                                 return confirmed ?? false;
                               } else {
                                 final reasons = await showTextInputDialog(
