@@ -60,9 +60,7 @@ class Feed {
       private: json['private'],
       nsfw: json['nsfw'],
       verified: json['verified'],
-      order: (json['order'] is int)
-          ? json['order']
-          : (json['order'] != null ? int.parse(json['order'].toString()) : 0),
+      order: json['order'] ?? 0,
       subscriberCount: json['subscriberCount'],
       posts: json['posts'] != null
           ? (json['posts'] as List).map((i) => Post.fromJson(i)).toList()
