@@ -9,7 +9,6 @@ import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/mention_text_field.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/pages/post/controllers/post_controller.dart';
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 
 class PostView extends GetView<PostController> {
   const PostView({super.key});
