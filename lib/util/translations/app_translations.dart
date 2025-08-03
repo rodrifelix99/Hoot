@@ -115,6 +115,7 @@ class AppTranslations extends Translations {
           'newUnfollower': '@username unfollowed you',
           'friendJoined': '@username joined Hoot using your invite code',
           'createFeed': 'Create a new Feed',
+          'feedCreated': 'Feed created',
           'title': 'Title',
           'description': 'Description',
           'color': 'Color',
@@ -501,6 +502,7 @@ class AppTranslations extends Translations {
           'friendJoined':
               '@username se unió a Hoot usando tu código de invitación',
           'createFeed': 'Crear un nuevo Feed',
+          'feedCreated': 'Feed creado',
           'title': 'Título',
           'description': 'Descripción',
           'color': 'Color',
@@ -891,6 +893,7 @@ class AppTranslations extends Translations {
           'friendJoined':
               '@username juntou-se ao Hoot usando o teu código de convite',
           'createFeed': 'Criar um novo Feed',
+          'feedCreated': 'Feed criado',
           'title': 'Título',
           'description': 'Descrição',
           'color': 'Cor',
@@ -1276,6 +1279,7 @@ class AppTranslations extends Translations {
           'friendJoined':
               '@username entrou no Hoot usando seu código de convite',
           'createFeed': 'Criar um novo Feed',
+          'feedCreated': 'Feed criado',
           'title': 'Título',
           'description': 'Descrição',
           'color': 'Cor',
