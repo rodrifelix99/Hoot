@@ -63,11 +63,71 @@ class CreatePostView extends GetView<CreatePostController> {
                 children: [
                   DropdownButtonHideUnderline(
                     child: Obx(() {
+                      final selected = controller.selectedFeeds;
                       return DropdownButton2<Feed>(
-                        value: controller.selectedFeed.value,
-                        hint: Text('selectFeed'.tr),
-                        onChanged: (f) => controller.selectedFeed.value = f,
                         isExpanded: true,
+                        hint: Text('selectFeed'.tr),
+                        items: controller.availableFeeds
+                            .map((feed) => DropdownMenuItem<Feed>(
+                                  value: feed,
+                                  enabled: false,
+                                  child: StatefulBuilder(
+                                    builder: (context, menuSetState) {
+                                      final isSelected =
+                                          selected.contains(feed);
+                                      return InkWell(
+                                        onTap: () {
+                                          isSelected
+                                              ? selected.remove(feed)
+                                              : selected.add(feed);
+                                          selected.refresh();
+                                          menuSetState(() {});
+                                        },
+                                        child: Container(
+                                          height: double.infinity,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0),
+                                          child: Row(
+                                            children: [
+                                              if (isSelected)
+                                                const Icon(
+                                                    Icons.check_box_outlined)
+                                              else
+                                                const Icon(Icons
+                                                    .check_box_outline_blank),
+                                              const SizedBox(width: 16),
+                                              Expanded(
+                                                child: Text(
+                                                  feed.title,
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ))
+                            .toList(),
+                        value: selected.isEmpty ? null : selected.last,
+                        onChanged: (_) {},
+                        selectedItemBuilder: (context) {
+                          return controller.availableFeeds.map((feed) {
+                            return Container(
+                              alignment: AlignmentDirectional.center,
+                              child: Text(
+                                selected.map((f) => f.title).join(', '),
+                                style: const TextStyle(
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                maxLines: 1,
+                              ),
+                            );
+                          }).toList();
+                        },
                         dropdownStyleData: DropdownStyleData(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           decoration: BoxDecoration(
@@ -86,12 +146,6 @@ class CreatePostView extends GetView<CreatePostController> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        items: controller.availableFeeds
-                            .map((feed) => DropdownMenuItem(
-                                  value: feed,
-                                  child: Text(feed.title),
-                                ))
-                            .toList(),
                       );
                     }),
                   ),
