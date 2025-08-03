@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart' as buttons;
 import 'package:get/get.dart';
+import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:hoot/pages/login/controllers/login_controller.dart';
@@ -41,6 +41,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -53,6 +54,22 @@ class _LoginViewState extends State<LoginView> {
                 child: VideoPlayer(_videoController!),
               ),
             ),
+          Center(
+            child: Glassify(
+              settings: LiquidGlassSettings(
+                blur: 10,
+                glassColor: Colors.white38,
+              ),
+              child: Text(
+                'appName'.tr,
+                style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                      color: Colors.white,
+                      fontSize: 100,
+                      fontWeight: FontWeight.w900,
+                    ),
+              ),
+            ),
+          ),
           Positioned(
             bottom: 16,
             left: 16,
@@ -61,19 +78,42 @@ class _LoginViewState extends State<LoginView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'welcomeDescription'.tr,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  LiquidGlass(
+                    shape: LiquidRoundedRectangle(
+                        borderRadius: Radius.circular(32),
+                    ),
+                    settings: LiquidGlassSettings(
+                      blur: 32,
+                      glassColor: Colors.white12,
+                    ),
+                    glassContainsChild: false,
+                    child: TextButton.icon(
+                      onPressed: controller.signInWithGoogle,
+                      label: Text('signInWithGoogle'.tr),
+                      icon: const Icon(Icons.android_rounded),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  buttons.SignInButton(
-                    buttons.Buttons.Google,
-                    onPressed: controller.signInWithGoogle,
-                  ),
-                  buttons.SignInButton(
-                    buttons.Buttons.Apple,
-                    onPressed: controller.signInWithApple,
+                  const SizedBox(height: 8),
+                  LiquidGlass(
+                    shape: LiquidRoundedRectangle(
+                      borderRadius: Radius.circular(32),
+                    ),
+                    settings: LiquidGlassSettings(
+                      blur: 32,
+                      glassColor: Colors.white12,
+                    ),
+                    glassContainsChild: false,
+                    child: TextButton.icon(
+                      onPressed: controller.signInWithApple,
+                      label: Text('signInWithApple'.tr),
+                      icon: const Icon(Icons.apple_rounded),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
                   ),
                 ],
               ),
