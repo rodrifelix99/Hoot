@@ -37,6 +37,9 @@ class FakeAuthService extends GetxService implements AuthService {
   Future<U?> refreshUser() async => null;
   @override
   Future<void> createUserDocumentIfNeeded(User user) async {}
+
+  @override
+  String? displayName;
 }
 
 class FakeFeedRequestService extends FeedRequestService {
