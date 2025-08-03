@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/image_component.dart';
-import 'package:hoot/components/name_component.dart';
 import 'package:hoot/components/url_preview_component.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
@@ -300,19 +299,46 @@ class _PostComponentState extends State<PostComponent> {
                               arguments: ProfileArgs(uid: _post.user!.uid),
                             );
                           },
-                          child: NameComponent(
-                            user: _post.user!,
-                            size: 16,
-                            feedName: _post.feed?.title ?? '',
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                ),
+                                child: Text(
+                                  _post.feed?.title ?? '',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                'by @${_post.user?.username ?? ''}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall,
+                              ),
+                            ],
                           ),
                         ),
                       const Spacer(),
                       if (_post.createdAt != null)
                         Text(
                           _post.createdAt!.timeAgo(),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                  ),
                         ),
                       const SizedBox(width: 4),
                       IconButton(
