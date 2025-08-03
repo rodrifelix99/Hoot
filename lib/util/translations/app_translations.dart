@@ -230,6 +230,7 @@ class AppTranslations extends Translations {
           'deleteComment': 'Delete Comment',
           'deleteCommentConfirmation':
               'Are you sure you want to delete this comment?',
+          'commentDeleted': 'Comment deleted',
           'reportPost': 'Report Post',
           'reportPostInfo': 'Why are you reporting this post?',
           'reportComment': 'Report Comment',
@@ -617,6 +618,7 @@ class AppTranslations extends Translations {
           'deleteComment': 'Eliminar Comentario',
           'deleteCommentConfirmation':
               '¿Estás seguro de que deseas eliminar este comentario?',
+          'commentDeleted': 'Comentario eliminado',
           'reportPost': 'Reportar Hoot',
           'reportPostInfo': '¿Por qué estás reportando este hoot?',
           'reportComment': 'Reportar Comentario',
@@ -1005,6 +1007,7 @@ class AppTranslations extends Translations {
           'deleteComment': 'Eliminar Comentário',
           'deleteCommentConfirmation':
               'Tens a certeza de que queres eliminar este comentário?',
+          'commentDeleted': 'Comentário eliminado',
           'reportPost': 'Reportar Hoot',
           'reportPostInfo': 'Por que estás denunciando este hoot?',
           'reportComment': 'Reportar Comentário',
@@ -1390,6 +1393,7 @@ class AppTranslations extends Translations {
           'deleteComment': 'Excluir Comentário',
           'deleteCommentConfirmation':
               'Tem certeza de que deseja excluir este comentário?',
+          'commentDeleted': 'Comentário excluído',
           'reportPost': 'Denunciar Hoot',
           'reportPostInfo': 'Por que você está denunciando este hoot?',
           'reportComment': 'Denunciar Comentário',
