@@ -959,7 +959,7 @@ class AppTranslations extends Translations {
           'deleteFeed': 'Eliminar Feed',
           'deleteFeedConfirmation':
               'Tens a certeza de que queres eliminar este feed?',
-          'feedDeleted': 'Feed eliminado',
+          'feedDeleted': 'Feed removido',
           'explore': 'Explorar',
           'topFeeds': 'Feeds Populares',
           'mainFeed': 'Este é o feed principal',
