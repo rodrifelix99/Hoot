@@ -172,6 +172,14 @@ class AuthService {
         await _createUserDocumentIfNeeded(firebaseUser);
       }
     }
+
+    final displayName = result.user?.displayName;
+    if (displayName != null && displayName.isNotEmpty) {
+      await _firestore
+          .collection('users')
+          .doc(result.user!.uid)
+          .set({'displayName': displayName}, SetOptions(merge: true));
+    }
     _fetched = false;
     await fetchUser();
     return result;
@@ -196,6 +204,14 @@ class AuthService {
       if (firebaseUser != null) {
         await _createUserDocumentIfNeeded(firebaseUser);
       }
+    }
+
+    final displayName = result.user?.displayName;
+    if (displayName != null && displayName.isNotEmpty) {
+      await _firestore
+          .collection('users')
+          .doc(result.user!.uid)
+          .set({'displayName': displayName}, SetOptions(merge: true));
     }
     _fetched = false;
     await fetchUser();
