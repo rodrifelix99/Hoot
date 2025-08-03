@@ -116,6 +116,7 @@ class AppTranslations extends Translations {
           'newUnfollower': '@username unfollowed you',
           'friendJoined': '@username joined Hoot using your invite code',
           'createFeed': 'Create a new Feed',
+          'feedCreated': 'Feed created',
           'title': 'Title',
           'description': 'Description',
           'color': 'Color',
@@ -184,6 +185,7 @@ class AppTranslations extends Translations {
           'deleteFeed': 'Delete Feed',
           'deleteFeedConfirmation':
               'Are you sure you want to delete this feed?',
+          'feedDeleted': 'Feed deleted',
           'explore': 'Explore',
           'topFeeds': 'Top Feeds',
           'mainFeed': 'This is the main feed',
@@ -217,6 +219,7 @@ class AppTranslations extends Translations {
           'newLike': 'New Like',
           'newComment': 'New Comment',
           'newReHoot': 'New ReHoot',
+          'rehootPosted': 'ReHoot posted',
           'newMention': 'New Mention',
           'newReport': 'New Report',
           'reHoot': 'ReHoot',
@@ -228,9 +231,11 @@ class AppTranslations extends Translations {
           'deletePost': 'Delete Post',
           'deletePostConfirmation':
               'Are you sure you want to delete this post?',
+          'postDeleted': 'Post deleted',
           'deleteComment': 'Delete Comment',
           'deleteCommentConfirmation':
               'Are you sure you want to delete this comment?',
+          'commentDeleted': 'Comment deleted',
           'reportPost': 'Report Post',
           'reportPostInfo': 'Why are you reporting this post?',
           'reportComment': 'Report Comment',
@@ -503,6 +508,7 @@ class AppTranslations extends Translations {
           'friendJoined':
               '@username se unió a Hoot usando tu código de invitación',
           'createFeed': 'Crear un nuevo Feed',
+          'feedCreated': 'Feed creado',
           'title': 'Título',
           'description': 'Descripción',
           'color': 'Color',
@@ -570,6 +576,7 @@ class AppTranslations extends Translations {
           'deleteFeed': 'Eliminar Feed',
           'deleteFeedConfirmation':
               '¿Estás seguro de que deseas eliminar este feed?',
+          'feedDeleted': 'Feed eliminado',
           'explore': 'Explorar',
           'topFeeds': 'Feeds Populares',
           'mainFeed': 'Este es el feed principal',
@@ -605,6 +612,7 @@ class AppTranslations extends Translations {
           'newLike': 'Nuevo Me Gusta',
           'newComment': 'Nuevo Comentario',
           'newReHoot': 'Nuevo ReHoot',
+          'rehootPosted': 'ReHoot publicado',
           'newMention': 'Nueva Mención',
           'newReport': 'Nuevo Reporte',
           'reHoot': 'ReHoot',
@@ -616,9 +624,11 @@ class AppTranslations extends Translations {
           'deletePost': 'Eliminar Hoot',
           'deletePostConfirmation':
               '¿Estás seguro de que deseas eliminar este hoot?',
+          'postDeleted': 'Hoot eliminado',
           'deleteComment': 'Eliminar Comentario',
           'deleteCommentConfirmation':
               '¿Estás seguro de que deseas eliminar este comentario?',
+          'commentDeleted': 'Comentario eliminado',
           'reportPost': 'Reportar Hoot',
           'reportPostInfo': '¿Por qué estás reportando este hoot?',
           'reportComment': 'Reportar Comentario',
@@ -894,6 +904,7 @@ class AppTranslations extends Translations {
           'friendJoined':
               '@username juntou-se ao Hoot usando o teu código de convite',
           'createFeed': 'Criar um novo Feed',
+          'feedCreated': 'Feed criado',
           'title': 'Título',
           'description': 'Descrição',
           'color': 'Cor',
@@ -960,6 +971,7 @@ class AppTranslations extends Translations {
           'deleteFeed': 'Eliminar Feed',
           'deleteFeedConfirmation':
               'Tens a certeza de que queres eliminar este feed?',
+          'feedDeleted': 'Feed removido',
           'explore': 'Explorar',
           'topFeeds': 'Feeds Populares',
           'mainFeed': 'Este é o feed principal',
@@ -994,6 +1006,7 @@ class AppTranslations extends Translations {
           'newLike': 'Novo Gosto',
           'newComment': 'Novo Comentário',
           'newReHoot': 'Novo ReHoot',
+          'rehootPosted': 'ReHoot postado',
           'newMention': 'Nova Menção',
           'newReport': 'Novo Relatório',
           'reHoot': 'ReHoot',
@@ -1005,9 +1018,11 @@ class AppTranslations extends Translations {
           'deletePost': 'Eliminar Hoot',
           'deletePostConfirmation':
               'Tens a certeza de que queres eliminar este hoot?',
+          'postDeleted': 'Hoot removido',
           'deleteComment': 'Eliminar Comentário',
           'deleteCommentConfirmation':
               'Tens a certeza de que queres eliminar este comentário?',
+          'commentDeleted': 'Comentário eliminado',
           'reportPost': 'Reportar Hoot',
           'reportPostInfo': 'Por que estás denunciando este hoot?',
           'reportComment': 'Reportar Comentário',
@@ -1280,6 +1295,7 @@ class AppTranslations extends Translations {
           'friendJoined':
               '@username entrou no Hoot usando seu código de convite',
           'createFeed': 'Criar um novo Feed',
+          'feedCreated': 'Feed criado',
           'title': 'Título',
           'description': 'Descrição',
           'color': 'Cor',
@@ -1345,6 +1361,7 @@ class AppTranslations extends Translations {
           'deleteFeed': 'Excluir Feed',
           'deleteFeedConfirmation':
               'Tem certeza de que deseja excluir este feed?',
+          'feedDeleted': 'Feed excluído',
           'explore': 'Explorar',
           'topFeeds': 'Feeds Populares',
           'mainFeed': 'Este é o feed principal',
@@ -1380,6 +1397,7 @@ class AppTranslations extends Translations {
           'newLike': 'Novo Curtir',
           'newComment': 'Novo Comentário',
           'newReHoot': 'Novo ReHoot',
+          'rehootPosted': 'ReHoot publicado',
           'newMention': 'Nova Menção',
           'newReport': 'Nova Denúncia',
           'reHoot': 'ReHoot',
@@ -1391,9 +1409,11 @@ class AppTranslations extends Translations {
           'deletePost': 'Excluir Hoot',
           'deletePostConfirmation':
               'Tem certeza de que deseja excluir este hoot?',
+          'postDeleted': 'Hoot excluído',
           'deleteComment': 'Excluir Comentário',
           'deleteCommentConfirmation':
               'Tem certeza de que deseja excluir este comentário?',
+          'commentDeleted': 'Comentário excluído',
           'reportPost': 'Denunciar Hoot',
           'reportPostInfo': 'Por que você está denunciando este hoot?',
           'reportComment': 'Denunciar Comentário',
