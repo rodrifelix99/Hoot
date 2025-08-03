@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/comment.dart';
@@ -212,23 +211,7 @@ class PostController extends GetxController {
     }
   }
 
-  Future<void> reportComment(Comment comment) async {
-    final reasons = await showTextInputDialog(
-      context: Get.context!,
-      title: 'reportComment'.tr,
-      textFields: [
-        DialogTextField(
-          hintText: 'reportCommentInfo'.tr,
-          minLines: 3,
-          maxLines: 5,
-          maxLength: 500,
-          keyboardType: TextInputType.multiline,
-          textCapitalization: TextCapitalization.sentences,
-        ),
-      ],
-    );
-    final reason = reasons?.first;
-    if (reason == null || reason.isEmpty) return;
+  Future<void> reportComment(Comment comment, String reason) async {
     try {
       await _reportService.reportComment(commentId: comment.id, reason: reason);
       ToastService.showSuccess('reportSent'.tr);

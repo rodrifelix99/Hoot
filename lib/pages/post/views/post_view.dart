@@ -10,6 +10,7 @@ import 'package:hoot/components/mention_text_field.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/pages/post/controllers/post_controller.dart';
 import 'package:hoot/services/dialog_service.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 
 class PostView extends GetView<PostController> {
   const PostView({super.key});
@@ -70,7 +71,26 @@ class PostView extends GetView<PostController> {
                                   cancelLabel: 'cancel'.tr,
                                 );
                               } else {
-                                await controller.reportComment(item);
+                                final reasons = await showTextInputDialog(
+                                  context: context,
+                                  title: 'reportComment'.tr,
+                                  textFields: [
+                                    DialogTextField(
+                                      hintText: 'reportCommentInfo'.tr,
+                                      minLines: 3,
+                                      maxLines: 5,
+                                      maxLength: 500,
+                                      keyboardType: TextInputType.multiline,
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                    ),
+                                  ],
+                                );
+                                final reason = reasons?.first;
+                                if (reason == null || reason.isEmpty) {
+                                  return false;
+                                }
+                                await controller.reportComment(item, reason);
                                 return false;
                               }
                             },
