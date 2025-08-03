@@ -33,6 +33,11 @@ class StaffDashboardView extends GetView<StaffDashboardController> {
               trailing: Text('${stats.activeUsers}'),
             ),
             ListTile(
+              leading: const Icon(Icons.person_off),
+              title: Text('uninvitedUsers'.tr),
+              trailing: Text('${stats.uninvitedUsers}'),
+            ),
+            ListTile(
               leading: const Icon(Icons.report),
               title: Text('reports'.tr),
               trailing: Text('${stats.reportsCount}'),
