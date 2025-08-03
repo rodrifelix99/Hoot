@@ -194,32 +194,71 @@ class CreatePostView extends GetView<CreatePostController> {
                     final news = controller.trendingNews.take(5).toList();
                     if (news.isEmpty) return const SizedBox.shrink();
                     return Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      padding: const EdgeInsets.all(8),
+                      margin: const EdgeInsets.only(top: 16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 0,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: Theme.of(context)
                             .colorScheme
                             .surfaceContainerLowest,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).shadowColor.withAlpha(10),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: news
-                            .map((n) => GestureDetector(
-                                  onTap: () => launchUrl(Uri.parse(n.link)),
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 4),
-                                    child: Text(
-                                      n.title,
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: news.length,
+                        padding: EdgeInsets.zero,
+                        separatorBuilder: (context, index) => Divider(
+                          height: 1,
+                          indent: 16,
+                          endIndent: 16,
+                          color: Theme.of(context).dividerColor.withAlpha(25),
+                        ),
+                        itemBuilder: (context, index) {
+                          final n = news[index];
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (index == 0)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ).copyWith(
+                                    bottom: 0,
                                   ),
-                                ))
-                            .toList(),
+                                  child: Text(
+                                    'trendingNews'.tr,
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                ),
+                              ListTile(
+                                onTap: () => launchUrl(Uri.parse(n.link)),
+                                leading: Opacity(
+                                  opacity: 0.75,
+                                  child: const Icon(SolarIconsBold.graphUp),
+                                ),
+                                title: Text(
+                                  n.title,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     );
                   }),
