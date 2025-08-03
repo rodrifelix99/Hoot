@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/models/comment.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/components/comment_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/mention_text_field.dart';
@@ -63,7 +62,7 @@ class PostView extends GetView<PostController> {
                     );
                   }),
                   SliverToBoxAdapter(
-                    child: SafeArea(child: const SizedBox(height: 32)),
+                    child: SafeArea(child: const SizedBox(height: 120)),
                   ),
                 ],
               ),
@@ -92,17 +91,10 @@ class PostView extends GetView<PostController> {
                           height: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : AnimatedSlide(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          offset: !controller.showSendButton.value
-                              ? const Offset(2, 0)
-                              : Offset.zero,
-                          child: IconButton(
-                            icon: const Icon(SolarIconsBold.uploadMinimalistic),
-                            onPressed: controller.publishComment,
-                          ),
-                        )),
+                      : IconButton(
+                        icon: const Icon(Icons.send_rounded),
+                        onPressed: controller.publishComment,
+                      )),
                 ],
               ),
             ),
