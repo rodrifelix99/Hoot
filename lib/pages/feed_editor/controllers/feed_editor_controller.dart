@@ -211,7 +211,7 @@ class FeedEditorController extends GetxController {
       user.feeds = (user.feeds ?? [])..add(newFeed);
     }
     _profileController?.feeds.add(newFeed);
-    ToastService.showSuccess('createFeed'.tr);
+    ToastService.showSuccess('feedCreated'.tr);
     titleController.clear();
     descriptionController.clear();
     selectedType.value = null;
@@ -313,7 +313,7 @@ class FeedEditorController extends GetxController {
       _profileController?.feeds.removeWhere((f) => f.id == feed!.id);
       final user = _authService.currentUser;
       user?.feeds?.removeWhere((f) => f.id == feed!.id);
-      ToastService.showSuccess('deleteFeed'.tr);
+      ToastService.showSuccess('feedDeleted'.tr);
       return true;
     } catch (e, s) {
       await ErrorService.reportError(e, stack: s);
