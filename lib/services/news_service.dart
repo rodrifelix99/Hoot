@@ -31,12 +31,21 @@ class NewsService implements BaseNewsService {
       final locale = _languageService.locale.value;
       final lang = locale.languageCode;
       final country = locale.countryCode ?? 'US';
-      final params = 'hl=$lang-$country&gl=$country&ceid=$country:$lang';
-      final baseUrl = topic == null
-          ? 'https://news.google.com/rss'
-          : 'https://news.google.com/rss/search?q=${Uri.encodeComponent(topic)}';
-      final url = topic == null ? '$baseUrl?$params' : '$baseUrl&$params';
-      final response = await _client.get(Uri.parse(url));
+      final queryParameters = <String, String>{
+        'hl': '$lang-$country',
+        'gl': country,
+        'ceid': '$country:$lang',
+      };
+      Uri uri;
+      if (topic == null) {
+        uri = Uri.https('news.google.com', '/rss', queryParameters);
+      } else {
+        uri = Uri.https('news.google.com', '/rss/search', {
+          ...queryParameters,
+          'q': topic,
+        });
+      }
+      final response = await _client.get(uri);
       if (response.statusCode != 200) {
         return [];
       }
