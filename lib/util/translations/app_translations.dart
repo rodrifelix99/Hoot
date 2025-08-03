@@ -185,6 +185,9 @@ class AppTranslations extends Translations {
               'Are you sure you want to delete this feed?',
           'explore': 'Explore',
           'topFeeds': 'Top Feeds',
+          'mainFeed': 'This is the main feed',
+          'mainFeedDescription':
+              'When you subscribe to feeds, all hoots will be merged here.',
           'noHoots': 'No hoots to show',
           'subscribeToSeeHoots': 'Subscribe to some feeds to see hoots here',
           'popularUsers': 'Popular users',
@@ -551,6 +554,9 @@ class AppTranslations extends Translations {
               '¿Estás seguro de que deseas eliminar este feed?',
           'explore': 'Explorar',
           'topFeeds': 'Feeds Populares',
+          'mainFeed': 'Este es el feed principal',
+          'mainFeedDescription':
+              'Cuando te suscribas a feeds, todos los hoots se combinarán aquí.',
           'noHoots': 'No hay hoots para mostrar',
           'subscribeToSeeHoots':
               'Suscríbete a algunos feeds para ver hoots aquí',
@@ -921,6 +927,9 @@ class AppTranslations extends Translations {
               'Tens a certeza de que queres eliminar este feed?',
           'explore': 'Explorar',
           'topFeeds': 'Feeds Populares',
+          'mainFeed': 'Este é o feed principal',
+          'mainFeedDescription':
+              'Quando subscreveres a feeds, todos os hoots serão reunidos aqui.',
           'noHoots': 'Não há hoots para mostrar',
           'subscribeToSeeHoots': 'Subscreve a alguns feeds para ver hoots aqui',
           'popularUsers': 'Utilizadores populares',
@@ -1286,6 +1295,9 @@ class AppTranslations extends Translations {
               'Tem certeza de que deseja excluir este feed?',
           'explore': 'Explorar',
           'topFeeds': 'Feeds Populares',
+          'mainFeed': 'Este é o feed principal',
+          'mainFeedDescription':
+              'Quando você se inscrever em feeds, todos os hoots serão reunidos aqui.',
           'noHoots': 'Não há hoots para mostrar',
           'subscribeToSeeHoots':
               'Inscreva-se em alguns feeds para ver hoots aqui',
