@@ -7,11 +7,12 @@ import 'package:hoot/util/routes/app_routes.dart';
 
 /// Middleware that allows access only to staff users.
 class StaffMiddleware extends GetMiddleware {
-  final AuthService _authService = Get.find<AuthService>();
+
 
   @override
   RouteSettings? redirect(String? route) {
-    final user = _authService.currentUser;
+    final authService = Get.find<AuthService>();
+    final user = authService.currentUser;
     if (user == null || user.role != UserRole.staff) {
       return RouteSettings(name: AppRoutes.home);
     }
