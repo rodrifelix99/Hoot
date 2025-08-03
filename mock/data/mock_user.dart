@@ -22,6 +22,7 @@ U createMockUser({DateTime? createdAt}) {
     createdAt: createdAt ?? DateTime(2020, 1, 1),
     feeds: [mockFeed],
     subscriptionCount: 1,
+    role: UserRole.user,
   );
 }
 
