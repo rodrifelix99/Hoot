@@ -17,6 +17,7 @@ final U mockUser = U(
   uid: 'user1',
   name: 'Mock User',
   username: 'mockuser',
+  createdAt: DateTime(2020, 1, 1),
   feeds: [mockFeed],
   subscriptionCount: 1,
 );
