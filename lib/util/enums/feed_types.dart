@@ -81,6 +81,29 @@ extension FeedTypeExtension on FeedType {
     return firstLetter.codeUnitAt(0);
   }
 
+  String? get rssTopic {
+    switch (this) {
+      case FeedType.general:
+        return 'WORLD';
+      case FeedType.news:
+        return 'NATION';
+      case FeedType.business:
+        return 'BUSINESS';
+      case FeedType.technology:
+        return 'TECHNOLOGY';
+      case FeedType.entertainment:
+        return 'ENTERTAINMENT';
+      case FeedType.science:
+        return 'SCIENCE';
+      case FeedType.sports:
+        return 'SPORTS';
+      case FeedType.health:
+        return 'HEALTH';
+      default:
+        return null;
+    }
+  }
+
   static String toTranslatedString(BuildContext context, FeedType type) {
     switch (type) {
       case FeedType.activism:
