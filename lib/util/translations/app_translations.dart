@@ -1004,7 +1004,7 @@ class AppTranslations extends Translations {
           'deletePost': 'Eliminar Hoot',
           'deletePostConfirmation':
               'Tens a certeza de que queres eliminar este hoot?',
-          'postDeleted': 'Hoot eliminado',
+          'postDeleted': 'Hoot removido',
           'deleteComment': 'Eliminar Comentário',
           'deleteCommentConfirmation':
               'Tens a certeza de que queres eliminar este comentário?',
