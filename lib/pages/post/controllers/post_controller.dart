@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/comment.dart';
@@ -11,12 +12,15 @@ import 'package:hoot/services/comment_service.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/user_service.dart';
 import 'package:hoot/services/post_service.dart';
+import 'package:hoot/services/report_service.dart';
+import 'package:hoot/services/toast_service.dart';
 
 class PostController extends GetxController {
   final Rx<Post> post = Post.empty().obs;
   final BaseCommentService _commentService;
   final AuthService _authService;
   final BasePostService _postService;
+  final BaseReportService _reportService;
   BaseUserService? _userService;
 
   PostController({
@@ -24,9 +28,11 @@ class PostController extends GetxController {
     AuthService? authService,
     BaseUserService? userService,
     BasePostService? postService,
+    BaseReportService? reportService,
   })  : _commentService = commentService ?? CommentService(),
         _authService = authService ?? Get.find<AuthService>(),
         _postService = postService ?? Get.find<BasePostService>(),
+        _reportService = reportService ?? ReportService(),
         _userService = userService;
 
   final Rx<PagingState<DocumentSnapshot?, Comment>> commentsState =
@@ -38,6 +44,8 @@ class PostController extends GetxController {
       <Map<String, dynamic>>[].obs;
   final RxBool postingComment = false.obs;
   final RxBool showSendButton = false.obs;
+
+  String? get currentUserId => _authService.currentUser?.uid;
 
   @override
   void onInit() {
@@ -183,6 +191,49 @@ class PostController extends GetxController {
       );
     } finally {
       postingComment.value = false;
+    }
+  }
+
+  Future<void> deleteComment(Comment comment) async {
+    try {
+      await _commentService.deleteComment(post.value.id, comment.id);
+      final pages = commentsState.value.pages;
+      if (pages != null) {
+        final updated = pages
+            .map((p) => p.where((c) => c.id != comment.id).toList())
+            .toList();
+        commentsState.value = commentsState.value.copyWith(pages: updated);
+      }
+      post.value.comments = (post.value.comments ?? 0) - 1;
+      post.refresh();
+      ToastService.showSuccess('deleteComment'.tr);
+    } catch (e) {
+      ToastService.showError('somethingWentWrong'.tr);
+    }
+  }
+
+  Future<void> reportComment(Comment comment) async {
+    final reasons = await showTextInputDialog(
+      context: Get.context!,
+      title: 'reportComment'.tr,
+      textFields: [
+        DialogTextField(
+          hintText: 'reportCommentInfo'.tr,
+          minLines: 3,
+          maxLines: 5,
+          maxLength: 500,
+          keyboardType: TextInputType.multiline,
+          textCapitalization: TextCapitalization.sentences,
+        ),
+      ],
+    );
+    final reason = reasons?.first;
+    if (reason == null || reason.isEmpty) return;
+    try {
+      await _reportService.reportComment(commentId: comment.id, reason: reason);
+      ToastService.showSuccess('reportSent'.tr);
+    } catch (e) {
+      ToastService.showError('somethingWentWrong'.tr);
     }
   }
 

@@ -9,6 +9,7 @@ import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/mention_text_field.dart';
 import 'package:hoot/components/post_component.dart';
 import 'package:hoot/pages/post/controllers/post_controller.dart';
+import 'package:hoot/services/dialog_service.dart';
 
 class PostView extends GetView<PostController> {
   const PostView({super.key});
@@ -41,8 +42,42 @@ class PostView extends GetView<PostController> {
                       state: state,
                       fetchNextPage: controller.fetchNextComments,
                       builderDelegate: PagedChildBuilderDelegate<Comment>(
-                        itemBuilder: (context, item, index) =>
-                            CommentComponent(comment: item),
+                        itemBuilder: (context, item, index) {
+                          final isOwner =
+                              item.user?.uid == controller.currentUserId;
+                          return Dismissible(
+                            key: Key(item.id),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              color: isOwner
+                                  ? Theme.of(context).colorScheme.error
+                                  : Colors.orange,
+                              alignment: Alignment.centerRight,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Icon(
+                                isOwner ? Icons.delete : Icons.flag,
+                                color: Colors.white,
+                              ),
+                            ),
+                            confirmDismiss: (_) async {
+                              if (isOwner) {
+                                return await DialogService.confirm(
+                                  context: context,
+                                  title: 'deleteComment'.tr,
+                                  message: 'deleteCommentConfirmation'.tr,
+                                  okLabel: 'delete'.tr,
+                                  cancelLabel: 'cancel'.tr,
+                                );
+                              } else {
+                                await controller.reportComment(item);
+                                return false;
+                              }
+                            },
+                            onDismissed: (_) => controller.deleteComment(item),
+                            child: CommentComponent(comment: item),
+                          );
+                        },
                         firstPageProgressIndicatorBuilder: (_) => const Padding(
                           padding: EdgeInsets.all(16),
                           child: Center(child: CircularProgressIndicator()),
@@ -92,9 +127,9 @@ class PostView extends GetView<PostController> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : IconButton(
-                        icon: const Icon(Icons.send_rounded),
-                        onPressed: controller.publishComment,
-                      )),
+                          icon: const Icon(Icons.send_rounded),
+                          onPressed: controller.publishComment,
+                        )),
                 ],
               ),
             ),
