@@ -16,6 +16,12 @@ class StaffHomeView extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
+            leading: const Icon(Icons.dashboard),
+            title: Text('dashboard'.tr),
+            trailing: const Icon(Icons.arrow_forward),
+            onTap: () => Get.toNamed(AppRoutes.staffDashboard),
+          ),
+          ListTile(
             leading: const Icon(Icons.report),
             title: Text('reports'.tr),
             trailing: const Icon(Icons.arrow_forward),
