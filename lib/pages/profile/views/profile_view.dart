@@ -313,8 +313,8 @@ class _ProfileViewState extends State<ProfileView> {
       );
       if (controller.isCurrentUser) {
         final children = [
-          for (final feed in feeds) _buildFeedTile(context, feed),
           _buildAddTile(context),
+          for (final feed in feeds) _buildFeedTile(context, feed),
         ];
         return SliverPadding(
           padding: padding,
@@ -325,9 +325,9 @@ class _ProfileViewState extends State<ProfileView> {
             childAspectRatio: 1,
             children: children,
             onReorder: (oldIndex, newIndex) {
-              // Prevent any reorder involving the add tile
-              if (oldIndex == feeds.length || newIndex == feeds.length) return;
-              controller.reorderFeeds(oldIndex, newIndex);
+              // Prevent reordering of the add tile
+              if (oldIndex == 0 || newIndex == 0) return;
+              controller.reorderFeeds(oldIndex - 1, newIndex - 1);
             },
           ),
         );
