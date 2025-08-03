@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 import 'package:hoot/models/post.dart';
+import 'package:hoot/models/feed.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/util/constants.dart';
 
@@ -26,6 +27,8 @@ abstract class BaseFeedService {
     DocumentSnapshot? startAfter,
     int limit = kDefaultFetchLimit,
   });
+
+  Future<void> updateFeedOrder(List<Feed> feeds);
 }
 
 /// Default implementation retrieving posts from feeds the current user is subscribed to.
@@ -160,5 +163,15 @@ class FeedService implements BaseFeedService {
       lastDoc: snapshot.docs.isNotEmpty ? snapshot.docs.last : null,
       hasMore: snapshot.docs.length == limit,
     );
+  }
+
+  @override
+  Future<void> updateFeedOrder(List<Feed> feeds) async {
+    final batch = _firestore.batch();
+    for (var i = 0; i < feeds.length; i++) {
+      final feed = feeds[i];
+      batch.update(_firestore.collection('feeds').doc(feed.id), {'order': i});
+    }
+    await batch.commit();
   }
 }

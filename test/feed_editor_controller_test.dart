@@ -78,6 +78,9 @@ class FakeFeedService implements BaseFeedService {
       {DocumentSnapshot? startAfter, int limit = 10}) async {
     return PostPage(posts: []);
   }
+
+  @override
+  Future<void> updateFeedOrder(List<Feed> feeds) async {}
 }
 
 void main() {
@@ -253,6 +256,7 @@ void main() {
       private: false,
       nsfw: false,
       subscriberCount: 0,
+      order: 0,
     );
     final user = U(uid: 'u1', feeds: [feed]);
     final auth = FakeAuthService(user);

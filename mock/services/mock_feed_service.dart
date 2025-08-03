@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hoot/services/feed_service.dart';
+import 'package:hoot/models/feed.dart';
 import 'mock_post_service.dart';
 
 /// Mock implementation of [BaseFeedService] returning posts from memory.
@@ -22,4 +23,7 @@ class MockFeedService implements BaseFeedService {
         postService.posts.where((p) => p.feedId == feedId).take(limit).toList();
     return PostPage(posts: posts, hasMore: false);
   }
+
+  @override
+  Future<void> updateFeedOrder(List<Feed> feeds) async {}
 }

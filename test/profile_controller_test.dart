@@ -134,6 +134,9 @@ class FakeFeedService implements BaseFeedService {
       {DocumentSnapshot? startAfter, int limit = 10}) async {
     return PostPage(posts: []);
   }
+
+  @override
+  Future<void> updateFeedOrder(List<Feed> feeds) async {}
 }
 
 void main() {
@@ -150,7 +153,8 @@ void main() {
             userId: 'u2',
             title: 'f',
             description: 'd',
-            private: false)
+            private: false,
+            order: 0)
       ]);
       final auth = FakeAuthService(user);
       final manager = FakeSubscriptionManager(SubscriptionResult.subscribed);
@@ -183,7 +187,12 @@ void main() {
       ));
       final user = U(uid: 'u1', feeds: [
         Feed(
-            id: 'f1', userId: 'u2', title: 'f', description: 'd', private: true)
+            id: 'f1',
+            userId: 'u2',
+            title: 'f',
+            description: 'd',
+            private: true,
+            order: 0)
       ]);
       final auth = FakeAuthService(user);
       final manager = FakeSubscriptionManager(SubscriptionResult.requested);

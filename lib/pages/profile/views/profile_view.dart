@@ -7,6 +7,7 @@ import 'package:hoot/util/extensions/feed_extension.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/models/feed.dart';
 import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/util/routes/app_routes.dart';
@@ -17,6 +18,7 @@ import 'package:hoot/services/report_service.dart';
 import 'package:hoot/services/toast_service.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:hoot/services/haptic_service.dart';
+import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -175,162 +177,181 @@ class _ProfileViewState extends State<ProfileView> {
     return uri;
   }
 
-  Widget buildFeedGrid(BuildContext context) {
-    return Obx(() {
-      final feeds = controller.feeds;
-      final itemCount =
-          controller.isCurrentUser ? feeds.length + 1 : feeds.length;
-      return SliverPadding(
-        padding: EdgeInsets.symmetric(horizontal: 16).copyWith(
-          bottom: MediaQuery.of(context).padding.bottom + 16,
+  Widget _buildAddTile(BuildContext context) {
+    return GestureDetector(
+      key: const ValueKey('add'),
+      onTap: () {
+        HapticService.lightImpact();
+        Get.toNamed(AppRoutes.createFeed);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outline.withAlpha(50),
+            width: 1,
+          ),
+          color: Theme.of(context).colorScheme.surfaceContainer,
         ),
-        sliver: SliverGrid(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              if (controller.isCurrentUser && index == 0) {
-                return GestureDetector(
-                  onTap: () {
-                    HapticService.lightImpact();
-                    Get.toNamed(AppRoutes.createFeed);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color:
-                            Theme.of(context).colorScheme.outline.withAlpha(50),
-                        width: 1,
-                      ),
-                      color: Theme.of(context).colorScheme.surfaceContainer,
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          HashCachedImage(
-                            imageUrl:
-                                controller.user.value?.smallProfilePictureUrl ??
-                                    '',
-                            hash: controller.user.value?.smallAvatarHash,
-                            width: double.infinity,
-                            height: double.infinity,
-                            fit: BoxFit.cover,
-                          ).blurred(
-                            blur: 16,
-                            blurColor: Theme.of(context).colorScheme.surface,
-                            colorOpacity: 0.25,
-                          ),
-                          Center(
-                            child: Icon(
-                              SolarIconsBold.addSquare,
-                              size: 64,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withAlpha(125),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }
-              final feed = feeds[controller.isCurrentUser ? index - 1 : index];
-              final color = feed.color ?? Theme.of(context).colorScheme.primary;
-              final textColor = feed.foregroundColor;
-              return ClipRRect(
+        clipBehavior: Clip.hardEdge,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            HashCachedImage(
+              imageUrl: controller.user.value?.smallProfilePictureUrl ?? '',
+              hash: controller.user.value?.smallAvatarHash,
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
+            ).blurred(
+              blur: 16,
+              blurColor: Theme.of(context).colorScheme.surface,
+              colorOpacity: 0.25,
+            ),
+            Center(
+              child: Icon(
+                SolarIconsBold.addSquare,
+                size: 64,
+                color: Theme.of(context).colorScheme.onSurface.withAlpha(125),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeedTile(BuildContext context, Feed feed) {
+    final color = feed.color ?? Theme.of(context).colorScheme.primary;
+    final textColor = feed.foregroundColor;
+    return ClipRRect(
+      key: ValueKey(feed.id),
+      borderRadius: BorderRadius.circular(16),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Positioned.fill(
+            child: HashCachedImage(
+              imageUrl: feed.smallAvatar ??
+                  controller.user.value?.smallProfilePictureUrl ??
+                  '',
+              hash: feed.bigAvatarHash ?? controller.user.value?.bigAvatarHash,
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
+            ).blurred(
+              blur: 16,
+              blurColor: color,
+              colorOpacity: 0.5,
+            ),
+          ),
+          Positioned.fill(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: InkWell(
+                onTap: () {
+                  HapticService.lightImpact();
+                  Get.toNamed(
+                    AppRoutes.feed,
+                    arguments: FeedPageArgs(feedId: feed.id),
+                  );
+                },
+                splashColor: Colors.white.withAlpha(50),
+                highlightColor: Colors.white.withAlpha(50),
                 borderRadius: BorderRadius.circular(16),
-                child: Stack(
-                  fit: StackFit.expand,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Positioned.fill(
-                      child: HashCachedImage(
-                        imageUrl: feed.smallAvatar ??
-                            controller.user.value?.smallProfilePictureUrl ??
-                            '',
-                        hash: feed.bigAvatarHash ??
-                            controller.user.value?.bigAvatarHash,
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                      ).blurred(
-                        blur: 16,
-                        blurColor: color,
-                        colorOpacity: 0.5,
+                    const SizedBox(height: 16),
+                    Text(
+                      feed.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Get.textTheme.titleLarge?.copyWith(
+                        color: textColor,
+                        fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    Positioned.fill(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: InkWell(
-                          onTap: () {
-                            HapticService.lightImpact();
-                            Get.toNamed(
-                              AppRoutes.feed,
-                              arguments: FeedPageArgs(feedId: feed.id),
-                            );
-                          },
-                          splashColor: Colors.white.withAlpha(50),
-                          highlightColor: Colors.white.withAlpha(50),
-                          borderRadius: BorderRadius.circular(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const SizedBox(height: 16),
-                              Text(
-                                feed.title,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: Get.textTheme.titleLarge?.copyWith(
-                                  color: textColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              if (feed.description != null &&
-                                  feed.description!.isNotEmpty) ...[
-                                const SizedBox(height: 8),
-                                Text(
-                                  feed.description!,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Get.textTheme.bodyMedium?.copyWith(
-                                    color: textColor,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                              const SizedBox(height: 8),
-                              Text(
-                                '${feed.subscriberCount ?? 0} ${'followers'.tr}',
-                                style: Get.textTheme.bodySmall?.copyWith(
-                                  color: textColor,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
+                    if (feed.description != null &&
+                        feed.description!.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        feed.description!,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Get.textTheme.bodyMedium?.copyWith(
+                          color: textColor,
                         ),
+                        textAlign: TextAlign.center,
                       ),
+                    ],
+                    const SizedBox(height: 8),
+                    Text(
+                      '${feed.subscriberCount ?? 0} ${'followers'.tr}',
+                      style: Get.textTheme.bodySmall?.copyWith(
+                        color: textColor,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),
-              );
-            },
-            childCount: itemCount,
+              ),
+            ),
           ),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-            childAspectRatio: 1,
-          ),
-        ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildFeedGrid(BuildContext context) {
+    return Obx(() {
+      final feeds = controller.feeds;
+      final padding = EdgeInsets.symmetric(horizontal: 16).copyWith(
+        bottom: MediaQuery.of(context).padding.bottom + 16,
       );
+      if (controller.isCurrentUser) {
+        final children = [
+          for (final feed in feeds) _buildFeedTile(context, feed),
+          _buildAddTile(context),
+        ];
+        return SliverPadding(
+          padding: padding,
+          sliver: ReorderableSliverGridView.count(
+            crossAxisCount: 2,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            childAspectRatio: 1,
+            children: children,
+            onReorder: (oldIndex, newIndex) {
+              // Prevent any reorder involving the add tile
+              if (oldIndex == feeds.length || newIndex == feeds.length) return;
+              controller.reorderFeeds(oldIndex, newIndex);
+            },
+            canReorder: (index) => index != feeds.length,
+          ),
+        );
+      } else {
+        return SliverPadding(
+          padding: padding,
+          sliver: SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final feed = feeds[index];
+                return _buildFeedTile(context, feed);
+              },
+              childCount: feeds.length,
+            ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              childAspectRatio: 1,
+            ),
+          ),
+        );
+      }
     });
   }
 
@@ -394,7 +415,8 @@ class _ProfileViewState extends State<ProfileView> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Get.textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
