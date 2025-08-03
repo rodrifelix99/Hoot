@@ -126,7 +126,7 @@ class _PostComponentState extends State<PostComponent> {
       _post.reFeeds = (_post.reFeeds ?? 0) + 1;
       _post.reFeededByMe = true;
     });
-    ToastService.showSuccess('newReHoot'.tr);
+    ToastService.showSuccess('rehootPosted'.tr);
   }
 
   Future<void> _showOptions() async {
@@ -324,18 +324,16 @@ class _PostComponentState extends State<PostComponent> {
                                 children: [
                                   Text(
                                     'by @${_post.user?.username ?? ''}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
                                   ),
                                   if (_post.user?.verified == true) ...[
                                     const SizedBox(width: 4),
                                     Icon(
                                       Icons.verified_rounded,
                                       size: 16,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                     ),
                                   ],
                                 ],
