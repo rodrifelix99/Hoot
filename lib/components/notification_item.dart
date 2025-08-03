@@ -65,7 +65,7 @@ class ListItem extends StatelessWidget {
                   DefaultTextStyle(
                     style:
                         titleStyle ?? Theme.of(context).textTheme.titleMedium!,
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     child: title,
                   ),
