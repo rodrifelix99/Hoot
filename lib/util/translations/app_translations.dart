@@ -217,6 +217,7 @@ class AppTranslations extends Translations {
           'newComment': 'New Comment',
           'newReHoot': 'New ReHoot',
           'newMention': 'New Mention',
+          'newReport': 'New Report',
           'reHoot': 'ReHoot',
           'reHootOf': 'ReHoot of',
           'deleteOnRefeededPost':
@@ -588,6 +589,7 @@ class AppTranslations extends Translations {
           'newComment': 'Nuevo Comentario',
           'newReHoot': 'Nuevo ReHoot',
           'newMention': 'Nueva Mención',
+          'newReport': 'Nuevo Reporte',
           'reHoot': 'ReHoot',
           'reHootOf': 'ReHoot de',
           'deleteOnRefeededPost':
@@ -960,6 +962,7 @@ class AppTranslations extends Translations {
           'newComment': 'Novo Comentário',
           'newReHoot': 'Novo ReHoot',
           'newMention': 'Nova Menção',
+          'newReport': 'Novo Relatório',
           'reHoot': 'ReHoot',
           'reHootOf': 'ReHoot de',
           'deleteOnRefeededPost':
@@ -1329,6 +1332,7 @@ class AppTranslations extends Translations {
           'newComment': 'Novo Comentário',
           'newReHoot': 'Novo ReHoot',
           'newMention': 'Nova Menção',
+          'newReport': 'Nova Denúncia',
           'reHoot': 'ReHoot',
           'reHootOf': 'ReHoot de',
           'deleteOnRefeededPost':
