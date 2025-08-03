@@ -113,7 +113,7 @@ class FeedService implements BaseFeedService {
       return PostPage(posts: [], hasMore: false);
     }
     final ownerId = feedDoc.get('userId');
-    final isPrivate = feedDoc.data()?['private'] == true;
+    final isPrivate = feedDoc.data()?['private'] as bool? ?? false;
     if (isPrivate && ownerId != user.uid) {
       final subDoc = await _firestore
           .collection('users')
