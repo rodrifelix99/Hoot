@@ -26,16 +26,42 @@ class _WelcomeViewState extends State<WelcomeView> {
 
   late final AvatarController _avatarController;
   late final WelcomeController _welcomeController;
+  late final FocusNode _displayNameFocus;
+  late final FocusNode _usernameFocus;
 
   @override
   void initState() {
     super.initState();
-    _avatarController = Get.put(AvatarController());
-    _welcomeController = Get.find<WelcomeController>();
-
     // Preserve the initial index passed to the widget so rebuilds do not
     // reset the Swiper to the first page.
     _currentIndex = widget.initialIndex;
+    
+    _avatarController = Get.put(AvatarController());
+    _welcomeController = Get.find<WelcomeController>();
+    _displayNameFocus = FocusNode();
+    _usernameFocus = FocusNode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleFocus(widget.initialIndex);
+    });
+  }
+
+  void _handleFocus(int index) {
+    if (index == 0) {
+      _displayNameFocus.requestFocus();
+    } else if (index == 1) {
+      _usernameFocus.requestFocus();
+    } else {
+      if (mounted) {
+        FocusScope.of(context).unfocus();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _displayNameFocus.dispose();
+    _usernameFocus.dispose();
+    super.dispose();
   }
 
   @override
@@ -179,6 +205,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                 onIndexChanged: (i) => _currentIndex = i,
                 physics: const NeverScrollableScrollPhysics(),
                 loop: false,
+                onIndexChanged: _handleFocus,
                 itemCount: 3,
                 itemBuilder: (context, i) {
                   switch (i) {
@@ -193,6 +220,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                         },
                         input: TextField(
                           controller: _welcomeController.displayNameController,
+                          focusNode: _displayNameFocus,
                           decoration: InputDecoration(
                             labelText: 'displayName'.tr,
                             hintText: 'displayNameExample'.tr,
@@ -211,6 +239,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                         },
                         input: TextField(
                           controller: _welcomeController.usernameController,
+                          focusNode: _usernameFocus,
                           decoration: InputDecoration(
                             labelText: 'username'.tr,
                             hintText: 'usernameExample'.tr,
