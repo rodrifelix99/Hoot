@@ -49,7 +49,7 @@ export const onNotificationCreated = onDocumentCreated(
       3: `${username} subscribed to your feed`,
       4: `${username} reFeeded your post`,
       5: `${username} joined Hoot using your invite code`,
-      6: `${username} submitted a report`,
+      6: user?.username ? `${username} submitted a report` : "An anonymous user submitted a report",
     };
     const body =
       bodyTemplates[data.type as number] ?? "You have a new notification";
