@@ -142,7 +142,6 @@ class _WelcomeViewState extends State<WelcomeView> {
             left: 0,
             right: 0,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.6,
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: const BorderRadius.only(
@@ -221,7 +220,6 @@ class _WelcomeViewState extends State<WelcomeView> {
     String text,
     Future<void> Function() onPressed, {
     Widget? input,
-    bool useSpacer = true,
   }) {
     return SafeArea(
       top: false,
@@ -229,6 +227,7 @@ class _WelcomeViewState extends State<WelcomeView> {
         padding: const EdgeInsets.all(32.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               title,
@@ -243,7 +242,7 @@ class _WelcomeViewState extends State<WelcomeView> {
               const SizedBox(height: 20),
               input,
             ],
-            if (useSpacer) const Spacer(),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: onPressed,
               child: Text('continueButton'.tr),
@@ -268,6 +267,7 @@ class _WelcomeViewState extends State<WelcomeView> {
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 title,
@@ -279,46 +279,42 @@ class _WelcomeViewState extends State<WelcomeView> {
               const SizedBox(height: 20),
               Text('profilePictureDescription'.tr),
               const SizedBox(height: 20),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          HapticService.lightImpact();
-                          _avatarController.pickAvatar();
-                        },
-                        child: Container(
-                          width: 120,
-                          height: 120,
-                          decoration: ShapeDecoration(
-                            shape: CircleBorder(),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: file == null
-                              ? Image.asset(
-                                  'assets/images/avatar.png',
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.file(
-                                  file,
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
+              Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      HapticService.lightImpact();
+                      _avatarController.pickAvatar();
+                    },
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: ShapeDecoration(
+                        shape: CircleBorder(),
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        message,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
+                      clipBehavior: Clip.antiAlias,
+                      child: file == null
+                          ? Image.asset(
+                              'assets/images/avatar.png',
+                              fit: BoxFit.cover,
+                            )
+                          : Image.file(
+                              file,
+                              fit: BoxFit.cover,
                             ),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 16),
+                  Text(
+                    message,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurfaceVariant,
+                        ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
               ),
               Opacity(
                 opacity: uploading ? 0.5 : 1,
