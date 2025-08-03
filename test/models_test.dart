@@ -38,6 +38,7 @@ void main() {
         'bio': 'bio',
         'location': 'loc',
         'website': 'w',
+        'createdAt': DateTime(2020, 1, 1),
         'invitationCode': 'ABCDEF',
         'invitationUses': 1,
         'invitationLastReset': DateTime(2020, 1, 1),
@@ -63,6 +64,7 @@ void main() {
       expect(user.invitationUses, 1);
       expect(user.activityScore, 5);
       expect(user.popularityScore, 10);
+      expect(user.createdAt, isNotNull);
 
       final json = user.toJson();
       expect(json['displayName'], 'John');
@@ -77,6 +79,7 @@ void main() {
       expect(cache['popularityScore'], 10);
       expect(cache['smallAvatarHash'], 'uhash');
       expect(cache['bigAvatarHash'], 'ubhash');
+      expect(cache['createdAt'], isNotNull);
     });
   });
 

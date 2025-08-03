@@ -15,6 +15,7 @@ class U {
   String? bio;
   String? location;
   String? website;
+  DateTime? createdAt;
 
   String? invitationCode;
   String? invitedBy;
@@ -44,6 +45,7 @@ class U {
     this.bio,
     this.location,
     this.website,
+    this.createdAt,
     this.invitationCode,
     this.invitedBy,
     this.invitationUses,
@@ -86,6 +88,18 @@ class U {
       bio: json['bio'],
       location: json['location'],
       website: json['website'],
+      createdAt: json['createdAt'] != null
+          ? json['createdAt'] is Timestamp
+              ? (json['createdAt'] as Timestamp).toDate()
+              : json['createdAt'] is Map<String, dynamic> &&
+                      json['createdAt']['_seconds'] != null
+                  ? DateTime.fromMillisecondsSinceEpoch(
+                      json['createdAt']['_seconds'] * 1000)
+                  : json['createdAt'] is String
+                      ? DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(json['createdAt']))
+                      : json['createdAt']
+          : null,
       invitationCode: json['invitationCode'],
       invitedBy: json['invitedBy'],
       invitationUses: json['invitationUses'],
@@ -119,6 +133,7 @@ class U {
       'bio': bio,
       'location': location,
       'website': website,
+      'createdAt': createdAt,
       'invitationCode': invitationCode,
       'invitationUses': invitationUses,
       'invitationLastReset': invitationLastReset,
@@ -142,6 +157,9 @@ class U {
         'bio': bio,
         'location': location,
         'website': website,
+        'createdAt': createdAt != null
+            ? createdAt!.millisecondsSinceEpoch.toString()
+            : null,
         'invitationCode': invitationCode,
         'invitationUses': invitationUses,
         'invitationLastReset': invitationLastReset,
@@ -155,4 +173,39 @@ class U {
         'popularityScore': popularityScore,
         'feeds': feeds?.map((e) => e.toCache()).toList(),
       };
+
+  factory U.fromCache(Map<String, dynamic> json) {
+    return U(
+      uid: json['uid'],
+      name: json['displayName'],
+      username: json['username'],
+      smallProfilePictureUrl: json['smallAvatar'],
+      largeProfilePictureUrl: json['bigAvatar'],
+      smallAvatarHash: json['smallAvatarHash'],
+      bigAvatarHash: json['bigAvatarHash'],
+      bannerPictureUrl: json['banner'],
+      bannerHash: json['bannerHash'],
+      musicUrl: json['music'],
+      bio: json['bio'],
+      location: json['location'],
+      website: json['website'],
+      createdAt: json['createdAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(int.parse(json['createdAt']))
+          : null,
+      invitationCode: json['invitationCode'],
+      invitedBy: json['invitedBy'],
+      invitationUses: json['invitationUses'],
+      invitationLastReset: json['invitationLastReset'],
+      phoneNumber: json['phoneNumber'],
+      verified: json['verified'],
+      tester: json['tester'],
+      birthday: json['birthday'],
+      subscriptionCount: json['subscriptionCount'],
+      activityScore: json['activityScore'],
+      popularityScore: json['popularityScore'],
+      feeds: json['feeds'] != null
+          ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x)))
+          : [],
+    );
+  }
 }

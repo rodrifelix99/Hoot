@@ -41,7 +41,9 @@ class AuthService {
     final doc =
         await _firestore.collection('users').doc(firebaseUser.uid).get();
     if (doc.exists) {
-      _currentUser.value = U.fromJson(doc.data()!);
+      final data = doc.data()!;
+      _currentUser.value =
+          U.fromJson({...data, 'createdAt': data['createdAt']});
       final subs = await _firestore
           .collection('users')
           .doc(firebaseUser.uid)
@@ -67,7 +69,8 @@ class AuthService {
   Future<U?> fetchUserById(String uid) async {
     final doc = await _firestore.collection('users').doc(uid).get();
     if (!doc.exists) return null;
-    final user = U.fromJson(doc.data()!);
+    final data = doc.data()!;
+    final user = U.fromJson({...data, 'createdAt': data['createdAt']});
     final subs = await _firestore
         .collection('users')
         .doc(uid)
@@ -94,7 +97,8 @@ class AuthService {
         .get();
     if (query.docs.isEmpty) return null;
     final doc = query.docs.first;
-    final user = U.fromJson(doc.data());
+    final data = doc.data();
+    final user = U.fromJson({...data, 'createdAt': data['createdAt']});
     final subs = await _firestore
         .collection('users')
         .doc(doc.id)
