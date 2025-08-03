@@ -133,7 +133,8 @@ void main() {
           userId: 'u1',
           title: 'feed',
           description: 'd',
-          color: Colors.blue);
+          color: Colors.blue,
+          order: 0);
       final user = U(uid: 'u1');
 
       final newId = await service.reFeed(
@@ -158,13 +159,18 @@ void main() {
           .set({'text': 'Hello', 'reFeeds': 0});
       final original = Post(id: 'orig', text: 'Hello');
       final feed = Feed(
-          id: 'f1', userId: 'u1', title: 'feed', description: 'd', color: Colors.blue);
+          id: 'f1',
+          userId: 'u1',
+          title: 'feed',
+          description: 'd',
+          color: Colors.blue,
+          order: 0);
       final user = U(uid: 'u1');
 
-      final firstId =
-          await service.reFeed(original: original, targetFeed: feed, user: user);
-      final secondId =
-          await service.reFeed(original: original, targetFeed: feed, user: user);
+      final firstId = await service.reFeed(
+          original: original, targetFeed: feed, user: user);
+      final secondId = await service.reFeed(
+          original: original, targetFeed: feed, user: user);
 
       expect(firstId, secondId);
       expect((await firestore.collection('posts').get()).docs.length, 2);

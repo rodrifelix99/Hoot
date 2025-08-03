@@ -52,6 +52,7 @@ class AuthService {
       final feedsSnapshot = await _firestore
           .collection('feeds')
           .where('userId', isEqualTo: firebaseUser.uid)
+          .orderBy('order')
           .get();
       _currentUser.value!.feeds = feedsSnapshot.docs
           .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
@@ -76,6 +77,7 @@ class AuthService {
     final feedsSnapshot = await _firestore
         .collection('feeds')
         .where('userId', isEqualTo: uid)
+        .orderBy('order')
         .get();
     user.feeds = feedsSnapshot.docs
         .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
@@ -102,6 +104,7 @@ class AuthService {
     final feedsSnapshot = await _firestore
         .collection('feeds')
         .where('userId', isEqualTo: doc.id)
+        .orderBy('order')
         .get();
     user.feeds = feedsSnapshot.docs
         .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))

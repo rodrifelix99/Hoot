@@ -136,6 +136,19 @@ class ProfileController extends GetxController {
     await loadFeedPosts(feedId);
   }
 
+  /// Reorders feeds locally and persists the new order.
+  Future<void> reorderFeeds(int oldIndex, int newIndex) async {
+    if (!isCurrentUser) return;
+    if (oldIndex < newIndex) newIndex -= 1;
+    final feed = feeds.removeAt(oldIndex);
+    feeds.insert(newIndex, feed);
+    for (var i = 0; i < feeds.length; i++) {
+      feeds[i].order = i;
+    }
+    user.value?.feeds = feeds.toList();
+    await _feedService.updateFeedOrder(feeds);
+  }
+
   /// Toggles subscription state for [feedId].
   Future<void> toggleSubscription(String feedId,
       [BuildContext? context]) async {

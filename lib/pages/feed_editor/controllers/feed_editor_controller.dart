@@ -162,6 +162,10 @@ class FeedEditorController extends GetxController {
       bigAvatarUrl = _authService.currentUser?.largeProfilePictureUrl;
     }
 
+    final order = _profileController?.feeds.length ??
+        _authService.currentUser?.feeds?.length ??
+        0;
+
     await docRef.set({
       'title': title,
       'description': description,
@@ -170,6 +174,7 @@ class FeedEditorController extends GetxController {
       'private': isPrivate.value,
       'nsfw': isNsfw.value,
       'userId': _userId,
+      'order': order,
       if (smallAvatarUrl != null) 'smallAvatar': smallAvatarUrl,
       if (bigAvatarUrl != null) 'bigAvatar': bigAvatarUrl,
       if (smallAvatarHash != null) 'smallAvatarHash': smallAvatarHash,
@@ -198,6 +203,7 @@ class FeedEditorController extends GetxController {
       type: type,
       private: isPrivate.value,
       nsfw: isNsfw.value,
+      order: order,
       subscriberCount: 0,
     );
     final user = _authService.currentUser;

@@ -18,6 +18,7 @@ class Feed {
   bool? nsfw;
   bool? verified;
   FeedType? type;
+  int order;
   final int? subscriberCount;
   List<Post>? posts;
 
@@ -36,6 +37,7 @@ class Feed {
       this.nsfw,
       this.verified,
       this.type,
+      this.order = 0,
       this.subscriberCount,
       this.posts});
 
@@ -58,6 +60,9 @@ class Feed {
       private: json['private'],
       nsfw: json['nsfw'],
       verified: json['verified'],
+      order: (json['order'] is int)
+          ? json['order']
+          : (json['order'] != null ? int.parse(json['order'].toString()) : 0),
       subscriberCount: json['subscriberCount'],
       posts: json['posts'] != null
           ? (json['posts'] as List).map((i) => Post.fromJson(i)).toList()
@@ -77,6 +82,7 @@ class Feed {
         'type': type.toString().split('.').last,
         'private': private,
         'nsfw': nsfw,
+        'order': order,
       };
 
   Map<String, dynamic> toCache() => {
@@ -94,6 +100,7 @@ class Feed {
         'private': private,
         'nsfw': nsfw,
         'verified': verified,
-        'subscriberCount': subscriberCount
+        'subscriberCount': subscriberCount,
+        'order': order
       };
 }

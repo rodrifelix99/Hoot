@@ -100,7 +100,8 @@ void main() {
                 userId: 'u1',
                 title: 't',
                 description: 'd',
-                color: Colors.blue)
+                color: Colors.blue,
+                order: 0)
           ]));
       final storage = FakeStorageService();
       final controller = CreatePostController(
@@ -133,7 +134,8 @@ void main() {
                 userId: 'u1',
                 title: 't',
                 description: 'd',
-                color: Colors.blue)
+                color: Colors.blue,
+                order: 0)
           ]));
       final storage = FakeStorageService();
       final controller = CreatePostController(
@@ -147,7 +149,8 @@ void main() {
           userId: 't',
           title: 't',
           description: 'd',
-          color: Colors.blue);
+          color: Colors.blue,
+          order: 0);
       expect(await controller.publish(), isNull);
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
@@ -172,7 +175,8 @@ void main() {
                 userId: 'u1',
                 title: 't',
                 description: 'd',
-                color: Colors.blue)
+                color: Colors.blue,
+                order: 0)
           ]));
       final storage = FakeStorageService();
       final controller = CreatePostController(
@@ -185,7 +189,8 @@ void main() {
           userId: 't',
           title: 't',
           description: 'd',
-          color: Colors.blue);
+          color: Colors.blue,
+          order: 0);
       controller.textController.text = 'Hi';
       final result = await controller.publish();
       await tester.pump(const Duration(seconds: 4));
@@ -220,7 +225,8 @@ void main() {
                 userId: 'u1',
                 title: 't',
                 description: 'd',
-                color: Colors.blue)
+                color: Colors.blue,
+                order: 0)
           ]));
       final storage = FakeStorageService();
       final controller = CreatePostController(
@@ -234,7 +240,8 @@ void main() {
           userId: 't',
           title: 't',
           description: 'd',
-          color: Colors.blue);
+          color: Colors.blue,
+          order: 0);
       final file = File('${Directory.systemTemp.path}/img.jpg')
         ..writeAsBytesSync([0]);
       addTearDown(() => file.deleteSync());
@@ -261,7 +268,8 @@ void main() {
           userId: 'u1',
           title: 't',
           description: 'd',
-          color: Colors.blue);
+          color: Colors.blue,
+          order: 0);
       final auth = FakeAuthService(U(
           uid: 'u1',
           name: 'Tester',
