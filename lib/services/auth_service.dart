@@ -222,7 +222,6 @@ class AuthService {
   Future<void> deleteAccount() async {
     final user = _auth.currentUser;
     if (user == null) return;
-    await _firestore.collection('users').doc(user.uid).delete();
     await user.delete();
     _currentUser.value = null;
     _fetched = false;
