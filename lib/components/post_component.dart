@@ -153,7 +153,7 @@ class _PostComponentState extends State<PostComponent> {
       if (!confirmed) return;
       try {
         await _postService.deletePost(_post.id);
-        ToastService.showSuccess('deletePost'.tr);
+        ToastService.showSuccess('postDeleted'.tr);
       } catch (e) {
         ToastService.showError('somethingWentWrong'.tr);
       }
