@@ -325,9 +325,11 @@ class _ProfileViewState extends State<ProfileView> {
             childAspectRatio: 1,
             children: children,
             onReorder: (oldIndex, newIndex) {
+              // Prevent any reorder involving the add tile
               if (oldIndex == feeds.length || newIndex == feeds.length) return;
               controller.reorderFeeds(oldIndex, newIndex);
             },
+            canReorder: (index) => index != feeds.length,
           ),
         );
       } else {
