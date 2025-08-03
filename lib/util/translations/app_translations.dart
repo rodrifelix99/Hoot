@@ -993,7 +993,7 @@ class AppTranslations extends Translations {
           'newLike': 'Novo Gosto',
           'newComment': 'Novo Comentário',
           'newReHoot': 'Novo ReHoot',
-          'rehootPosted': 'ReHoot publicado',
+          'rehootPosted': 'ReHoot postado',
           'newMention': 'Nova Menção',
           'newReport': 'Novo Relatório',
           'reHoot': 'ReHoot',
