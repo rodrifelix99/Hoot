@@ -87,7 +87,7 @@ class PostView extends GetView<PostController> {
                                   ],
                                 );
                                 final reason = reasons?.first;
-                                if (reason == null || reason.isEmpty) {
+                                if (reason?.trim().isEmpty ?? true) {
                                   return false;
                                 }
                                 await controller.reportComment(item, reason);
