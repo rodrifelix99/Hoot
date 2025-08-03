@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rss_dart/dart_rss.dart';
 
-import 'language_service.dart';
+import 'package:hoot/services/language_service.dart';
 
 /// Lightweight representation of a news article.
 class NewsItem {
@@ -51,10 +51,9 @@ class NewsService implements BaseNewsService {
       }
       final feed = RssFeed.parse(response.body);
       return feed.items
-              ?.where((i) => i.title != null && i.link != null)
-              .map((i) => NewsItem(title: i.title!, link: i.link!))
-              .toList() ??
-          [];
+              .where((i) => i.title != null && i.link != null)
+              .map((i) => NewsItem(title: i.title!.split(' - ').first, link: i.link!))
+              .toList();
     } catch (_) {
       return [];
     }
