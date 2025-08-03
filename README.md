@@ -43,6 +43,10 @@ flutter run
 flutter test
 ```
 
+## User roles
+
+Every document in the `users` collection contains a `role` field indicating whether the account is a regular `user` or a member of `staff`. New accounts default to the `user` role. To promote someone to staff, set their document's `role` to `staff` in Firestore. To demote them, change the value back to `user`.
+
 ## Contributing
 
 Read the [contributing guidelines](CONTRIBUTING.md) for information on preferred patterns and example usage of services.

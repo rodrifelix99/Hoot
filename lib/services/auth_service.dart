@@ -139,6 +139,7 @@ class AuthService {
     await docRef.set({
       'uid': user.uid,
       'displayName': user.displayName,
+      'role': 'user',
       'invitationCode': const Uuid().v4().substring(0, 8).toUpperCase(),
       'invitationUses': 0,
       'invitationLastReset': FieldValue.serverTimestamp(),
