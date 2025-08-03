@@ -6,13 +6,17 @@ import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/util/enums/feed_types.dart';
+import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/util/constants.dart';
 
 /// Controller in charge of fetching data for the explore page.
 class ExploreController extends GetxController {
   final FirebaseFirestore _firestore;
+  final AuthService _authService;
 
-  ExploreController({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  ExploreController({FirebaseFirestore? firestore, AuthService? authService})
+      : _firestore = firestore ?? FirebaseFirestore.instance,
+        _authService = authService ?? Get.find<AuthService>();
 
   /// Text editing controller used by the search field.
   final TextEditingController searchController = TextEditingController();
@@ -37,6 +41,14 @@ class ExploreController extends GetxController {
 
   /// Popular feed genres.
   final RxList<FeedType> genres = <FeedType>[].obs;
+
+  bool get _shouldHideAdultContent {
+    final user = _authService.currentUser;
+    final created = user?.createdAt;
+    if (created == null) return false;
+    return DateTime.now().difference(created) <
+        Duration(days: kAdultContentAccountAgeDays);
+  }
 
   @override
   void onInit() {
@@ -70,9 +82,15 @@ class ExploreController extends GetxController {
         .orderBy('subscriberCount', descending: true)
         .limit(10)
         .get();
-    topFeeds.assignAll(snapshot.docs
+    final feeds = snapshot.docs
         .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
-        .toList());
+        .toList();
+    topFeeds.assignAll(_shouldHideAdultContent
+        ? feeds
+            .where((f) =>
+                f.type != FeedType.adultContent && (f.nsfw ?? false) != true)
+            .toList()
+        : feeds);
   }
 
   /// Queries the ten newest feeds.
@@ -82,9 +100,15 @@ class ExploreController extends GetxController {
         .orderBy('createdAt', descending: true)
         .limit(10)
         .get();
-    newFeeds.assignAll(snapshot.docs
+    final feeds = snapshot.docs
         .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
-        .toList());
+        .toList();
+    newFeeds.assignAll(_shouldHideAdultContent
+        ? feeds
+            .where((f) =>
+                f.type != FeedType.adultContent && (f.nsfw ?? false) != true)
+            .toList()
+        : feeds);
   }
 
   /// Queries the ten users with highest popularity score.
@@ -107,10 +131,16 @@ class ExploreController extends GetxController {
         .orderBy('createdAt', descending: true)
         .limit(10)
         .get();
-
-    topPosts.assignAll(snapshot.docs
+    final posts = snapshot.docs
         .map((d) => Post.fromJson({'id': d.id, ...d.data()}))
-        .toList());
+        .toList();
+    topPosts.assignAll(_shouldHideAdultContent
+        ? posts
+            .where((p) =>
+                p.feed?.type != FeedType.adultContent &&
+                (p.feed?.nsfw ?? false) != true)
+            .toList()
+        : posts);
   }
 
   /// Retrieves the most common feed genres from the most popular feeds.
@@ -120,12 +150,16 @@ class ExploreController extends GetxController {
         .orderBy('subscriberCount', descending: true)
         .limit(20)
         .get();
-
-    final types = snapshot.docs
-        .map((d) => d.data()['type'] as String?)
-        .whereType<String>()
-        .map(FeedTypeExtension.fromString)
+    final feeds = snapshot.docs
+        .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
         .toList();
+    final filtered = _shouldHideAdultContent
+        ? feeds
+            .where((f) =>
+                f.type != FeedType.adultContent && (f.nsfw ?? false) != true)
+            .toList()
+        : feeds;
+    final types = filtered.map((f) => f.type).whereType<FeedType>().toList();
 
     // Keep unique types while preserving order.
     final seen = <FeedType>{};
