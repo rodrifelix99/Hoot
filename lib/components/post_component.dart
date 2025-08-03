@@ -187,12 +187,13 @@ class _PostComponentState extends State<PostComponent> {
     Get.toNamed(AppRoutes.post, arguments: _post);
   }
 
-  double _calculateFontSize(String text, double base) {
+  double _calculateFontSize(String? text, double base) {
     const double minFontSize = 16;
     const int threshold = 100;
     const int maxLength = 280;
-    if (text.length <= threshold) return base;
-    final ratio = ((text.length - threshold) / (maxLength - threshold))
+    final length = text?.length ?? 0;
+    if (length <= threshold) return base;
+    final ratio = ((length - threshold) / (maxLength - threshold))
         .clamp(0.0, 1.0);
     return base - (base - minFontSize) * ratio;
   }
