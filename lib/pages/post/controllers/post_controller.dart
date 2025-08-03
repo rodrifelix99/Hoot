@@ -205,7 +205,7 @@ class PostController extends GetxController {
       }
       post.value.comments = (post.value.comments ?? 0) - 1;
       post.refresh();
-      ToastService.showSuccess('deleteComment'.tr);
+      ToastService.showSuccess('commentDeleted'.tr);
     } catch (e) {
       ToastService.showError('somethingWentWrong'.tr);
     }

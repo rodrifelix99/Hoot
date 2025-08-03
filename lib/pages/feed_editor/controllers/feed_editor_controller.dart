@@ -211,7 +211,7 @@ class FeedEditorController extends GetxController {
       user.feeds = (user.feeds ?? [])..add(newFeed);
     }
     _profileController?.feeds.add(newFeed);
-    ToastService.showSuccess('createFeed'.tr);
+    ToastService.showSuccess('feedCreated'.tr);
     titleController.clear();
     descriptionController.clear();
     selectedType.value = null;
