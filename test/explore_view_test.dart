@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 
 import 'package:hoot/pages/explore/controllers/explore_controller.dart';
 import 'package:hoot/pages/explore/views/explore_view.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/translations/app_translations.dart';
+import 'package:hoot/services/auth_service.dart';
 
 void main() {
   testWidgets('ExploreView shows search suggestions', (tester) async {
@@ -28,7 +30,9 @@ void main() {
       'createdAt': DateTime.now(),
     });
 
-    Get.put(ExploreController(firestore: firestore));
+    final auth = AuthService(auth: MockFirebaseAuth(), firestore: firestore);
+    Get.put<AuthService>(auth);
+    Get.put(ExploreController(firestore: firestore, authService: auth));
 
     await tester.pumpWidget(
       GetMaterialApp(
@@ -64,7 +68,9 @@ void main() {
       'usernameLowercase': 'tester',
     });
 
-    Get.put(ExploreController(firestore: firestore));
+    final auth = AuthService(auth: MockFirebaseAuth(), firestore: firestore);
+    Get.put<AuthService>(auth);
+    Get.put(ExploreController(firestore: firestore, authService: auth));
 
     await tester.pumpWidget(
       GetMaterialApp(
