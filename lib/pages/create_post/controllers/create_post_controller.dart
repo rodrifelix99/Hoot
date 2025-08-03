@@ -57,8 +57,8 @@ class CreatePostController extends GetxController {
   /// First URL found in the post text.
   final RxnString linkUrl = RxnString();
 
-  /// Feed chosen to post to.
-  final Rx<Feed?> selectedFeed = Rx<Feed?>(null);
+  /// Feeds chosen to post to.
+  final RxList<Feed> selectedFeeds = <Feed>[].obs;
 
   /// Feeds available to the user.
   final RxList<Feed> availableFeeds = <Feed>[].obs;
@@ -143,10 +143,10 @@ class CreatePostController extends GetxController {
   Future<Post?> publish() async {
     if (publishing.value) return null;
 
-    final feed = selectedFeed.value;
+    final feeds = selectedFeeds.toList();
     final text = textController.text.trim();
 
-    if (feed == null) {
+    if (feeds.isEmpty) {
       ToastService.showError('selectFeed'.tr);
       return null;
     }
@@ -162,63 +162,68 @@ class CreatePostController extends GetxController {
     publishing.value = true;
     try {
       final user = _authService.currentUser;
-      final feedData = feed.toJson();
-      feedData['id'] = feed.id;
-      feedData['userId'] = feed.userId;
-
       final userData = user?.toJson();
       if (userData != null) {
         userData['uid'] = user!.uid;
       }
 
-      final postId = _postService.newPostId();
-      List<String>? imageUrls;
-      List<String>? hashes;
-      if (imageFiles.isNotEmpty) {
-        final uploaded =
-            await _storageService.uploadPostImages(postId, imageFiles);
-        imageUrls = uploaded.map((e) => e.url).toList();
-        hashes = uploaded.map((e) => e.blurHash).toList();
+      Post? firstPost;
+      for (final feed in feeds) {
+        final feedData = feed.toJson();
+        feedData['id'] = feed.id;
+        feedData['userId'] = feed.userId;
+
+        final postId = _postService.newPostId();
+        List<String>? imageUrls;
+        List<String>? hashes;
+        if (imageFiles.isNotEmpty) {
+          final uploaded =
+              await _storageService.uploadPostImages(postId, imageFiles);
+          imageUrls = uploaded.map((e) => e.url).toList();
+          hashes = uploaded.map((e) => e.blurHash).toList();
+        }
+
+        await _postService.createPost(
+            {
+              'text': text,
+              'feedId': feed.id,
+              'feed': feedData,
+              if (imageUrls != null) 'images': imageUrls,
+              if (hashes != null) 'hashes': hashes,
+              if (gifUrl.value != null) 'gifs': [gifUrl.value],
+              'userId': _userId,
+              if (userData != null) 'user': userData,
+              'url': linkUrl.value,
+              'createdAt': FieldValue.serverTimestamp(),
+            }..removeWhere((key, value) => value == null),
+            id: postId);
+
+        final post = Post(
+          id: postId,
+          text: text.isEmpty ? null : text,
+          media: imageUrls ?? (gifUrl.value != null ? [gifUrl.value!] : null),
+          url: linkUrl.value,
+          feedId: feed.id,
+          feed: feed,
+          user: user,
+          liked: false,
+          likes: 0,
+          reFeeded: false,
+          reFeeds: 0,
+          comments: 0,
+          createdAt: DateTime.now(),
+        );
+
+        firstPost ??= post;
       }
-
-      await _postService.createPost(
-          {
-            'text': text,
-            'feedId': feed.id,
-            'feed': feedData,
-            if (imageUrls != null) 'images': imageUrls,
-            if (hashes != null) 'hashes': hashes,
-            if (gifUrl.value != null) 'gifs': [gifUrl.value],
-            'userId': _userId,
-            if (userData != null) 'user': userData,
-            'url': linkUrl.value,
-            'createdAt': FieldValue.serverTimestamp(),
-          }..removeWhere((key, value) => value == null),
-          id: postId);
-
-      final post = Post(
-        id: postId,
-        text: text.isEmpty ? null : text,
-        media: imageUrls ?? (gifUrl.value != null ? [gifUrl.value!] : null),
-        url: linkUrl.value,
-        feedId: feed.id,
-        feed: feed,
-        user: user,
-        liked: false,
-        likes: 0,
-        reFeeded: false,
-        reFeeds: 0,
-        comments: 0,
-        createdAt: DateTime.now(),
-      );
 
       textController.clear();
       mentionKey.currentState?.controller?.clear();
       imageFiles.clear();
       gifUrl.value = null;
       linkUrl.value = null;
-      selectedFeed.value = null;
-      return post;
+      selectedFeeds.clear();
+      return firstPost;
     } catch (e, s) {
       await ErrorService.reportError(e, stack: s);
       return null;

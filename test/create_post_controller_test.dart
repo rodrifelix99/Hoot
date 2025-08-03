@@ -142,12 +142,12 @@ void main() {
           userId: 'u1',
           storageService: storage);
       controller.textController.text = 'a' * 281;
-      controller.selectedFeed.value = Feed(
+      controller.selectedFeeds.add(Feed(
           id: 'f1',
           userId: 't',
           title: 't',
           description: 'd',
-          color: Colors.blue);
+          color: Colors.blue));
       expect(await controller.publish(), isNull);
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
@@ -180,12 +180,12 @@ void main() {
           authService: auth,
           userId: 'u1',
           storageService: storage);
-      controller.selectedFeed.value = Feed(
+      controller.selectedFeeds.add(Feed(
           id: 'f1',
           userId: 't',
           title: 't',
           description: 'd',
-          color: Colors.blue);
+          color: Colors.blue));
       controller.textController.text = 'Hi';
       final result = await controller.publish();
       await tester.pump(const Duration(seconds: 4));
@@ -199,6 +199,52 @@ void main() {
       expect(data['user']['username'], 'tester');
       expect(data['user']['smallAvatar'], 'a.png');
       expect(data['feed']['title'], 't');
+    });
+
+    testWidgets('publish creates a post for each selected feed',
+        (tester) async {
+      await tester.pumpWidget(const ToastificationWrapper(
+        child: MaterialApp(home: Scaffold(body: SizedBox())),
+      ));
+      final firestore = FakeFirebaseFirestore();
+      final postService = PostService(
+        firestore: firestore,
+      );
+      final feeds = [
+        Feed(
+            id: 'f1',
+            userId: 'u1',
+            title: 't1',
+            description: 'd1',
+            color: Colors.blue),
+        Feed(
+            id: 'f2',
+            userId: 'u1',
+            title: 't2',
+            description: 'd2',
+            color: Colors.red),
+      ];
+      final auth = FakeAuthService(U(
+          uid: 'u1',
+          name: 'Tester',
+          username: 'tester',
+          smallProfilePictureUrl: 'a.png',
+          feeds: feeds));
+      final storage = FakeStorageService();
+      final controller = CreatePostController(
+          postService: postService,
+          authService: auth,
+          userId: 'u1',
+          storageService: storage);
+      controller.selectedFeeds.assignAll(feeds);
+      controller.textController.text = 'Hi';
+      await controller.publish();
+      await tester.pump(const Duration(seconds: 4));
+      await tester.pumpAndSettle();
+      final posts = await firestore.collection('posts').get();
+      expect(posts.docs.length, 2);
+      final feedIds = posts.docs.map((e) => e.data()['feedId']).toSet();
+      expect(feedIds, {'f1', 'f2'});
     });
 
     testWidgets('images are uploaded and urls stored', (tester) async {
@@ -229,12 +275,12 @@ void main() {
           userId: 'u1',
           storageService: storage);
 
-      controller.selectedFeed.value = Feed(
+      controller.selectedFeeds.add(Feed(
           id: 'f1',
           userId: 't',
           title: 't',
           description: 'd',
-          color: Colors.blue);
+          color: Colors.blue));
       final file = File('${Directory.systemTemp.path}/img.jpg')
         ..writeAsBytesSync([0]);
       addTearDown(() => file.deleteSync());
