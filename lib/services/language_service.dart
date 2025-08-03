@@ -15,8 +15,18 @@ class LanguageService extends GetxService {
     final code = prefs.getString(_prefKeyLocale);
     if (code != null) {
       final parts = code.split('-');
-      locale.value = Locale(parts[0], parts.length > 1 ? parts[1] : null);
-    } else {
+      // Validate language code (must be non-empty and match [a-zA-Z]{2,3})
+      final languageCode = parts.isNotEmpty ? parts[0] : '';
+      final countryCode = parts.length > 1 ? parts[1] : null;
+      final isValidLanguage = RegExp(r'^[a-zA-Z]{2,3}$').hasMatch(languageCode);
+      if (isValidLanguage) {
+        locale.value = Locale.fromSubtags(
+          languageCode: languageCode,
+          countryCode: countryCode,
+        );
+      } else {
+        locale.value = const Locale('en', 'US');
+      }
       locale.value = Get.deviceLocale ?? const Locale('en', 'US');
     }
     Get.updateLocale(locale.value);
