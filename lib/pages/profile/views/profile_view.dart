@@ -329,7 +329,6 @@ class _ProfileViewState extends State<ProfileView> {
               if (oldIndex == feeds.length || newIndex == feeds.length) return;
               controller.reorderFeeds(oldIndex, newIndex);
             },
-            canReorder: (index) => index != feeds.length,
           ),
         );
       } else {

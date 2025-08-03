@@ -17,6 +17,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
   final U _user;
+
   FakeAuthService(this._user);
 
   @override
@@ -26,7 +27,9 @@ class FakeAuthService extends GetxService implements AuthService {
   Stream<U?> get currentUserStream => Stream.value(_user);
 
   @override
-  Rxn<U> get currentUserRx => Rxn<U>()..value = _user;
+  Rxn<U> get currentUserRx =>
+      Rxn<U>()
+        ..value = _user;
 
   @override
   Future<U?> fetchUser() async => _user;
@@ -66,12 +69,15 @@ class FakeStorageService extends GetxService implements BaseStorageService {
   List<List<File>> calls = [];
 
   @override
-  Future<List<UploadedPostImage>> uploadPostImages(
-      String postId, List<File> files) async {
+  Future<List<UploadedPostImage>> uploadPostImages(String postId,
+      List<File> files) async {
     calls.add(files);
     return files
-        .map((f) => UploadedPostImage(
-            url: 'https://example.com/${f.path.split('/').last}',
+        .map((f) =>
+        UploadedPostImage(
+            url: 'https://example.com/${f.path
+                .split('/')
+                .last}',
             blurHash: 'hash'))
         .toList();
   }
@@ -145,12 +151,12 @@ void main() {
           storageService: storage);
       controller.textController.text = 'a' * 281;
       controller.selectedFeeds.add(Feed(
-          id: 'f1',
-          userId: 't',
-          title: 't',
-          description: 'd',
-          color: Colors.blue,
-          order: 0);
+        id: 'f1',
+        userId: 't',
+        title: 't',
+        description: 'd',
+        color: Colors.blue,
+        order: 0,),);
       expect(await controller.publish(), isNull);
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
@@ -190,9 +196,9 @@ void main() {
           title: 't',
           description: 'd',
           color: Colors.blue,
-          order: 0);
-      controller.textController.text = 'Hi';
-      final result = await controller.publish();
+          order: 0,));
+          controller.textController.text = 'Hi';
+          final result = await controller.publish();
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
       expect(result, isA<Post>());
@@ -207,50 +213,50 @@ void main() {
     });
 
     testWidgets('publish creates a post for each selected feed',
-        (tester) async {
-      await tester.pumpWidget(const ToastificationWrapper(
-        child: MaterialApp(home: Scaffold(body: SizedBox())),
-      ));
-      final firestore = FakeFirebaseFirestore();
-      final postService = PostService(
-        firestore: firestore,
-      );
-      final feeds = [
-        Feed(
-            id: 'f1',
-            userId: 'u1',
-            title: 't1',
-            description: 'd1',
-            color: Colors.blue),
-        Feed(
-            id: 'f2',
-            userId: 'u1',
-            title: 't2',
-            description: 'd2',
-            color: Colors.red),
-      ];
-      final auth = FakeAuthService(U(
-          uid: 'u1',
-          name: 'Tester',
-          username: 'tester',
-          smallProfilePictureUrl: 'a.png',
-          feeds: feeds));
-      final storage = FakeStorageService();
-      final controller = CreatePostController(
-          postService: postService,
-          authService: auth,
-          userId: 'u1',
-          storageService: storage);
-      controller.selectedFeeds.assignAll(feeds);
-      controller.textController.text = 'Hi';
-      await controller.publish();
-      await tester.pump(const Duration(seconds: 4));
-      await tester.pumpAndSettle();
-      final posts = await firestore.collection('posts').get();
-      expect(posts.docs.length, 2);
-      final feedIds = posts.docs.map((e) => e.data()['feedId']).toSet();
-      expect(feedIds, {'f1', 'f2'});
-    });
+            (tester) async {
+          await tester.pumpWidget(const ToastificationWrapper(
+            child: MaterialApp(home: Scaffold(body: SizedBox())),
+          ));
+          final firestore = FakeFirebaseFirestore();
+          final postService = PostService(
+            firestore: firestore,
+          );
+          final feeds = [
+            Feed(
+                id: 'f1',
+                userId: 'u1',
+                title: 't1',
+                description: 'd1',
+                color: Colors.blue),
+            Feed(
+                id: 'f2',
+                userId: 'u1',
+                title: 't2',
+                description: 'd2',
+                color: Colors.red),
+          ];
+          final auth = FakeAuthService(U(
+              uid: 'u1',
+              name: 'Tester',
+              username: 'tester',
+              smallProfilePictureUrl: 'a.png',
+              feeds: feeds));
+          final storage = FakeStorageService();
+          final controller = CreatePostController(
+              postService: postService,
+              authService: auth,
+              userId: 'u1',
+              storageService: storage);
+          controller.selectedFeeds.assignAll(feeds);
+          controller.textController.text = 'Hi';
+          await controller.publish();
+          await tester.pump(const Duration(seconds: 4));
+          await tester.pumpAndSettle();
+          final posts = await firestore.collection('posts').get();
+          expect(posts.docs.length, 2);
+          final feedIds = posts.docs.map((e) => e.data()['feedId']).toSet();
+          expect(feedIds, {'f1', 'f2'});
+        });
 
     testWidgets('images are uploaded and urls stored', (tester) async {
       await tester.pumpWidget(const ToastificationWrapper(
@@ -287,8 +293,8 @@ void main() {
           title: 't',
           description: 'd',
           color: Colors.blue,
-          order: 0);
-      final file = File('${Directory.systemTemp.path}/img.jpg')
+          order: 0,));
+          final file = File('${Directory.systemTemp.path}/img.jpg')
         ..writeAsBytesSync([0]);
       addTearDown(() => file.deleteSync());
       controller.imageFiles.add(file);
