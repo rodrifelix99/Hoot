@@ -204,33 +204,36 @@ class _ProfileViewState extends State<ProfileView> {
                       color: Theme.of(context).colorScheme.surfaceContainer,
                     ),
                     clipBehavior: Clip.hardEdge,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        HashCachedImage(
-                          imageUrl:
-                              controller.user.value?.smallProfilePictureUrl ??
-                                  '',
-                          hash: controller.user.value?.smallAvatarHash,
-                          width: double.infinity,
-                          height: double.infinity,
-                          fit: BoxFit.cover,
-                        ).blurred(
-                          blur: 16,
-                          blurColor: Theme.of(context).colorScheme.surface,
-                          colorOpacity: 0.25,
-                        ),
-                        Center(
-                          child: Icon(
-                            SolarIconsBold.addSquare,
-                            size: 64,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withAlpha(125),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          HashCachedImage(
+                            imageUrl:
+                                controller.user.value?.smallProfilePictureUrl ??
+                                    '',
+                            hash: controller.user.value?.smallAvatarHash,
+                            width: double.infinity,
+                            height: double.infinity,
+                            fit: BoxFit.cover,
+                          ).blurred(
+                            blur: 16,
+                            blurColor: Theme.of(context).colorScheme.surface,
+                            colorOpacity: 0.25,
                           ),
-                        ),
-                      ],
+                          Center(
+                            child: Icon(
+                              SolarIconsBold.addSquare,
+                              size: 64,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withAlpha(125),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
