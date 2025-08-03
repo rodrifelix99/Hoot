@@ -60,4 +60,3 @@ ios/Runner/GoogleService-Info.plist
 android/app/google-services.json
 /apply_patch.sh
 firebase.json
-functions/src
