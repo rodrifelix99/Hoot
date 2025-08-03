@@ -8,3 +8,4 @@ export * from "./triggers/onPostDeleted";
 export * from "./triggers/onUserUpdated";
 export * from "./triggers/onFeedUpdated";
 export * from "./triggers/onInvitationUsed";
+export * from "./triggers/onReportCreated";
