@@ -36,8 +36,9 @@ class FeedView extends GetView<FeedController> {
             text: 'somethingWentWrong'.tr,
           ),
           noItemsFoundIndicatorBuilder: (_) => NothingToShowComponent(
-            icon: const Icon(Icons.feed_outlined),
-            text: 'subscribeToSeeHoots'.tr,
+            imageAsset: 'assets/images/feed.webp',
+            title: 'This is the main feed',
+            text: 'When you subscribe to feeds, all hoots will be merged here.',
           ),
           noMoreItemsIndicatorBuilder: (_) => const Padding(
             padding: EdgeInsets.symmetric(vertical: 32, horizontal: 16),
