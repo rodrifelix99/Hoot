@@ -61,9 +61,13 @@ class FakeAuthService extends GetxService implements AuthService {
 
 void main() {
   group('FeedService.fetchFeedPosts', () {
-    test('allows owner or subscriber to access posts', () async {
+    test('allows owner or subscriber to access posts from private feed',
+        () async {
       final firestore = FakeFirebaseFirestore();
-      await firestore.collection('feeds').doc('f1').set({'userId': 'owner'});
+      await firestore
+          .collection('feeds')
+          .doc('f1')
+          .set({'userId': 'owner', 'private': true});
       await firestore.collection('users').doc('owner').set({'uid': 'owner'});
       await firestore.collection('users').doc('sub').set({'uid': 'sub'});
       await firestore
@@ -88,9 +92,29 @@ void main() {
       expect(subPage.posts, isNotEmpty);
     });
 
-    test('returns empty page when user not subscribed', () async {
+    test('allows non-subscribed user to access posts from public feed',
+        () async {
       final firestore = FakeFirebaseFirestore();
       await firestore.collection('feeds').doc('f1').set({'userId': 'owner'});
+      await firestore.collection('users').doc('other').set({'uid': 'other'});
+      await firestore
+          .collection('posts')
+          .doc('p1')
+          .set({'feedId': 'f1', 'createdAt': Timestamp.now()});
+
+      final service = FeedService(
+          firestore: firestore, authService: FakeAuthService(U(uid: 'other')));
+      final page = await service.fetchFeedPosts('f1');
+      expect(page.posts, isNotEmpty);
+    });
+
+    test('returns empty page when user not subscribed to private feed',
+        () async {
+      final firestore = FakeFirebaseFirestore();
+      await firestore
+          .collection('feeds')
+          .doc('f1')
+          .set({'userId': 'owner', 'private': true});
       await firestore.collection('users').doc('other').set({'uid': 'other'});
       await firestore
           .collection('posts')
