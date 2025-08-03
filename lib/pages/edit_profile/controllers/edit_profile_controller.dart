@@ -151,7 +151,7 @@ class EditProfileController extends GetxController {
         if (bigAvatarHash != null) u.bigAvatarHash = bigAvatarHash;
       }
 
-      ToastService.showSuccess('editProfile'.tr);
+      ToastService.showSuccess('profileUpdated'.tr);
       return true;
     } catch (e, s) {
       await ErrorService.reportError(e, stack: s);
