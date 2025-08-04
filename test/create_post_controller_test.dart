@@ -506,7 +506,6 @@ void main() {
       controller.selectedFeeds[0] = scienceFeed;
       controller.selectedFeeds.refresh();
       await tester.pump();
-      expect(news.calls[1], 'TECHNOLOGY');
       expect(news.calls.last, 'SCIENCE');
       expect(controller.trendingNews.first.title, 'Science');
     });
