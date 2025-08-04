@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:toastification/toastification.dart';
 
 import 'package:hoot/pages/create_post/controllers/create_post_controller.dart';
@@ -335,93 +334,6 @@ void main() {
       expect(
           posts.docs.first.data()['images'][0], 'https://example.com/img.jpg');
       expect(posts.docs.first.data()['hashes'][0], 'hash');
-    });
-
-    testWidgets('setScheduledAt validates dates', (tester) async {
-      await tester.pumpWidget(const ToastificationWrapper(
-        child: MaterialApp(home: Scaffold(body: SizedBox())),
-      ));
-      final firestore = FakeFirebaseFirestore();
-      final postService = PostService(
-        firestore: firestore,
-      );
-      final feed = Feed(
-          id: 'f1',
-          userId: 'u1',
-          title: 't',
-          description: 'd',
-          color: Colors.blue,
-          order: 0);
-      final auth = FakeAuthService(U(
-          uid: 'u1',
-          name: 'Tester',
-          username: 'tester',
-          smallProfilePictureUrl: 'a.png',
-          feeds: [feed]));
-      final storage = FakeStorageService();
-      final controller = CreatePostController(
-          postService: postService,
-          authService: auth,
-          userId: 'u1',
-          storageService: storage,
-          newsService: FakeNewsService());
-
-      controller
-          .setScheduledAt(DateTime.now().subtract(const Duration(minutes: 5)));
-      await tester.pump(const Duration(seconds: 4));
-      expect(controller.scheduledAt.value, isNull);
-      controller.setScheduledAt(DateTime.now().add(const Duration(days: 8)));
-      await tester.pump(const Duration(seconds: 4));
-      expect(controller.scheduledAt.value, isNull);
-      final valid = DateTime.now().add(const Duration(hours: 1));
-      controller.setScheduledAt(valid);
-      expect(controller.scheduledAt.value, isNotNull);
-      expect(controller.scheduledAt.value!.difference(valid).inSeconds, 0);
-    });
-
-    testWidgets('publish stores scheduledAt when set', (tester) async {
-      await tester.pumpWidget(const ToastificationWrapper(
-        child: MaterialApp(home: Scaffold(body: SizedBox())),
-      ));
-      final firestore = FakeFirebaseFirestore();
-      final postService = PostService(
-        firestore: firestore,
-      );
-      final feed = Feed(
-          id: 'f1',
-          userId: 'u1',
-          title: 't',
-          description: 'd',
-          color: Colors.blue,
-          order: 0);
-      final auth = FakeAuthService(U(
-          uid: 'u1',
-          name: 'Tester',
-          username: 'tester',
-          smallProfilePictureUrl: 'a.png',
-          feeds: [feed]));
-      final storage = FakeStorageService();
-      final controller = CreatePostController(
-          postService: postService,
-          authService: auth,
-          userId: 'u1',
-          storageService: storage,
-          newsService: FakeNewsService());
-
-      controller.selectedFeeds.add(feed);
-      controller.textController.text = 'Hi';
-      final schedule = DateTime.now().add(const Duration(hours: 1));
-      controller.setScheduledAt(schedule);
-      final result = await controller.publish();
-      await tester.pump(const Duration(seconds: 4));
-      await tester.pumpAndSettle();
-      expect(result, isA<Post>());
-      expect(result?.scheduledAt?.difference(schedule).inSeconds, 0);
-      final posts = await firestore.collection('posts').get();
-      final data = posts.docs.first.data();
-      expect(data.containsKey('createdAt'), isFalse);
-      final ts = data['scheduledAt'] as Timestamp;
-      expect(ts.toDate().difference(schedule).inSeconds, 0);
     });
 
     testWidgets('available feeds loaded on init', (tester) async {

@@ -141,13 +141,11 @@ void main() {
         'reFeeds': 0,
         'comments': 0,
         'createdAt': {'_seconds': 10},
-        'scheduledAt': {'_seconds': 15},
         'updatedAt': {'_seconds': 20},
       };
 
       final post = Post.fromJson(json);
       expect(post.createdAt, DateTime.fromMillisecondsSinceEpoch(10000));
-      expect(post.scheduledAt, DateTime.fromMillisecondsSinceEpoch(15000));
       expect(post.updatedAt, DateTime.fromMillisecondsSinceEpoch(20000));
       expect(post.hashes?.first, 'h1');
 

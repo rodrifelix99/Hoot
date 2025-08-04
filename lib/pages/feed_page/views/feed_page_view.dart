@@ -1,3 +1,4 @@
+import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -57,7 +58,6 @@ class FeedPageView extends GetView<FeedPageController> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(8),
       ),
       child: SafeArea(
         bottom: false,
@@ -65,6 +65,7 @@ class FeedPageView extends GetView<FeedPageController> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ProfileAvatarComponent(
+              preview: true,
               image: feed.bigAvatar ?? '',
               hash: feed.bigAvatarHash ?? feed.smallAvatarHash,
               size: 120,
@@ -113,7 +114,7 @@ class FeedPageView extends GetView<FeedPageController> {
               _buildHeader(context),
               const SizedBox(height: 16),
               NothingToShowComponent(
-                icon: const Icon(Icons.lock_outline),
+                imageAsset: 'assets/images/lock.webp',
                 text: 'thisFeedIsPrivate'.tr,
                 buttonText: controller.requested.value
                     ? 'cancelRequest'.tr
@@ -157,7 +158,7 @@ class FeedPageView extends GetView<FeedPageController> {
                   text: 'somethingWentWrong'.tr,
                 ),
                 noItemsFoundIndicatorBuilder: (_) => NothingToShowComponent(
-                  icon: const Icon(Icons.feed_outlined),
+                  imageAsset: 'assets/images/empty.webp',
                   text: 'noHoots'.tr,
                 ),
               ),
@@ -174,30 +175,48 @@ class FeedPageView extends GetView<FeedPageController> {
           body,
           if (controller.showNsfwWarning.value)
             Positioned.fill(
-              child: Container(
-                color: Colors.black54,
-                child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SafeArea(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'nsfwWarning'.tr,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(color: Colors.white),
-                        ),
+                      const Spacer(),
+                      Image.asset(
+                        'assets/images/nsfw.webp',
+                        width: 200,
+                        height: 200,
                       ),
-                      ElevatedButton(
-                        onPressed: controller.acknowledgeNsfw,
-                        child: Text('continueButton'.tr),
+                      const SizedBox(height: 32),
+                      Text(
+                        'nsfwWarning'.tr,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(color: Colors.white),
+                      ),
+                      const Spacer(),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: controller.acknowledgeNsfw,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            foregroundColor: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                          ),
+                          child: Text('continueButton'.tr),
+                        ),
                       ),
                     ],
                   ),
                 ),
+              ).frosted(
+                blur: 16,
+                frostColor: Colors.black,
               ),
             ),
         ],
@@ -209,12 +228,14 @@ class FeedPageView extends GetView<FeedPageController> {
   Widget build(BuildContext context) {
     return Obx(() {
       final feed = controller.feed.value;
+      final showNsfwWarning = controller.showNsfwWarning.value;
       return Scaffold(
         appBar: AppBarComponent(
           title: feed?.title ?? '',
         ),
         extendBodyBehindAppBar: true,
-        floatingActionButton: _buildFab(context, feed),
+        floatingActionButton:
+            !showNsfwWarning ? _buildFab(context, feed) : null,
         body: _buildBody(context),
       );
     });
