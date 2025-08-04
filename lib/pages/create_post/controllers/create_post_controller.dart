@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -26,7 +25,7 @@ class CreatePostController extends GetxController {
   final BaseStorageService _storageService;
   BaseUserService? _userService;
   final BaseNewsService _newsService;
-  final String _userId;
+  late final String _userId;
 
   CreatePostController({
     BasePostService? postService,
@@ -39,8 +38,9 @@ class CreatePostController extends GetxController {
         _authService = authService ?? Get.find<AuthService>(),
         _storageService = storageService ?? StorageService(),
         _userService = userService,
-        _newsService = newsService ?? Get.find<BaseNewsService>(),
-        _userId = userId ?? FirebaseAuth.instance.currentUser?.uid ?? '';
+        _newsService = newsService ?? Get.find<BaseNewsService>() {
+    _userId = userId ?? _authService.currentUser?.uid ?? '';
+  }
 
   /// Text entered by the user.
   final textController = TextEditingController();
