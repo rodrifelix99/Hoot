@@ -9,7 +9,7 @@ Hoot is a community-first social network built with Flutter. It brings back the 
 - Multi-step onboarding to choose your name and avatar
 - Create posts ("hoots") with text, images and GIFs
 - Build and subscribe to thematic feeds
-- Follow people and get notified about new followers, likes and mentions
+- Subscribe to people and get notified about new subscribers, likes and mentions
 - Explore popular feeds or search by username or genre
 - Customize your profile and toggle dark mode
 

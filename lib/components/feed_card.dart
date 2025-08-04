@@ -109,7 +109,7 @@ class FeedCard extends StatelessWidget {
                     Text(
                       (feed.description?.isNotEmpty == true
                           ? feed.description!
-                          : '${feed.subscriberCount ?? 0} ${'followers'.tr}'),
+                          : '${feed.subscriberCount ?? 0} ${'subscribers'.tr}'),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(

@@ -58,7 +58,7 @@ class NotificationsView extends GetView<NotificationsController> {
                           text = 'newMention'.tr;
                           break;
                         case 3:
-                          text = 'newSubscriber'.trParams({
+                          text = 'newFeedSubscriber'.trParams({
                             'username': user.username ?? '',
                             'feedName': feed?.title ?? '',
                           });
