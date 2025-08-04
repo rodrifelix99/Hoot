@@ -304,7 +304,7 @@ class _ProfileViewState extends State<ProfileView> {
                     ],
                     const SizedBox(height: 8),
                     Text(
-                      '${feed.subscriberCount ?? 0} ${'followers'.tr}',
+                      '${feed.subscriberCount ?? 0} ${'subscribers'.tr}',
                       style: Get.textTheme.bodySmall?.copyWith(
                         color: textColor,
                       ),

@@ -85,7 +85,7 @@ class FeedPageView extends GetView<FeedPageController> {
                 arguments: feed.id,
               ),
               icon: const Icon(Icons.group_outlined),
-              label: Text('${feed.subscriberCount ?? 0} ${'followers'.tr}'),
+              label: Text('${feed.subscriberCount ?? 0} ${'subscribers'.tr}'),
             ),
           ],
         ),

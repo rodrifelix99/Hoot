@@ -56,7 +56,7 @@ class SearchByGenreView extends GetView<SearchByGenreController> {
                 builderDelegate: PagedChildBuilderDelegate<Feed>(
                   itemBuilder: (context, feed, index) {
                     String content =
-                        '${feed.subscriberCount ?? 0} ${'followers'.tr}';
+                        '${feed.subscriberCount ?? 0} ${'subscribers'.tr}';
                     if (feed.description != null &&
                         feed.description!.isNotEmpty) {
                       content = '${feed.description}\n$content';
