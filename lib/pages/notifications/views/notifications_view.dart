@@ -93,17 +93,18 @@ class NotificationsView extends GetView<NotificationsController> {
                                     arguments: {'id': n.postId});
                               }
                               break;
+                            case 3:
+                            case 5:
+                              Get.toNamed(
+                                AppRoutes.profile,
+                                arguments: ProfileArgs(uid: user.uid),
+                              );
+                              break;
                             case 4:
                               if (n.postId != null) {
                                 Get.toNamed(AppRoutes.post,
                                     arguments: {'id': n.postId});
                               }
-                              break;
-                            case 3:
-                              Get.toNamed(
-                                AppRoutes.profile,
-                                arguments: ProfileArgs(uid: user.uid),
-                              );
                               break;
                             case 6:
                               Get.toNamed(AppRoutes.staffReports);
