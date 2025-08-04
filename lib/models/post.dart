@@ -21,6 +21,7 @@ class Post {
   Post? reFeededFrom;
   int? comments;
   DateTime? createdAt;
+  DateTime? scheduledAt;
   DateTime? updatedAt;
 
   String get smallAvatar =>
@@ -52,6 +53,7 @@ class Post {
     this.reFeeders = const [],
     this.comments,
     this.createdAt,
+    this.scheduledAt,
     this.updatedAt,
   });
 
@@ -85,6 +87,12 @@ class Post {
               : DateTime.fromMillisecondsSinceEpoch(
                   json['createdAt']['_seconds'] * 1000)
           : null,
+      scheduledAt: json['scheduledAt'] != null
+          ? json['scheduledAt'] is Timestamp
+              ? (json['scheduledAt'] as Timestamp).toDate()
+              : DateTime.fromMillisecondsSinceEpoch(
+                  json['scheduledAt']['_seconds'] * 1000)
+          : null,
       updatedAt: json['updatedAt'] != null
           ? json['updatedAt'] is Timestamp
               ? (json['updatedAt'] as Timestamp).toDate()
@@ -112,6 +120,7 @@ class Post {
       reFeededFrom: null,
       comments: 0,
       createdAt: DateTime.now(),
+      scheduledAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
   }
@@ -123,6 +132,7 @@ class Post {
       'hashes': hashes,
       'feedId': feedId,
       'url': url,
+      'scheduledAt': scheduledAt,
     };
   }
 
@@ -144,6 +154,7 @@ class Post {
       'reFeededFrom': reFeededFrom?.toCache(),
       'comments': comments,
       'createdAt': createdAt?.millisecondsSinceEpoch.toString(),
+      'scheduledAt': scheduledAt?.millisecondsSinceEpoch.toString(),
       'updatedAt': updatedAt?.millisecondsSinceEpoch.toString(),
     };
   }
@@ -170,6 +181,9 @@ class Post {
       comments: json['comments'],
       createdAt: json['createdAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(int.parse(json['createdAt']))
+          : null,
+      scheduledAt: json['scheduledAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(int.parse(json['scheduledAt']))
           : null,
       updatedAt: json['updatedAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(int.parse(json['updatedAt']))
