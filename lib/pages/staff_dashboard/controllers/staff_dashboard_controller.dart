@@ -10,6 +10,7 @@ class StaffDashboardController extends GetxController {
                 ? Get.find<BaseStatsService>()
                 : StatsService());
 
+  /// Aggregated statistics including feedback counts.
   final Rx<Stats?> stats = Rx<Stats?>(null);
   final RxBool loading = false.obs;
 
