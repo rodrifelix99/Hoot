@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/toast_service.dart';
@@ -34,7 +33,7 @@ class WelcomeController extends GetxController {
       ToastService.showError('displayNameTooShort'.tr);
       return false;
     }
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = _auth.currentUser?.uid;
     if (uid == null) return false;
 
     final user = _auth.currentUser;
@@ -70,7 +69,7 @@ class WelcomeController extends GetxController {
       return false;
     }
 
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = _auth.currentUser?.uid;
     if (uid == null) return false;
     final user = _auth.currentUser;
     if (user != null) {
