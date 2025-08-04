@@ -19,8 +19,26 @@ void main() {
     language.locale.value = const Locale('en', 'US');
     final service = NewsService(client: client, languageService: language);
     await service.fetchTrendingNews();
-    expect(requested.toString(),
-        'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en');
+    expect(
+        requested,
+        Uri.https('news.google.com', '/rss',
+            {'hl': 'en-US', 'gl': 'US', 'ceid': 'US:en'}));
+  });
+
+  test('uses topic path when topic is provided', () async {
+    Uri? requested;
+    final client = MockClient((request) async {
+      requested = request.url;
+      return http.Response('<rss><channel></channel></rss>', 200);
+    });
+    final language = LanguageService();
+    language.locale.value = const Locale('en', 'US');
+    final service = NewsService(client: client, languageService: language);
+    await service.fetchTrendingNews(topic: 'TECHNOLOGY');
+    expect(
+        requested,
+        Uri.https('news.google.com', '/rss/headlines/section/topic/TECHNOLOGY',
+            {'hl': 'en-US', 'gl': 'US', 'ceid': 'US:en'}));
   });
 
   test('parses feed items', () async {

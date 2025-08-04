@@ -40,10 +40,8 @@ class NewsService implements BaseNewsService {
       if (topic == null) {
         uri = Uri.https('news.google.com', '/rss', queryParameters);
       } else {
-        uri = Uri.https('news.google.com', '/rss/search', {
-          ...queryParameters,
-          'q': topic,
-        });
+        uri = Uri.https('news.google.com',
+            '/rss/headlines/section/topic/$topic', queryParameters);
       }
       final response = await _client.get(uri);
       if (response.statusCode != 200) {
@@ -51,9 +49,10 @@ class NewsService implements BaseNewsService {
       }
       final feed = RssFeed.parse(response.body);
       return feed.items
-              .where((i) => i.title != null && i.link != null)
-              .map((i) => NewsItem(title: i.title!.split(' - ').first, link: i.link!))
-              .toList();
+          .where((i) => i.title != null && i.link != null)
+          .map((i) =>
+              NewsItem(title: i.title!.split(' - ').first, link: i.link!))
+          .toList();
     } catch (_) {
       return [];
     }
