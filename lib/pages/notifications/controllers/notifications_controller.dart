@@ -19,7 +19,8 @@ class NotificationsController extends GetxController {
     BaseNotificationService? notificationService,
     FeedRequestService? feedRequestService,
   })  : _authService = authService ?? Get.find<AuthService>(),
-        _notificationService = notificationService ?? NotificationService(),
+        _notificationService =
+            notificationService ?? Get.find<BaseNotificationService>(),
         _feedRequestService =
             feedRequestService ?? Get.find<FeedRequestService>();
 
