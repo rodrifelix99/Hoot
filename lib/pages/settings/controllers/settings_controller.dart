@@ -85,7 +85,7 @@ class SettingsController extends GetxController {
       try {
         await FeedbackService.submitFeedback(
           screenshot: feedback.screenshot,
-          message: feedback.feedback,
+          message: feedback.text,
         );
       } catch (e, s) {
         await ErrorService.reportError(e, stack: s);
