@@ -6,12 +6,14 @@ class Stats {
   final int activeUsers;
   final int uninvitedUsers;
   final int reportsCount;
+  final int feedbackCount;
 
   Stats({
     required this.totalUsers,
     required this.activeUsers,
     required this.uninvitedUsers,
     required this.reportsCount,
+    required this.feedbackCount,
   });
 }
 
@@ -40,13 +42,20 @@ class StatsService implements BaseStatsService {
           .where('resolved', isEqualTo: false)
           .get(),
       // Uninvited users: invitationCode is null
-      _firestore.collection('users').where('invitationCode', isNull: true).get(),
+      _firestore
+          .collection('users')
+          .where('invitationCode', isNull: true)
+          .get(),
       // Uninvited users: invitationCode is empty string
-      _firestore.collection('users').where('invitationCode', isEqualTo: '').get(),
+      _firestore
+          .collection('users')
+          .where('invitationCode', isEqualTo: '')
+          .get(),
       // Uninvited users: invitedBy is null
       _firestore.collection('users').where('invitedBy', isNull: true).get(),
       // Uninvited users: invitedBy is empty string
       _firestore.collection('users').where('invitedBy', isEqualTo: '').get(),
+      _firestore.collection('feedback').get(),
     ]);
 
     final usersSnapshot = results[0];
@@ -65,6 +74,7 @@ class StatsService implements BaseStatsService {
       activeUsers: results[1].size,
       reportsCount: results[2].size,
       uninvitedUsers: uninvitedUsers,
+      feedbackCount: results[7].size,
     );
   }
 }

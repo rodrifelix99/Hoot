@@ -42,6 +42,11 @@ class StaffDashboardView extends GetView<StaffDashboardController> {
               title: Text('reports'.tr),
               trailing: Text('${stats.reportsCount}'),
             ),
+            ListTile(
+              leading: const Icon(Icons.feedback),
+              title: Text('feedbacks'.tr),
+              trailing: Text('${stats.feedbackCount}'),
+            ),
           ],
         );
       }),
