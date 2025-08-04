@@ -390,6 +390,9 @@ class AppTranslations extends Translations {
           'warnUser': 'Warn user',
           'findFriends': 'Find Friends',
           'findFriendsFromContacts': 'Find friends from your contacts list',
+          'inviteFriends': 'Invite friends',
+          'yourInviteCode': 'Your invite code',
+          'invitesLeftThisMonth': '@count invites left this month',
           'contactsPermission':
               'We need your permission to access your contacts',
           'enableNotifications': 'Enable Notifications',
@@ -797,6 +800,9 @@ class AppTranslations extends Translations {
           'warnUser': 'Advertir al usuario',
           'findFriends': 'Buscar amigos',
           'findFriendsFromContacts': 'Buscar amigos en tu lista de contactos',
+          'inviteFriends': 'Invitar amigos',
+          'yourInviteCode': 'Tu código de invitación',
+          'invitesLeftThisMonth': '@count invitaciones restantes este mes',
           'contactsPermission':
               'Necesitamos tu permiso para acceder a tus contactos',
           'enableNotifications': 'Activar Notificaciones',
@@ -1206,6 +1212,9 @@ class AppTranslations extends Translations {
           'findFriends': 'Encontrar Amigos',
           'findFriendsFromContacts':
               'Encontrar amigos a partir da tua lista de contactos',
+          'inviteFriends': 'Convidar amigos',
+          'yourInviteCode': 'O teu código de convite',
+          'invitesLeftThisMonth': '@count convites restantes este mês',
           'contactsPermission':
               'Precisamos da tua permissão para aceder aos teus contactos',
           'enableNotifications': 'Ativar Notificações',
@@ -1611,6 +1620,9 @@ class AppTranslations extends Translations {
           'findFriends': 'Encontrar Amigos',
           'findFriendsFromContacts':
               'Encontrar amigos na sua lista de contatos',
+          'inviteFriends': 'Convidar amigos',
+          'yourInviteCode': 'Seu código de convite',
+          'invitesLeftThisMonth': '@count convites restantes este mês',
           'contactsPermission':
               'Precisamos da sua permissão para acessar seus contatos',
           'enableNotifications': 'Ativar Notificações',

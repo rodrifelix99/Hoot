@@ -49,4 +49,27 @@ class InvitationService {
     }
     return true;
   }
+
+  Future<int> getRemainingInvites(String userId) async {
+    final doc = await _firestore.collection('users').doc(userId).get();
+    if (!doc.exists) return 5;
+    int uses = (doc.data()?['invitationUses'] ?? 0) as int;
+    final Timestamp? ts = doc.data()?['invitationLastReset'];
+    final now = DateTime.now();
+    if (ts != null) {
+      final last = ts.toDate();
+      if (last.year != now.year || last.month != now.month) {
+        uses = 0;
+        await doc.reference.update({
+          'invitationUses': 0,
+          'invitationLastReset': FieldValue.serverTimestamp(),
+        });
+      }
+    } else {
+      await doc.reference.update({
+        'invitationLastReset': FieldValue.serverTimestamp(),
+      });
+    }
+    return uses >= 5 ? 0 : 5 - uses;
+  }
 }
