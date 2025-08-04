@@ -172,6 +172,26 @@ class CreatePostController extends GetxController {
     linkUrl.value = _firstUrl(text);
   }
 
+  /// Validates [date] as a scheduled publish time.
+  ///
+  /// Returns `true` if the date is within the next 7 days and in the future.
+  /// Displays error toasts otherwise. When [detailed] is `false`, a generic
+  /// error is shown instead of specific messages.
+  bool _validateScheduledTime(DateTime date, {bool detailed = true}) {
+    final now = DateTime.now();
+    if (date.isBefore(now)) {
+      ToastService.showError(
+          detailed ? 'scheduledTimePast'.tr : 'scheduledTimeInvalid'.tr);
+      return false;
+    }
+    if (date.isAfter(now.add(const Duration(days: 7)))) {
+      ToastService.showError(
+          detailed ? 'scheduledTimeTooFar'.tr : 'scheduledTimeInvalid'.tr);
+      return false;
+    }
+    return true;
+  }
+
   /// Validates and stores a scheduled publish [date].
   ///
   /// The [date] must be in the future and within the next 7 days.
@@ -181,16 +201,9 @@ class CreatePostController extends GetxController {
       scheduledAt.value = null;
       return;
     }
-    final now = DateTime.now();
-    if (date.isBefore(now)) {
-      ToastService.showError('scheduledTimePast'.tr);
-      return;
+    if (_validateScheduledTime(date)) {
+      scheduledAt.value = date;
     }
-    if (date.isAfter(now.add(const Duration(days: 7)))) {
-      ToastService.showError('scheduledTimeTooFar'.tr);
-      return;
-    }
-    scheduledAt.value = date;
   }
 
   /// Opens date and time pickers to select a scheduled publish time.
@@ -225,13 +238,9 @@ class CreatePostController extends GetxController {
     final text = textController.text.trim();
     final scheduled = scheduledAt.value;
 
-    if (scheduled != null) {
-      final now = DateTime.now();
-      if (scheduled.isBefore(now) ||
-          scheduled.isAfter(now.add(const Duration(days: 7)))) {
-        ToastService.showError('scheduledTimeInvalid'.tr);
-        return null;
-      }
+    if (scheduled != null &&
+        !_validateScheduledTime(scheduled, detailed: false)) {
+      return null;
     }
 
     if (feeds.isEmpty) {
