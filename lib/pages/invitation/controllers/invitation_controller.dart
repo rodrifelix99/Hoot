@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/invitation_service.dart';
@@ -35,9 +34,11 @@ class InvitationController extends GetxController {
     if (code.isEmpty) return;
     verifying.value = true;
     try {
-      final uid = _authService.currentUser?.uid ??
-          FirebaseAuth.instance.currentUser?.uid;
-      if (uid == null) return;
+      final uid = _authService.currentUser?.uid;
+      if (uid == null) {
+        ToastService.showError('somethingWentWrong'.tr);
+        return;
+      }
       final success = await _invitationService.useInvitationCode(uid, code);
       if (success) {
         await _authService.refreshUser();
