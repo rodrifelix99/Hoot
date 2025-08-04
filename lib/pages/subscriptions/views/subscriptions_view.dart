@@ -39,7 +39,8 @@ class SubscriptionsView extends GetView<SubscriptionsController> {
               avatarUrl: feed.bigAvatar ?? '',
               avatarHash: feed.bigAvatarHash ?? feed.smallAvatarHash,
               title: Text(feed.title),
-              subtitle: Text('${feed.subscriberCount ?? 0} ${'followers'.tr}'),
+              subtitle:
+                  Text('${feed.subscriberCount ?? 0} ${'subscribers'.tr}'),
               onTap: () {
                 HapticService.lightImpact();
                 Get.toNamed(

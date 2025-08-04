@@ -106,14 +106,13 @@ class AppTranslations extends Translations {
           'errorEditingProfile': 'There was an error editing your profile',
           'searchPlaceholder': 'Search users and feeds',
           'searchCity': 'Search for a city',
-          'followers': 'Followers',
           'following': 'Following',
           'noUsersToShow': 'No users to show',
           'noNotifications': 'No notifications yet',
           'noNotificationsText':
               'You will see notifications here when you have new subscribers, likes, comments, and more.',
-          'newFollower': '@username started following you',
-          'newUnfollower': '@username unfollowed you',
+          'newSubscriber': '@username subscribed to you',
+          'newUnsubscriber': '@username unsubscribed from you',
           'friendJoined': '@username joined Hoot using your invite code',
           'createFeed': 'Create a new Feed',
           'feedCreated': 'Feed created',
@@ -134,7 +133,7 @@ class AppTranslations extends Translations {
           'createFeedFirstTitle': 'First, create a feed',
           'createFeedFirstDescription':
               'To Hoot, you need to create a feed first. You can create a feed from your profile page or by clicking the button below.',
-          'newSubscriber': '@username subscribed to @feedName',
+          'newFeedSubscriber': '@username subscribed to @feedName',
           'unsubscribe': 'Unsubscribe',
           'unsubscribeConfirmation':
               'Are you sure you want to unsubscribe from this feed?',
@@ -508,14 +507,14 @@ class AppTranslations extends Translations {
           'errorEditingProfile': 'Hubo un error al editar tu perfil',
           'searchPlaceholder': 'Buscar usuarios y feeds',
           'searchCity': 'Buscar una ciudad',
-          'followers': 'Seguidores',
+          'subscribers': 'Suscriptores',
           'following': 'Siguiendo',
           'noUsersToShow': 'No hay usuarios para mostrar',
           'noNotifications': 'No tienes notificaciones',
           'noNotificationsText':
               'Verás notificaciones aquí cuando tengas nuevos suscriptores, me gusta, comentarios y más.',
-          'newFollower': '@username comenzó a seguirte',
-          'newUnfollower': '@username dejó de seguirte',
+          'newSubscriber': '@username se suscribió a ti',
+          'newUnsubscriber': '@username canceló la suscripción a ti',
           'friendJoined':
               '@username se unió a Hoot usando tu código de invitación',
           'createFeed': 'Crear un nuevo Feed',
@@ -537,7 +536,7 @@ class AppTranslations extends Translations {
           'createFeedFirstTitle': 'Primero, crea un feed',
           'createFeedFirstDescription':
               'Para hootear necesitas crear un feed primero. Puedes crearlo desde tu perfil o haciendo clic en el botón de abajo.',
-          'newSubscriber': '@username se suscribió a @feedName',
+          'newFeedSubscriber': '@username se suscribió a @feedName',
           'unsubscribe': 'Cancelar Suscripción',
           'unsubscribeConfirmation':
               '¿Estás seguro de que deseas cancelar la suscripción a este feed?',
@@ -916,14 +915,14 @@ class AppTranslations extends Translations {
           'errorEditingProfile': 'Ocorreu um erro ao editar o teu perfil',
           'searchPlaceholder': 'Procurar utilizadores e feeds',
           'searchCity': 'Procurar uma cidade',
-          'followers': 'Seguidores',
+          'subscribers': 'Subscritores',
           'following': 'A Seguir',
           'noUsersToShow': 'Não há utilizadores para mostrar',
           'noNotifications': 'Não tens notificações',
           'noNotificationsText':
               'Verás notificações aqui quando tiveres novos subscritores, gostos, comentários e mais.',
-          'newFollower': '@username começou a seguir-te',
-          'newUnfollower': '@username deixou de seguir-te',
+          'newSubscriber': '@username subscreveu-se a ti',
+          'newUnsubscriber': '@username cancelou a subscrição a ti',
           'friendJoined':
               '@username juntou-se ao Hoot usando o teu código de convite',
           'createFeed': 'Criar um novo Feed',
@@ -944,7 +943,7 @@ class AppTranslations extends Translations {
           'createFeedFirstTitle': 'Primeiro, cria um feed',
           'createFeedFirstDescription':
               'Para hootar precisas de criar um feed primeiro. Podes fazê-lo a partir do teu perfil ou clicando no botão abaixo.',
-          'newSubscriber': '@username subscreveu @feedName',
+          'newFeedSubscriber': '@username subscreveu @feedName',
           'unsubscribe': 'Cancelar Subscrição',
           'unsubscribeConfirmation':
               'Tens a certeza de que queres cancelar a subscrição deste feed?',
@@ -1319,14 +1318,14 @@ class AppTranslations extends Translations {
           'errorEditingProfile': 'Erro ao editar o perfil',
           'searchPlaceholder': 'Pesquisar usuários e feeds',
           'searchCity': 'Pesquisar uma cidade',
-          'followers': 'Seguidores',
+          'subscribers': 'Inscritos',
           'following': 'Seguindo',
           'noUsersToShow': 'Não há usuários para mostrar',
           'noNotifications': 'Não há notificações',
           'noNotificationsText':
               'Você verá notificações aqui quando tiver novos inscritos, curtidas, comentários e mais.',
-          'newFollower': '@username começou a te seguir',
-          'newUnfollower': '@username deixou de te seguir',
+          'newSubscriber': '@username se inscreveu em você',
+          'newUnsubscriber': '@username se desinscreveu de você',
           'friendJoined':
               '@username entrou no Hoot usando seu código de convite',
           'createFeed': 'Criar um novo Feed',
@@ -1348,7 +1347,7 @@ class AppTranslations extends Translations {
           'createFeedFirstTitle': 'Primeiro, crie um feed',
           'createFeedFirstDescription':
               'Para hootar você precisa criar um feed primeiro. Você pode fazer isso a partir do seu perfil ou clicando no botão abaixo.',
-          'newSubscriber': '@username se inscreveu em @feedName',
+          'newFeedSubscriber': '@username se inscreveu em @feedName',
           'unsubscribe': 'Cancelar Inscrição',
           'unsubscribeConfirmation':
               'Tem certeza de que deseja cancelar a inscrição deste feed?',
