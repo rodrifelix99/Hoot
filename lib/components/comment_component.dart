@@ -20,10 +20,12 @@ class CommentComponent extends StatelessWidget {
       title: comment.user != null
           ? NameComponent(user: comment.user!, size: 14)
           : const SizedBox.shrink(),
-      subtitle: RichText(
-        text: TextSpan(
-          style: Theme.of(context).textTheme.bodyMedium,
-          children: parseMentions(comment.text),
+      subtitle: SelectionArea(
+        child: RichText(
+          text: TextSpan(
+            style: Theme.of(context).textTheme.bodyMedium,
+            children: parseMentions(comment.text),
+          ),
         ),
       ),
       trailing: comment.createdAt != null

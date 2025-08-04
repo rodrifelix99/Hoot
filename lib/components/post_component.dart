@@ -193,8 +193,8 @@ class _PostComponentState extends State<PostComponent> {
     const int maxLength = 280;
     final length = text?.length ?? 0;
     if (length <= threshold) return base;
-    final ratio = ((length - threshold) / (maxLength - threshold))
-        .clamp(0.0, 1.0);
+    final ratio =
+        ((length - threshold) / (maxLength - threshold)).clamp(0.0, 1.0);
     return base - (base - minFontSize) * ratio;
   }
 
@@ -373,22 +373,24 @@ class _PostComponentState extends State<PostComponent> {
                   ),
                   if (_post.text != null && _post.text!.isNotEmpty) ...[
                     const SizedBox(height: 16),
-                    RichText(
-                      text: TextSpan(
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall
-                            ?.copyWith(
-                              fontSize: _calculateFontSize(
-                                _post.text!,
-                                Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall
-                                        ?.fontSize ??
-                                    20,
+                    SelectionArea(
+                      child: RichText(
+                        text: TextSpan(
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                fontSize: _calculateFontSize(
+                                  _post.text!,
+                                  Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall
+                                          ?.fontSize ??
+                                      20,
+                                ),
                               ),
-                            ),
-                        children: parseMentions(_post.text!),
+                          children: parseMentions(_post.text!),
+                        ),
                       ),
                     ),
                   ],
