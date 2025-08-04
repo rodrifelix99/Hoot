@@ -35,8 +35,10 @@ class _WelcomeViewState extends State<WelcomeView> {
     // Preserve the initial index passed to the widget so rebuilds do not
     // reset the Swiper to the first page.
     _currentIndex = widget.initialIndex;
-    
-    _avatarController = Get.put(AvatarController());
+
+    _avatarController = Get.isRegistered<AvatarController>()
+        ? Get.find<AvatarController>()
+        : Get.put(AvatarController());
     _welcomeController = Get.find<WelcomeController>();
     _displayNameFocus = FocusNode();
     _usernameFocus = FocusNode();
