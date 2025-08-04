@@ -17,6 +17,7 @@ import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/storage_service.dart';
 import 'package:hoot/services/user_service.dart';
 import 'package:hoot/services/news_service.dart';
+import 'package:hoot/util/enums/feed_types.dart';
 
 /// Manages state for creating a new post.
 class CreatePostController extends GetxController {
@@ -80,6 +81,10 @@ class CreatePostController extends GetxController {
     super.onInit();
     _loadFeeds();
     _loadTrendingNews();
+    ever<List<Feed>>(selectedFeeds, (feeds) {
+      final topic = feeds.isNotEmpty ? feeds.last.type?.rssTopic : null;
+      _loadTrendingNews(topic: topic);
+    });
   }
 
   Future<void> _loadFeeds() async {
@@ -87,12 +92,23 @@ class CreatePostController extends GetxController {
     availableFeeds.assignAll(user?.feeds ?? []);
   }
 
-  Future<void> _loadTrendingNews() async {
+  Future<void> _loadTrendingNews({String? topic}) async {
     try {
-      final news = await _newsService.fetchTrendingNews();
+      var news = await _newsService.fetchTrendingNews(topic: topic);
+      if (news.isEmpty && topic != null) {
+        news = await _newsService.fetchTrendingNews();
+      }
       trendingNews.assignAll(news);
     } catch (e, s) {
       await ErrorService.reportError(e, stack: s);
+      if (topic != null) {
+        try {
+          final fallback = await _newsService.fetchTrendingNews();
+          trendingNews.assignAll(fallback);
+        } catch (e2, s2) {
+          await ErrorService.reportError(e2, stack: s2);
+        }
+      }
     }
   }
 
