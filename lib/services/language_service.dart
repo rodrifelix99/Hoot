@@ -27,6 +27,7 @@ class LanguageService extends GetxService {
       } else {
         locale.value = const Locale('en', 'US');
       }
+    } else {
       locale.value = Get.deviceLocale ?? const Locale('en', 'US');
     }
     Get.updateLocale(locale.value);
