@@ -22,4 +22,29 @@ void main() {
     expect(newUser.get('invitedBy'), 'u1');
     expect(newUser.get('invitationCode'), isNotEmpty);
   });
+
+  test('getRemainingInvites returns remaining invites', () async {
+    final firestore = FakeFirebaseFirestore();
+    final service = InvitationService(firestore: firestore);
+    await firestore.collection('users').doc('u1').set({
+      'invitationUses': 2,
+      'invitationLastReset': Timestamp.fromDate(DateTime.now()),
+    });
+    final remaining = await service.getRemainingInvites('u1');
+    expect(remaining, 3);
+  });
+
+  test('getRemainingInvites resets on new month', () async {
+    final firestore = FakeFirebaseFirestore();
+    final service = InvitationService(firestore: firestore);
+    final lastMonth = DateTime.now().subtract(const Duration(days: 31));
+    await firestore.collection('users').doc('u1').set({
+      'invitationUses': 4,
+      'invitationLastReset': Timestamp.fromDate(lastMonth),
+    });
+    final remaining = await service.getRemainingInvites('u1');
+    expect(remaining, 5);
+    final doc = await firestore.collection('users').doc('u1').get();
+    expect(doc.get('invitationUses'), 0);
+  });
 }
