@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 
 /// Middleware that redirects unauthenticated users to the login page.
@@ -19,8 +19,8 @@ class AuthMiddleware extends GetMiddleware {
       return null; // Allow access to open routes
     }
 
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null || user.isAnonymous) {
+    final user = Get.find<AuthService>().currentUser;
+    if (user == null) {
       return RouteSettings(
         name: AppRoutes.login,
       );
