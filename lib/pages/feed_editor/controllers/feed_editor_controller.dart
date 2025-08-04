@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:blurhash/blurhash.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,6 +22,7 @@ import 'package:hoot/util/constants.dart';
 class FeedEditorController extends GetxController {
   final FirebaseFirestore _firestore;
   final AuthService _authService;
+  final FirebaseStorage _storage;
   final ProfileController? _profileController;
   final String _userId;
 
@@ -30,18 +30,20 @@ class FeedEditorController extends GetxController {
   Feed? feed;
 
   FeedEditorController({
-    FirebaseFirestore? firestore,
-    AuthService? authService,
+    required FirebaseFirestore firestore,
+    required AuthService authService,
+    required FirebaseStorage storage,
     ProfileController? profileController,
     String? userId,
     this.feed,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _authService = authService ?? Get.find<AuthService>(),
+  })  : _firestore = firestore,
+        _authService = authService,
+        _storage = storage,
         _profileController = profileController ??
             (Get.isRegistered<ProfileController>(tag: 'current')
                 ? Get.find<ProfileController>(tag: 'current')
                 : null),
-        _userId = userId ?? FirebaseAuth.instance.currentUser?.uid ?? '';
+        _userId = userId ?? authService.currentUser?.uid ?? '';
 
   /// Controllers for title/description fields and genre search.
   final TextEditingController titleController = TextEditingController();
@@ -144,10 +146,8 @@ class FeedEditorController extends GetxController {
         smallAvatarHash =
             await BlurHash.encode(smallData, kBlurHashX, kBlurHashY);
         bigAvatarHash = await BlurHash.encode(bigData, kBlurHashX, kBlurHashY);
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('feed_avatars')
-            .child(docRef.id);
+        final storageRef =
+            _storage.ref().child('feed_avatars').child(docRef.id);
         final smallRef = storageRef.child('small_avatar.jpg');
         final bigRef = storageRef.child('big_avatar.jpg');
         await smallRef.putData(
@@ -239,10 +239,7 @@ class FeedEditorController extends GetxController {
         smallAvatarHash =
             await BlurHash.encode(smallData, kBlurHashX, kBlurHashY);
         bigAvatarHash = await BlurHash.encode(bigData, kBlurHashX, kBlurHashY);
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('feed_avatars')
-            .child(feed!.id);
+        final storageRef = _storage.ref().child('feed_avatars').child(feed!.id);
         final smallRef = storageRef.child('small_avatar.jpg');
         final bigRef = storageRef.child('big_avatar.jpg');
         await smallRef.putData(
