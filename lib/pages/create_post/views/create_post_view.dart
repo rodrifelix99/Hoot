@@ -76,7 +76,7 @@ class CreatePostView extends GetView<CreatePostController> {
                                     builder: (context, menuSetState) {
                                       final isSelected =
                                           selected.contains(feed);
-                                      return InkWell(
+                                      return GestureDetector(
                                         onTap: () {
                                           isSelected
                                               ? selected.remove(feed)
@@ -84,29 +84,24 @@ class CreatePostView extends GetView<CreatePostController> {
                                           selected.refresh();
                                           menuSetState(() {});
                                         },
-                                        child: Container(
-                                          height: double.infinity,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16.0),
-                                          child: Row(
-                                            children: [
-                                              if (isSelected)
-                                                const Icon(
-                                                    Icons.check_box_outlined)
-                                              else
-                                                const Icon(Icons
-                                                    .check_box_outline_blank),
-                                              const SizedBox(width: 16),
-                                              Expanded(
-                                                child: Text(
-                                                  feed.title,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                  ),
+                                        child: Row(
+                                          children: [
+                                            if (isSelected)
+                                              const Icon(
+                                                  SolarIconsBold.checkSquare)
+                                            else
+                                              const Icon(SolarIconsOutline
+                                                  .addSquare),
+                                            const SizedBox(width: 16),
+                                            Expanded(
+                                              child: Text(
+                                                feed.title,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       );
                                     },
@@ -118,7 +113,7 @@ class CreatePostView extends GetView<CreatePostController> {
                         selectedItemBuilder: (context) {
                           return controller.availableFeeds.map((feed) {
                             return Container(
-                              alignment: AlignmentDirectional.center,
+                              alignment: AlignmentDirectional.centerStart,
                               child: Text(
                                 selected.map((f) => f.title).join(', '),
                                 style: const TextStyle(
