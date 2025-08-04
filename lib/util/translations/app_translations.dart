@@ -112,8 +112,8 @@ class AppTranslations extends Translations {
           'noNotifications': 'No notifications yet',
           'noNotificationsText':
               'You will see notifications here when you have new subscribers, likes, comments, and more.',
-          'newFollower': '@username started following you',
-          'newUnfollower': '@username unfollowed you',
+          'newUserSubscriber': '@username subscribed to you',
+          'newUserUnsubscriber': '@username unsubscribed from you',
           'friendJoined': '@username joined Hoot using your invite code',
           'createFeed': 'Create a new Feed',
           'feedCreated': 'Feed created',
@@ -514,8 +514,8 @@ class AppTranslations extends Translations {
           'noNotifications': 'No tienes notificaciones',
           'noNotificationsText':
               'Verás notificaciones aquí cuando tengas nuevos suscriptores, me gusta, comentarios y más.',
-          'newFollower': '@username comenzó a seguirte',
-          'newUnfollower': '@username dejó de seguirte',
+          'newUserSubscriber': '@username se suscribió a ti',
+          'newUserUnsubscriber': '@username canceló la suscripción a ti',
           'friendJoined':
               '@username se unió a Hoot usando tu código de invitación',
           'createFeed': 'Crear un nuevo Feed',
@@ -922,8 +922,8 @@ class AppTranslations extends Translations {
           'noNotifications': 'Não tens notificações',
           'noNotificationsText':
               'Verás notificações aqui quando tiveres novos subscritores, gostos, comentários e mais.',
-          'newFollower': '@username começou a seguir-te',
-          'newUnfollower': '@username deixou de seguir-te',
+          'newUserSubscriber': '@username subscreveu-te',
+          'newUserUnsubscriber': '@username cancelou a subscrição de ti',
           'friendJoined':
               '@username juntou-se ao Hoot usando o teu código de convite',
           'createFeed': 'Criar um novo Feed',
@@ -1325,8 +1325,8 @@ class AppTranslations extends Translations {
           'noNotifications': 'Não há notificações',
           'noNotificationsText':
               'Você verá notificações aqui quando tiver novos inscritos, curtidas, comentários e mais.',
-          'newFollower': '@username começou a te seguir',
-          'newUnfollower': '@username deixou de te seguir',
+          'newUserSubscriber': '@username se inscreveu em você',
+          'newUserUnsubscriber': '@username cancelou a inscrição em você',
           'friendJoined':
               '@username entrou no Hoot usando seu código de convite',
           'createFeed': 'Criar um novo Feed',
