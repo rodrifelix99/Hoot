@@ -449,6 +449,67 @@ void main() {
       expect(controller.trendingNews.first.title, 'General');
     });
 
+    testWidgets('switching selected feed refreshes headlines', (tester) async {
+      final firestore = FakeFirebaseFirestore();
+      final postService = PostService(
+        firestore: firestore,
+      );
+      final techFeed = Feed(
+          id: 'f1',
+          userId: 'u1',
+          title: 'tech',
+          description: 'd',
+          color: Colors.blue,
+          order: 0,
+          type: FeedType.technology);
+      final scienceFeed = Feed(
+          id: 'f2',
+          userId: 'u1',
+          title: 'science',
+          description: 'd',
+          color: Colors.red,
+          order: 0,
+          type: FeedType.science);
+      final auth = FakeAuthService(U(
+          uid: 'u1',
+          name: 'Tester',
+          username: 'tester',
+          smallProfilePictureUrl: 'a.png',
+          feeds: [techFeed, scienceFeed]));
+      final storage = FakeStorageService();
+      final generalNews =
+          [NewsItem(title: 'General', link: 'https://example.com')];
+      final techNews = [NewsItem(title: 'Tech', link: 'https://tech.com')];
+      final scienceNews =
+          [NewsItem(title: 'Science', link: 'https://science.com')];
+      final news = FakeNewsService(topicItems: {
+        null: generalNews,
+        'TECHNOLOGY': techNews,
+        'SCIENCE': scienceNews,
+      });
+      final controller = CreatePostController(
+          postService: postService,
+          authService: auth,
+          userId: 'u1',
+          storageService: storage,
+          newsService: news);
+      controller.onInit();
+      await tester.pump();
+      expect(news.calls, [null]);
+      expect(controller.trendingNews.first.title, 'General');
+
+      controller.selectedFeeds.add(techFeed);
+      await tester.pump();
+      expect(news.calls, [null, 'TECHNOLOGY']);
+      expect(controller.trendingNews.first.title, 'Tech');
+
+      controller.selectedFeeds[0] = scienceFeed;
+      controller.selectedFeeds.refresh();
+      await tester.pump();
+      expect(news.calls.last, 'SCIENCE');
+      expect(controller.trendingNews.first.title, 'Science');
+    });
+
     testWidgets('falls back to general news when topic returns empty',
         (tester) async {
       final firestore = FakeFirebaseFirestore();
