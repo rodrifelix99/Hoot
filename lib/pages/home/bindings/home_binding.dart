@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:hoot/pages/home/controllers/home_controller.dart';
 import 'package:hoot/pages/feed/controllers/feed_controller.dart';
@@ -12,7 +14,16 @@ class HomeBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(() => HomeController());
     Get.lazyPut(() => FeedController());
-    Get.lazyPut(() => ExploreController(authService: Get.find<AuthService>()));
+
+    final authService = Get.find<AuthService>();
+    final bool isMock = authService.runtimeType.toString().contains('Mock');
+    final FirebaseFirestore firestore =
+        isMock ? FakeFirebaseFirestore() : FirebaseFirestore.instance;
+
+    Get.lazyPut(() => ExploreController(
+          authService: authService,
+          firestore: firestore,
+        ));
     Get.lazyPut(() => CreatePostController());
     Get.lazyPut(() => NotificationsController());
     Get.lazyPut(() => ProfileController(), tag: 'current');
