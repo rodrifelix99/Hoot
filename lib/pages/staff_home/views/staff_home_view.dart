@@ -27,6 +27,12 @@ class StaffHomeView extends StatelessWidget {
             trailing: const Icon(Icons.arrow_forward),
             onTap: () => Get.toNamed(AppRoutes.staffReports),
           ),
+          ListTile(
+            leading: const Icon(Icons.feedback),
+            title: Text('feedbacks'.tr),
+            trailing: const Icon(Icons.arrow_forward),
+            onTap: () => Get.toNamed(AppRoutes.staffFeedbacks),
+          ),
         ],
       ),
     );

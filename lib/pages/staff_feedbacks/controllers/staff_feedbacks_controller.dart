@@ -1,0 +1,32 @@
+import 'package:get/get.dart';
+import 'package:hoot/models/feedback.dart' as fb;
+import 'package:hoot/services/feedback_service.dart';
+
+class StaffFeedbacksController extends GetxController {
+  final BaseFeedbackService _service;
+
+  StaffFeedbacksController({BaseFeedbackService? service})
+      : _service = service ??
+            (Get.isRegistered<BaseFeedbackService>()
+                ? Get.find<BaseFeedbackService>()
+                : FeedbackService());
+
+  final RxList<fb.Feedback> feedbacks = <fb.Feedback>[].obs;
+  final RxBool loading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadFeedbacks();
+  }
+
+  Future<void> loadFeedbacks() async {
+    loading.value = true;
+    try {
+      final result = await _service.fetchFeedbacks();
+      feedbacks.assignAll(result);
+    } finally {
+      loading.value = false;
+    }
+  }
+}

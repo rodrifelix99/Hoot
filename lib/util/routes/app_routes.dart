@@ -26,6 +26,7 @@ class AppRoutes {
   static const staff = '/staff';
   static const staffDashboard = '/staff_dashboard';
   static const staffReports = '/staff_reports';
+  static const staffFeedbacks = '/staff_feedbacks';
   static const photoViewer = '/photo_view';
   static const appColor = '/app_color';
 }
