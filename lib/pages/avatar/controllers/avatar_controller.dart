@@ -3,7 +3,6 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:blurhash/blurhash.dart';
@@ -16,8 +15,18 @@ import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/constants.dart';
 
 class AvatarController extends GetxController {
-  final _auth = Get.find<AuthService>();
+  final AuthService _auth;
+  final FirebaseStorage _storage;
+  final FirebaseFirestore _firestore;
   final ImagePicker _picker = ImagePicker();
+
+  AvatarController({
+    AuthService? authService,
+    FirebaseStorage? storage,
+    FirebaseFirestore? firestore,
+  })  : _auth = authService ?? Get.find<AuthService>(),
+        _storage = storage ?? FirebaseStorage.instance,
+        _firestore = firestore ?? FirebaseFirestore.instance;
 
   final Rx<File?> avatarFile = Rx<File?>(null);
   final RxString avatarMessage = ''.obs;
@@ -52,7 +61,7 @@ class AvatarController extends GetxController {
     if (uploading.value) return;
     uploading.value = true;
     try {
-      final uid = FirebaseAuth.instance.currentUser?.uid;
+      final uid = _auth.currentUser?.uid;
       if (uid != null && avatarFile.value != null) {
         final file = avatarFile.value!;
         final bytes = await file.readAsBytes();
@@ -74,8 +83,7 @@ class AvatarController extends GetxController {
           final bannerHash =
               await BlurHash.encode(bannerData, kBlurHashX, kBlurHashY);
 
-          final avatarRef =
-              FirebaseStorage.instance.ref().child('avatars').child(uid);
+          final avatarRef = _storage.ref().child('avatars').child(uid);
           final smallRef = avatarRef.child('small_avatar.jpg');
           final bigRef = avatarRef.child('big_avatar.jpg');
 
@@ -84,11 +92,8 @@ class AvatarController extends GetxController {
           await bigRef.putData(
               bigData, SettableMetadata(contentType: 'image/jpeg'));
 
-          final bannerRef = FirebaseStorage.instance
-              .ref()
-              .child('banners')
-              .child(uid)
-              .child('banner.jpg');
+          final bannerRef =
+              _storage.ref().child('banners').child(uid).child('banner.jpg');
           await bannerRef.putData(
               bannerData, SettableMetadata(contentType: 'image/jpeg'));
 
@@ -96,7 +101,7 @@ class AvatarController extends GetxController {
           final bigUrl = await bigRef.getDownloadURL();
           final bannerUrl = await bannerRef.getDownloadURL();
 
-          await FirebaseFirestore.instance.collection('users').doc(uid).set({
+          await _firestore.collection('users').doc(uid).set({
             'smallAvatar': smallUrl,
             'bigAvatar': bigUrl,
             'smallAvatarHash': smallHash,
