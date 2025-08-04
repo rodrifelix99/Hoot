@@ -20,7 +20,7 @@ class AuthMiddleware extends GetMiddleware {
     }
 
     final user = Get.find<AuthService>().currentUser;
-    if (user == null || (user.isAnonymous == true)) {
+    if (user == null) {
       return RouteSettings(
         name: AppRoutes.login,
       );
