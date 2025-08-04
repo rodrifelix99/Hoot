@@ -15,6 +15,7 @@ import 'package:hoot/models/user.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hoot/services/news_service.dart';
+import 'package:hoot/util/enums/feed_types.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
   final U _user;
@@ -84,14 +85,15 @@ class FakeStorageService extends GetxService implements BaseStorageService {
 }
 
 class FakeNewsService implements BaseNewsService {
-  final List<NewsItem> items;
-  int calls = 0;
-  FakeNewsService({this.items = const []});
+  final Map<String?, List<NewsItem>> topicItems;
+  final List<String?> calls = [];
+  FakeNewsService({List<NewsItem> items = const [], Map<String?, List<NewsItem>>? topicItems})
+      : topicItems = topicItems ?? {null: items};
 
   @override
   Future<List<NewsItem>> fetchTrendingNews({String? topic}) async {
-    calls++;
-    return items;
+    calls.add(topic);
+    return topicItems[topic] ?? [];
   }
 }
 
@@ -395,6 +397,97 @@ void main() {
       await tester.pump();
       expect(controller.trendingNews.length, 1);
       expect(controller.trendingNews.first.title, 'News 1');
+    });
+
+    testWidgets('selecting feed loads topic news and resets on deselect',
+        (tester) async {
+      final firestore = FakeFirebaseFirestore();
+      final postService = PostService(
+        firestore: firestore,
+      );
+      final feed = Feed(
+          id: 'f1',
+          userId: 'u1',
+          title: 't',
+          description: 'd',
+          color: Colors.blue,
+          order: 0,
+          type: FeedType.technology);
+      final auth = FakeAuthService(U(
+          uid: 'u1',
+          name: 'Tester',
+          username: 'tester',
+          smallProfilePictureUrl: 'a.png',
+          feeds: [feed]));
+      final storage = FakeStorageService();
+      final generalNews =
+          [NewsItem(title: 'General', link: 'https://example.com')];
+      final techNews = [NewsItem(title: 'Tech', link: 'https://tech.com')];
+      final news = FakeNewsService(topicItems: {
+        null: generalNews,
+        'TECHNOLOGY': techNews,
+      });
+      final controller = CreatePostController(
+          postService: postService,
+          authService: auth,
+          userId: 'u1',
+          storageService: storage,
+          newsService: news);
+      controller.onInit();
+      await tester.pump();
+      expect(news.calls, [null]);
+      expect(controller.trendingNews.first.title, 'General');
+
+      controller.selectedFeeds.add(feed);
+      await tester.pump();
+      expect(news.calls, [null, 'TECHNOLOGY']);
+      expect(controller.trendingNews.first.title, 'Tech');
+
+      controller.selectedFeeds.clear();
+      await tester.pump();
+      expect(news.calls, [null, 'TECHNOLOGY', null]);
+      expect(controller.trendingNews.first.title, 'General');
+    });
+
+    testWidgets('falls back to general news when topic returns empty',
+        (tester) async {
+      final firestore = FakeFirebaseFirestore();
+      final postService = PostService(
+        firestore: firestore,
+      );
+      final feed = Feed(
+          id: 'f1',
+          userId: 'u1',
+          title: 't',
+          description: 'd',
+          color: Colors.blue,
+          order: 0,
+          type: FeedType.science);
+      final auth = FakeAuthService(U(
+          uid: 'u1',
+          name: 'Tester',
+          username: 'tester',
+          smallProfilePictureUrl: 'a.png',
+          feeds: [feed]));
+      final storage = FakeStorageService();
+      final generalNews =
+          [NewsItem(title: 'General', link: 'https://example.com')];
+      final news = FakeNewsService(topicItems: {
+        null: generalNews,
+        'SCIENCE': [],
+      });
+      final controller = CreatePostController(
+          postService: postService,
+          authService: auth,
+          userId: 'u1',
+          storageService: storage,
+          newsService: news);
+      controller.onInit();
+      await tester.pump();
+      controller.selectedFeeds.add(feed);
+      await tester.pump();
+      expect(news.calls, [null, 'SCIENCE', null]);
+      expect(controller.trendingNews.first.title, 'General');
     });
   });
 }
