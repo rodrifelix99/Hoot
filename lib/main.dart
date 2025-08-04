@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:feedback/feedback.dart';
 import 'package:hoot/theme/theme.dart';
 import 'package:hoot/util/enums/app_colors.dart';
 import 'package:hoot/util/translations/app_translations.dart';
@@ -19,6 +20,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:hoot/services/theme_service.dart';
 import 'package:hoot/services/language_service.dart';
 import 'package:hoot/firebase_options.dart';
+import 'package:shake/shake.dart';
 
 void main() {
   runZonedGuarded(() async {
@@ -55,21 +57,24 @@ void main() {
       Portal(
         child: ToastificationWrapper(
           child: Obx(
-            () => GetMaterialApp(
-              title: 'Hoot',
-              debugShowCheckedModeBanner: false,
-              getPages: AppPages.pages,
-              initialRoute: AppRoutes.home,
-              theme: AppTheme.lightTheme(themeService.appColor.value.color),
-              darkTheme: AppTheme.darkTheme(themeService.appColor.value.color),
-              themeMode: themeService.themeMode.value,
-              translations: AppTranslations(),
-              locale: languageService.locale.value,
-              fallbackLocale: const Locale('en', 'US'),
-              builder: (context, child) => GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                child: child,
+            () => BetterFeedback(
+              child: GetMaterialApp(
+                title: 'Hoot',
+                debugShowCheckedModeBanner: false,
+                getPages: AppPages.pages,
+                initialRoute: AppRoutes.home,
+                theme: AppTheme.lightTheme(themeService.appColor.value.color),
+                darkTheme:
+                    AppTheme.darkTheme(themeService.appColor.value.color),
+                themeMode: themeService.themeMode.value,
+                translations: AppTranslations(),
+                locale: languageService.locale.value,
+                fallbackLocale: const Locale('en', 'US'),
+                builder: (context, child) => GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                  child: child,
+                ),
               ),
             ),
           ),
@@ -77,6 +82,14 @@ void main() {
       ),
     );
     FlutterNativeSplash.remove();
+    ShakeDetector.autoStart(onPhoneShake: () {
+      final context = Get.context;
+      if (context != null) {
+        BetterFeedback.of(context).show((feedback) async {
+          debugPrint(feedback.text);
+        });
+      }
+    });
   }, (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack);
   });
