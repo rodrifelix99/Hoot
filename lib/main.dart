@@ -82,7 +82,26 @@ void main() {
       ),
     );
     FlutterNativeSplash.remove();
-    ShakeDetector.autoStart(onPhoneShake: () {
+  }, (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack);
+  });
+}
+
+class ShakeDetectorWrapper extends StatefulWidget {
+  final Widget child;
+  const ShakeDetectorWrapper({Key? key, required this.child}) : super(key: key);
+
+  @override
+  State<ShakeDetectorWrapper> createState() => _ShakeDetectorWrapperState();
+}
+
+class _ShakeDetectorWrapperState extends State<ShakeDetectorWrapper> {
+  ShakeDetector? _shakeDetector;
+
+  @override
+  void initState() {
+    super.initState();
+    _shakeDetector = ShakeDetector.autoStart(onPhoneShake: () {
       final context = Get.context;
       if (context != null) {
         BetterFeedback.of(context).show((feedback) async {
