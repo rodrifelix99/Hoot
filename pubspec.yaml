@@ -92,6 +92,9 @@ dependencies:
   rss_dart: ^1.0.13
   http: ^1.4.0
 
+  feedback: ^3.2.0
+  shake: ^2.2.0
+
   meta: any
 dev_dependencies:
   flutter_test:
