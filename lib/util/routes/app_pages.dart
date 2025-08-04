@@ -51,6 +51,8 @@ import 'package:hoot/pages/report/bindings/report_binding.dart';
 import 'package:hoot/pages/report/views/report_view.dart';
 import 'package:hoot/pages/contacts/bindings/contacts_binding.dart';
 import 'package:hoot/pages/contacts/views/contacts_view.dart';
+import 'package:hoot/pages/invite_friends/bindings/invite_friends_binding.dart';
+import 'package:hoot/pages/invite_friends/views/invite_friends_view.dart';
 import 'package:hoot/pages/terms.dart';
 import 'package:hoot/pages/about_us.dart';
 import 'package:hoot/util/constants.dart';
@@ -229,6 +231,12 @@ class AppPages {
       name: AppRoutes.contacts,
       page: () => const ContactsView(),
       binding: ContactsBinding(),
+      middlewares: [AuthMiddleware()],
+    ),
+    GetPage(
+      name: AppRoutes.inviteFriends,
+      page: () => const InviteFriendsView(),
+      binding: InviteFriendsBinding(),
       middlewares: [AuthMiddleware()],
     ),
     GetPage(

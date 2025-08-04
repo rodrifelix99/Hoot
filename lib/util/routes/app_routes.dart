@@ -23,6 +23,7 @@ class AppRoutes {
   static const report = '/report';
   static const aboutUs = '/about_us';
   static const contacts = '/contacts';
+  static const inviteFriends = '/invite_friends';
   static const staff = '/staff';
   static const staffDashboard = '/staff_dashboard';
   static const staffReports = '/staff_reports';
