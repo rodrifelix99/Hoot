@@ -12,6 +12,7 @@ import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/toast_service.dart';
 import 'package:hoot/services/theme_service.dart';
 import 'package:hoot/services/language_service.dart';
+import 'package:hoot/services/feedback_service.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 
 class SettingsController extends GetxController {
@@ -80,7 +81,16 @@ class SettingsController extends GetxController {
   }
 
   void sendFeedback(BuildContext ctx) {
-    BetterFeedback.of(ctx).show((UserFeedback feedback) {});
+    BetterFeedback.of(ctx).show((UserFeedback feedback) async {
+      try {
+        await FeedbackService.submitFeedback(
+          screenshot: feedback.screenshot,
+          message: feedback.feedback,
+        );
+      } catch (e, s) {
+        await ErrorService.reportError(e, stack: s);
+      }
+    });
   }
 
   Future<void> deleteAccount(BuildContext context) async {
