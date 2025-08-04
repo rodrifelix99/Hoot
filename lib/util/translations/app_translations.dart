@@ -330,6 +330,7 @@ class AppTranslations extends Translations {
           'appColor': 'App Color',
           'resetColor': 'Revert to default color',
           'sendFeedback': 'Send Feedback',
+          'sendFeedbackDescription': 'Report a bug or request a feature',
           'version': 'Version',
           'deleteAccount': 'Delete Account',
           'deleteAccountDescription':
@@ -733,6 +734,8 @@ class AppTranslations extends Translations {
           'appColor': 'Color de la App',
           'resetColor': 'Restablecer color por defecto',
           'sendFeedback': 'Enviar comentarios',
+          'sendFeedbackDescription':
+              'Informa de un error o solicita una funcionalidad',
           'version': 'Versión',
           'deleteAccount': 'Eliminar Cuenta',
           'deleteAccountDescription':
@@ -1137,6 +1140,8 @@ class AppTranslations extends Translations {
           'appColor': 'Cor da App',
           'resetColor': 'Repor cor padrão',
           'sendFeedback': 'Enviar feedback',
+          'sendFeedbackDescription':
+              'Reporta um erro ou pede uma funcionalidade',
           'version': 'Versão',
           'deleteAccount': 'Eliminar Conta',
           'deleteAccountDescription':
@@ -1538,6 +1543,8 @@ class AppTranslations extends Translations {
           'appColor': 'Cor do App',
           'resetColor': 'Restaurar cor padrão',
           'sendFeedback': 'Enviar feedback',
+          'sendFeedbackDescription':
+              'Reporte um erro ou peça uma funcionalidade',
           'version': 'Versão',
           'deleteAccount': 'Excluir Conta',
           'deleteAccountDescription':
