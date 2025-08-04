@@ -62,6 +62,9 @@ class CreatePostController extends GetxController {
   /// First URL found in the post text.
   final RxnString linkUrl = RxnString();
 
+  /// Scheduled publish time for the post, if any.
+  final Rx<DateTime?> scheduledAt = Rx<DateTime?>(null);
+
   /// Feeds chosen to post to.
   final RxList<Feed> selectedFeeds = <Feed>[].obs;
 
@@ -169,6 +172,48 @@ class CreatePostController extends GetxController {
     linkUrl.value = _firstUrl(text);
   }
 
+  /// Validates and stores a scheduled publish [date].
+  ///
+  /// The [date] must be in the future and within the next 7 days.
+  /// Pass `null` to clear any scheduled time.
+  void setScheduledAt(DateTime? date) {
+    if (date == null) {
+      scheduledAt.value = null;
+      return;
+    }
+    final now = DateTime.now();
+    if (date.isBefore(now)) {
+      ToastService.showError('scheduledTimePast'.tr);
+      return;
+    }
+    if (date.isAfter(now.add(const Duration(days: 7)))) {
+      ToastService.showError('scheduledTimeTooFar'.tr);
+      return;
+    }
+    scheduledAt.value = date;
+  }
+
+  /// Opens date and time pickers to select a scheduled publish time.
+  Future<void> pickScheduledAt(BuildContext context) async {
+    final now = DateTime.now();
+    final initial = scheduledAt.value ?? now;
+    final date = await showDatePicker(
+      context: context,
+      initialDate: initial,
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 7)),
+    );
+    if (date == null) return;
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(initial),
+    );
+    if (time == null) return;
+    final chosen =
+        DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    setScheduledAt(chosen);
+  }
+
   /// Publishes the post to Firestore after validating the form.
   ///
   /// Returns the newly created [Post] on success or `null` if the post
@@ -178,6 +223,16 @@ class CreatePostController extends GetxController {
 
     final feeds = selectedFeeds.toList();
     final text = textController.text.trim();
+    final scheduled = scheduledAt.value;
+
+    if (scheduled != null) {
+      final now = DateTime.now();
+      if (scheduled.isBefore(now) ||
+          scheduled.isAfter(now.add(const Duration(days: 7)))) {
+        ToastService.showError('scheduledTimeInvalid'.tr);
+        return null;
+      }
+    }
 
     if (feeds.isEmpty) {
       ToastService.showError('selectFeed'.tr);
@@ -227,7 +282,10 @@ class CreatePostController extends GetxController {
               'userId': _userId,
               if (userData != null) 'user': userData,
               'url': linkUrl.value,
-              'createdAt': FieldValue.serverTimestamp(),
+              if (scheduled != null)
+                'scheduledAt': scheduled
+              else
+                'createdAt': FieldValue.serverTimestamp(),
             }..removeWhere((key, value) => value == null),
             id: postId);
 
@@ -244,7 +302,8 @@ class CreatePostController extends GetxController {
           reFeeded: false,
           reFeeds: 0,
           comments: 0,
-          createdAt: DateTime.now(),
+          createdAt: scheduled == null ? DateTime.now() : null,
+          scheduledAt: scheduled,
         );
 
         firstPost ??= post;
@@ -255,6 +314,7 @@ class CreatePostController extends GetxController {
       imageFiles.clear();
       gifUrl.value = null;
       linkUrl.value = null;
+      scheduledAt.value = null;
       selectedFeeds.clear();
       return firstPost;
     } catch (e, s) {
