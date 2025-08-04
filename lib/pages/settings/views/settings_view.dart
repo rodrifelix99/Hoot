@@ -172,6 +172,12 @@ class SettingsView extends GetView<SettingsController> {
                         ),
                       ],
                     ),
+                    ListTile(
+                      leading: const Icon(SolarIconsOutline.bug),
+                      title: Text('sendFeedback'.tr),
+                      trailing: const Icon(SolarIconsOutline.arrowRight),
+                      onTap: () => controller.sendFeedback(context),
+                    ),
                     Obx(
                       () => ListTile(
                         leading: const Icon(SolarIconsOutline.infoSquare),

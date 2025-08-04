@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:feedback/feedback.dart';
 
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/dialog_service.dart';
@@ -76,6 +77,10 @@ class SettingsController extends GetxController {
       return;
     }
     Get.toNamed(AppRoutes.contacts);
+  }
+
+  void sendFeedback(BuildContext ctx) {
+    BetterFeedback.of(ctx).show((UserFeedback feedback) {});
   }
 
   Future<void> deleteAccount(BuildContext context) async {
