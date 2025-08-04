@@ -16,6 +16,7 @@ import 'package:hoot/services/storage_service.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/news_service.dart';
 import 'package:hoot/util/translations/app_translations.dart';
+import 'package:hoot/util/enums/feed_types.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
   final U _user;
@@ -70,16 +71,18 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   Get.testMode = true;
 
-  testWidgets('renders trending news titles', (tester) async {
+  testWidgets('renders dynamic trending title', (tester) async {
     final firestore = FakeFirebaseFirestore();
     final postService = PostService(firestore: firestore);
     final feed = Feed(
-        id: 'f1',
-        userId: 'u1',
-        title: 't',
-        description: 'd',
-        color: Colors.blue,
-        order: 0);
+      id: 'f1',
+      userId: 'u1',
+      title: 't',
+      description: 'd',
+      color: Colors.blue,
+      order: 0,
+      type: FeedType.technology,
+    );
     final auth = FakeAuthService(U(
         uid: 'u1',
         name: 'Tester',
@@ -94,6 +97,7 @@ void main() {
         newsService: FakeNewsService(
             [NewsItem(title: 'News 1', link: 'https://a.com')]));
     Get.put(controller);
+    controller.selectedFeeds.assignAll([feed]);
     await tester.pumpWidget(Portal(
       child: GetMaterialApp(
         translations: AppTranslations(),
@@ -102,10 +106,9 @@ void main() {
       ),
     ));
     await tester.pump();
-    await tester.pump();
     await tester.pumpAndSettle();
+    expect(find.text('Trending in Technology'), findsOneWidget);
     expect(find.text('News 1'), findsOneWidget);
-    await tester.pumpAndSettle();
     Get.reset();
   }, skip: true);
 }

@@ -397,6 +397,7 @@ class AppTranslations extends Translations {
           'report': 'Report',
           'reportReasonRequired': 'Report reason required',
           'trendingNews': 'Trending News',
+          'trendingIn': 'Trending in @topic',
         },
         'es': {
           'helloWorld': '¡Hola Mundo!',
@@ -798,6 +799,7 @@ class AppTranslations extends Translations {
           'report': 'Reportar',
           'reportReasonRequired': 'Se requiere un motivo',
           'trendingNews': 'Noticias de Tendencia',
+          'trendingIn': 'Tendencias en @topic',
         },
         'pt_PT': {
           'helloWorld': 'Olá Mundo!',
@@ -1201,6 +1203,7 @@ class AppTranslations extends Translations {
           'report': 'Reportar',
           'reportReasonRequired': 'É necessário fornecer uma razão',
           'trendingNews': 'Notícias em Alta',
+          'trendingIn': 'Em Alta em @topic',
         },
         'pt_BR': {
           'helloWorld': 'Olá Mundo!',
@@ -1600,6 +1603,7 @@ class AppTranslations extends Translations {
           'report': 'Denunciar',
           'reportReasonRequired': 'É necessário fornecer um motivo',
           'trendingNews': 'Notícias em Alta',
+          'trendingIn': 'Em Alta em @topic',
         },
       };
 }
