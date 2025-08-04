@@ -36,6 +36,21 @@ class CreatePostView extends GetView<CreatePostController> {
     }
   }
 
+  String _getTrendingTitle(BuildContext context) {
+    final feed =
+    controller.selectedFeeds.isNotEmpty
+        ? controller.selectedFeeds.last
+        : null;
+    final type = feed?.type;
+    if (type?.rssTopic != null) {
+      final translatedType = FeedTypeExtension
+          .toTranslatedString(context, type!);
+      return 'trendingIn'.trParams(
+          {'topic': translatedType});
+    }
+    return 'trendingNews'.tr;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
