@@ -4,6 +4,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:toastification/toastification.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hoot/models/feed.dart';
@@ -68,6 +69,8 @@ class FakeAuthService extends GetxService implements AuthService {
   bool get isStaff => throw UnimplementedError();
 }
 
+class FakeFirebaseStorage extends Fake implements FirebaseStorage {}
+
 class FakeFeedService implements BaseFeedService {
   @override
   Future<PostPage> fetchSubscribedPosts({
@@ -98,7 +101,10 @@ void main() {
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
     final controller = FeedEditorController(
-        firestore: firestore, userId: 'u1', authService: auth);
+        firestore: firestore,
+        userId: 'u1',
+        authService: auth,
+        storage: FakeFirebaseStorage());
     controller.titleController.text = 'My Feed';
     controller.descriptionController.text = 'Desc';
     controller.selectedType.value = FeedType.music;
@@ -122,7 +128,10 @@ void main() {
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
     final controller = FeedEditorController(
-        firestore: firestore, userId: 'u1', authService: auth);
+        firestore: firestore,
+        userId: 'u1',
+        authService: auth,
+        storage: FakeFirebaseStorage());
     controller.selectedType.value = FeedType.music;
 
     final result = await controller.submit();
@@ -142,7 +151,10 @@ void main() {
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
     final controller = FeedEditorController(
-        firestore: firestore, userId: 'u1', authService: auth);
+        firestore: firestore,
+        userId: 'u1',
+        authService: auth,
+        storage: FakeFirebaseStorage());
     controller.titleController.text = 'Feed';
 
     final result = await controller.submit();
@@ -192,7 +204,8 @@ void main() {
         firestore: firestore,
         userId: 'u1',
         authService: auth,
-        profileController: profile);
+        profileController: profile,
+        storage: FakeFirebaseStorage());
     controller.titleController.text = 'My Feed';
     controller.selectedType.value = FeedType.music;
 
@@ -215,7 +228,10 @@ void main() {
     final firestore = FakeFirebaseFirestore();
     final auth = FakeAuthService(U(uid: 'u1'));
     final controller = FeedEditorController(
-        firestore: firestore, userId: 'u1', authService: auth);
+        firestore: firestore,
+        userId: 'u1',
+        authService: auth,
+        storage: FakeFirebaseStorage());
     controller.titleController.text = 'My Feed';
     controller.selectedType.value = FeedType.music;
 
@@ -266,7 +282,11 @@ void main() {
     final auth = FakeAuthService(user);
 
     final controller = FeedEditorController(
-        firestore: firestore, authService: auth, feed: feed, userId: 'u1');
+        firestore: firestore,
+        authService: auth,
+        feed: feed,
+        userId: 'u1',
+        storage: FakeFirebaseStorage());
     controller.onInit();
     controller.titleController.text = 'New';
 
