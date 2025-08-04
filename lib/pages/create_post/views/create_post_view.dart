@@ -234,20 +234,7 @@ class CreatePostView extends GetView<CreatePostController> {
                                     bottom: 0,
                                   ),
                                   child: Text(
-                                    () {
-                                      final feed =
-                                          controller.selectedFeeds.isNotEmpty
-                                              ? controller.selectedFeeds.last
-                                              : null;
-                                      final type = feed?.type;
-                                      if (type?.rssTopic != null) {
-                                        final translatedType = FeedTypeExtension
-                                            .toTranslatedString(context, type!);
-                                        return 'trendingIn'.trParams(
-                                            {'topic': translatedType});
-                                      }
-                                      return 'trendingNews'.tr;
-                                    }(),
+                                    _getTrendingTitle(context),
                                     style:
                                         Theme.of(context).textTheme.titleMedium,
                                   ),
