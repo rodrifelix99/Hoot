@@ -13,6 +13,7 @@ import 'package:hoot/components/url_preview_component.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/pages/home/controllers/home_controller.dart';
 import 'package:hoot/pages/feed/controllers/feed_controller.dart';
+import 'package:hoot/util/enums/feed_types.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CreatePostView extends GetView<CreatePostController> {
@@ -90,8 +91,8 @@ class CreatePostView extends GetView<CreatePostController> {
                                               const Icon(
                                                   SolarIconsBold.checkSquare)
                                             else
-                                              const Icon(SolarIconsOutline
-                                                  .addSquare),
+                                              const Icon(
+                                                  SolarIconsOutline.addSquare),
                                             const SizedBox(width: 16),
                                             Expanded(
                                               child: Text(
@@ -233,7 +234,7 @@ class CreatePostView extends GetView<CreatePostController> {
                                     bottom: 0,
                                   ),
                                   child: Text(
-                                    'trendingNews'.tr,
+                                    _getTrendingTitle(context),
                                     style:
                                         Theme.of(context).textTheme.titleMedium,
                                   ),
