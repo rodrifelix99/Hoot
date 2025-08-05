@@ -183,7 +183,7 @@ class _HomeMockPageState extends State<HomeMockPage> {
                   minHeight: 16,
                 ),
                 child: Text(
-                  unreadCount > 99 ? '' : '$unreadCount',
+                  unreadCount > 99 ? '99+' : '$unreadCount',
                   style: TextStyle(
                     color: Colors.black.withAlpha(150),
                     fontSize: 10,
