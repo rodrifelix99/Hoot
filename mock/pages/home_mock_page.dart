@@ -10,6 +10,7 @@ import 'package:hoot/util/enums/app_colors.dart';
 
 import '../data/mock_user.dart';
 import 'profile_mock_page.dart';
+import 'explore_mock_tab.dart';
 
 class HomeMockPage extends StatefulWidget {
   const HomeMockPage({super.key});
@@ -50,7 +51,7 @@ class _HomeMockPageState extends State<HomeMockPage> {
           return PostComponent(post: post);
         },
       ),
-      const Center(child: Text('Explore')),
+      const ExploreMockTab(),
       const SizedBox.shrink(),
       const Center(child: Text('Notifications')),
       ListView(
