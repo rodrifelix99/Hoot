@@ -123,7 +123,45 @@ class InviteFriendsView extends GetView<InviteFriendsController> {
                     ),
                   ],
                 ),
-              ),
+                const SizedBox(
+                  height: 64,
+                ),
+                Center(
+                  child: Text(
+                    controller.inviteCode.value,
+                    key: const Key('inviteCode'),
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Center(
+                  child: Text(
+                    'invitesLeftThisMonth'.trParams({
+                      'count': controller.remainingInvites.value.toString(),
+                    }),
+                    textAlign: TextAlign.center,
+                    key: const Key('invitesLeft'),
+                  ),
+                ),
+                const SizedBox(
+                  height: 64,
+                ),
+                Text(
+                  'quickTips'.tr,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  'inviteOnlyDescription'.tr,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 9,
+                ),
+              ],
             ),
           ),
         ],
