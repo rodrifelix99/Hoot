@@ -8,7 +8,10 @@ import 'package:hoot/components/post_component.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/util/enums/app_colors.dart';
 
+import '../data/mock_user.dart';
+import 'notifications_mock_tab.dart';
 import 'profile_mock_page.dart';
+import 'explore_mock_tab.dart';
 
 class HomeMockPage extends StatefulWidget {
   const HomeMockPage({super.key});
@@ -49,9 +52,12 @@ class _HomeMockPageState extends State<HomeMockPage> {
           return PostComponent(post: post);
         },
       ),
-      const Center(child: Text('Explore')),
+      const ExploreMockTab(),
       const SizedBox.shrink(),
-      const Center(child: Text('Notifications')),
+      NotificationsMockTab(
+        isActive: selectedIndex == 3,
+        onClearUnread: () => setState(() => unreadCount = 0),
+      ),
       const ProfileMockPage(),
     ];
 
@@ -169,10 +175,7 @@ class _HomeMockPageState extends State<HomeMockPage> {
                   ? Colors.white
                   : Colors.white.withAlpha(175),
             ),
-            onPressed: () => setState(() {
-              selectedIndex = 3;
-              unreadCount = 0;
-            }),
+            onPressed: () => setState(() => selectedIndex = 3),
           ),
           if (unreadCount > 0)
             Positioned(
