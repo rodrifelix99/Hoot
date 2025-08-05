@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/util/routes/app_routes.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:video_player/video_player.dart';
 
@@ -113,6 +115,29 @@ class _LoginViewState extends State<LoginView> {
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.white,
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                          ),
+                      children: [
+                        TextSpan(text: '${'bySigningUpYouAgreeToOur'.tr} '),
+                        TextSpan(
+                          text: 'termsOfService'.tr,
+                          style: const TextStyle(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Get.toNamed(AppRoutes.terms);
+                            },
+                        ),
+                      ],
                     ),
                   ),
                 ],
