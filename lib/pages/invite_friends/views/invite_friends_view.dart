@@ -89,14 +89,14 @@ class InviteFriendsView extends GetView<InviteFriendsController> {
                   height: 64,
                 ),
                 Text(
-                  'Quick tips:',
+                  'quickTips'.tr,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(
                   height: 8,
                 ),
                 Text(
-                  'Hoot is invite-only. That means the only way in is through someone who\'s already inside. Like you.\nYour invite code is unique. Share it with friends, mutuals, or that one guy who keeps asking what app this is. When they use your code during sign-up, they get instant access to the full Hoot experience 🪶',
+                  'inviteOnlyDescription'.tr,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 9,
                 ),

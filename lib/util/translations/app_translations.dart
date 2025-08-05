@@ -393,6 +393,9 @@ class AppTranslations extends Translations {
           'inviteFriends': 'Invite friends',
           'yourInviteCode': 'Your invite code',
           'invitesLeftThisMonth': '@count invites left this month',
+          'quickTips': 'Quick tips:',
+          'inviteOnlyDescription':
+              'Hoot is invite-only. That means the only way in is through someone who\'s already inside. Like you.\nYour invite code is unique. Share it with friends, mutuals, or that one guy who keeps asking what app this is. When they use your code during sign-up, they get instant access to the full Hoot experience 🪶',
           'contactsPermission':
               'We need your permission to access your contacts',
           'enableNotifications': 'Enable Notifications',
@@ -803,6 +806,9 @@ class AppTranslations extends Translations {
           'inviteFriends': 'Invitar amigos',
           'yourInviteCode': 'Tu código de invitación',
           'invitesLeftThisMonth': '@count invitaciones restantes este mes',
+          'quickTips': 'Consejos rápidos:',
+          'inviteOnlyDescription':
+              'Hoot es solo por invitación. Eso significa que la única manera de entrar es a través de alguien que ya está dentro. Como tú.\nTu código de invitación es único. Compártelo con amigos, conocidos o ese chico que siempre pregunta qué app es esta. Cuando usen tu código durante el registro, obtendrán acceso instantáneo a toda la experiencia de Hoot 🪶',
           'contactsPermission':
               'Necesitamos tu permiso para acceder a tus contactos',
           'enableNotifications': 'Activar Notificaciones',
@@ -1215,6 +1221,9 @@ class AppTranslations extends Translations {
           'inviteFriends': 'Convidar amigos',
           'yourInviteCode': 'O teu código de convite',
           'invitesLeftThisMonth': '@count convites restantes este mês',
+          'quickTips': 'Dicas rápidas:',
+          'inviteOnlyDescription':
+              'Hoot é apenas por convite. Isto significa que a única forma de entrar é através de alguém que já está dentro. Como tu.\nO teu código de convite é único. Partilha-o com amigos, conhecidos ou aquele tipo que está sempre a perguntar que app é esta. Quando usarem o teu código durante o registo, terão acesso imediato à experiência completa do Hoot 🪶',
           'contactsPermission':
               'Precisamos da tua permissão para aceder aos teus contactos',
           'enableNotifications': 'Ativar Notificações',
@@ -1623,6 +1632,9 @@ class AppTranslations extends Translations {
           'inviteFriends': 'Convidar amigos',
           'yourInviteCode': 'Seu código de convite',
           'invitesLeftThisMonth': '@count convites restantes este mês',
+          'quickTips': 'Dicas rápidas:',
+          'inviteOnlyDescription':
+              'Hoot é só por convite. Isso significa que a única forma de entrar é por alguém que já está dentro. Como você.\nSeu código de convite é único. Compartilhe com amigos, conhecidos ou aquele cara que vive perguntando que app é esse. Quando usarem seu código durante o cadastro, eles terão acesso instantâneo à experiência completa do Hoot 🪶',
           'contactsPermission':
               'Precisamos da sua permissão para acessar seus contatos',
           'enableNotifications': 'Ativar Notificações',
