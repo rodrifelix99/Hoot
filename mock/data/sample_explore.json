@@ -1,0 +1,31 @@
+{
+  "popularUsers": [
+    "https://placehold.co/100x100?text=U1",
+    "https://placehold.co/100x100?text=U2",
+    "https://placehold.co/100x100?text=U3",
+    "https://placehold.co/100x100?text=U4"
+  ],
+  "topFeeds": [
+    {
+      "id": "1",
+      "userId": "1",
+      "title": "Tech Feed",
+      "description": "Latest in tech",
+      "bigAvatar": "https://placehold.co/600x400?text=Tech",
+      "bigAvatarHash": "",
+      "color": "4280391411",
+      "subscriberCount": 1234
+    },
+    {
+      "id": "2",
+      "userId": "2",
+      "title": "Sports Feed",
+      "description": "All about sports",
+      "bigAvatar": "https://placehold.co/600x400?text=Sports",
+      "bigAvatarHash": "",
+      "color": "4283215696",
+      "subscriberCount": 2345
+    }
+  ],
+  "genres": ["technology", "sports", "music", "art"]
+}
