@@ -8,7 +8,6 @@ import 'package:hoot/components/post_component.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/util/enums/app_colors.dart';
 
-import '../data/mock_user.dart';
 import 'notifications_mock_tab.dart';
 import 'profile_mock_page.dart';
 import 'explore_mock_tab.dart';
