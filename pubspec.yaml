@@ -85,6 +85,7 @@ dependencies:
   screen_corner_radius: ^2.0.0
   onesignal_flutter: ^5.3.4
   geocoding: ^2.1.0
+  geolocator: ^11.0.0
   flutter_typeahead: ^5.2.0
   video_player: ^2.7.0
   reorderable_grid_view: ^2.2.8

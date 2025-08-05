@@ -8,6 +8,7 @@ class Post {
   List<String>? media;
   List<String>? hashes;
   String? url;
+  String? location;
   U? user;
   String? feedId;
   Feed? feed;
@@ -39,6 +40,7 @@ class Post {
     this.media,
     this.hashes,
     this.url,
+    this.location,
     this.user,
     this.feedId,
     this.feed,
@@ -66,6 +68,7 @@ class Post {
               : null,
       hashes: json['hashes'] != null ? List<String>.from(json['hashes']) : null,
       url: json['url'],
+      location: json['location'],
       feedId: json['feedId'],
       feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
       user: json['user'] != null ? U.fromJson(json['user']) : null,
@@ -101,6 +104,7 @@ class Post {
       media: [],
       hashes: [],
       url: null,
+      location: null,
       feedId: '0',
       feed: null,
       user: null,
@@ -123,6 +127,7 @@ class Post {
       'hashes': hashes,
       'feedId': feedId,
       'url': url,
+      'location': location,
     };
   }
 
@@ -134,6 +139,7 @@ class Post {
       'hashes': hashes,
       'feedId': feedId,
       'url': url,
+      'location': location,
       'feed': feed?.toCache(),
       'user': user?.toCache(),
       'liked': liked,
@@ -155,6 +161,7 @@ class Post {
       media: json['media'] != null ? List<String>.from(json['media']) : null,
       hashes: json['hashes'] != null ? List<String>.from(json['hashes']) : null,
       url: json['url'],
+      location: json['location'],
       feedId: json['feedId'],
       feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
       user: json['user'] != null ? U.fromJson(json['user']) : null,
