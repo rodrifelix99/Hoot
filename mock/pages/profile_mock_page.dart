@@ -13,13 +13,19 @@ class ProfileMockPage extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
-          _buildHeader(context, mockUser),
+          ProfileHeader(user: mockUser),
         ],
       ),
     );
   }
+}
 
-  Widget _buildHeader(BuildContext context, U user) {
+class ProfileHeader extends StatelessWidget {
+  final U user;
+  const ProfileHeader({super.key, required this.user});
+
+  @override
+  Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 0.7,
       child: Stack(
