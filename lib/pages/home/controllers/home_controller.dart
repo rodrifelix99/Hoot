@@ -42,6 +42,7 @@ class HomeController extends GetxController {
 
     final oneSignal = Get.find<OneSignalService>();
     await oneSignal.login(user.uid);
+    // Only show the permission prompt if the user hasn't responded yet.
     if (await oneSignal.canRequestPermission()) {
       Get.offAllNamed(AppRoutes.notificationsPermission);
       return;
