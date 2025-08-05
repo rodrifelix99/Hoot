@@ -1,8 +1,8 @@
-# Mock mode
+# UI mock
 
-This directory contains a lightweight mock setup for running the Hoot UI
-without Firebase or network dependencies. Services are backed by in-memory
-sample data.
+This directory provides a UI-only mock of Hoot. Pages under `mock/pages/`
+use hardcoded data and manage their own state, allowing the interface to run
+without any backend or GetX dependencies.
 
 ## Run
 
@@ -10,5 +10,4 @@ sample data.
 flutter run -t mock/main.dart
 ```
 
-The app will use the production UI from `lib/` but with static data, making it
-useful for screenshots or UI experiments.
+Launching with the entry point above starts the simplified mock app.
