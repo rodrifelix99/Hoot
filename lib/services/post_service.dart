@@ -44,8 +44,8 @@ class PostService {
     final doc = await _firestore.collection('posts').doc(id).get();
     if (!doc.exists) return null;
     final data = {'id': doc.id, ...doc.data()!};
-    if (_authService.currentUser != null) {
-      final uid = _authService.currentUser!.uid;
+    final uid = _authService.currentUser?.uid;
+    if (uid != null) {
       final likeDoc = await _firestore
           .collection('posts')
           .doc(id)
