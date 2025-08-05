@@ -20,25 +20,14 @@ import 'package:hoot/util/enums/feed_types.dart';
 
 /// Manages state for creating a new post.
 class CreatePostController extends GetxController {
-  final PostService _postService;
-  final AuthService _authService;
-  final StorageService _storageService;
+  final PostService _postService = Get.find<PostService>();
+  final AuthService _authService = Get.find<AuthService>();
+  final StorageService _storageService = StorageService();
   UserService? _userService;
-  final NewsService _newsService;
+  final NewsService _newsService = Get.find<NewsService>();
   late final String _userId;
 
-  CreatePostController({
-    PostService? postService,
-    AuthService? authService,
-    String? userId,
-    StorageService? storageService,
-    UserService? userService,
-    NewsService? newsService,
-  })  : _postService = postService ?? PostService(),
-        _authService = authService ?? Get.find<AuthService>(),
-        _storageService = storageService ?? StorageService(),
-        _userService = userService,
-        _newsService = newsService ?? Get.find<NewsService>() {
+  CreatePostController({String? userId}) {
     _userId = userId ?? _authService.currentUser?.uid ?? '';
   }
 

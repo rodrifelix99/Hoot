@@ -17,27 +17,15 @@ import 'package:hoot/util/routes/args/feed_page_args.dart';
 
 class FeedPageController extends GetxController {
   final FeedPageArgs? args;
-  final AuthService _authService;
-  final FeedService _feedService;
-  final SubscriptionService _subscriptionService;
-  final FeedRequestService _feedRequestService;
-  final SubscriptionManager _subscriptionManager;
+  final AuthService _authService = Get.find<AuthService>();
+  final FeedService _feedService = Get.find<FeedService>();
+  final SubscriptionService _subscriptionService =
+      Get.find<SubscriptionService>();
+  final FeedRequestService _feedRequestService = Get.find<FeedRequestService>();
+  final SubscriptionManager _subscriptionManager =
+      Get.find<SubscriptionManager>();
 
-  FeedPageController({
-    this.args,
-    AuthService? authService,
-    FeedService? feedService,
-    SubscriptionService? subscriptionService,
-    FeedRequestService? feedRequestService,
-    SubscriptionManager? subscriptionManager,
-  })  : _authService = authService ?? Get.find<AuthService>(),
-        _feedService = feedService ?? Get.find<FeedService>(),
-        _subscriptionService =
-            subscriptionService ?? Get.find<SubscriptionService>(),
-        _feedRequestService =
-            feedRequestService ?? Get.find<FeedRequestService>(),
-        _subscriptionManager =
-            subscriptionManager ?? Get.find<SubscriptionManager>();
+  FeedPageController({this.args});
 
   final Rxn<Feed> feed = Rxn<Feed>();
   final RxBool loading = false.obs;

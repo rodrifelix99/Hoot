@@ -3,13 +3,9 @@ import 'package:hoot/models/feedback.dart' as fb;
 import 'package:hoot/services/feedback_service.dart';
 
 class StaffFeedbacksController extends GetxController {
-  final FeedbackService _service;
-
-  StaffFeedbacksController({FeedbackService? service})
-      : _service = service ??
-            (Get.isRegistered<FeedbackService>()
-                ? Get.find<FeedbackService>()
-                : FeedbackService());
+  final FeedbackService _service = Get.isRegistered<FeedbackService>()
+      ? Get.find<FeedbackService>()
+      : FeedbackService();
 
   final RxList<fb.Feedback> feedbacks = <fb.Feedback>[].obs;
   final RxBool loading = false.obs;
