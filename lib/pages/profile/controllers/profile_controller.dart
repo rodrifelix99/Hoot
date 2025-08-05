@@ -20,29 +20,17 @@ import 'package:url_launcher/url_launcher_string.dart';
 /// Loads the current user profile data and owned feeds.
 class ProfileController extends GetxController {
   final ProfileArgs? args;
-  final AuthService _authService;
-  final FeedService _feedService;
-  final SubscriptionService _subscriptionService;
-  final FeedRequestService _feedRequestService;
-  final SubscriptionManager _subscriptionManager;
+  final AuthService _authService = Get.find<AuthService>();
+  final FeedService _feedService = Get.find<FeedService>();
+  final SubscriptionService _subscriptionService =
+      Get.find<SubscriptionService>();
+  final FeedRequestService _feedRequestService = Get.find<FeedRequestService>();
+  final SubscriptionManager _subscriptionManager =
+      Get.find<SubscriptionManager>();
 
-  ProfileController({
-    this.args,
-    AuthService? authService,
-    FeedService? feedService,
-    SubscriptionService? subscriptionService,
-    FeedRequestService? feedRequestService,
-    SubscriptionManager? subscriptionManager,
-  })  : uid = args?.uid,
-        initialFeedId = args?.feedId,
-        _authService = authService ?? Get.find<AuthService>(),
-        _feedService = feedService ?? Get.find<FeedService>(),
-        _subscriptionService =
-            subscriptionService ?? Get.find<SubscriptionService>(),
-        _feedRequestService =
-            feedRequestService ?? Get.find<FeedRequestService>(),
-        _subscriptionManager =
-            subscriptionManager ?? Get.find<SubscriptionManager>();
+  ProfileController({this.args})
+      : uid = args?.uid,
+        initialFeedId = args?.feedId;
 
   final Rxn<U> user = Rxn<U>();
   final RxList<Feed> feeds = <Feed>[].obs;

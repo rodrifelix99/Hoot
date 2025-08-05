@@ -10,19 +10,12 @@ import 'package:hoot/services/notification_service.dart';
 import 'package:hoot/services/feed_request_service.dart';
 
 class NotificationsController extends GetxController {
-  final AuthService _authService;
-  final NotificationService _notificationService;
-  final FeedRequestService _feedRequestService;
+  final AuthService _authService = Get.find<AuthService>();
+  final NotificationService _notificationService =
+      Get.find<NotificationService>();
+  final FeedRequestService _feedRequestService = Get.find<FeedRequestService>();
 
-  NotificationsController({
-    AuthService? authService,
-    NotificationService? notificationService,
-    FeedRequestService? feedRequestService,
-  })  : _authService = authService ?? Get.find<AuthService>(),
-        _notificationService =
-            notificationService ?? Get.find<NotificationService>(),
-        _feedRequestService =
-            feedRequestService ?? Get.find<FeedRequestService>();
+  NotificationsController();
 
   final RxList<HootNotification> notifications = <HootNotification>[].obs;
   final Rx<PagingState<DocumentSnapshot?, HootNotification>> state =

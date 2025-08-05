@@ -11,12 +11,10 @@ import 'package:hoot/util/constants.dart';
 
 /// Controller in charge of fetching data for the explore page.
 class ExploreController extends GetxController {
-  final FirebaseFirestore _firestore;
-  final AuthService _authService;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final AuthService _authService = Get.find<AuthService>();
 
-  ExploreController({FirebaseFirestore? firestore, AuthService? authService})
-      : _firestore = firestore ?? FirebaseFirestore.instance,
-        _authService = authService ?? Get.find<AuthService>();
+  ExploreController();
 
   /// Text editing controller used by the search field.
   final TextEditingController searchController = TextEditingController();

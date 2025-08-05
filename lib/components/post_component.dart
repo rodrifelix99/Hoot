@@ -23,14 +23,10 @@ import 'package:hoot/util/routes/args/profile_args.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
-  final PostService? postService;
-  final ReportService? reportService;
   final EdgeInsetsGeometry? margin;
 
   const PostComponent({
     required this.post,
-    this.postService,
-    this.reportService,
     this.margin,
     super.key,
   });
@@ -41,24 +37,17 @@ class PostComponent extends StatefulWidget {
 
 class _PostComponentState extends State<PostComponent> {
   late Post _post;
-  late PostService _postService;
-  late AuthService _authService;
-  late ReportService _reportService;
+  final PostService _postService =
+      Get.isRegistered<PostService>() ? Get.find<PostService>() : PostService();
+  final AuthService _authService =
+      Get.isRegistered<AuthService>() ? Get.find<AuthService>() : AuthService();
+  final ReportService _reportService = Get.isRegistered<ReportService>()
+      ? Get.find<ReportService>()
+      : ReportService();
 
   @override
   void initState() {
     _post = widget.post;
-    _postService = widget.postService ??
-        (Get.isRegistered<PostService>()
-            ? Get.find<PostService>()
-            : PostService());
-    _authService = Get.isRegistered<AuthService>()
-        ? Get.find<AuthService>()
-        : AuthService();
-    _reportService = widget.reportService ??
-        (Get.isRegistered<ReportService>()
-            ? Get.find<ReportService>()
-            : ReportService());
     super.initState();
 
     if (_post.reFeeded &&
