@@ -23,6 +23,10 @@ U createMockUser({DateTime? createdAt}) {
     feeds: [mockFeed],
     subscriptionCount: 1,
     role: UserRole.user,
+    bannerPictureUrl: 'https://picsum.photos/seed/banner/800/600',
+    largeProfilePictureUrl: 'https://picsum.photos/seed/avatar/400/400',
+    bio: 'Just a mock user for testing.',
+    verified: true,
   );
 }
 
