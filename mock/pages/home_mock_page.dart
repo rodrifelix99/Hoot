@@ -67,8 +67,12 @@ class _HomeMockPageState extends State<HomeMockPage> {
               clipBehavior: Clip.antiAlias,
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(40),
+                    bottomRight: Radius.circular(40),
+                  ),
                 ),
+                color: Theme.of(context).colorScheme.surface,
                 shadows: [
                   BoxShadow(
                     color: Colors.black.withAlpha(100),
