@@ -98,6 +98,8 @@ dependencies:
   feedback: ^3.2.0
   shake: ^2.2.0
 
+  app_settings: ^6.1.1
+
   meta: any
 dev_dependencies:
   flutter_test:

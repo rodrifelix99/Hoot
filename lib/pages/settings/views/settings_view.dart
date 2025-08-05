@@ -114,6 +114,12 @@ class SettingsView extends GetView<SettingsController> {
                     trailing: const Icon(SolarIconsOutline.arrowRight),
                     onTap: () => Get.toNamed(AppRoutes.inviteFriends),
                   ),
+                  ListTile(
+                    leading: const Icon(SolarIconsOutline.bell),
+                    title: Text('notifications'.tr),
+                    trailing: const Icon(SolarIconsOutline.arrowRight),
+                    onTap: controller.openNotificationSettings,
+                  ),
                   Obx(() {
                     if (controller.isStaff) {
                       return ListTile(
