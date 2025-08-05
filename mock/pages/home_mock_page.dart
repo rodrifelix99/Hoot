@@ -58,10 +58,7 @@ class _HomeMockPageState extends State<HomeMockPage> {
         isActive: selectedIndex == 3,
         onClearUnread: () => setState(() => unreadCount = 0),
       ),
-      ListView(
-        padding: EdgeInsets.zero,
-        children: [ProfileHeader(user: mockUser)],
-      ),
+      const ProfileMockPage(),
     ];
 
     return Scaffold(
