@@ -6,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
@@ -62,6 +64,9 @@ class CreatePostController extends GetxController {
   /// First URL found in the post text.
   final RxnString linkUrl = RxnString();
 
+  /// Location selected for the post.
+  final RxnString location = RxnString();
+
   /// Feeds chosen to post to.
   final RxList<Feed> selectedFeeds = <Feed>[].obs;
 
@@ -109,6 +114,39 @@ class CreatePostController extends GetxController {
           await ErrorService.reportError(e2, stack: s2);
         }
       }
+    }
+  }
+
+  /// Toggles the post location using the device's current position.
+  Future<void> toggleLocation() async {
+    if (location.value != null) {
+      location.value = null;
+      return;
+    }
+    try {
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        ToastService.showError('couldNotGetLocation'.tr);
+        return;
+      }
+      final pos = await Geolocator.getCurrentPosition();
+      final placemarks =
+          await placemarkFromCoordinates(pos.latitude, pos.longitude);
+      if (placemarks.isNotEmpty) {
+        final place = placemarks.first;
+        final city = place.locality;
+        final country = place.country;
+        if (city != null && city.isNotEmpty && country != null && country.isNotEmpty) {
+          location.value = '$city, $country';
+        }
+      }
+    } catch (e, s) {
+      await ErrorService.reportError(e, stack: s);
+      ToastService.showError('couldNotGetLocation'.tr);
     }
   }
 
@@ -227,6 +265,7 @@ class CreatePostController extends GetxController {
               'userId': _userId,
               if (userData != null) 'user': userData,
               'url': linkUrl.value,
+              'location': location.value,
               'createdAt': FieldValue.serverTimestamp(),
             }..removeWhere((key, value) => value == null),
             id: postId);
@@ -236,6 +275,7 @@ class CreatePostController extends GetxController {
           text: text.isEmpty ? null : text,
           media: imageUrls ?? (gifUrl.value != null ? [gifUrl.value!] : null),
           url: linkUrl.value,
+          location: location.value,
           feedId: feed.id,
           feed: feed,
           user: user,
@@ -255,6 +295,7 @@ class CreatePostController extends GetxController {
       imageFiles.clear();
       gifUrl.value = null;
       linkUrl.value = null;
+      location.value = null;
       selectedFeeds.clear();
       return firstPost;
     } catch (e, s) {

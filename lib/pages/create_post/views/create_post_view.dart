@@ -199,6 +199,22 @@ class CreatePostView extends GetView<CreatePostController> {
                           onPressed: disableGif ? null : () => pickGif(context),
                           tooltip: 'addGif'.tr,
                         ),
+                        IconButton(
+                          icon: const Icon(Icons.location_on_outlined),
+                          onPressed: controller.toggleLocation,
+                          tooltip: controller.location.value == null
+                              ? 'addLocation'.tr
+                              : 'removeLocation'.tr,
+                        ),
+                        if (controller.location.value != null)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              controller.location.value!,
+                              style: Theme.of(context).textTheme.bodySmall,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                       ],
                     );
                   }),

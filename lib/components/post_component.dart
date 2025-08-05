@@ -371,6 +371,17 @@ class _PostComponentState extends State<PostComponent> {
                       ),
                     ],
                   ),
+                  if (_post.location != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      'hootedFrom'.trParams({'location': _post.location!}),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant,
+                          ),
+                    ),
+                  ],
                   if (_post.text != null && _post.text!.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     RichText(
