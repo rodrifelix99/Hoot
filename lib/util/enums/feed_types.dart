@@ -72,10 +72,12 @@ enum FeedType {
 
 extension FeedTypeExtension on FeedType {
   int get order {
-    if (this == FeedType.general)
+    if (this == FeedType.general) {
       return kGeneralFeedOrder; // General feed comes first.
-    if (this == FeedType.other)
+    }
+    if (this == FeedType.other) {
       return kOtherFeedOrder; // Other feed is sorted last.
+    }
 
     final firstLetter = toString().substring(0, 1).toLowerCase();
     return firstLetter.codeUnitAt(0);
