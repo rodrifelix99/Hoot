@@ -6,6 +6,7 @@ import 'package:hoot/services/post_service.dart';
 import 'package:hoot/services/subscription_service.dart';
 import 'package:hoot/services/feed_request_service.dart';
 import 'package:hoot/services/subscription_manager.dart';
+import 'package:hoot/services/notification_service.dart';
 import 'package:hoot/services/quick_actions_service.dart';
 import 'package:hoot/services/onesignal_service.dart';
 import 'package:hoot/services/language_service.dart';
@@ -23,6 +24,7 @@ class DependencyInjector {
     Get.put(PostService(), permanent: true);
     Get.put(SubscriptionService(), permanent: true);
     Get.put(FeedRequestService(), permanent: true);
+    Get.put(NotificationService(), permanent: true);
     Get.put(SubscriptionManager(), permanent: true);
     final quickActions = Get.put(QuickActionsService(), permanent: true);
     final oneSignal = Get.put(OneSignalService(), permanent: true);
