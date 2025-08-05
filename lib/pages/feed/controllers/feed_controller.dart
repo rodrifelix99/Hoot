@@ -8,10 +8,10 @@ import 'package:hoot/services/feed_service.dart';
 
 /// Controller responsible for fetching posts for the feed view.
 class FeedController extends GetxController {
-  FeedController({BaseFeedService? service})
-      : _feedService = service ?? Get.find<BaseFeedService>();
+  FeedController({FeedService? service})
+      : _feedService = service ?? Get.find<FeedService>();
 
-  final BaseFeedService _feedService;
+  final FeedService _feedService;
 
   final Rx<PagingState<DocumentSnapshot?, Post>> state =
       PagingState<DocumentSnapshot?, Post>().obs;

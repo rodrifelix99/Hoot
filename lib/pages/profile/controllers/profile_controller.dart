@@ -21,7 +21,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 class ProfileController extends GetxController {
   final ProfileArgs? args;
   final AuthService _authService;
-  final BaseFeedService _feedService;
+  final FeedService _feedService;
   final SubscriptionService _subscriptionService;
   final FeedRequestService _feedRequestService;
   final SubscriptionManager _subscriptionManager;
@@ -29,14 +29,14 @@ class ProfileController extends GetxController {
   ProfileController({
     this.args,
     AuthService? authService,
-    BaseFeedService? feedService,
+    FeedService? feedService,
     SubscriptionService? subscriptionService,
     FeedRequestService? feedRequestService,
     SubscriptionManager? subscriptionManager,
   })  : uid = args?.uid,
         initialFeedId = args?.feedId,
         _authService = authService ?? Get.find<AuthService>(),
-        _feedService = feedService ?? Get.find<BaseFeedService>(),
+        _feedService = feedService ?? Get.find<FeedService>(),
         _subscriptionService =
             subscriptionService ?? Get.find<SubscriptionService>(),
         _feedRequestService =

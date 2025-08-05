@@ -18,11 +18,10 @@ import 'package:hoot/util/constants.dart';
 
 class EditProfileController extends GetxController {
   final AuthService _authService;
-  final BaseUserService _userService;
+  final UserService _userService;
   final ImagePicker _picker = ImagePicker();
 
-  EditProfileController(
-      {AuthService? authService, BaseUserService? userService})
+  EditProfileController({AuthService? authService, UserService? userService})
       : _authService = authService ?? Get.find<AuthService>(),
         _userService = userService ?? UserService();
 

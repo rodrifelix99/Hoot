@@ -2,12 +2,12 @@ import 'package:get/get.dart';
 import 'package:hoot/services/stats_service.dart';
 
 class StaffDashboardController extends GetxController {
-  final BaseStatsService _service;
+  final StatsService _service;
 
-  StaffDashboardController({BaseStatsService? service})
+  StaffDashboardController({StatsService? service})
       : _service = service ??
-            (Get.isRegistered<BaseStatsService>()
-                ? Get.find<BaseStatsService>()
+            (Get.isRegistered<StatsService>()
+                ? Get.find<StatsService>()
                 : StatsService());
 
   /// Aggregated statistics including feedback counts.

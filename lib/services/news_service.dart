@@ -11,21 +11,11 @@ class NewsItem {
   final String link;
 }
 
-/// API definition for fetching news.
-abstract class BaseNewsService {
-  Future<List<NewsItem>> fetchTrendingNews({String? topic});
-}
-
 /// Default implementation downloading and parsing Google News RSS feeds.
-class NewsService implements BaseNewsService {
-  final http.Client _client;
-  final LanguageService _languageService;
+class NewsService {
+  final http.Client _client = http.Client();
+  final LanguageService _languageService = Get.find<LanguageService>();
 
-  NewsService({http.Client? client, LanguageService? languageService})
-      : _client = client ?? http.Client(),
-        _languageService = languageService ?? Get.find<LanguageService>();
-
-  @override
   Future<List<NewsItem>> fetchTrendingNews({String? topic}) async {
     try {
       final locale = _languageService.locale.value;

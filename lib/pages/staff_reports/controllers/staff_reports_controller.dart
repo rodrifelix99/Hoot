@@ -4,18 +4,17 @@ import 'package:hoot/services/post_service.dart';
 import 'package:hoot/services/report_service.dart';
 
 class StaffReportsController extends GetxController {
-  final BaseReportService _service;
-  final BasePostService _postService;
+  final ReportService _service;
+  final PostService _postService;
 
-  StaffReportsController(
-      {BaseReportService? service, BasePostService? postService})
+  StaffReportsController({ReportService? service, PostService? postService})
       : _service = service ??
-            (Get.isRegistered<BaseReportService>()
-                ? Get.find<BaseReportService>()
+            (Get.isRegistered<ReportService>()
+                ? Get.find<ReportService>()
                 : ReportService()),
         _postService = postService ??
-            (Get.isRegistered<BasePostService>()
-                ? Get.find<BasePostService>()
+            (Get.isRegistered<PostService>()
+                ? Get.find<PostService>()
                 : PostService());
 
   final RxList<Report> reports = <Report>[].obs;

@@ -16,21 +16,21 @@ import 'package:hoot/services/toast_service.dart';
 
 class PostController extends GetxController {
   final Rx<Post> post = Post.empty().obs;
-  final BaseCommentService _commentService;
+  final CommentService _commentService;
   final AuthService _authService;
-  final BasePostService _postService;
-  final BaseReportService _reportService;
-  BaseUserService? _userService;
+  final PostService _postService;
+  final ReportService _reportService;
+  UserService? _userService;
 
   PostController({
-    BaseCommentService? commentService,
+    CommentService? commentService,
     AuthService? authService,
-    BaseUserService? userService,
-    BasePostService? postService,
-    BaseReportService? reportService,
+    UserService? userService,
+    PostService? postService,
+    ReportService? reportService,
   })  : _commentService = commentService ?? CommentService(),
         _authService = authService ?? Get.find<AuthService>(),
-        _postService = postService ?? Get.find<BasePostService>(),
+        _postService = postService ?? Get.find<PostService>(),
         _reportService = reportService ?? ReportService(),
         _userService = userService;
 

@@ -10,28 +10,9 @@ class CommentPage {
   final bool hasMore;
 }
 
-abstract class BaseCommentService {
-  Future<CommentPage> fetchComments(
-    String postId, {
-    DocumentSnapshot? startAfter,
-    int limit = kDefaultFetchLimit,
-  });
+class CommentService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  String newCommentId(String postId);
-
-  Future<void> createComment(String postId, Map<String, dynamic> data,
-      {String? id});
-
-  Future<void> deleteComment(String postId, String commentId);
-}
-
-class CommentService implements BaseCommentService {
-  final FirebaseFirestore _firestore;
-
-  CommentService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
-
-  @override
   Future<CommentPage> fetchComments(
     String postId, {
     DocumentSnapshot? startAfter,
@@ -61,7 +42,6 @@ class CommentService implements BaseCommentService {
     );
   }
 
-  @override
   String newCommentId(String postId) => _firestore
       .collection('posts')
       .doc(postId)
@@ -69,7 +49,6 @@ class CommentService implements BaseCommentService {
       .doc()
       .id;
 
-  @override
   Future<void> createComment(String postId, Map<String, dynamic> data,
       {String? id}) async {
     final postRef = _firestore.collection('posts').doc(postId);
@@ -83,7 +62,6 @@ class CommentService implements BaseCommentService {
     // Notification creation is handled server-side by Firestore triggers.
   }
 
-  @override
   Future<void> deleteComment(String postId, String commentId) async {
     final postRef = _firestore.collection('posts').doc(postId);
     final commentRef = postRef.collection('comments').doc(commentId);

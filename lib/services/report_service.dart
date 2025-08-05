@@ -5,26 +5,10 @@ import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/models/report.dart';
 
 /// Provides helpers to submit user, post and comment reports.
-abstract class BaseReportService {
-  Future<void> reportPost({required String postId, required String reason});
-  Future<void> reportUser({required String userId, required String reason});
+class ReportService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final AuthService _authService = Get.find<AuthService>();
 
-  /// Reports a comment with the provided [reason].
-  Future<void> reportComment(
-      {required String commentId, required String reason});
-  Future<List<Report>> fetchReports();
-  Future<void> resolveReport(String id, {required String action});
-}
-
-class ReportService implements BaseReportService {
-  final FirebaseFirestore _firestore;
-  final AuthService _authService;
-
-  ReportService({FirebaseFirestore? firestore, AuthService? authService})
-      : _firestore = firestore ?? FirebaseFirestore.instance,
-        _authService = authService ?? Get.find<AuthService>();
-
-  @override
   Future<void> reportPost(
       {required String postId, required String reason}) async {
     final user = _authService.currentUser;
@@ -39,7 +23,6 @@ class ReportService implements BaseReportService {
     });
   }
 
-  @override
   Future<void> reportUser(
       {required String userId, required String reason}) async {
     final user = _authService.currentUser;
@@ -54,7 +37,6 @@ class ReportService implements BaseReportService {
     });
   }
 
-  @override
   Future<void> reportComment(
       {required String commentId, required String reason}) async {
     final user = _authService.currentUser;
@@ -69,7 +51,6 @@ class ReportService implements BaseReportService {
     });
   }
 
-  @override
   Future<List<Report>> fetchReports() async {
     final snapshot = await _firestore
         .collection('reports')
@@ -79,7 +60,6 @@ class ReportService implements BaseReportService {
     return snapshot.docs.map((d) => Report.fromJson(d.id, d.data())).toList();
   }
 
-  @override
   Future<void> resolveReport(String id, {required String action}) async {
     await _firestore.collection('reports').doc(id).update({
       'resolved': true,

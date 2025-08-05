@@ -2,20 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hoot/models/user.dart';
 
 /// Provides helpers to update and query user documents.
-abstract class BaseUserService {
-  Future<void> updateUserData(String uid, Map<String, dynamic> data);
-  Future<bool> isUsernameAvailable(String username);
-  Future<List<U>> searchUsers(String query);
-}
+class UserService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-/// Default implementation that persists data to Firestore.
-class UserService implements BaseUserService {
-  final FirebaseFirestore _firestore;
-
-  UserService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
-
-  @override
   Future<void> updateUserData(String uid, Map<String, dynamic> data) {
     return _firestore
         .collection('users')
@@ -23,7 +12,6 @@ class UserService implements BaseUserService {
         .set(data, SetOptions(merge: true));
   }
 
-  @override
   Future<bool> isUsernameAvailable(String username) async {
     final existing = await _firestore
         .collection('users')
@@ -33,7 +21,6 @@ class UserService implements BaseUserService {
     return existing.docs.isEmpty;
   }
 
-  @override
   Future<List<U>> searchUsers(String query) async {
     final snapshot = await _firestore
         .collection('users')

@@ -18,7 +18,7 @@ import 'package:hoot/util/routes/args/feed_page_args.dart';
 class FeedPageController extends GetxController {
   final FeedPageArgs? args;
   final AuthService _authService;
-  final BaseFeedService _feedService;
+  final FeedService _feedService;
   final SubscriptionService _subscriptionService;
   final FeedRequestService _feedRequestService;
   final SubscriptionManager _subscriptionManager;
@@ -26,12 +26,12 @@ class FeedPageController extends GetxController {
   FeedPageController({
     this.args,
     AuthService? authService,
-    BaseFeedService? feedService,
+    FeedService? feedService,
     SubscriptionService? subscriptionService,
     FeedRequestService? feedRequestService,
     SubscriptionManager? subscriptionManager,
   })  : _authService = authService ?? Get.find<AuthService>(),
-        _feedService = feedService ?? Get.find<BaseFeedService>(),
+        _feedService = feedService ?? Get.find<FeedService>(),
         _subscriptionService =
             subscriptionService ?? Get.find<SubscriptionService>(),
         _feedRequestService =
