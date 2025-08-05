@@ -37,13 +37,9 @@ class PostComponent extends StatefulWidget {
 
 class _PostComponentState extends State<PostComponent> {
   late Post _post;
-  final PostService _postService =
-      Get.isRegistered<PostService>() ? Get.find<PostService>() : PostService();
-  final AuthService _authService =
-      Get.isRegistered<AuthService>() ? Get.find<AuthService>() : AuthService();
-  final ReportService _reportService = Get.isRegistered<ReportService>()
-      ? Get.find<ReportService>()
-      : ReportService();
+  final PostService _postService = Get.find<PostService>();
+  final AuthService _authService = Get.find<AuthService>();
+  final ReportService _reportService = Get.find<ReportService>();
 
   @override
   void initState() {

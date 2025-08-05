@@ -9,8 +9,7 @@ import 'package:hoot/util/routes/args/profile_args.dart';
 /// Parses [text] and returns spans where @username mentions are highlighted
 /// in blue and tappable to open the mentioned user's profile.
 List<TextSpan> parseMentions(String text) {
-  final authService =
-      Get.isRegistered<AuthService>() ? Get.find<AuthService>() : AuthService();
+  final authService = Get.find<AuthService>();
   final regex = RegExp(r'@([A-Za-z0-9_]+)');
   final spans = <TextSpan>[];
   var currentIndex = 0;

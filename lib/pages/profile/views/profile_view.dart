@@ -60,9 +60,7 @@ class _ProfileViewState extends State<ProfileView> {
     );
     final reason = reasons?.first;
     if (reason == null || reason.isEmpty) return;
-    final service = Get.isRegistered<ReportService>()
-        ? Get.find<ReportService>()
-        : ReportService();
+    final service = Get.find<ReportService>();
     try {
       await service.reportUser(userId: user.uid, reason: reason);
       ToastService.showSuccess('reportSent'.tr);
