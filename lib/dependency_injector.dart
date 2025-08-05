@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/feed_service.dart';
+import 'package:hoot/services/invitation_service.dart';
 import 'package:hoot/services/theme_service.dart';
 import 'package:hoot/services/post_service.dart';
 import 'package:hoot/services/subscription_service.dart';
@@ -30,6 +31,7 @@ class DependencyInjector {
     await theme.loadThemeSettings();
     final language = Get.put(LanguageService(), permanent: true);
     await language.loadLocale();
+    Get.put(InvitationService(), permanent: true);
     Get.put<BaseNewsService>(NewsService(), permanent: true);
     await Get.find<OneSignalService>().init();
     await Get.find<QuickActionsService>().init();
