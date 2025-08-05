@@ -38,16 +38,14 @@ class CreatePostView extends GetView<CreatePostController> {
   }
 
   String _getTrendingTitle(BuildContext context) {
-    final feed =
-    controller.selectedFeeds.isNotEmpty
+    final feed = controller.selectedFeeds.isNotEmpty
         ? controller.selectedFeeds.last
         : null;
     final type = feed?.type;
     if (type?.rssTopic != null) {
-      final translatedType = FeedTypeExtension
-          .toTranslatedString(context, type!);
-      return 'trendingIn'.trParams(
-          {'topic': translatedType});
+      final translatedType =
+          FeedTypeExtension.toTranslatedString(context, type!);
+      return 'trendingIn'.trParams({'topic': translatedType});
     }
     return 'trendingNews'.tr;
   }
@@ -200,7 +198,9 @@ class CreatePostView extends GetView<CreatePostController> {
                           tooltip: 'addGif'.tr,
                         ),
                         IconButton(
-                          icon: const Icon(Icons.location_on_outlined),
+                          icon: controller.location.value == null
+                              ? Icon(SolarIconsOutline.gps)
+                              : Icon(SolarIconsBold.gps),
                           onPressed: controller.toggleLocation,
                           tooltip: controller.location.value == null
                               ? 'addLocation'.tr
@@ -236,7 +236,8 @@ class CreatePostView extends GetView<CreatePostController> {
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).shadowColor.withAlpha(10),
+                              color:
+                                  Theme.of(context).shadowColor.withAlpha(10),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -269,8 +270,9 @@ class CreatePostView extends GetView<CreatePostController> {
                                     ),
                                     child: Text(
                                       _getTrendingTitle(context),
-                                      style:
-                                          Theme.of(context).textTheme.titleMedium,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
                                     ),
                                   ),
                                 ListTile(
@@ -281,7 +283,8 @@ class CreatePostView extends GetView<CreatePostController> {
                                   ),
                                   title: Text(
                                     n.title,
-                                    style: Theme.of(context).textTheme.bodySmall,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),

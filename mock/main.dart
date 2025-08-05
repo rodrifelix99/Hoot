@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoot/theme/theme.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 
 import 'ui_mock_pages.dart';
@@ -15,10 +16,7 @@ class MockApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hoot',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme(Colors.blue),
       initialRoute: AppRoutes.home,
       routes: uiMockRoutes,
     );
