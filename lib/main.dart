@@ -81,7 +81,7 @@ void main() {
         ),
       ),
     );
-    ShakeDetector.autoStart(onPhoneShake: () {
+    ShakeDetector.autoStart(onPhoneShake: (_) {
       final context = Get.context;
       if (context != null) {
         BetterFeedback.of(context).show((feedback) async {
