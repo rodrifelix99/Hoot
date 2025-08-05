@@ -4,11 +4,8 @@ import 'package:hoot/services/post_service.dart';
 import 'package:hoot/services/report_service.dart';
 
 class StaffReportsController extends GetxController {
-  final ReportService _service = Get.isRegistered<ReportService>()
-      ? Get.find<ReportService>()
-      : ReportService();
-  final PostService _postService =
-      Get.isRegistered<PostService>() ? Get.find<PostService>() : PostService();
+  final ReportService _service = Get.find<ReportService>();
+  final PostService _postService = Get.find<PostService>();
 
   final RxList<Report> reports = <Report>[].obs;
   final RxBool loading = false.obs;

@@ -2,9 +2,7 @@ import 'package:get/get.dart';
 import 'package:hoot/services/stats_service.dart';
 
 class StaffDashboardController extends GetxController {
-  final StatsService _service = Get.isRegistered<StatsService>()
-      ? Get.find<StatsService>()
-      : StatsService();
+  final StatsService _service = Get.find<StatsService>();
 
   StaffDashboardController();
 
