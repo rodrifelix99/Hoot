@@ -12,8 +12,6 @@
 		</dict>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
-		<key>GADApplicationIdentifier</key>
-		<string>ca-app-pub-2440287554514413~1060263471</string>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
@@ -92,8 +90,6 @@
 		</array>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
-		<key>NSUserTrackingUsageDescription</key>
-		<string>This identifier will be used to deliver personalized ads to you.</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
 	</dict>
