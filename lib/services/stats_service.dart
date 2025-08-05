@@ -17,19 +17,10 @@ class Stats {
   });
 }
 
-/// Contract for fetching aggregate statistics.
-abstract class BaseStatsService {
-  Future<Stats> fetchStats();
-}
-
 /// Default implementation that aggregates data from Firestore.
-class StatsService implements BaseStatsService {
-  final FirebaseFirestore _firestore;
+class StatsService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  StatsService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
-
-  @override
   Future<Stats> fetchStats() async {
     final results = await Future.wait([
       _firestore.collection('users').get(),

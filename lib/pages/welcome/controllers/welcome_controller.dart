@@ -12,9 +12,9 @@ class WelcomeController extends GetxController {
   final usernameController = TextEditingController();
 
   final _auth = Get.find<AuthService>();
-  final BaseUserService _userService;
+  final UserService _userService;
 
-  WelcomeController({BaseUserService? userService})
+  WelcomeController({UserService? userService})
       : _userService = userService ?? UserService();
 
   @override

@@ -15,25 +15,9 @@ class NotificationPage {
   final bool hasMore;
 }
 
-abstract class BaseNotificationService {
-  Future<NotificationPage> fetchNotifications(
-    String userId, {
-    DocumentSnapshot? startAfter,
-    int limit = kDefaultFetchLimit,
-  });
-  Future<void> createNotification(String userId, Map<String, dynamic> data);
-  Future<void> markAsRead(String userId, String notificationId);
-  Stream<int> unreadCountStream(String userId);
-  Future<void> markAllAsRead(String userId);
-}
+class NotificationService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-class NotificationService implements BaseNotificationService {
-  final FirebaseFirestore _firestore;
-
-  NotificationService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
-
-  @override
   Future<NotificationPage> fetchNotifications(
     String userId, {
     DocumentSnapshot? startAfter,
@@ -63,7 +47,6 @@ class NotificationService implements BaseNotificationService {
     );
   }
 
-  @override
   Future<void> createNotification(String userId, Map<String, dynamic> data) {
     return _firestore
         .collection('users')
@@ -72,7 +55,6 @@ class NotificationService implements BaseNotificationService {
         .add(data);
   }
 
-  @override
   Future<void> markAsRead(String userId, String notificationId) {
     return _firestore
         .collection('users')
@@ -82,7 +64,6 @@ class NotificationService implements BaseNotificationService {
         .update({'read': true});
   }
 
-  @override
   Future<void> markAllAsRead(String userId) async {
     final snapshot = await _firestore
         .collection('users')
@@ -98,7 +79,6 @@ class NotificationService implements BaseNotificationService {
     await batch.commit();
   }
 
-  @override
   Stream<int> unreadCountStream(String userId) {
     return _firestore
         .collection('users')

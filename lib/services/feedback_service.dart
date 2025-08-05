@@ -6,19 +6,10 @@ import 'package:cloud_functions/cloud_functions.dart';
 
 import 'package:hoot/models/feedback.dart' as fb;
 
-/// Abstraction for feedback operations.
-abstract class BaseFeedbackService {
-  /// Fetches feedback documents from Firestore.
-  Future<List<fb.Feedback>> fetchFeedbacks();
-}
-
 /// Service to submit user feedback such as screenshots and comments and to
 /// fetch feedback entries from Firestore.
-class FeedbackService implements BaseFeedbackService {
-  FeedbackService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
-
-  final FirebaseFirestore _firestore;
+class FeedbackService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   static final _functions = FirebaseFunctions.instance;
 
@@ -34,7 +25,6 @@ class FeedbackService implements BaseFeedbackService {
     });
   }
 
-  @override
   Future<List<fb.Feedback>> fetchFeedbacks() async {
     final snapshot = await _firestore
         .collection('feedback')

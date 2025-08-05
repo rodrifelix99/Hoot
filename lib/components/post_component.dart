@@ -23,8 +23,8 @@ import 'package:hoot/util/routes/args/profile_args.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
-  final BasePostService? postService;
-  final BaseReportService? reportService;
+  final PostService? postService;
+  final ReportService? reportService;
   final EdgeInsetsGeometry? margin;
 
   const PostComponent({
@@ -41,23 +41,23 @@ class PostComponent extends StatefulWidget {
 
 class _PostComponentState extends State<PostComponent> {
   late Post _post;
-  late BasePostService _postService;
+  late PostService _postService;
   late AuthService _authService;
-  late BaseReportService _reportService;
+  late ReportService _reportService;
 
   @override
   void initState() {
     _post = widget.post;
     _postService = widget.postService ??
-        (Get.isRegistered<BasePostService>()
-            ? Get.find<BasePostService>()
+        (Get.isRegistered<PostService>()
+            ? Get.find<PostService>()
             : PostService());
     _authService = Get.isRegistered<AuthService>()
         ? Get.find<AuthService>()
         : AuthService();
     _reportService = widget.reportService ??
-        (Get.isRegistered<BaseReportService>()
-            ? Get.find<BaseReportService>()
+        (Get.isRegistered<ReportService>()
+            ? Get.find<ReportService>()
             : ReportService());
     super.initState();
 
@@ -193,8 +193,8 @@ class _PostComponentState extends State<PostComponent> {
     const int maxLength = 280;
     final length = text?.length ?? 0;
     if (length <= threshold) return base;
-    final ratio = ((length - threshold) / (maxLength - threshold))
-        .clamp(0.0, 1.0);
+    final ratio =
+        ((length - threshold) / (maxLength - threshold)).clamp(0.0, 1.0);
     return base - (base - minFontSize) * ratio;
   }
 
@@ -375,19 +375,17 @@ class _PostComponentState extends State<PostComponent> {
                     const SizedBox(height: 16),
                     RichText(
                       text: TextSpan(
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall
-                            ?.copyWith(
-                              fontSize: _calculateFontSize(
-                                _post.text!,
-                                Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall
-                                        ?.fontSize ??
-                                    20,
-                              ),
-                            ),
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontSize: _calculateFontSize(
+                                    _post.text!,
+                                    Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall
+                                            ?.fontSize ??
+                                        20,
+                                  ),
+                                ),
                         children: parseMentions(_post.text!),
                       ),
                     ),

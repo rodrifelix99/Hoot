@@ -11,16 +11,16 @@ import 'package:hoot/services/feed_request_service.dart';
 
 class NotificationsController extends GetxController {
   final AuthService _authService;
-  final BaseNotificationService _notificationService;
+  final NotificationService _notificationService;
   final FeedRequestService _feedRequestService;
 
   NotificationsController({
     AuthService? authService,
-    BaseNotificationService? notificationService,
+    NotificationService? notificationService,
     FeedRequestService? feedRequestService,
   })  : _authService = authService ?? Get.find<AuthService>(),
         _notificationService =
-            notificationService ?? Get.find<BaseNotificationService>(),
+            notificationService ?? Get.find<NotificationService>(),
         _feedRequestService =
             feedRequestService ?? Get.find<FeedRequestService>();
 

@@ -15,33 +15,12 @@ class PostPage {
   final bool hasMore;
 }
 
-/// Service retrieving posts from feeds the current user is subscribed to.
-abstract class BaseFeedService {
-  Future<PostPage> fetchSubscribedPosts({
-    DocumentSnapshot? startAfter,
-    int limit = kDefaultFetchLimit,
-  });
-
-  Future<PostPage> fetchFeedPosts(
-    String feedId, {
-    DocumentSnapshot? startAfter,
-    int limit = kDefaultFetchLimit,
-  });
-
-  Future<void> updateFeedOrder(List<Feed> feeds);
-}
-
 /// Default implementation retrieving posts from feeds the current user is subscribed to.
-class FeedService implements BaseFeedService {
-  final FirebaseFirestore _firestore;
-  final AuthService _authService;
-
-  FeedService({FirebaseFirestore? firestore, AuthService? authService})
-      : _firestore = firestore ?? FirebaseFirestore.instance,
-        _authService = authService ?? Get.find<AuthService>();
+class FeedService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final AuthService _authService = Get.find<AuthService>();
 
   /// Returns the latest posts from the user's subscriptions ordered by creation.
-  @override
   Future<PostPage> fetchSubscribedPosts({
     DocumentSnapshot? startAfter,
     int limit = kDefaultFetchLimit,
@@ -97,7 +76,6 @@ class FeedService implements BaseFeedService {
     );
   }
 
-  @override
   Future<PostPage> fetchFeedPosts(
     String feedId, {
     DocumentSnapshot? startAfter,
@@ -166,7 +144,6 @@ class FeedService implements BaseFeedService {
     );
   }
 
-  @override
   Future<void> updateFeedOrder(List<Feed> feeds) async {
     final batch = _firestore.batch();
     for (var i = 0; i < feeds.length; i++) {

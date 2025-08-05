@@ -60,8 +60,8 @@ class _ProfileViewState extends State<ProfileView> {
     );
     final reason = reasons?.first;
     if (reason == null || reason.isEmpty) return;
-    final service = Get.isRegistered<BaseReportService>()
-        ? Get.find<BaseReportService>()
+    final service = Get.isRegistered<ReportService>()
+        ? Get.find<ReportService>()
         : ReportService();
     try {
       await service.reportUser(userId: user.uid, reason: reason);

@@ -1,49 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/services/auth_service.dart';
 
-/// Base interface for creating posts in Firestore.
-abstract class BasePostService {
-  /// Generates a new unique identifier for a post document.
-  String newPostId();
-
-  /// Creates a post document with optional [id].
-  Future<void> createPost(Map<String, dynamic> data, {String? id});
-
-  /// Toggles like state for [postId] by [userId].
-  Future<void> toggleLike(String postId, String userId, bool like);
-
-  /// Fetches a post document by [id]. Returns null if not found.
-  Future<Post?> fetchPost(String id);
-
-  /// Creates a reFeed of [original] into [targetFeed] by [user].
-  /// Returns the new post id.
-  Future<String> reFeed({
-    required Post original,
-    required Feed targetFeed,
-    required U user,
-  });
-
-  /// Deletes a post document by [id].
-  Future<void> deletePost(String id);
-}
-
 /// Default implementation writing to the `posts` collection.
-class PostService implements BasePostService {
-  final FirebaseFirestore _firestore;
-  final AuthService? _authService;
+class PostService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final AuthService _authService = Get.find<AuthService>();
 
-  PostService({FirebaseFirestore? firestore, AuthService? authService})
-      : _firestore = firestore ?? FirebaseFirestore.instance,
-        _authService = authService;
-
-  @override
   String newPostId() => _firestore.collection('posts').doc().id;
 
-  @override
   Future<void> createPost(Map<String, dynamic> data, {String? id}) async {
     if (id != null) {
       await _firestore.collection('posts').doc(id).set(data);
@@ -54,7 +23,6 @@ class PostService implements BasePostService {
     // Mentions are now handled server-side by a Firestore trigger.
   }
 
-  @override
   Future<void> toggleLike(String postId, String userId, bool like) async {
     final postRef = _firestore.collection('posts').doc(postId);
     final likeRef = postRef.collection('likes').doc(userId);
@@ -72,13 +40,12 @@ class PostService implements BasePostService {
     // Like notifications are handled server-side by a Firestore trigger.
   }
 
-  @override
   Future<Post?> fetchPost(String id) async {
     final doc = await _firestore.collection('posts').doc(id).get();
     if (!doc.exists) return null;
     final data = {'id': doc.id, ...doc.data()!};
-    if (_authService?.currentUser != null) {
-      final uid = _authService!.currentUser!.uid;
+    if (_authService.currentUser != null) {
+      final uid = _authService.currentUser!.uid;
       final likeDoc = await _firestore
           .collection('posts')
           .doc(id)
@@ -97,7 +64,6 @@ class PostService implements BasePostService {
     return Post.fromJson(data);
   }
 
-  @override
   Future<String> reFeed({
     required Post original,
     required Feed targetFeed,
@@ -146,7 +112,6 @@ class PostService implements BasePostService {
     return newId;
   }
 
-  @override
   Future<void> deletePost(String id) async {
     final postRef = _firestore.collection('posts').doc(id);
     final snap = await postRef.get();

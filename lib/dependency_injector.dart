@@ -19,8 +19,8 @@ class DependencyInjector {
   static Future<void> init() async {
     final auth = Get.put(AuthService(), permanent: true);
     await auth.fetchUser();
-    Get.put<BaseFeedService>(FeedService(), permanent: true);
-    Get.put<BasePostService>(PostService(authService: auth), permanent: true);
+    Get.put(FeedService(), permanent: true);
+    Get.put(PostService(), permanent: true);
     Get.put(SubscriptionService(), permanent: true);
     Get.put(FeedRequestService(), permanent: true);
     Get.put(SubscriptionManager(), permanent: true);
@@ -30,7 +30,7 @@ class DependencyInjector {
     await theme.loadThemeSettings();
     final language = Get.put(LanguageService(), permanent: true);
     await language.loadLocale();
-    Get.put<BaseNewsService>(NewsService(), permanent: true);
+    Get.put(NewsService(), permanent: true);
     await Get.find<OneSignalService>().init();
     await Get.find<QuickActionsService>().init();
   }

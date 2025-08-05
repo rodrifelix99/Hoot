@@ -6,7 +6,6 @@ import 'package:image/image.dart' as img;
 import 'package:blurhash/blurhash.dart';
 import 'package:hoot/util/constants.dart';
 
-/// Interface for uploading post media to Firebase Storage.
 class UploadedPostImage {
   final String url;
   final String blurHash;
@@ -14,19 +13,10 @@ class UploadedPostImage {
   UploadedPostImage({required this.url, required this.blurHash});
 }
 
-abstract class BaseStorageService {
-  Future<List<UploadedPostImage>> uploadPostImages(
-      String postId, List<File> files);
-}
-
 /// Default implementation uploading to the `posts` folder.
-class StorageService implements BaseStorageService {
-  final FirebaseStorage _storage;
+class StorageService {
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  StorageService({FirebaseStorage? storage})
-      : _storage = storage ?? FirebaseStorage.instance;
-
-  @override
   Future<List<UploadedPostImage>> uploadPostImages(
       String postId, List<File> files) async {
     final results = <UploadedPostImage>[];
