@@ -24,14 +24,14 @@ class DependencyInjector {
     Get.put(SubscriptionService(), permanent: true);
     Get.put(FeedRequestService(), permanent: true);
     Get.put(SubscriptionManager(), permanent: true);
-    Get.put(QuickActionsService(), permanent: true);
-    Get.put(OneSignalService(), permanent: true);
+    final quickActions = Get.put(QuickActionsService(), permanent: true);
+    final oneSignal = Get.put(OneSignalService(), permanent: true);
     final theme = Get.put(ThemeService(), permanent: true);
     await theme.loadThemeSettings();
     final language = Get.put(LanguageService(), permanent: true);
     await language.loadLocale();
     Get.put(NewsService(), permanent: true);
-    await Get.find<OneSignalService>().init();
-    await Get.find<QuickActionsService>().init();
+    await oneSignal.init();
+    await quickActions.init();
   }
 }
