@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:solar_icons/solar_icons.dart';
 
+import 'package:hoot/components/post_component.dart';
+import 'package:hoot/models/post.dart';
 import 'package:hoot/util/enums/app_colors.dart';
+
+import '../data/mock_user.dart';
+import 'profile_mock_page.dart';
 
 class HomeMockPage extends StatefulWidget {
   const HomeMockPage({super.key});
@@ -14,7 +19,7 @@ class HomeMockPage extends StatefulWidget {
 }
 
 class _HomeMockPageState extends State<HomeMockPage> {
-  List<dynamic> posts = [];
+  List<Post> posts = [];
   int selectedIndex = 0;
   int unreadCount = 3;
   final AppColor appColor = AppColor.blue;
@@ -30,7 +35,8 @@ class _HomeMockPageState extends State<HomeMockPage> {
         await rootBundle.loadString('mock/data/sample_posts.json');
     final data = json.decode(jsonString) as List<dynamic>;
     setState(() {
-      posts = data;
+      posts =
+          data.map((e) => Post.fromJson(e as Map<String, dynamic>)).toList();
     });
   }
 
@@ -41,16 +47,16 @@ class _HomeMockPageState extends State<HomeMockPage> {
         itemCount: posts.length,
         itemBuilder: (context, index) {
           final post = posts[index];
-          final user = post['user'] as Map<String, dynamic>? ?? {};
-          return ListTile(
-            title: Text(user['username'] ?? ''),
-            subtitle: Text(post['text'] ?? ''),
-          );
+          return PostComponent(post: post);
         },
       ),
       const Center(child: Text('Explore')),
+      const SizedBox.shrink(),
       const Center(child: Text('Notifications')),
-      const Center(child: Text('Profile')),
+      ListView(
+        padding: EdgeInsets.zero,
+        children: [ProfileHeader(user: mockUser)],
+      ),
     ];
 
     return Scaffold(
@@ -163,12 +169,12 @@ class _HomeMockPageState extends State<HomeMockPage> {
             constraints: const BoxConstraints(minWidth: 56, minHeight: 56),
             icon: Icon(
               SolarIconsOutline.bell,
-              color: selectedIndex == 2
+              color: selectedIndex == 3
                   ? Colors.white
                   : Colors.white.withAlpha(175),
             ),
             onPressed: () => setState(() {
-              selectedIndex = 2;
+              selectedIndex = 3;
               unreadCount = 0;
             }),
           ),
@@ -205,9 +211,9 @@ class _HomeMockPageState extends State<HomeMockPage> {
         icon: Icon(
           SolarIconsOutline.user,
           color:
-              selectedIndex == 3 ? Colors.white : Colors.white.withAlpha(175),
+              selectedIndex == 4 ? Colors.white : Colors.white.withAlpha(175),
         ),
-        onPressed: () => setState(() => selectedIndex = 3),
+        onPressed: () => setState(() => selectedIndex = 4),
       ),
     ];
   }
