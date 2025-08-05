@@ -64,6 +64,10 @@
 		<string>Access to your camera is needed to create new media for your hoots and profile</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>Access to your gallery is needed to upload media to your hoots and profile</string>
+                <key>NSLocationWhenInUseUsageDescription</key>
+                <string>Needed to determine your position for nearby content</string>
+                <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+                <string>Needed to determine your position for nearby content</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UIBackgroundModes</key>
