@@ -8,7 +8,6 @@ import 'package:hoot/components/post_component.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/util/enums/app_colors.dart';
 
-import '../data/mock_user.dart';
 import 'profile_mock_page.dart';
 
 class HomeMockPage extends StatefulWidget {
@@ -53,10 +52,7 @@ class _HomeMockPageState extends State<HomeMockPage> {
       const Center(child: Text('Explore')),
       const SizedBox.shrink(),
       const Center(child: Text('Notifications')),
-      ListView(
-        padding: EdgeInsets.zero,
-        children: [ProfileHeader(user: mockUser)],
-      ),
+      const ProfileMockPage(),
     ];
 
     return Scaffold(
