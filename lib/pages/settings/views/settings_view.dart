@@ -101,13 +101,13 @@ class SettingsView extends GetView<SettingsController> {
                     trailing: const Icon(SolarIconsOutline.arrowRight),
                     onTap: controller.goToEditProfile,
                   ),
-                  ListTile(
+                  /*ListTile(
                     leading: const Icon(SolarIconsOutline.usersGroupRounded),
                     title: Text('findFriends'.tr),
                     subtitle: Text('findFriendsFromContacts'.tr),
                     trailing: const Icon(SolarIconsOutline.arrowRight),
                     onTap: controller.findFriends,
-                  ),
+                  ),*/
                   ListTile(
                     leading: const Icon(Icons.card_giftcard),
                     title: Text('inviteFriends'.tr),

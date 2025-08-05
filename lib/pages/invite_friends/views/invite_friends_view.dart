@@ -24,11 +24,15 @@ class InviteFriendsView extends GetView<InviteFriendsController> {
             bottom: 0,
             left: 0,
             right: 0,
-            child: Image.asset(
-              'assets/images/top_bar.png',
-              fit: BoxFit.cover,
-              height: 200,
-              width: double.infinity,
+            child: Opacity(
+              opacity: 0.5,
+              child: Image.asset(
+                'assets/images/top_bar.png',
+                fit: BoxFit.cover,
+                height: 120,
+                width: double.infinity,
+                alignment: Alignment.topCenter,
+              ),
             ),
           ),
           Obx(
