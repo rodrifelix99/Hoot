@@ -42,8 +42,8 @@ class HomeController extends GetxController {
 
     final oneSignal = Get.find<OneSignalService>();
     await oneSignal.login(user.uid);
-    if (await oneSignal.canRequestPermission()) {
-      Get.toNamed(AppRoutes.notificationsPermission);
+    if (!await oneSignal.canRequestPermission()) {
+      Get.offAllNamed(AppRoutes.notificationsPermission);
       return;
     }
 
