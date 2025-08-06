@@ -13,6 +13,7 @@ import 'package:hoot/pages/home/controllers/home_controller.dart';
 import 'package:hoot/services/haptic_service.dart';
 import 'package:hoot/services/theme_service.dart';
 import 'package:hoot/util/enums/app_colors.dart';
+import 'package:hoot/services/app_review_service.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -26,6 +27,9 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<AppReviewService>().recordAction(context);
+    });
     return Obx(() {
       final index = controller.selectedIndex.value;
       final unread = Get.find<NotificationsController>().unreadCount.value;
