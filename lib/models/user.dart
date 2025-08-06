@@ -32,6 +32,7 @@ class U {
   int? subscriptionCount;
   int? activityScore;
   int? popularityScore;
+  int? challengeCount;
   List<Feed>? feeds;
   UserRole role;
 
@@ -61,6 +62,7 @@ class U {
     this.subscriptionCount,
     this.activityScore = 0,
     this.popularityScore = 0,
+    this.challengeCount = 0,
     this.feeds,
     this.role = UserRole.user,
   });
@@ -118,6 +120,7 @@ class U {
       subscriptionCount: json['subscriptionCount'],
       activityScore: json['activityScore'],
       popularityScore: json['popularityScore'],
+      challengeCount: json['challengeCount'] ?? 0,
       feeds: json['feeds'] != null
           ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x)))
           : [],
@@ -148,6 +151,7 @@ class U {
       'birthday': birthday,
       'role': role.name,
       'verified': verified,
+      'challengeCount': challengeCount,
     };
   }
 
@@ -177,6 +181,7 @@ class U {
         'subscriptionCount': subscriptionCount,
         'activityScore': activityScore,
         'popularityScore': popularityScore,
+        'challengeCount': challengeCount,
         'feeds': feeds?.map((e) => e.toCache()).toList(),
         'role': role.name,
       };
@@ -210,6 +215,7 @@ class U {
       subscriptionCount: json['subscriptionCount'],
       activityScore: json['activityScore'],
       popularityScore: json['popularityScore'],
+      challengeCount: json['challengeCount'] ?? 0,
       feeds: json['feeds'] != null
           ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x)))
           : [],
