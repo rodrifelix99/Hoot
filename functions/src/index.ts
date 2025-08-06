@@ -9,4 +9,5 @@ export * from "./triggers/onUserUpdated";
 export * from "./triggers/onFeedUpdated";
 export * from "./triggers/onInvitationUsed";
 export * from "./triggers/onReportCreated";
+export * from "./triggers/onChallengeCreated";
 export * from "./feedback";
