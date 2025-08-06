@@ -8,10 +8,12 @@ class ChallengeCard extends StatefulWidget {
     super.key,
     required this.challenge,
     required this.onJoin,
+    required this.onViewEntries,
   });
 
   final DailyChallenge challenge;
   final VoidCallback onJoin;
+  final VoidCallback onViewEntries;
 
   @override
   State<ChallengeCard> createState() => _ChallengeCardState();
@@ -71,12 +73,19 @@ class _ChallengeCardState extends State<ChallengeCard> {
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: widget.onJoin,
-                child: const Text('Join Challenge'),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: widget.onViewEntries,
+                  child: const Text('View entries'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: widget.onJoin,
+                  child: const Text('Join Challenge'),
+                ),
+              ],
             ),
           ],
         ),

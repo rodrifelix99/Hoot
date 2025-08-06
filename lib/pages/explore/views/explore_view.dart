@@ -97,6 +97,9 @@ class ExploreView extends GetView<ExploreController> {
                             '${AppRoutes.createPost}?text=${Uri.encodeComponent(tag)}',
                           );
                         },
+                        onViewEntries: () {
+                          Get.toNamed(AppRoutes.challenge);
+                        },
                       ),
                     );
                   },

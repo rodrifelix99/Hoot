@@ -20,6 +20,7 @@ class AppRoutes {
   static const subscribers = '/subscribers';
   static const feed = '/feed';
   static const post = '/post';
+  static const challenge = '/challenge';
   static const report = '/report';
   static const aboutUs = '/about_us';
   static const contacts = '/contacts';
