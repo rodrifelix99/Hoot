@@ -5,12 +5,15 @@ import 'package:hoot/components/feed_card.dart';
 import 'package:hoot/components/type_box_component.dart';
 import 'package:hoot/components/avatar_component.dart';
 import 'package:hoot/components/post_component.dart';
+import 'package:hoot/components/challenge_card.dart';
 import 'package:hoot/util/routes/args/feed_page_args.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
 import 'package:hoot/pages/explore/controllers/explore_controller.dart';
 import 'package:hoot/components/scale_on_press.dart';
+import 'package:hoot/services/challenge_service.dart';
+import 'package:hoot/models/daily_challenge.dart';
 
 class ExploreView extends GetView<ExploreController> {
   const ExploreView({super.key});
@@ -78,6 +81,27 @@ class ExploreView extends GetView<ExploreController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                StreamBuilder<DailyChallenge?>(
+                  stream:
+                      Get.find<BaseChallengeService>().watchCurrentChallenge(),
+                  builder: (context, snapshot) {
+                    final challenge = snapshot.data;
+                    if (challenge == null) return const SizedBox.shrink();
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: ChallengeCard(
+                        challenge: challenge,
+                        onJoin: () {
+                          final tag = '#${challenge.hashtag} ';
+                          Get.toNamed(
+                            '${AppRoutes.createPost}?text=${Uri.encodeComponent(tag)}',
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: TextField(
