@@ -7,6 +7,7 @@ import 'package:hoot/components/post_component.dart';
 import 'package:hoot/models/daily_challenge.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/services/challenge_service.dart';
+import 'package:hoot/pages/challenge/challenge_feed_controller.dart';
 
 /// Displays posts tagged with the currently active challenge.
 class ChallengeFeedPage extends StatelessWidget {
@@ -48,13 +49,21 @@ class ChallengeFeedPage extends StatelessWidget {
                   text: 'noHoots'.tr,
                 );
               }
+              final controller = Get.put(ChallengeFeedController());
               final posts = docs
                   .map((d) => Post.fromJson({'id': d.id, ...d.data()}))
                   .toList();
+              final filtered = controller.filterPosts(posts);
+              if (filtered.isEmpty) {
+                return NothingToShowComponent(
+                  imageAsset: 'assets/images/empty.webp',
+                  text: 'challengePostsFiltered'.tr,
+                );
+              }
               return ListView.builder(
-                itemCount: posts.length,
+                itemCount: filtered.length,
                 itemBuilder: (context, index) => PostComponent(
-                  post: posts[index],
+                  post: filtered[index],
                   margin: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 8,
