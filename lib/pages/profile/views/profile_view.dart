@@ -446,6 +446,17 @@ class _ProfileViewState extends State<ProfileView> {
                       ],
                     ),
                   ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '🌟 ${user.challengeCount ?? 0} Daily Challenges',
+                      style: Get.textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             )),
             const SliverToBoxAdapter(child: SizedBox(height: 32)),

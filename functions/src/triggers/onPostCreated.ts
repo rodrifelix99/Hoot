@@ -64,9 +64,14 @@ export const onPostCreated = onDocumentCreated(
           });
       }
     }
-    await db
-      .collection("users")
-      .doc(userId)
-      .update({ activityScore: FieldValue.increment(1) });
+    const updates: Record<string, unknown> = {
+      activityScore: FieldValue.increment(1),
+    };
+
+    if (post.challengeId) {
+      updates.challengeCount = FieldValue.increment(1);
+    }
+
+    await db.collection("users").doc(userId).update(updates);
   }
 );
