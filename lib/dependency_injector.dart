@@ -11,6 +11,7 @@ import 'package:hoot/services/quick_actions_service.dart';
 import 'package:hoot/services/onesignal_service.dart';
 import 'package:hoot/services/language_service.dart';
 import 'package:hoot/services/news_service.dart';
+import 'package:hoot/services/challenge_service.dart';
 import 'package:hoot/services/app_review_service.dart';
 
 /// Registers global dependencies for the application.
@@ -35,6 +36,7 @@ class DependencyInjector {
     await language.loadLocale();
     Get.put(InvitationService(), permanent: true);
     Get.put<BaseNewsService>(NewsService(), permanent: true);
+    Get.put<BaseChallengeService>(ChallengeService(), permanent: true);
     await Get.find<OneSignalService>().init();
     await Get.find<QuickActionsService>().init();
   }
