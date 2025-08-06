@@ -19,55 +19,55 @@ import 'package:hoot/models/post.dart';
 class ExploreView extends GetView<ExploreController> {
   const ExploreView({super.key});
 
+  Widget buildSuggestions() {
+    return Obx(() {
+      if (controller.query.value.isEmpty) return const SizedBox();
+      if (controller.searching.value) {
+        return const Padding(
+          padding: EdgeInsets.all(16),
+          child: CircularProgressIndicator(),
+        );
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ...controller.userSuggestions.map(
+                (u) => ListTile(
+              leading: ProfileAvatarComponent(
+                image: u.largeProfilePictureUrl ?? '',
+                hash: u.bigAvatarHash ?? u.smallAvatarHash,
+                size: 40,
+              ),
+              title: Text(u.name ?? ''),
+              subtitle: Text('@${u.username ?? ''}'),
+              onTap: () => Get.toNamed(
+                AppRoutes.profile,
+                arguments: ProfileArgs(uid: u.uid),
+              ),
+            ),
+          ),
+          ...controller.feedSuggestions.map(
+                (f) => ListTile(
+              leading: ProfileAvatarComponent(
+                image: f.smallAvatar ?? f.bigAvatar ?? '',
+                hash: f.smallAvatarHash ?? f.bigAvatarHash,
+                size: 40,
+              ),
+              title: Text(f.title),
+              subtitle: Text('feed'.tr),
+              onTap: () => Get.toNamed(
+                AppRoutes.profile,
+                arguments: ProfileArgs(uid: f.userId, feedId: f.id),
+              ),
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget buildSuggestions() {
-      return Obx(() {
-        if (controller.query.value.isEmpty) return const SizedBox();
-        if (controller.searching.value) {
-          return const Padding(
-            padding: EdgeInsets.all(16),
-            child: CircularProgressIndicator(),
-          );
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ...controller.userSuggestions.map(
-              (u) => ListTile(
-                leading: ProfileAvatarComponent(
-                  image: u.largeProfilePictureUrl ?? '',
-                  hash: u.bigAvatarHash ?? u.smallAvatarHash,
-                  size: 40,
-                ),
-                title: Text(u.name ?? ''),
-                subtitle: Text('@${u.username ?? ''}'),
-                onTap: () => Get.toNamed(
-                  AppRoutes.profile,
-                  arguments: ProfileArgs(uid: u.uid),
-                ),
-              ),
-            ),
-            ...controller.feedSuggestions.map(
-              (f) => ListTile(
-                leading: ProfileAvatarComponent(
-                  image: f.smallAvatar ?? f.bigAvatar ?? '',
-                  hash: f.smallAvatarHash ?? f.bigAvatarHash,
-                  size: 40,
-                ),
-                title: Text(f.title),
-                subtitle: Text('feed'.tr),
-                onTap: () => Get.toNamed(
-                  AppRoutes.profile,
-                  arguments: ProfileArgs(uid: f.userId, feedId: f.id),
-                ),
-              ),
-            ),
-          ],
-        );
-      });
-    }
-
     return Scaffold(
       appBar: AppBarComponent(
         title: 'explore'.tr,
@@ -82,30 +82,6 @@ class ExploreView extends GetView<ExploreController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                StreamBuilder<DailyChallenge?>(
-                  stream:
-                      Get.find<BaseChallengeService>().watchCurrentChallenge(),
-                  builder: (context, snapshot) {
-                    final challenge = snapshot.data;
-                    if (challenge == null) return const SizedBox.shrink();
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: ChallengeCard(
-                        challenge: challenge,
-                        onJoin: () {
-                          final tag = '#${challenge.hashtag} ';
-                          Get.toNamed(
-                            '${AppRoutes.createPost}?challengeId=${challenge.id}&text=${Uri.encodeComponent(tag)}',
-                          );
-                        },
-                        onViewEntries: () {
-                          Get.toNamed(AppRoutes.challenge);
-                        },
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 16),
                 FutureBuilder<({DailyChallenge challenge, List<Post> posts})?>(
                   future: Get.find<BaseChallengeService>()
                       .fetchRecentExpiredChallengeTopPosts(),
@@ -154,7 +130,29 @@ class ExploreView extends GetView<ExploreController> {
                     onChanged: controller.search,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 16),StreamBuilder<DailyChallenge?>(
+                  stream:
+                  Get.find<BaseChallengeService>().watchCurrentChallenge(),
+                  builder: (context, snapshot) {
+                    final challenge = snapshot.data;
+                    if (challenge == null) return const SizedBox.shrink();
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: ChallengeCard(
+                        challenge: challenge,
+                        onJoin: () {
+                          final tag = '#${challenge.hashtag} ';
+                          Get.toNamed(
+                            '${AppRoutes.createPost}?challengeId=${challenge.id}&text=${Uri.encodeComponent(tag)}',
+                          );
+                        },
+                        onViewEntries: () {
+                          Get.toNamed(AppRoutes.challenge);
+                        },
+                      ),
+                    );
+                  },
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: buildSuggestions(),

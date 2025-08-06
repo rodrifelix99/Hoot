@@ -226,11 +226,6 @@ class CreatePostView extends GetView<CreatePostController> {
                       ],
                     );
                   }),
-                  Obx(() => SwitchListTile(
-                        value: controller.isNsfw.value,
-                        onChanged: (v) => controller.isNsfw.value = v,
-                        title: Text('nsfwPost'.tr),
-                      )),
                   Obx(() {
                     final news = controller.trendingNews.take(5).toList();
                     if (news.isEmpty) return const SizedBox.shrink();
