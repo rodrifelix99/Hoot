@@ -411,6 +411,7 @@ class AppTranslations extends Translations {
           'reportReasonRequired': 'Report reason required',
           'trendingNews': 'Trending News',
           'trendingIn': 'Trending in @topic',
+          'reorderFeeds': 'You can reorder your feeds by dragging them',
         },
         'es': {
           'helloWorld': '¡Hola Mundo!',
@@ -828,6 +829,7 @@ class AppTranslations extends Translations {
           'reportReasonRequired': 'Se requiere un motivo',
           'trendingNews': 'Noticias de Tendencia',
           'trendingIn': 'Tendencias en @topic',
+          'reorderFeeds': 'Puedes reordenar tus feeds arrastrándolos',
         },
         'pt_PT': {
           'helloWorld': 'Olá Mundo!',
@@ -1248,6 +1250,7 @@ class AppTranslations extends Translations {
           'reportReasonRequired': 'É necessário fornecer uma razão',
           'trendingNews': 'Notícias em Alta',
           'trendingIn': 'Em Alta em @topic',
+          'reorderFeeds': 'Podes reorganizar os teus feeds arrastando-os',
         },
         'pt_BR': {
           'helloWorld': 'Olá Mundo!',
@@ -1664,6 +1667,7 @@ class AppTranslations extends Translations {
           'reportReasonRequired': 'É necessário fornecer um motivo',
           'trendingNews': 'Notícias em Alta',
           'trendingIn': 'Em Alta em @topic',
+          'reorderFeeds': 'Você pode reorganizar seus feeds arrastando-os',
         },
       };
 }

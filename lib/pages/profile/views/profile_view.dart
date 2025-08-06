@@ -209,28 +209,31 @@ class _ProfileViewState extends State<ProfileView> {
           color: Theme.of(context).colorScheme.surfaceContainer,
         ),
         clipBehavior: Clip.hardEdge,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            HashCachedImage(
-              imageUrl: controller.user.value?.smallProfilePictureUrl ?? '',
-              hash: controller.user.value?.smallAvatarHash,
-              width: double.infinity,
-              height: double.infinity,
-              fit: BoxFit.cover,
-            ).blurred(
-              blur: 16,
-              blurColor: Theme.of(context).colorScheme.surface,
-              colorOpacity: 0.25,
-            ),
-            Center(
-              child: Icon(
-                SolarIconsBold.addSquare,
-                size: 64,
-                color: Theme.of(context).colorScheme.onSurface.withAlpha(125),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              HashCachedImage(
+                imageUrl: controller.user.value?.smallProfilePictureUrl ?? '',
+                hash: controller.user.value?.smallAvatarHash,
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
+              ).blurred(
+                blur: 16,
+                blurColor: Theme.of(context).colorScheme.surface,
+                colorOpacity: 0.25,
               ),
-            ),
-          ],
+              Center(
+                child: Icon(
+                  SolarIconsBold.addSquare,
+                  size: 64,
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(125),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -239,9 +242,16 @@ class _ProfileViewState extends State<ProfileView> {
   Widget _buildFeedTile(BuildContext context, Feed feed) {
     final color = feed.color ?? Theme.of(context).colorScheme.primary;
     final textColor = feed.foregroundColor;
-    return ClipRRect(
+    return Container(
       key: ValueKey(feed.id),
-      borderRadius: BorderRadius.circular(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withAlpha(50),
+          width: 1,
+        ),
+      ),
+      clipBehavior: Clip.hardEdge,
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -306,7 +316,7 @@ class _ProfileViewState extends State<ProfileView> {
                     Text(
                       '${feed.subscriberCount ?? 0} ${'subscribers'.tr}',
                       style: Get.textTheme.bodySmall?.copyWith(
-                        color: textColor,
+                        color: textColor.withAlpha(150),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -456,8 +466,24 @@ class _ProfileViewState extends State<ProfileView> {
                         }),
                       ),
               )
-            else
+            else ...[
               buildFeedGrid(context),
+              if (controller.isCurrentUser && controller.feeds.length > 1)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16).copyWith(
+                      top: 0,
+                    ),
+                    child: Text(
+                      'reorderFeeds'.tr,
+                      style: Get.textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
           ],
         ),
       );
