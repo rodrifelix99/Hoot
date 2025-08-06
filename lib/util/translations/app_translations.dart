@@ -198,6 +198,7 @@ class AppTranslations extends Translations {
           'mainFeedDescription':
               'When you subscribe to feeds, all hoots will be merged here.',
           'noHoots': 'No hoots to show',
+          'noActiveChallenge': 'No challenge is active',
           'challengePostsFiltered':
               'All challenge posts are hidden by your NSFW filter',
           'subscribeToSeeHoots': 'Subscribe to some feeds to see hoots here',
@@ -629,6 +630,7 @@ class AppTranslations extends Translations {
           'mainFeedDescription':
               'Cuando te suscribas a feeds, todos los hoots se combinarán aquí.',
           'noHoots': 'No hay hoots para mostrar',
+          'noActiveChallenge': 'No hay desafío activo',
           'challengePostsFiltered':
               'Todos los hoots del desafío están ocultos por tu filtro NSFW',
           'subscribeToSeeHoots':
@@ -1065,6 +1067,7 @@ class AppTranslations extends Translations {
           'mainFeedDescription':
               'Quando subscreveres a feeds, todos os hoots serão reunidos aqui.',
           'noHoots': 'Não há hoots para mostrar',
+          'noActiveChallenge': 'Nenhum desafio ativo',
           'challengePostsFiltered':
               'Todos os hoots do desafio estão ocultos pelo teu filtro NSFW',
           'subscribeToSeeHoots': 'Subscreve a alguns feeds para ver hoots aqui',
@@ -1496,6 +1499,7 @@ class AppTranslations extends Translations {
           'mainFeedDescription':
               'Quando você se inscrever em feeds, todos os hoots serão reunidos aqui.',
           'noHoots': 'Não há hoots para mostrar',
+          'noActiveChallenge': 'Nenhum desafio ativo',
           'challengePostsFiltered':
               'Todos os hoots do desafio estão ocultos pelo seu filtro NSFW',
           'subscribeToSeeHoots':
