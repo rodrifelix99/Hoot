@@ -41,6 +41,16 @@ void main() {
             type: FeedType.adultContent,
           ),
         ),
+        Post(
+          id: 'p3',
+          feed: Feed(
+            id: 'f3',
+            userId: 'u1',
+            title: 't3',
+            description: 'd3',
+          ),
+          nsfw: true,
+        ),
       ];
 
       final filtered = controller.filterPosts(posts);
@@ -77,10 +87,20 @@ void main() {
             type: FeedType.adultContent,
           ),
         ),
+        Post(
+          id: 'p3',
+          feed: Feed(
+            id: 'f3',
+            userId: 'u1',
+            title: 't3',
+            description: 'd3',
+          ),
+          nsfw: true,
+        ),
       ];
 
       final filtered = controller.filterPosts(posts);
-      expect(filtered.length, 2);
+      expect(filtered.length, 3);
     });
   });
 }

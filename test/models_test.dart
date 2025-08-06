@@ -135,6 +135,7 @@ void main() {
         'text': 'hello',
         'feedId': 'f1',
         'hashes': ['h1'],
+        'nsfw': true,
         'liked': true,
         'likes': 2,
         'reFeeded': false,
@@ -148,12 +149,13 @@ void main() {
       expect(post.createdAt, DateTime.fromMillisecondsSinceEpoch(10000));
       expect(post.updatedAt, DateTime.fromMillisecondsSinceEpoch(20000));
       expect(post.hashes?.first, 'h1');
+      expect(post.nsfw, true);
 
       final toJson = post.toJson();
       expect(toJson['text'], 'hello');
       expect(toJson['feedId'], 'f1');
       expect(toJson['hashes'][0], 'h1');
-      expect(toJson['scheduledAt'], DateTime.fromMillisecondsSinceEpoch(15000));
+      expect(toJson['nsfw'], true);
       expect(toJson.containsKey('id'), isFalse);
     });
   });

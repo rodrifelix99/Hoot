@@ -22,6 +22,7 @@ class Post {
   List<U> reFeeders;
   Post? reFeededFrom;
   int? comments;
+  bool? nsfw;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -55,6 +56,7 @@ class Post {
     this.reFeeds,
     this.reFeeders = const [],
     this.comments,
+    this.nsfw,
     this.createdAt,
     this.updatedAt,
   });
@@ -85,6 +87,7 @@ class Post {
           ? Post.fromJson(json['reFeededFrom'])
           : null,
       comments: json['comments'],
+      nsfw: json['nsfw'],
       createdAt: json['createdAt'] != null
           ? json['createdAt'] is Timestamp
               ? (json['createdAt'] as Timestamp).toDate()
@@ -119,6 +122,7 @@ class Post {
       reFeeds: 0,
       reFeededFrom: null,
       comments: 0,
+      nsfw: false,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
@@ -133,6 +137,7 @@ class Post {
       'challengeId': challengeId,
       'url': url,
       'location': location,
+      'nsfw': nsfw,
     };
   }
 
@@ -155,6 +160,7 @@ class Post {
       'reFeeds': reFeeds,
       'reFeededFrom': reFeededFrom?.toCache(),
       'comments': comments,
+      'nsfw': nsfw,
       'createdAt': createdAt?.millisecondsSinceEpoch.toString(),
       'updatedAt': updatedAt?.millisecondsSinceEpoch.toString(),
     };
@@ -182,6 +188,7 @@ class Post {
           ? Post.fromCache(json['reFeededFrom'])
           : null,
       comments: json['comments'],
+      nsfw: json['nsfw'],
       createdAt: json['createdAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(int.parse(json['createdAt']))
           : null,

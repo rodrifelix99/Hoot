@@ -220,6 +220,7 @@ class AppTranslations extends Translations {
           'privateFeed': 'Private Feed',
           'nsfwFeed': 'NSFW Feed',
           'nsfwWarning': 'This feed contains NSFW content. Continue?',
+          'nsfwPost': 'NSFW Post',
           'verifiedUser': 'This user is verified',
           'verifiedTester': 'This user is a verified tester',
           'youAreGoingTooFast':
@@ -645,6 +646,7 @@ class AppTranslations extends Translations {
           'privateFeed': 'Feed Privado',
           'nsfwFeed': 'Feed NSFW',
           'nsfwWarning': 'Este feed contiene contenido NSFW. ¿Continuar?',
+          'nsfwPost': 'Publicación NSFW',
           'verifiedUser': 'Este usuario está verificado',
           'verifiedTester': 'Este usuario es un probador verificado',
           'youAreGoingTooFast':
@@ -1072,6 +1074,7 @@ class AppTranslations extends Translations {
           'privateFeed': 'Feed Privado',
           'nsfwFeed': 'Feed NSFW',
           'nsfwWarning': 'Este feed contém conteúdo NSFW. Continuar?',
+          'nsfwPost': 'Publicação NSFW',
           'verifiedUser': 'Este utilizador está verificado',
           'verifiedTester': 'Este utilizador é um testador verificado',
           'youAreGoingTooFast':
@@ -1496,6 +1499,7 @@ class AppTranslations extends Translations {
           'privateFeed': 'Feed Privado',
           'nsfwFeed': 'Feed NSFW',
           'nsfwWarning': 'Este feed contém conteúdo NSFW. Continuar?',
+          'nsfwPost': 'Publicação NSFW',
           'verifiedUser': 'Este usuário está verificado',
           'verifiedTester': 'Este usuário é um testador verificado',
           'youAreGoingTooFast':

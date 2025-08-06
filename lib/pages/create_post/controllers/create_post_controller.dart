@@ -78,6 +78,9 @@ class CreatePostController extends GetxController {
   /// Trending news articles.
   final RxList<NewsItem> trendingNews = <NewsItem>[].obs;
 
+  /// Whether the post should be marked as NSFW.
+  final RxBool isNsfw = false.obs;
+
   /// Whether a post is currently being published.
   final RxBool publishing = false.obs;
 
@@ -274,6 +277,7 @@ class CreatePostController extends GetxController {
               if (userData != null) 'user': userData,
               'url': linkUrl.value,
               'location': location.value,
+              if (isNsfw.value) 'nsfw': true,
               'createdAt': FieldValue.serverTimestamp(),
             }..removeWhere((key, value) => value == null),
             id: postId,
@@ -293,6 +297,7 @@ class CreatePostController extends GetxController {
           reFeeded: false,
           reFeeds: 0,
           comments: 0,
+          nsfw: isNsfw.value ? true : null,
           createdAt: DateTime.now(),
         );
 
@@ -305,6 +310,7 @@ class CreatePostController extends GetxController {
       gifUrl.value = null;
       linkUrl.value = null;
       location.value = null;
+      isNsfw.value = false;
       selectedFeeds.clear();
       return firstPost;
     } catch (e, s) {

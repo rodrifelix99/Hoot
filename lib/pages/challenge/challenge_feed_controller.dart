@@ -25,7 +25,8 @@ class ChallengeFeedController extends GetxController {
     return posts
         .where((p) =>
             p.feed?.type != FeedType.adultContent &&
-            (p.feed?.nsfw ?? false) != true)
+            (p.feed?.nsfw ?? false) != true &&
+            (p.nsfw ?? false) != true)
         .toList();
   }
 }
