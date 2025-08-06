@@ -4,20 +4,37 @@ import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/util/constants.dart';
+
+class PostPage {
+  PostPage({required this.posts, this.lastDoc, this.hasMore = false});
+
+  final List<Post> posts;
+  final DocumentSnapshot? lastDoc;
+  final bool hasMore;
+}
 
 /// Base interface for creating posts in Firestore.
 abstract class BasePostService {
   /// Generates a new unique identifier for a post document.
   String newPostId();
 
-  /// Creates a post document with optional [id].
-  Future<void> createPost(Map<String, dynamic> data, {String? id});
+  /// Creates a post document with optional [id] and [challengeId].
+  Future<void> createPost(Map<String, dynamic> data,
+      {String? id, String? challengeId});
 
   /// Toggles like state for [postId] by [userId].
   Future<void> toggleLike(String postId, String userId, bool like);
 
   /// Fetches a post document by [id]. Returns null if not found.
   Future<Post?> fetchPost(String id);
+
+  /// Fetches posts participating in a challenge identified by [challengeId].
+  Future<PostPage> fetchChallengePosts(
+    String challengeId, {
+    DocumentSnapshot? startAfter,
+    int limit = kDefaultFetchLimit,
+  });
 
   /// Creates a reFeed of [original] into [targetFeed] by [user].
   /// Returns the new post id.
@@ -44,7 +61,11 @@ class PostService implements BasePostService {
   String newPostId() => _firestore.collection('posts').doc().id;
 
   @override
-  Future<void> createPost(Map<String, dynamic> data, {String? id}) async {
+  Future<void> createPost(Map<String, dynamic> data,
+      {String? id, String? challengeId}) async {
+    if (challengeId != null) {
+      data['challengeId'] = challengeId;
+    }
     if (id != null) {
       await _firestore.collection('posts').doc(id).set(data);
     } else {
@@ -95,6 +116,54 @@ class PostService implements BasePostService {
       data['reFeededByMe'] = reFeedDoc.exists;
     }
     return Post.fromJson(data);
+  }
+
+  @override
+  Future<PostPage> fetchChallengePosts(
+    String challengeId, {
+    DocumentSnapshot? startAfter,
+    int limit = kDefaultFetchLimit,
+  }) async {
+    var query = _firestore
+        .collection('posts')
+        .where('challengeId', isEqualTo: challengeId)
+        .orderBy('createdAt', descending: true)
+        .limit(limit);
+
+    if (startAfter != null) {
+      query = query.startAfterDocument(startAfter);
+    }
+
+    final snapshot = await query.get();
+    final posts = snapshot.docs
+        .map((d) => Post.fromJson({'id': d.id, ...d.data()}))
+        .toList();
+
+    final user = _authService?.currentUser;
+    if (user != null) {
+      for (final post in posts) {
+        final likeDoc = await _firestore
+            .collection('posts')
+            .doc(post.id)
+            .collection('likes')
+            .doc(user.uid)
+            .get();
+        post.liked = likeDoc.exists;
+        final reFeedDoc = await _firestore
+            .collection('posts')
+            .doc(post.id)
+            .collection('reFeeds')
+            .doc(user.uid)
+            .get();
+        post.reFeededByMe = reFeedDoc.exists;
+      }
+    }
+
+    return PostPage(
+      posts: posts,
+      lastDoc: snapshot.docs.isNotEmpty ? snapshot.docs.last : null,
+      hasMore: snapshot.docs.length == limit,
+    );
   }
 
   @override
