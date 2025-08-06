@@ -52,6 +52,14 @@ class CreatePostView extends GetView<CreatePostController> {
 
   @override
   Widget build(BuildContext context) {
+    final prefill = Get.parameters['text'];
+    if (prefill != null && controller.textController.text.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final text = Uri.decodeComponent(prefill);
+        controller.mentionKey.currentState?.controller?.text = text;
+        controller.onTextChanged(text);
+      });
+    }
     return Scaffold(
       appBar: AppBarComponent(
         title: 'createPost'.tr,
