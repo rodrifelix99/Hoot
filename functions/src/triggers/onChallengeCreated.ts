@@ -23,7 +23,7 @@ export const onChallengeCreated = onDocumentCreated(
 
     const payload: Record<string, unknown> = {
       app_id: appId,
-      included_segments: ["Subscribed Users"],
+      included_segments: ["Active Subscriptions"],
       target_channel: "push",
       headings: { en: "New Daily Challenge" },
       contents: { en: prompt ?? "Check out today's challenge!" },
@@ -31,8 +31,10 @@ export const onChallengeCreated = onDocumentCreated(
         challengeId,
         ...(hashtag ? { hashtag } : {}),
       },
-      android_channel_id: "b6b704fe-d3eb-40d7-ba28-9870ad6820cc",
-      ios_sound: "notification.wav",
+      android_channel_id: "492e9ddf-b609-42c5-9d19-99b6321e7c4b",
+      ios_sound: "daily_notification.wav",
+      ios_badgeType: "Increase",
+      ios_badgeCount: 1,
     };
 
     console.log(

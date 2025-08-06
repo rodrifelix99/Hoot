@@ -68,6 +68,8 @@ export const onNotificationCreated = onDocumentCreated(
       },
       "android_channel_id": "b6b704fe-d3eb-40d7-ba28-9870ad6820cc",
       "ios_sound": "notification.wav",
+      "ios_badgeType": "Increase",
+      "ios_badgeCount": 1,
       "data": trimmedData,
     };
     if (avatar) {
