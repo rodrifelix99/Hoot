@@ -49,7 +49,8 @@ import 'package:hoot/pages/feed_page/bindings/feed_page_binding.dart';
 import 'package:hoot/pages/feed_page/views/feed_page_view.dart';
 import 'package:hoot/pages/post/bindings/post_binding.dart';
 import 'package:hoot/pages/post/views/post_view.dart';
-import 'package:hoot/pages/challenge/challenge_feed_page.dart';
+import 'package:hoot/pages/challenge/bindings/challenge_feed_binding.dart';
+import 'package:hoot/pages/challenge/views/challenge_feed_view.dart';
 import 'package:hoot/pages/report/bindings/report_binding.dart';
 import 'package:hoot/pages/report/views/report_view.dart';
 import 'package:hoot/pages/contacts/bindings/contacts_binding.dart';
@@ -218,7 +219,8 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.challenge,
-      page: () => const ChallengeFeedPage(),
+      page: () => const ChallengeFeedView(),
+      binding: ChallengeFeedBinding(),
       middlewares: [AuthMiddleware()],
     ),
     GetPage(
