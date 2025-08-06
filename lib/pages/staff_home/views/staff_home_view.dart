@@ -33,6 +33,12 @@ class StaffHomeView extends StatelessWidget {
             trailing: const Icon(Icons.arrow_forward),
             onTap: () => Get.toNamed(AppRoutes.staffFeedbacks),
           ),
+          ListTile(
+            leading: const Icon(Icons.edit),
+            title: Text('dailyChallenge'.tr),
+            trailing: const Icon(Icons.arrow_forward),
+            onTap: () => Get.toNamed(AppRoutes.dailyChallengeEditor),
+          ),
         ],
       ),
     );

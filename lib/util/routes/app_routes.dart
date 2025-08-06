@@ -29,6 +29,7 @@ class AppRoutes {
   static const staffDashboard = '/staff_dashboard';
   static const staffReports = '/staff_reports';
   static const staffFeedbacks = '/staff_feedbacks';
+  static const dailyChallengeEditor = '/daily_challenge_editor';
   static const photoViewer = '/photo_view';
   static const appColor = '/app_color';
 }
