@@ -11,8 +11,8 @@ import 'package:hoot/services/challenge_service.dart';
 import 'package:hoot/pages/challenge/challenge_feed_controller.dart';
 
 /// Displays posts tagged with the currently active challenge.
-class ChallengeFeedPage extends StatelessWidget {
-  const ChallengeFeedPage({super.key});
+class ChallengeFeedView extends GetView<ChallengeFeedController> {
+  const ChallengeFeedView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,6 @@ class ChallengeFeedPage extends StatelessWidget {
                   ),
                 );
               }
-              final controller = Get.put(ChallengeFeedController());
               final posts = docs
                   .map((d) => Post.fromJson({'id': d.id, ...d.data()}))
                   .toList();
