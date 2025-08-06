@@ -6,9 +6,11 @@ class CreatePostBinding extends Bindings {
   @override
   void dependencies() {
     final authService = Get.find<AuthService>();
+    final challengeId = Get.parameters['challengeId'];
     Get.lazyPut(() => CreatePostController(
           authService: authService,
           userId: authService.currentUser?.uid,
+          challengeId: challengeId,
         ));
   }
 }

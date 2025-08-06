@@ -94,7 +94,7 @@ class ExploreView extends GetView<ExploreController> {
                         onJoin: () {
                           final tag = '#${challenge.hashtag} ';
                           Get.toNamed(
-                            '${AppRoutes.createPost}?text=${Uri.encodeComponent(tag)}',
+                            '${AppRoutes.createPost}?challengeId=${challenge.id}&text=${Uri.encodeComponent(tag)}',
                           );
                         },
                         onViewEntries: () {
