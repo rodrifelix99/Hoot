@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
@@ -37,16 +38,25 @@ class ChallengeFeedPage extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.hasError) {
-                return NothingToShowComponent(
-                  icon: const Icon(Icons.error_outline),
-                  text: 'somethingWentWrong'.tr,
+                FirebaseCrashlytics.instance.recordError(
+                  snapshot.error!,
+                  snapshot.stackTrace,
+                  reason: 'Failed to load challenge posts',
+                );
+                return Center(
+                  child: NothingToShowComponent(
+                    icon: const Icon(Icons.error_outline),
+                    text: 'somethingWentWrong'.tr,
+                  ),
                 );
               }
               final docs = snapshot.data?.docs ?? [];
               if (docs.isEmpty) {
-                return NothingToShowComponent(
-                  imageAsset: 'assets/images/empty.webp',
-                  text: 'noHoots'.tr,
+                return Center(
+                  child: NothingToShowComponent(
+                    imageAsset: 'assets/images/empty.webp',
+                    text: 'noHoots'.tr,
+                  ),
                 );
               }
               final controller = Get.put(ChallengeFeedController());
