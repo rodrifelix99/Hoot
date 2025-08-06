@@ -32,6 +32,19 @@ class DailyChallengeEditorView extends GetView<DailyChallengeEditorController> {
             Obx(
               () => ListTile(
                 contentPadding: EdgeInsets.zero,
+                title: Text('createAt'.tr),
+                subtitle: Text(
+                  controller.createAt.value != null
+                      ? dateFormat.format(controller.createAt.value!)
+                      : 'Select creation time',
+                ),
+                onTap: controller.pickCreateAt,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Obx(
+              () => ListTile(
+                contentPadding: EdgeInsets.zero,
                 title: Text('expiration'.tr),
                 subtitle: Text(
                   controller.expiration.value != null
