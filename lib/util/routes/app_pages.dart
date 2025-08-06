@@ -17,6 +17,8 @@ import 'package:hoot/pages/staff_feedbacks/bindings/staff_feedbacks_binding.dart
 import 'package:hoot/pages/staff_feedbacks/views/staff_feedbacks_view.dart';
 import 'package:hoot/pages/staff_dashboard/bindings/staff_dashboard_binding.dart';
 import 'package:hoot/pages/staff_dashboard/views/staff_dashboard_view.dart';
+import 'package:hoot/pages/staff_dashboard/bindings/daily_challenge_editor_binding.dart';
+import 'package:hoot/pages/staff_dashboard/views/daily_challenge_editor_view.dart';
 import 'package:hoot/pages/invitation/bindings/invitation_binding.dart';
 import 'package:hoot/pages/invitation/views/invitation_view.dart';
 import 'package:hoot/pages/notifications_permission/bindings/notification_permission_binding.dart';
@@ -128,6 +130,12 @@ class AppPages {
       name: AppRoutes.staffFeedbacks,
       page: () => const StaffFeedbacksView(),
       binding: StaffFeedbacksBinding(),
+      middlewares: [AuthMiddleware(), StaffMiddleware()],
+    ),
+    GetPage(
+      name: AppRoutes.dailyChallengeEditor,
+      page: () => const DailyChallengeEditorView(),
+      binding: DailyChallengeEditorBinding(),
       middlewares: [AuthMiddleware(), StaffMiddleware()],
     ),
     GetPage(
