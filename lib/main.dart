@@ -21,6 +21,7 @@ import 'package:hoot/services/theme_service.dart';
 import 'package:hoot/services/language_service.dart';
 import 'package:hoot/firebase_options.dart';
 import 'package:shake/shake.dart';
+import 'package:hoot/services/analytics_service.dart';
 
 void main() {
   runZonedGuarded(() async {
@@ -37,6 +38,7 @@ void main() {
       appleProvider: AppleProvider.appAttestWithDeviceCheckFallback,
     );
     await DependencyInjector.init();
+    await AnalyticsService.init();
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
