@@ -14,6 +14,7 @@ import 'package:hoot/pages/explore/controllers/explore_controller.dart';
 import 'package:hoot/components/scale_on_press.dart';
 import 'package:hoot/services/challenge_service.dart';
 import 'package:hoot/models/daily_challenge.dart';
+import 'package:hoot/models/post.dart';
 
 class ExploreView extends GetView<ExploreController> {
   const ExploreView({super.key});
@@ -105,6 +106,41 @@ class ExploreView extends GetView<ExploreController> {
                   },
                 ),
                 const SizedBox(height: 16),
+                FutureBuilder<({DailyChallenge challenge, List<Post> posts})?>(
+                  future: Get.find<BaseChallengeService>()
+                      .fetchRecentExpiredChallengeTopPosts(),
+                  builder: (context, snapshot) {
+                    final data = snapshot.data;
+                    if (data == null || data.posts.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              'previousChallengeTopPosts'.tr,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          ...data.posts.map(
+                            (p) => PostComponent(
+                              post: p,
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: TextField(

@@ -201,6 +201,7 @@ class AppTranslations extends Translations {
           'challengePostsFiltered':
               'All challenge posts are hidden by your NSFW filter',
           'subscribeToSeeHoots': 'Subscribe to some feeds to see hoots here',
+          'previousChallengeTopPosts': 'Top posts from last challenge',
           'popularUsers': 'Popular users',
           'top10MostSubscribed': 'Popular feeds',
           'top10RecentPopularHoots': 'Popular hoots',
@@ -626,6 +627,7 @@ class AppTranslations extends Translations {
               'Todos los hoots del desafío están ocultos por tu filtro NSFW',
           'subscribeToSeeHoots':
               'Suscríbete a algunos feeds para ver hoots aquí',
+          'previousChallengeTopPosts': 'Mejores hoots del último desafío',
           'popularUsers': 'Usuarios populares',
           'top10MostSubscribed': 'Feeds populares',
           'top10RecentPopularHoots': 'Hoots populares',
@@ -1054,6 +1056,7 @@ class AppTranslations extends Translations {
           'challengePostsFiltered':
               'Todos os hoots do desafio estão ocultos pelo teu filtro NSFW',
           'subscribeToSeeHoots': 'Subscreve a alguns feeds para ver hoots aqui',
+          'previousChallengeTopPosts': 'Hoots principais do último desafio',
           'popularUsers': 'Utilizadores populares',
           'top10MostSubscribed': 'Feeds populares',
           'top10RecentPopularHoots': 'Hoots populares',
@@ -1479,6 +1482,7 @@ class AppTranslations extends Translations {
               'Todos os hoots do desafio estão ocultos pelo seu filtro NSFW',
           'subscribeToSeeHoots':
               'Inscreva-se em alguns feeds para ver hoots aqui',
+          'previousChallengeTopPosts': 'Principais hoots do último desafio',
           'popularUsers': 'Usuários populares',
           'top10MostSubscribed': 'Feeds populares',
           'top10RecentPopularHoots': 'Hoots populares',
