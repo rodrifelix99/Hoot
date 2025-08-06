@@ -11,6 +11,7 @@ class Post {
   String? location;
   U? user;
   String? feedId;
+  String? challengeId;
   Feed? feed;
   bool liked;
   int? likes;
@@ -43,6 +44,7 @@ class Post {
     this.location,
     this.user,
     this.feedId,
+    this.challengeId,
     this.feed,
     this.liked = false,
     this.likes,
@@ -70,6 +72,7 @@ class Post {
       url: json['url'],
       location: json['location'],
       feedId: json['feedId'],
+      challengeId: json['challengeId'],
       feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
       user: json['user'] != null ? U.fromJson(json['user']) : null,
       liked: json['liked'] ?? false,
@@ -106,6 +109,7 @@ class Post {
       url: null,
       location: null,
       feedId: '0',
+      challengeId: null,
       feed: null,
       user: null,
       liked: false,
@@ -126,6 +130,7 @@ class Post {
       'images': media,
       'hashes': hashes,
       'feedId': feedId,
+      'challengeId': challengeId,
       'url': url,
       'location': location,
     };
@@ -138,6 +143,7 @@ class Post {
       'media': media,
       'hashes': hashes,
       'feedId': feedId,
+      'challengeId': challengeId,
       'url': url,
       'location': location,
       'feed': feed?.toCache(),
@@ -163,6 +169,7 @@ class Post {
       url: json['url'],
       location: json['location'],
       feedId: json['feedId'],
+      challengeId: json['challengeId'],
       feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
       user: json['user'] != null ? U.fromJson(json['user']) : null,
       liked: json['liked'] ?? false,
