@@ -26,6 +26,7 @@ class ChallengeFeedController extends GetxController {
         _firestore = firestore ?? FirebaseFirestore.instance;
 
   final Rxn<DailyChallenge> challenge = Rxn<DailyChallenge>();
+  final RxBool challengeLoading = true.obs;
   final RxList<Post> posts = <Post>[].obs;
   final RxBool postsLoading = false.obs;
   final Rxn<Object> postsError = Rxn<Object>();
@@ -39,6 +40,7 @@ class ChallengeFeedController extends GetxController {
     super.onInit();
     _challengeSub = _challengeService.watchCurrentChallenge().listen((c) {
       challenge.value = c;
+      challengeLoading.value = false;
       if (c == null) {
         posts.clear();
         postsLoading.value = false;
@@ -51,6 +53,9 @@ class ChallengeFeedController extends GetxController {
       }
     });
   }
+
+  bool get noActiveChallenge =>
+      !challengeLoading.value && challenge.value == null;
 
   void _subscribeToPosts(String challengeId) {
     postsLoading.value = true;

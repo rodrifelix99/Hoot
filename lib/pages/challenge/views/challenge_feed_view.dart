@@ -16,43 +16,48 @@ class ChallengeFeedView extends GetView<ChallengeFeedController> {
         title: 'challenge'.tr,
       ),
       body: Obx(() {
-        final challenge = controller.challenge.value;
-        if (challenge == null) {
+        if (controller.challengeLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
-        return Obx(() {
-          if (controller.postsLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (controller.postsError.value != null) {
-            return Center(
-              child: NothingToShowComponent(
-                icon: const Icon(Icons.error_outline),
-                text: 'somethingWentWrong'.tr,
-              ),
-            );
-          }
-          if (controller.posts.isEmpty) {
-            return Center(
-              child: NothingToShowComponent(
-                imageAsset: 'assets/images/empty.webp',
-                text: controller.hasAnyPosts.value
-                    ? 'challengePostsFiltered'.tr
-                    : 'noHoots'.tr,
-              ),
-            );
-          }
-          return ListView.builder(
-            itemCount: controller.posts.length,
-            itemBuilder: (context, index) => PostComponent(
-              post: controller.posts[index],
-              margin: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
+        if (controller.noActiveChallenge) {
+          return Center(
+            child: NothingToShowComponent(
+              imageAsset: 'assets/images/empty.webp',
+              text: 'noActiveChallenge'.tr,
             ),
           );
-        });
+        }
+        if (controller.postsLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (controller.postsError.value != null) {
+          return Center(
+            child: NothingToShowComponent(
+              icon: const Icon(Icons.error_outline),
+              text: 'somethingWentWrong'.tr,
+            ),
+          );
+        }
+        if (controller.posts.isEmpty) {
+          return Center(
+            child: NothingToShowComponent(
+              imageAsset: 'assets/images/empty.webp',
+              text: controller.hasAnyPosts.value
+                  ? 'challengePostsFiltered'.tr
+                  : 'noHoots'.tr,
+            ),
+          );
+        }
+        return ListView.builder(
+          itemCount: controller.posts.length,
+          itemBuilder: (context, index) => PostComponent(
+            post: controller.posts[index],
+            margin: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
+          ),
+        );
       }),
     );
   }
