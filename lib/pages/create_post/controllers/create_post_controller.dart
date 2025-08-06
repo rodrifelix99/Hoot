@@ -27,6 +27,7 @@ class CreatePostController extends GetxController {
   final BaseStorageService _storageService;
   BaseUserService? _userService;
   final BaseNewsService _newsService;
+  final String? challengeId;
   late final String _userId;
 
   CreatePostController({
@@ -36,6 +37,7 @@ class CreatePostController extends GetxController {
     BaseStorageService? storageService,
     BaseUserService? userService,
     BaseNewsService? newsService,
+    this.challengeId,
   })  : _postService = postService ?? PostService(),
         _authService = authService ?? Get.find<AuthService>(),
         _storageService = storageService ?? StorageService(),
@@ -143,7 +145,10 @@ class CreatePostController extends GetxController {
         final place = placemarks.first;
         final city = place.locality;
         final country = place.country;
-        if (city != null && city.isNotEmpty && country != null && country.isNotEmpty) {
+        if (city != null &&
+            city.isNotEmpty &&
+            country != null &&
+            country.isNotEmpty) {
           location.value = '$city, $country';
         }
       }
@@ -271,7 +276,8 @@ class CreatePostController extends GetxController {
               'location': location.value,
               'createdAt': FieldValue.serverTimestamp(),
             }..removeWhere((key, value) => value == null),
-            id: postId);
+            id: postId,
+            challengeId: challengeId);
 
         final post = Post(
           id: postId,
