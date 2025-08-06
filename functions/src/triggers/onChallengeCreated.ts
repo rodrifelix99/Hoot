@@ -1,8 +1,5 @@
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
-import { onSchedule } from "firebase-functions/v2/scheduler";
 import { defineSecret } from "firebase-functions/params";
-import { Timestamp } from "firebase-admin/firestore";
-import { db } from "../config";
 
 const onesignalApiKey = defineSecret("ONESIGNAL_API_KEY");
 const onesignalAppId = defineSecret("ONESIGNAL_APP_ID");
@@ -58,33 +55,5 @@ export const onChallengeCreated = onDocumentCreated(
       const json = JSON.parse((await res?.text()) || "{}");
       console.error("Failed to send challenge notification", json);
     }
-  }
-);
-
-export const createDailyChallenge = onSchedule(
-  {
-    schedule: "0 0 * * *",
-    timeZone: "UTC",
-  },
-  async () => {
-    const prompts = [
-      { prompt: "Share a snapshot from your day", hashtag: "DailySnapshot" },
-      {
-        prompt: "What's something you're grateful for today?",
-        hashtag: "Grateful",
-      },
-      { prompt: "Show us a hobby you love", hashtag: "HobbyTime" },
-    ];
-    const choice = prompts[Math.floor(Math.random() * prompts.length)];
-    const now = Timestamp.now();
-    const expiresAt = Timestamp.fromMillis(
-      now.toMillis() + 24 * 60 * 60 * 1000
-    );
-    await db.collection("daily_challenges").add({
-      prompt: choice.prompt,
-      hashtag: choice.hashtag,
-      createdAt: now,
-      expiresAt,
-    });
   }
 );
