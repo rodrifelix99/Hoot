@@ -27,6 +27,7 @@ void main() {
         'likes': 0,
         'createdAt': DateTime.now(),
         'feedId': 'f1',
+        'nsfw': true,
         'feed': {
           'id': 'f1',
           'title': 'Adult Feed',
@@ -81,6 +82,7 @@ void main() {
         'likes': 0,
         'createdAt': DateTime.now(),
         'feedId': 'f1',
+        'nsfw': true,
         'feed': {
           'id': 'f1',
           'title': 'Adult Feed',

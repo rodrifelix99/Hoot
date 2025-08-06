@@ -199,6 +199,7 @@ class PostService implements BasePostService {
       'user': userData,
       'reFeeded': true,
       'reFeededFrom': {'id': original.id},
+      if (original.nsfw == true) 'nsfw': true,
       'createdAt': FieldValue.serverTimestamp(),
     });
 
