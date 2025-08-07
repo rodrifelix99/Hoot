@@ -11,6 +11,7 @@ import 'package:geocoding/geocoding.dart';
 
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
+import 'package:hoot/models/music_attachment.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/toast_service.dart';
 import 'package:hoot/services/post_service.dart';
@@ -18,6 +19,7 @@ import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/storage_service.dart';
 import 'package:hoot/services/user_service.dart';
 import 'package:hoot/services/news_service.dart';
+import 'package:hoot/services/music_service.dart';
 import 'package:hoot/util/enums/feed_types.dart';
 
 /// Manages state for creating a new post.
@@ -27,6 +29,7 @@ class CreatePostController extends GetxController {
   final BaseStorageService _storageService;
   BaseUserService? _userService;
   final BaseNewsService _newsService;
+  final BaseMusicService _musicService;
   final String? challengeId;
   late final String _userId;
 
@@ -37,12 +40,14 @@ class CreatePostController extends GetxController {
     BaseStorageService? storageService,
     BaseUserService? userService,
     BaseNewsService? newsService,
+    BaseMusicService? musicService,
     this.challengeId,
   })  : _postService = postService ?? PostService(),
         _authService = authService ?? Get.find<AuthService>(),
         _storageService = storageService ?? StorageService(),
         _userService = userService,
-        _newsService = newsService ?? Get.find<BaseNewsService>() {
+        _newsService = newsService ?? Get.find<BaseNewsService>(),
+        _musicService = musicService ?? MusicService() {
     _userId = userId ?? _authService.currentUser?.uid ?? '';
   }
 
@@ -62,6 +67,9 @@ class CreatePostController extends GetxController {
 
   /// Selected GIF url from Tenor.
   final Rx<String?> gifUrl = Rx<String?>(null);
+
+  /// Selected music attachment.
+  final Rxn<MusicAttachment> music = Rxn<MusicAttachment>();
 
   /// First URL found in the post text.
   final RxnString linkUrl = RxnString();
@@ -171,6 +179,7 @@ class CreatePostController extends GetxController {
 
   /// Picks an image from the gallery.
   Future<void> pickImage() async {
+    if (music.value != null) return;
     final picked = await _picker.pickMultiImage();
     if (picked.isNotEmpty) {
       final remaining = 4 - imageFiles.length;
@@ -181,8 +190,24 @@ class CreatePostController extends GetxController {
 
   /// Picks a GIF using the Tenor API.
   void pickGif(String url) async {
+    if (music.value != null) return;
     gifUrl.value = url;
     imageFiles.clear();
+  }
+
+  /// Picks a music track using the iTunes search API.
+  Future<void> pickMusic({BuildContext? context}) async {
+    final ctx = context ?? Get.context;
+    if (ctx == null) return;
+    final result = await showSearch<MusicAttachment?>(
+      context: ctx,
+      delegate: _MusicSearchDelegate(_musicService),
+    );
+    if (result != null) {
+      imageFiles.clear();
+      gifUrl.value = null;
+      music.value = result;
+    }
   }
 
   /// Removes the image at [index].
@@ -229,7 +254,10 @@ class CreatePostController extends GetxController {
       ToastService.showError('selectFeed'.tr);
       return null;
     }
-    if (text.isEmpty && imageFiles.isEmpty && gifUrl.value == null) {
+    if (text.isEmpty &&
+        imageFiles.isEmpty &&
+        gifUrl.value == null &&
+        music.value == null) {
       ToastService.showError('writeSomething'.tr);
       return null;
     }
@@ -270,6 +298,7 @@ class CreatePostController extends GetxController {
               if (imageUrls != null) 'images': imageUrls,
               if (hashes != null) 'hashes': hashes,
               if (gifUrl.value != null) 'gifs': [gifUrl.value],
+              if (music.value != null) 'music': music.value!.toJson(),
               'userId': _userId,
               if (userData != null) 'user': userData,
               'url': linkUrl.value,
@@ -284,6 +313,7 @@ class CreatePostController extends GetxController {
           id: postId,
           text: text.isEmpty ? null : text,
           media: imageUrls ?? (gifUrl.value != null ? [gifUrl.value!] : null),
+          music: music.value,
           url: linkUrl.value,
           location: location.value,
           feedId: feed.id,
@@ -305,6 +335,7 @@ class CreatePostController extends GetxController {
       mentionKey.currentState?.controller?.clear();
       imageFiles.clear();
       gifUrl.value = null;
+      music.value = null;
       linkUrl.value = null;
       location.value = null;
       selectedFeeds.clear();
@@ -321,5 +352,65 @@ class CreatePostController extends GetxController {
   void onClose() {
     textController.dispose();
     super.onClose();
+  }
+}
+
+class _MusicSearchDelegate extends SearchDelegate<MusicAttachment?> {
+  _MusicSearchDelegate(this._service);
+
+  final BaseMusicService _service;
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    if (query.isEmpty) return null;
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () => query = '',
+      ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () => close(context, null),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) => _buildSuggestions();
+
+  @override
+  Widget buildSuggestions(BuildContext context) => _buildSuggestions();
+
+  Widget _buildSuggestions() {
+    if (query.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    return FutureBuilder<List<MusicAttachment>>(
+      future: _service.searchSongs(query),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final results = snapshot.data ?? [];
+        if (results.isEmpty) {
+          return const Center(child: Text('No results'));
+        }
+        return ListView(
+          children: results
+              .map(
+                (e) => ListTile(
+                  title: Text(e.title),
+                  subtitle: Text(e.artist),
+                  onTap: () => close(context, e),
+                ),
+              )
+              .toList(),
+        );
+      },
+    );
   }
 }
