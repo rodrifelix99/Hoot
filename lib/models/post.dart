@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hoot/models/feed.dart';
+import 'package:hoot/models/music_attachment.dart';
 import 'package:hoot/models/user.dart';
 
 class Post {
@@ -9,6 +10,7 @@ class Post {
   List<String>? hashes;
   String? url;
   String? location;
+  MusicAttachment? music;
   U? user;
   String? feedId;
   String? challengeId;
@@ -43,6 +45,7 @@ class Post {
     this.hashes,
     this.url,
     this.location,
+    this.music,
     this.user,
     this.feedId,
     this.challengeId,
@@ -73,6 +76,9 @@ class Post {
       hashes: json['hashes'] != null ? List<String>.from(json['hashes']) : null,
       url: json['url'],
       location: json['location'],
+      music: json['music'] != null
+          ? MusicAttachment.fromJson(json['music'])
+          : null,
       feedId: json['feedId'],
       challengeId: json['challengeId'],
       feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
@@ -137,6 +143,7 @@ class Post {
       'challengeId': challengeId,
       'url': url,
       'location': location,
+      'music': music?.toJson(),
       'nsfw': nsfw,
     };
   }
@@ -151,6 +158,7 @@ class Post {
       'challengeId': challengeId,
       'url': url,
       'location': location,
+      'music': music?.toCache(),
       'feed': feed?.toCache(),
       'user': user?.toCache(),
       'liked': liked,
@@ -174,6 +182,9 @@ class Post {
       hashes: json['hashes'] != null ? List<String>.from(json['hashes']) : null,
       url: json['url'],
       location: json['location'],
+      music: json['music'] != null
+          ? MusicAttachment.fromCache(json['music'])
+          : null,
       feedId: json['feedId'],
       challengeId: json['challengeId'],
       feed: json['feed'] != null ? Feed.fromJson(json['feed']) : null,
