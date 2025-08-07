@@ -93,7 +93,7 @@ class AuthService {
   Future<U?> fetchUserByUsername(String username) async {
     final query = await _firestore
         .collection('users')
-        .where('username', isEqualTo: username)
+        .where('usernameLowercase', isEqualTo: username.toLowerCase())
         .limit(1)
         .get();
     if (query.docs.isEmpty) return null;
@@ -119,10 +119,11 @@ class AuthService {
 
   /// Returns users whose username starts with [query].
   Future<List<U>> searchUsers(String query, {int limit = 5}) async {
+    final q = query.toLowerCase();
     final snapshot = await _firestore
         .collection('users')
-        .where('username', isGreaterThanOrEqualTo: query)
-        .where('username', isLessThanOrEqualTo: '$query\uf8ff')
+        .where('usernameLowercase', isGreaterThanOrEqualTo: q)
+        .where('usernameLowercase', isLessThanOrEqualTo: '$q\uf8ff')
         .limit(limit)
         .get();
     return snapshot.docs.map((d) => U.fromJson(d.data())).toList();
