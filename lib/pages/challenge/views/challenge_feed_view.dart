@@ -58,8 +58,9 @@ class ChallengeFeedView extends GetView<ChallengeFeedController> {
                   horizontal: 16,
                   vertical: 8,
                 ),
-                child: ChallengeCard.withoutActions(
+                child: ChallengeCard(
                   challenge: controller.challenge.value!,
+                  showActions: false,
                 ),
               );
             }
