@@ -1,9 +1,11 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:super_clipboard/super_clipboard.dart';
+
+class PasteImageIntent extends Intent {
+  const PasteImageIntent();
+}
 
 /// Text field with @ mention support.
 class MentionTextField extends StatelessWidget {
@@ -70,15 +72,15 @@ class MentionTextField extends StatelessWidget {
     );
 
     return Shortcuts(
-      shortcuts: const <LogicalKeySet, Intent>{
+      shortcuts: <LogicalKeySet, Intent>{
         LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.keyV):
-            PasteIntent(),
+            const PasteImageIntent(),
         LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyV):
-            PasteIntent(),
+            const PasteImageIntent(),
       },
       child: Actions(
         actions: <Type, Action<Intent>>{
-          PasteIntent: CallbackAction<PasteIntent>(
+          PasteImageIntent: CallbackAction<PasteImageIntent>(
             onInvoke: (intent) async {
               final clipboard = SystemClipboard.instance;
               if (onImagePaste != null && clipboard != null) {
