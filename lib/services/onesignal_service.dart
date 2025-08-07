@@ -9,6 +9,7 @@ import 'package:hoot/util/routes/args/profile_args.dart';
 /// Wrapper around the OneSignal SDK.
 class OneSignalService extends GetxService {
   Map<String, dynamic>? _pendingData;
+
   /// Initializes the OneSignal SDK.
   Future<void> init() async {
     OneSignal.initialize(dotenv.env['ONESIGNAL_APP_ID']!);
@@ -42,14 +43,17 @@ class OneSignalService extends GetxService {
       Get.toNamed(AppRoutes.post, arguments: {'id': data['postId']});
       return;
     }
+    if (data['action'] == 'view_feed_requests') {
+      Get.toNamed(AppRoutes.feedRequests);
+      return;
+    }
     if (data['feedId'] != null) {
       Get.toNamed(AppRoutes.feed,
           arguments: FeedPageArgs(feedId: data['feedId']));
       return;
     }
     if (data['uid'] != null) {
-      Get.toNamed(AppRoutes.profile,
-          arguments: ProfileArgs(uid: data['uid']));
+      Get.toNamed(AppRoutes.profile, arguments: ProfileArgs(uid: data['uid']));
     }
   }
 }
