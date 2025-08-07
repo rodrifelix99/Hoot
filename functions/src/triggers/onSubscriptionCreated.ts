@@ -6,7 +6,8 @@ export const onSubscriptionCreated = onDocumentCreated(
   "feeds/{feedId}/subscribers/{userId}",
   async (event) => {
     const { feedId, userId } = event.params;
-    const feedSnap = await db.collection("feeds").doc(feedId).get();
+    const feedRef = db.collection("feeds").doc(feedId);
+    const feedSnap = await feedRef.get();
     if (!feedSnap.exists) return;
     const ownerId = feedSnap.get("userId");
     if (ownerId === userId) return;
@@ -16,17 +17,22 @@ export const onSubscriptionCreated = onDocumentCreated(
     userData["uid"] = userId;
     const feedData = feedSnap.data();
     if (feedData) feedData["id"] = feedId;
-    await db
-      .collection("users")
-      .doc(ownerId)
-      .collection("notifications")
-      .add({
-        user: userData,
-        ...(feedData ? { feed: feedData } : {}),
-        type: 3,
-        read: false,
-        createdAt: FieldValue.serverTimestamp(),
-      });
+    const requestSnap = await feedRef.collection("requests").doc(userId).get();
+    if (!requestSnap.exists) {
+      await db
+        .collection("users")
+        .doc(ownerId)
+        .collection("notifications")
+        .add({
+          user: userData,
+          ...(feedData ? { feed: feedData } : {}),
+          type: 3,
+          read: false,
+          createdAt: FieldValue.serverTimestamp(),
+        });
+    } else {
+      await requestSnap.ref.delete().catch(() => undefined);
+    }
     await db
       .collection("users")
       .doc(ownerId)
