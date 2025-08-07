@@ -396,74 +396,77 @@ class _ProfileViewState extends State<ProfileView> {
             SliverToBoxAdapter(child: buildHeader(user)),
             SliverToBoxAdapter(child: SizedBox(height: 16)),
             SliverToBoxAdapter(
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 16,
-                runSpacing: 8,
-                children: [
-                  if (user.location != null && user.location!.isNotEmpty)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          SolarIconsBold.mapPoint,
-                          size: 16,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          user.location!,
-                          style: Get.textTheme.bodySmall?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  if (user.website != null && user.website!.isNotEmpty)
-                    GestureDetector(
-                      onTap: () {
-                        HapticService.lightImpact();
-                        controller.visitUrl();
-                      },
-                      child: Row(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 16,
+                  runSpacing: 8,
+                  children: [
+                    if (user.location != null && user.location!.isNotEmpty)
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            SolarIconsBold.global,
+                            SolarIconsBold.mapPoint,
                             size: 16,
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            cleanUpUrl(user.website!),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            user.location!,
                             style: Get.textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
+                              color:
+                                  Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '🌟 ${user.challengeCount ?? 0} Daily Challenges',
-                        style: Get.textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    if (user.website != null && user.website!.isNotEmpty)
+                      GestureDetector(
+                        onTap: () {
+                          HapticService.lightImpact();
+                          controller.visitUrl();
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              SolarIconsBold.global,
+                              size: 16,
+                              color:
+                                  Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              cleanUpUrl(user.website!),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Get.textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '🌟 ${user.challengeCount ?? 0} Daily Challenges',
+                          style: Get.textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
