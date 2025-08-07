@@ -44,8 +44,25 @@ class FeedRequestService {
         .doc(feedId)
         .collection('requests')
         .doc(userId);
+    final feedDoc = await _firestore.collection('feeds').doc(feedId).get();
     await _firestore.runTransaction((txn) async {
       txn.delete(requestRef);
+    });
+    final userData = _authService.currentUser?.toCache() ?? {};
+    final feedData = {
+      'id': feedDoc.id,
+      'title': feedDoc.data()?['title'],
+    };
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('notifications')
+        .add({
+      'user': userData,
+      'feed': feedData,
+      'type': 7,
+      'read': false,
+      'createdAt': FieldValue.serverTimestamp(),
     });
   }
 
@@ -55,8 +72,25 @@ class FeedRequestService {
         .doc(feedId)
         .collection('requests')
         .doc(userId);
+    final feedDoc = await _firestore.collection('feeds').doc(feedId).get();
     await _firestore.runTransaction((txn) async {
       txn.delete(requestRef);
+    });
+    final userData = _authService.currentUser?.toCache() ?? {};
+    final feedData = {
+      'id': feedDoc.id,
+      'title': feedDoc.data()?['title'],
+    };
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('notifications')
+        .add({
+      'user': userData,
+      'feed': feedData,
+      'type': 8,
+      'read': false,
+      'createdAt': FieldValue.serverTimestamp(),
     });
   }
 

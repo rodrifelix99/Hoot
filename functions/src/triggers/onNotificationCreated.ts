@@ -26,6 +26,8 @@ export const onNotificationCreated = onDocumentCreated(
       4: "New ReHoot",
       5: "Friend Joined",
       6: "New Report",
+      7: "Request Accepted",
+      8: "Request Rejected",
     };
     const title = titles[data.type as number];
     if (!title) return;
@@ -42,6 +44,7 @@ export const onNotificationCreated = onDocumentCreated(
     if (user?.uid) trimmedData.uid = user.uid;
     if (user?.username) trimmedData.username = user.username;
     if (user?.bigAvatar) trimmedData.bigAvatar = user.bigAvatar;
+    const feedName = data.feed?.title ? `${data.feed.title}` : "their feed";
     const bodyTemplates: Record<number, string> = {
       0: `${username} liked your post`,
       1: `${username} commented on your post`,
@@ -50,6 +53,8 @@ export const onNotificationCreated = onDocumentCreated(
       4: `${username} reFeeded your post`,
       5: `${username} joined Hoot using your invite code`,
       6: user?.username ? `${username} submitted a report` : "An anonymous user submitted a report",
+      7: `${username} accepted your request to see ${feedName}`,
+      8: `${username} rejected your request to see ${feedName}`,
     };
     const body =
       bodyTemplates[data.type as number] ?? "You have a new notification";
