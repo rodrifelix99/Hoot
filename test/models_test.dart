@@ -71,6 +71,7 @@ void main() {
       final json = user.toJson();
       expect(json['displayName'], 'John');
       expect(json['username'], 'john');
+      expect(json['usernameLowercase'], 'john');
       expect(json.containsKey('uid'), isFalse);
       expect(json['invitationCode'], 'ABCDEF');
       expect(json['smallAvatarHash'], 'uhash');
@@ -80,6 +81,7 @@ void main() {
       final cache = user.toCache();
       expect(cache['activityScore'], 5);
       expect(cache['popularityScore'], 10);
+      expect(cache['usernameLowercase'], 'john');
       expect(cache['smallAvatarHash'], 'uhash');
       expect(cache['bigAvatarHash'], 'ubhash');
       expect(cache['createdAt'], isNotNull);
