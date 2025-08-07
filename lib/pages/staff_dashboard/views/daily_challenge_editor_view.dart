@@ -58,9 +58,8 @@ class DailyChallengeEditorView extends GetView<DailyChallengeEditorController> {
                         subtitle: Text(
                           controller.expiration.value != null
                               ? dateFormat.format(controller.expiration.value!)
-                              : 'Select expiration',
+                              : '--',
                         ),
-                        onTap: controller.pickExpiration,
                       ),
                     ),
                   ),
