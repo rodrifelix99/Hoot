@@ -40,10 +40,11 @@ class UserService implements BaseUserService {
 
   @override
   Future<List<U>> searchUsers(String query) async {
+    final q = query.toLowerCase();
     final snapshot = await _firestore
         .collection('users')
-        .where('username', isGreaterThanOrEqualTo: query)
-        .where('username', isLessThanOrEqualTo: '$query\uf8ff')
+        .where('usernameLowercase', isGreaterThanOrEqualTo: q)
+        .where('usernameLowercase', isLessThanOrEqualTo: '$q\uf8ff')
         .limit(5)
         .get();
     return snapshot.docs.map((d) => U.fromJson(d.data())).toList();
