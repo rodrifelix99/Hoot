@@ -442,25 +442,26 @@ class _PostComponentState extends State<PostComponent> {
                     ),
                   ],
                   if (_post.challengeId != null && _challenge != null) ...[
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 16),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 8),
+                          vertical:12, horizontal: 12),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Icon(
-                            Icons.emoji_events_rounded,
-                            size: 16,
+                            SolarIconsBold.medalRibbonStar,
+                            size: 32,
                             color: Theme.of(context).colorScheme.primary,
                           ),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: 8),
                           Flexible(
                             child: Text(
                               _challenge!.prompt,
@@ -471,7 +472,6 @@ class _PostComponentState extends State<PostComponent> {
                                     color:
                                         Theme.of(context).colorScheme.primary,
                                   ),
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],

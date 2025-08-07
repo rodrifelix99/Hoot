@@ -32,7 +32,7 @@ class UserService implements BaseUserService {
   Future<bool> isUsernameAvailable(String username) async {
     final existing = await _firestore
         .collection('users')
-        .where('username', isEqualTo: username)
+        .where('usernameLowercase', isEqualTo: username.toLowerCase())
         .limit(1)
         .get();
     return existing.docs.isEmpty;

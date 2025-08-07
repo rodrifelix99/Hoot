@@ -130,6 +130,10 @@ class ExploreView extends GetView<ExploreController> {
                     onChanged: controller.search,
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: buildSuggestions(),
+                ),
                 const SizedBox(height: 16),
                 StreamBuilder<DailyChallenge?>(
                   stream:
@@ -154,10 +158,6 @@ class ExploreView extends GetView<ExploreController> {
                       ),
                     );
                   },
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: buildSuggestions(),
                 ),
                 const SizedBox(height: 16),
                 Padding(
