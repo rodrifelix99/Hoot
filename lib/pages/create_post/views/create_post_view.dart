@@ -7,6 +7,7 @@ import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/components/post_media_preview.dart';
 import 'package:hoot/components/mention_text_field.dart';
+import 'package:hoot/components/challenge_card.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:hoot/pages/create_post/controllers/create_post_controller.dart';
@@ -272,6 +273,10 @@ class CreatePostView extends GetView<CreatePostController> {
                     );
                   }),
                   Obx(() {
+                    final c = controller.challenge.value;
+                    if (c != null) {
+                      return ChallengeCard(challenge: c, showActions: false);
+                    }
                     final news = controller.trendingNews.take(5).toList();
                     if (news.isEmpty) return const SizedBox.shrink();
                     return FadeInUp(

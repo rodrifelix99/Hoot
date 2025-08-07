@@ -13,6 +13,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/music_attachment.dart';
+import 'package:hoot/models/daily_challenge.dart';
 import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/toast_service.dart';
 import 'package:hoot/services/post_service.dart';
@@ -21,6 +22,7 @@ import 'package:hoot/services/storage_service.dart';
 import 'package:hoot/services/user_service.dart';
 import 'package:hoot/services/news_service.dart';
 import 'package:hoot/services/music_service.dart';
+import 'package:hoot/services/challenge_service.dart';
 import 'package:hoot/util/enums/feed_types.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -32,6 +34,7 @@ class CreatePostController extends GetxController {
   BaseUserService? _userService;
   final BaseNewsService _newsService;
   final BaseMusicService _musicService;
+  final BaseChallengeService _challengeService;
   final String? challengeId;
   late final String _userId;
 
@@ -43,13 +46,16 @@ class CreatePostController extends GetxController {
     BaseUserService? userService,
     BaseNewsService? newsService,
     BaseMusicService? musicService,
+    BaseChallengeService? challengeService,
     this.challengeId,
   })  : _postService = postService ?? PostService(),
         _authService = authService ?? Get.find<AuthService>(),
         _storageService = storageService ?? StorageService(),
         _userService = userService,
         _newsService = newsService ?? Get.find<BaseNewsService>(),
-        _musicService = musicService ?? MusicService() {
+        _musicService = musicService ?? MusicService(),
+        _challengeService =
+            challengeService ?? Get.find<BaseChallengeService>() {
     _userId = userId ?? _authService.currentUser?.uid ?? '';
   }
 
@@ -91,6 +97,9 @@ class CreatePostController extends GetxController {
   /// Feeds available to the user.
   final RxList<Feed> availableFeeds = <Feed>[].obs;
 
+  /// Daily challenge being posted to, if any.
+  final Rxn<DailyChallenge> challenge = Rxn<DailyChallenge>();
+
   /// Trending news articles.
   final RxList<NewsItem> trendingNews = <NewsItem>[].obs;
 
@@ -103,11 +112,17 @@ class CreatePostController extends GetxController {
   void onInit() {
     super.onInit();
     _loadFeeds();
-    _loadTrendingNews();
-    ever<List<Feed>>(selectedFeeds, (feeds) {
-      final topic = feeds.isNotEmpty ? feeds.last.type?.rssTopic : null;
-      _loadTrendingNews(topic: topic);
-    });
+    if (challengeId != null) {
+      _challengeService
+          .getChallengeById(challengeId!)
+          .then((value) => challenge.value = value);
+    } else {
+      _loadTrendingNews();
+      ever<List<Feed>>(selectedFeeds, (feeds) {
+        final topic = feeds.isNotEmpty ? feeds.last.type?.rssTopic : null;
+        _loadTrendingNews(topic: topic);
+      });
+    }
 
     audioPlayer.playerStateStream.listen((state) {
       if (state.processingState == ProcessingState.completed) {
@@ -431,7 +446,7 @@ class _MusicSearchDelegate extends SearchDelegate<MusicAttachment?> {
         child: NothingToShowComponent(
           imageAsset: 'assets/images/music.webp',
           title: 'searchForMusicTitle'.tr,
-            text: 'searchForMusicDescription'.tr,
+          text: 'searchForMusicDescription'.tr,
         ),
       );
     }
