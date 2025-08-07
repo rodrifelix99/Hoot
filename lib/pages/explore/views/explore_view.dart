@@ -32,7 +32,7 @@ class ExploreView extends GetView<ExploreController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ...controller.userSuggestions.map(
-                (u) => ListTile(
+            (u) => ListTile(
               leading: ProfileAvatarComponent(
                 image: u.largeProfilePictureUrl ?? '',
                 hash: u.bigAvatarHash ?? u.smallAvatarHash,
@@ -47,7 +47,7 @@ class ExploreView extends GetView<ExploreController> {
             ),
           ),
           ...controller.feedSuggestions.map(
-                (f) => ListTile(
+            (f) => ListTile(
               leading: ProfileAvatarComponent(
                 image: f.smallAvatar ?? f.bigAvatar ?? '',
                 hash: f.smallAvatarHash ?? f.bigAvatarHash,
@@ -130,9 +130,10 @@ class ExploreView extends GetView<ExploreController> {
                     onChanged: controller.search,
                   ),
                 ),
-                const SizedBox(height: 16),StreamBuilder<DailyChallenge?>(
+                const SizedBox(height: 16),
+                StreamBuilder<DailyChallenge?>(
                   stream:
-                  Get.find<BaseChallengeService>().watchCurrentChallenge(),
+                      Get.find<BaseChallengeService>().watchCurrentChallenge(),
                   builder: (context, snapshot) {
                     final challenge = snapshot.data;
                     if (challenge == null) return const SizedBox.shrink();
@@ -140,6 +141,7 @@ class ExploreView extends GetView<ExploreController> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: ChallengeCard(
                         challenge: challenge,
+                        showActions: true,
                         onJoin: () {
                           final tag = '#${challenge.hashtag} ';
                           Get.toNamed(

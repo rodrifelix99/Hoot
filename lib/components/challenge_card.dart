@@ -9,13 +9,15 @@ class ChallengeCard extends StatefulWidget {
   const ChallengeCard({
     super.key,
     required this.challenge,
-    required this.onJoin,
-    required this.onViewEntries,
+    this.onJoin,
+    this.onViewEntries,
+    this.showActions = true,
   });
 
   final DailyChallenge challenge;
-  final VoidCallback onJoin;
-  final VoidCallback onViewEntries;
+  final VoidCallback? onJoin;
+  final VoidCallback? onViewEntries;
+  final bool showActions;
 
   @override
   State<ChallengeCard> createState() => _ChallengeCardState();
@@ -96,7 +98,10 @@ class _ChallengeCardState extends State<ChallengeCard> {
                   _formatDuration(_remaining),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer.withAlpha(175),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onPrimaryContainer
+                            .withAlpha(175),
                       ),
                 ),
                 const Divider(
@@ -108,33 +113,43 @@ class _ChallengeCardState extends State<ChallengeCard> {
                   widget.challenge.prompt,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: widget.onViewEntries,
-                      style: TextButton.styleFrom(
-                        foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
-                      child: const Text('View entries'),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: widget.onJoin,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-                          foregroundColor: Theme.of(context).colorScheme.primaryContainer,
+                ),
+                if (widget.showActions) ...[
+                  const SizedBox(height: 32),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: widget.onViewEntries == null
+                            ? null
+                            : () => widget.onViewEntries!(),
+                        style: TextButton.styleFrom(
+                          foregroundColor:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
                         ),
-                        child: const Text('Join Challenge'),
+                        child: const Text('View entries'),
                       ),
-                    ),
-                  ],
-                ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: widget.onJoin == null
+                              ? null
+                              : () => widget.onJoin!(),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.primaryContainer,
+                          ),
+                          child: const Text('Join Challenge'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ).frosted(
