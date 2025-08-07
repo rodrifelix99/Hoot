@@ -19,4 +19,18 @@ class MusicAttachment {
       previewUrl: json['previewUrl'] ?? '',
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'trackName': title,
+      'artistName': artist,
+      'artworkUrl100': artworkUrl,
+      'previewUrl': previewUrl,
+    };
+  }
+
+  Map<String, dynamic> toCache() => toJson();
+
+  factory MusicAttachment.fromCache(Map<String, dynamic> json) =>
+      MusicAttachment.fromJson(json);
 }
