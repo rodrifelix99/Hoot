@@ -4,6 +4,7 @@ import 'package:hoot/components/image_component.dart';
 import 'package:hoot/components/url_preview_component.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
+import 'package:hoot/models/daily_challenge.dart';
 import 'package:get/get.dart';
 import 'package:flutter/gestures.dart';
 import 'package:hoot/util/routes/args/feed_page_args.dart';
@@ -16,6 +17,7 @@ import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/dialog_service.dart';
 import 'package:hoot/services/toast_service.dart';
 import 'package:hoot/services/report_service.dart';
+import 'package:hoot/services/challenge_service.dart';
 import 'package:hoot/util/mention_utils.dart';
 import 'package:hoot/util/extensions/datetime_extension.dart';
 import 'package:hoot/services/haptic_service.dart';
@@ -44,6 +46,8 @@ class _PostComponentState extends State<PostComponent> {
   late BasePostService _postService;
   late AuthService _authService;
   late BaseReportService _reportService;
+  late BaseChallengeService _challengeService;
+  DailyChallenge? _challenge;
 
   @override
   void initState() {
@@ -59,6 +63,9 @@ class _PostComponentState extends State<PostComponent> {
         (Get.isRegistered<BaseReportService>()
             ? Get.find<BaseReportService>()
             : ReportService());
+    _challengeService = Get.isRegistered<BaseChallengeService>()
+        ? Get.find<BaseChallengeService>()
+        : ChallengeService();
     super.initState();
 
     if (_post.reFeeded &&
@@ -72,6 +79,15 @@ class _PostComponentState extends State<PostComponent> {
         }
       });
     }
+
+    if (_post.challengeId != null) {
+      _challengeService.getChallengeById(_post.challengeId!).then((c) {
+        if (!mounted) return;
+        setState(() {
+          _challenge = c;
+        });
+      });
+    }
   }
 
   @override
@@ -81,6 +97,19 @@ class _PostComponentState extends State<PostComponent> {
       setState(() {
         _post = widget.post;
       });
+      if (widget.post.challengeId != oldWidget.post.challengeId) {
+        _challenge = null;
+        if (widget.post.challengeId != null) {
+          _challengeService
+              .getChallengeById(widget.post.challengeId!)
+              .then((c) {
+            if (!mounted) return;
+            setState(() {
+              _challenge = c;
+            });
+          });
+        }
+      }
     }
   }
 
@@ -193,8 +222,8 @@ class _PostComponentState extends State<PostComponent> {
     const int maxLength = 280;
     final length = text?.length ?? 0;
     if (length <= threshold) return base;
-    final ratio = ((length - threshold) / (maxLength - threshold))
-        .clamp(0.0, 1.0);
+    final ratio =
+        ((length - threshold) / (maxLength - threshold)).clamp(0.0, 1.0);
     return base - (base - minFontSize) * ratio;
   }
 
@@ -376,29 +405,63 @@ class _PostComponentState extends State<PostComponent> {
                     Text(
                       'hootedFrom'.trParams({'location': _post.location!}),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurfaceVariant,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
+                    ),
+                  ],
+                  if (_post.challengeId != null && _challenge != null) ...[
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.emoji_events_rounded,
+                            size: 16,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              _challenge!.prompt,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                   if (_post.text != null && _post.text!.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     RichText(
                       text: TextSpan(
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall
-                            ?.copyWith(
-                              fontSize: _calculateFontSize(
-                                _post.text!,
-                                Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall
-                                        ?.fontSize ??
-                                    20,
-                              ),
-                            ),
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontSize: _calculateFontSize(
+                                    _post.text!,
+                                    Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall
+                                            ?.fontSize ??
+                                        20,
+                                  ),
+                                ),
                         children: parseMentions(_post.text!),
                       ),
                     ),

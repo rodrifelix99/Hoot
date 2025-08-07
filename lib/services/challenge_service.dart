@@ -11,6 +11,9 @@ abstract class BaseChallengeService {
   /// Watches the currently active [DailyChallenge] in real-time.
   Stream<DailyChallenge?> watchCurrentChallenge();
 
+  /// Fetches a [DailyChallenge] by its identifier.
+  Future<DailyChallenge?> getChallengeById(String id);
+
   /// Fetches the most recent expired [DailyChallenge] and its top posts
   /// ordered by likes.
   Future<({DailyChallenge challenge, List<Post> posts})?>
@@ -52,6 +55,14 @@ class ChallengeService implements BaseChallengeService {
       final doc = snapshot.docs.first;
       return DailyChallenge.fromJson({'id': doc.id, ...doc.data()});
     });
+  }
+
+  /// Retrieves a [DailyChallenge] document by [id].
+  @override
+  Future<DailyChallenge?> getChallengeById(String id) async {
+    final doc = await _firestore.collection('daily_challenges').doc(id).get();
+    if (!doc.exists) return null;
+    return DailyChallenge.fromJson({'id': doc.id, ...doc.data()!});
   }
 
   /// Retrieves the most recent expired [DailyChallenge] and its top posts
