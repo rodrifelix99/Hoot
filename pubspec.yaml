@@ -55,6 +55,7 @@ dependencies:
   full_screen_image_null_safe: ^2.0.0
   animations: ^2.0.7
   package_info_plus: ^8.3.0
+  path_provider: ^2.1.5
   quick_actions: ^1.1.0
   image_cropper: ^9.1.0
   timeago: ^3.5.0
@@ -99,6 +100,7 @@ dependencies:
 
   feedback: ^3.2.0
   shake: ^3.0.0
+  super_clipboard: ^0.9.1
   in_app_review: ^2.0.10
 
   app_settings: ^6.1.1

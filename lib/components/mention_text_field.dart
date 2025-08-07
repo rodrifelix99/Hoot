@@ -1,5 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:super_clipboard/super_clipboard.dart';
 
 /// Text field with @ mention support.
 class MentionTextField extends StatelessWidget {
@@ -14,6 +18,7 @@ class MentionTextField extends StatelessWidget {
     this.textCapitalization = TextCapitalization.sentences,
     this.onSearchChanged,
     this.onChanged,
+    this.onImagePaste,
   });
 
   final GlobalKey<FlutterMentionsState> mentionKey;
@@ -25,10 +30,11 @@ class MentionTextField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final ValueChanged<String>? onSearchChanged;
   final ValueChanged<String>? onChanged;
+  final Future<void> Function(Uint8List data)? onImagePaste;
 
   @override
   Widget build(BuildContext context) {
-    return FlutterMentions(
+    final editor = FlutterMentions(
       key: mentionKey,
       suggestionPosition: SuggestionPosition.Top,
       maxLength: maxLength,
@@ -61,6 +67,63 @@ class MentionTextField extends StatelessWidget {
           data: suggestions,
         ),
       ],
+    );
+
+    return Shortcuts(
+      shortcuts: const <LogicalKeySet, Intent>{
+        LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.keyV):
+            PasteIntent(),
+        LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyV):
+            PasteIntent(),
+      },
+      child: Actions(
+        actions: <Type, Action<Intent>>{
+          PasteIntent: CallbackAction<PasteIntent>(
+            onInvoke: (intent) async {
+              final clipboard = SystemClipboard.instance;
+              if (onImagePaste != null && clipboard != null) {
+                final reader = await clipboard.read();
+                final formats = [
+                  Formats.png,
+                  Formats.jpeg,
+                  Formats.webp,
+                  Formats.gif,
+                  Formats.bmp,
+                  Formats.tiff,
+                  Formats.heic,
+                  Formats.heif,
+                ];
+                for (final format in formats) {
+                  if (reader.canProvide(format)) {
+                    await reader.getFile(format, (file) async {
+                      final bytes = await file.readAll();
+                      await onImagePaste?.call(bytes);
+                    });
+                    return null;
+                  }
+                }
+              }
+
+              final data = await Clipboard.getData(Clipboard.kTextPlain);
+              final controller = mentionKey.currentState?.controller;
+              if (data != null && controller != null) {
+                final selection = controller.selection;
+                final text = data.text ?? '';
+                final newText = controller.text
+                    .replaceRange(selection.start, selection.end, text);
+                controller.value = controller.value.copyWith(
+                  text: newText,
+                  selection: TextSelection.collapsed(
+                      offset: selection.start + text.length),
+                  composing: TextRange.empty,
+                );
+              }
+              return null;
+            },
+          ),
+        },
+        child: editor,
+      ),
     );
   }
 }
