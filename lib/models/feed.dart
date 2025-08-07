@@ -70,6 +70,7 @@ class Feed {
 
   Map<String, dynamic> toJson() => {
         'title': title,
+        'titleLowercase': title.toLowerCase(),
         'description': description,
         'icon': icon,
         'smallAvatar': smallAvatar,
@@ -91,6 +92,7 @@ class Feed {
         'smallAvatarHash': smallAvatarHash,
         'bigAvatarHash': bigAvatarHash,
         'title': title,
+        'titleLowercase': title.toLowerCase(),
         'description': description,
         'icon': icon,
         'color': color!.hashCode.toString(),
