@@ -22,6 +22,7 @@ import 'package:hoot/util/mention_utils.dart';
 import 'package:hoot/util/extensions/datetime_extension.dart';
 import 'package:hoot/services/haptic_service.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
+import 'package:just_audio/just_audio.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
@@ -48,6 +49,8 @@ class _PostComponentState extends State<PostComponent> {
   late BaseReportService _reportService;
   late BaseChallengeService _challengeService;
   DailyChallenge? _challenge;
+  late final AudioPlayer _audioPlayer;
+  bool _isPlaying = false;
 
   @override
   void initState() {
@@ -66,6 +69,13 @@ class _PostComponentState extends State<PostComponent> {
     _challengeService = Get.isRegistered<BaseChallengeService>()
         ? Get.find<BaseChallengeService>()
         : ChallengeService();
+    _audioPlayer = AudioPlayer();
+    _audioPlayer.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed) {
+        if (!mounted) return;
+        setState(() => _isPlaying = false);
+      }
+    });
     super.initState();
 
     if (_post.reFeeded &&
@@ -94,6 +104,8 @@ class _PostComponentState extends State<PostComponent> {
   void didUpdateWidget(covariant PostComponent oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.post != oldWidget.post) {
+      _audioPlayer.stop();
+      _isPlaying = false;
       setState(() {
         _post = widget.post;
       });
@@ -111,6 +123,12 @@ class _PostComponentState extends State<PostComponent> {
         }
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
   }
 
   Future<void> _toggleLike() async {
@@ -156,6 +174,19 @@ class _PostComponentState extends State<PostComponent> {
       _post.reFeededByMe = true;
     });
     ToastService.showSuccess('rehootPosted'.tr);
+  }
+
+  Future<void> _toggleMusicPlayback() async {
+    final track = _post.music;
+    if (track == null) return;
+    if (_isPlaying) {
+      await _audioPlayer.pause();
+      setState(() => _isPlaying = false);
+    } else {
+      await _audioPlayer.setUrl(track.previewUrl);
+      await _audioPlayer.play();
+      setState(() => _isPlaying = true);
+    }
   }
 
   Future<void> _showOptions() async {
@@ -469,6 +500,27 @@ class _PostComponentState extends State<PostComponent> {
                   if (_post.url != null) ...[
                     const SizedBox(height: 16),
                     UrlPreviewComponent(url: _post.url!),
+                  ],
+                  if (_post.music != null) ...[
+                    const SizedBox(height: 16),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          _post.music!.artworkUrl,
+                          width: 56,
+                          height: 56,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      title: Text(_post.music!.title),
+                      subtitle: Text(_post.music!.artist),
+                      trailing: IconButton(
+                        icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+                        onPressed: _toggleMusicPlayback,
+                      ),
+                    ),
                   ],
                   if (_post.media != null && _post.media!.isNotEmpty) ...[
                     const SizedBox(height: 16),
