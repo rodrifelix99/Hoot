@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
+import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:hoot/models/daily_challenge.dart';
 
 /// Card displaying the active daily challenge.
@@ -56,45 +58,78 @@ class _ChallengeCardState extends State<ChallengeCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.primaryContainer,
+            Theme.of(context).colorScheme.onPrimaryContainer,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.shadow.withAlpha(25),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Stack(
         children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-            color: Theme.of(context).colorScheme.primaryContainer,
-            child: Text(
-              _formatDuration(_remaining),
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
+          Positioned.fill(
+            child: HashCachedImage(
+              imageUrl:
+                  'https://cdn.dribbble.com/userupload/42098016/file/original-95161d967fb850a082d81e3143129a34.gif',
+              fit: BoxFit.cover,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16),
+          SizedBox(
+            width: double.infinity,
             child: Column(
               children: [
                 Text(
+                  _formatDuration(_remaining),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer.withAlpha(175),
+                      ),
+                ),
+                const Divider(
+                  height: 32,
+                  thickness: 1,
+                  color: Colors.white12,
+                ),
+                Text(
                   widget.challenge.prompt,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 32),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
                       onPressed: widget.onViewEntries,
+                      style: TextButton.styleFrom(
+                        foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
                       child: const Text('View entries'),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: widget.onJoin,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                          foregroundColor: Theme.of(context).colorScheme.primaryContainer,
+                        ),
                         child: const Text('Join Challenge'),
                       ),
                     ),
@@ -102,6 +137,10 @@ class _ChallengeCardState extends State<ChallengeCard> {
                 ),
               ],
             ),
+          ).frosted(
+            blur: 32,
+            padding: const EdgeInsets.all(12),
+            frostColor: Theme.of(context).colorScheme.primaryContainer,
           ),
         ],
       ),

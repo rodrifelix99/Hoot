@@ -3,14 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class DailyChallenge {
   final String id;
   final String prompt;
-  final String hashtag;
+  final String? hashtag;
   final DateTime? expiresAt;
   final DateTime? createdAt;
 
   DailyChallenge({
     required this.id,
     required this.prompt,
-    required this.hashtag,
+    this.hashtag,
     this.expiresAt,
     this.createdAt,
   });
