@@ -244,7 +244,7 @@ class CreatePostView extends GetView<CreatePostController> {
                           tooltip: 'addGif'.tr,
                         ),
                         IconButton(
-                          icon: const Icon(Icons.music_note),
+                          icon: const Icon(SolarIconsBold.musicNote),
                           onPressed: disableMusic
                               ? null
                               : () => controller.pickMusic(context: context),
@@ -252,8 +252,8 @@ class CreatePostView extends GetView<CreatePostController> {
                         ),
                         IconButton(
                           icon: controller.location.value == null
-                              ? Icon(SolarIconsOutline.gps)
-                              : Icon(SolarIconsBold.gps),
+                              ? Icon(SolarIconsOutline.mapPoint)
+                              : Icon(SolarIconsBold.mapPoint),
                           onPressed: controller.toggleLocation,
                           tooltip: controller.location.value == null
                               ? 'addLocation'.tr
