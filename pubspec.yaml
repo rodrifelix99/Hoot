@@ -91,8 +91,8 @@ dependencies:
   reorderable_grid_view: ^2.2.8
   share_plus: ^11.0.0
   ticket_widget: ^1.0.2
-  just_audio: ^0.9.37
-  audio_session: ^0.1.18
+  just_audio: ^0.10.4
+  audio_session: ^0.2.2
 
   rss_dart: ^1.0.13
   http: ^1.4.0
