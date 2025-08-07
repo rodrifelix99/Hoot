@@ -35,6 +35,11 @@ class OneSignalService extends GetxService {
     return OneSignal.Notifications.canRequest();
   }
 
+  /// Clears notifications and resets the app badge.
+  Future<void> clearBadge() {
+    return OneSignal.Notifications.clearAll();
+  }
+
   void handlePendingNotification() {
     final data = _pendingData;
     if (data == null) return;

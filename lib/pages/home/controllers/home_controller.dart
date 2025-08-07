@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:hoot/pages/notifications/controllers/notifications_controller.dart';
 import 'package:hoot/services/auth_service.dart';
@@ -7,7 +8,7 @@ import 'package:hoot/util/routes/app_routes.dart';
 import 'package:screen_corner_radius/screen_corner_radius.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeController extends GetxController {
+class HomeController extends GetxController with WidgetsBindingObserver {
   final selectedIndex = 0.obs;
   final _auth = Get.find<AuthService>();
 
@@ -16,7 +17,21 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
     _verifyUser();
+  }
+
+  @override
+  void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.onClose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      Get.find<OneSignalService>().clearBadge();
+    }
   }
 
   Future<void> _setRadius() async {
@@ -54,6 +69,7 @@ class HomeController extends GetxController {
     final quickActions = Get.find<QuickActionsService>();
     quickActions.handlePendingAction();
     oneSignal.handlePendingNotification();
+    await oneSignal.clearBadge();
 
     _setRadius();
   }
