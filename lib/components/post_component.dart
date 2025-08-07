@@ -180,11 +180,11 @@ class _PostComponentState extends State<PostComponent> {
     final track = _post.music;
     if (track == null) return;
     if (_isPlaying) {
-      await _audioPlayer.pause();
+      _audioPlayer.pause();
       setState(() => _isPlaying = false);
     } else {
       await _audioPlayer.setUrl(track.previewUrl);
-      await _audioPlayer.play();
+      _audioPlayer.play();
       setState(() => _isPlaying = true);
     }
   }
@@ -502,7 +502,7 @@ class _PostComponentState extends State<PostComponent> {
                     UrlPreviewComponent(url: _post.url!),
                   ],
                   if (_post.music != null) ...[
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: ClipRRect(

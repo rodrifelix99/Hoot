@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hoot/components/empty_message.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
@@ -426,7 +427,13 @@ class _MusicSearchDelegate extends SearchDelegate<MusicAttachment?> {
 
   Widget _buildSuggestions() {
     if (query.isEmpty) {
-      return const SizedBox.shrink();
+      return Center(
+        child: NothingToShowComponent(
+          imageAsset: 'assets/images/music.webp',
+          title: 'searchForMusicTitle'.tr,
+            text: 'searchForMusicDescription'.tr,
+        ),
+      );
     }
     return FutureBuilder<List<MusicAttachment>>(
       future: _service.searchSongs(query),

@@ -432,6 +432,8 @@ class AppTranslations extends Translations {
           'reorderFeeds': 'You can reorder your feeds by dragging them',
           'inviteFriendsDescription': 'Share your invite code with friends and let them join Hoot!',
           'challenge': 'Challenge',
+          'searchForMusicTitle': 'Search for music',
+          'searchForMusicDescription': 'Make your Hoot stand out with music',
         },
         'es': {
           'helloWorld': '¡Hola Mundo!',
@@ -870,6 +872,8 @@ class AppTranslations extends Translations {
           'reorderFeeds': 'Puedes reordenar tus feeds arrastrándolos',
           'inviteFriendsDescription': '¡Comparte tu código de invitación con amigos y deja que se unan a Hoot!',
           'challenge': 'Desafío',
+          'searchForMusicTitle': 'Buscar música',
+          'searchForMusicDescription': 'Haz que tu Hoot destaque con música',
         },
         'pt_PT': {
           'helloWorld': 'Olá Mundo!',
@@ -1310,6 +1314,8 @@ class AppTranslations extends Translations {
           'reorderFeeds': 'Podes reorganizar os teus feeds arrastando-os',
           'inviteFriendsDescription': 'Partilha o teu código de convite com amigos e deixa-os entrar no Hoot!',
           'challenge': 'Desafio',
+          'searchForMusicTitle': 'Procurar música',
+          'searchForMusicDescription': 'Faz com que o teu Hoot se destaque com música',
         },
         'pt_BR': {
           'helloWorld': 'Olá Mundo!',
@@ -1746,6 +1752,8 @@ class AppTranslations extends Translations {
           'reorderFeeds': 'Você pode reorganizar seus feeds arrastando-os',
           'inviteFriendsDescription': 'Compartilhe seu código de convite com amigos e deixe-os entrar no Hoot!',
           'challenge': 'Desafio',
+          'searchForMusicTitle': 'Procurar música',
+          'searchForMusicDescription': 'Faça seu Hoot se destacar com música',
         },
       };
 }
