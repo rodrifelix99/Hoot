@@ -168,6 +168,7 @@ class FeedEditorController extends GetxController {
 
     await docRef.set({
       'title': title,
+      'titleLowercase': title.toLowerCase(),
       'description': description,
       'color': selectedColor.value.value.toString(),
       'type': type.toString().split('.').last,
@@ -253,6 +254,7 @@ class FeedEditorController extends GetxController {
 
     await _firestore.collection('feeds').doc(feed!.id).update({
       'title': title,
+      'titleLowercase': title.toLowerCase(),
       'description': description,
       'color': selectedColor.value.value.toString(),
       'type': type.toString().split('.').last,

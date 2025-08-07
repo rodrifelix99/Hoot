@@ -3,9 +3,12 @@
     {
       "collectionGroup": "users",
       "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "usernameLowercase", "order": "ASCENDING" }
-      ]
+      "fields": [{ "fieldPath": "usernameLowercase", "order": "ASCENDING" }]
+    },
+    {
+      "collectionGroup": "feeds",
+      "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "titleLowercase", "order": "ASCENDING" }]
     }
   ],
   "fieldOverrides": []

@@ -8,7 +8,8 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "test": "npm run build && node --test lib/**/*.test.js"
+    "test": "npm run build && node --test lib/**/*.test.js",
+    "backfill:title-lowercase": "npm run build && node lib/backfillTitleLowercase.js"
   },
   "engines": {
     "node": "22"
