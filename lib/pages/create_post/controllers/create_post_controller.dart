@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
@@ -222,6 +225,19 @@ class CreatePostController extends GetxController {
     if (music.value != null) return;
     gifUrl.value = url;
     imageFiles.clear();
+  }
+
+  /// Handles an image pasted from clipboard.
+  Future<void> handlePastedImage(Uint8List data) async {
+    if (music.value != null) return;
+    if (imageFiles.length >= 4) return;
+    final dir = await getTemporaryDirectory();
+    final path = '${dir.path}/${const Uuid().v4()}.png';
+    final file = File(path);
+    await file.writeAsBytes(data);
+    imageFiles.add(file);
+    gifUrl.value = null;
+    imageFiles.refresh();
   }
 
   /// Picks a music track using the iTunes search API.

@@ -179,6 +179,7 @@ class CreatePostView extends GetView<CreatePostController> {
                     hintText: 'postPlaceholder'.tr,
                     onSearchChanged: controller.searchUsers,
                     onChanged: controller.onTextChanged,
+                    onImagePaste: controller.handlePastedImage,
                   ),
                   const SizedBox(height: 16),
                   Obx(() {
