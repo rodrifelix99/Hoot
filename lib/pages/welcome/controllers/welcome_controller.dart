@@ -79,6 +79,7 @@ class WelcomeController extends GetxController {
       await _userService.updateUserData(uid, {
         'uid': uid,
         'username': username,
+        'usernameLowercase': username.toLowerCase(),
       });
     }
     _auth.currentUser?.username = username;

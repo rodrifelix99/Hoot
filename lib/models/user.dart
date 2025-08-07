@@ -132,6 +132,7 @@ class U {
     return {
       'displayName': name,
       'username': username,
+      'usernameLowercase': username?.toLowerCase(),
       'smallAvatar': smallProfilePictureUrl,
       'bigAvatar': largeProfilePictureUrl,
       'smallAvatarHash': smallAvatarHash,
@@ -159,6 +160,7 @@ class U {
         'uid': uid,
         'displayName': name,
         'username': username,
+        'usernameLowercase': username?.toLowerCase(),
         'smallAvatar': smallProfilePictureUrl,
         'bigAvatar': largeProfilePictureUrl,
         'smallAvatarHash': smallAvatarHash,

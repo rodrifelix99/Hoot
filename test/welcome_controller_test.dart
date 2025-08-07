@@ -91,6 +91,7 @@ void main() {
     expect(result, isTrue);
     expect(userService.lastUid, 'u1');
     expect(userService.lastData?['username'], 'jane_doe');
+    expect(userService.lastData?['usernameLowercase'], 'jane_doe');
     expect(authService.currentUser?.username, 'jane_doe');
 
     controller.onClose();

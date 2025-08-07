@@ -17,10 +17,15 @@ class UserService implements BaseUserService {
 
   @override
   Future<void> updateUserData(String uid, Map<String, dynamic> data) {
+    final updated = Map<String, dynamic>.from(data);
+    if (updated.containsKey('username')) {
+      updated['usernameLowercase'] =
+          (updated['username'] as String?)?.toLowerCase();
+    }
     return _firestore
         .collection('users')
         .doc(uid)
-        .set(data, SetOptions(merge: true));
+        .set(updated, SetOptions(merge: true));
   }
 
   @override
