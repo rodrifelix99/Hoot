@@ -21,6 +21,7 @@ import 'package:hoot/services/user_service.dart';
 import 'package:hoot/services/news_service.dart';
 import 'package:hoot/services/music_service.dart';
 import 'package:hoot/util/enums/feed_types.dart';
+import 'package:just_audio/just_audio.dart';
 
 /// Manages state for creating a new post.
 class CreatePostController extends GetxController {
@@ -71,6 +72,12 @@ class CreatePostController extends GetxController {
   /// Selected music attachment.
   final Rxn<MusicAttachment> music = Rxn<MusicAttachment>();
 
+  /// Audio player for music preview.
+  final AudioPlayer audioPlayer = AudioPlayer();
+
+  /// Whether the music preview is currently playing.
+  final RxBool isPlaying = false.obs;
+
   /// First URL found in the post text.
   final RxnString linkUrl = RxnString();
 
@@ -99,6 +106,12 @@ class CreatePostController extends GetxController {
     ever<List<Feed>>(selectedFeeds, (feeds) {
       final topic = feeds.isNotEmpty ? feeds.last.type?.rssTopic : null;
       _loadTrendingNews(topic: topic);
+    });
+
+    audioPlayer.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed) {
+        isPlaying.value = false;
+      }
     });
   }
 
@@ -204,10 +217,33 @@ class CreatePostController extends GetxController {
       delegate: _MusicSearchDelegate(_musicService),
     );
     if (result != null) {
+      await audioPlayer.stop();
+      isPlaying.value = false;
       imageFiles.clear();
       gifUrl.value = null;
       music.value = result;
     }
+  }
+
+  /// Plays or pauses the selected music preview.
+  Future<void> toggleMusicPlayback() async {
+    final track = music.value;
+    if (track == null) return;
+    if (isPlaying.value) {
+      await audioPlayer.pause();
+      isPlaying.value = false;
+    } else {
+      await audioPlayer.setUrl(track.previewUrl);
+      await audioPlayer.play();
+      isPlaying.value = true;
+    }
+  }
+
+  /// Clears the selected music attachment.
+  Future<void> clearMusic() async {
+    await audioPlayer.stop();
+    music.value = null;
+    isPlaying.value = false;
   }
 
   /// Removes the image at [index].
@@ -336,6 +372,8 @@ class CreatePostController extends GetxController {
       imageFiles.clear();
       gifUrl.value = null;
       music.value = null;
+      await audioPlayer.stop();
+      isPlaying.value = false;
       linkUrl.value = null;
       location.value = null;
       selectedFeeds.clear();
@@ -351,6 +389,7 @@ class CreatePostController extends GetxController {
   @override
   void onClose() {
     textController.dispose();
+    audioPlayer.dispose();
     super.onClose();
   }
 }
