@@ -74,6 +74,18 @@ class NotificationsView extends GetView<NotificationsController> {
                         case 6:
                           text = 'newReport'.tr;
                           break;
+                        case 7:
+                          text = 'privateFeedRequestAccepted'.trParams({
+                            'username': user.username ?? '',
+                            'feedName': feed?.title ?? '',
+                          });
+                          break;
+                        case 8:
+                          text = 'privateFeedRequestRejected'.trParams({
+                            'username': user.username ?? '',
+                            'feedName': feed?.title ?? '',
+                          });
+                          break;
                         default:
                           text = '';
                       }
