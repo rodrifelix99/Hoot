@@ -180,18 +180,56 @@ class CreatePostView extends GetView<CreatePostController> {
                     onChanged: controller.onTextChanged,
                   ),
                   const SizedBox(height: 16),
-                  Obx(() => PostMediaPreview(
-                        imageFiles: controller.imageFiles,
-                        gifUrl: controller.gifUrl.value,
-                        onOpenViewer: _openViewer,
-                        onRemoveImage: controller.removeImage,
-                        onCropImage: controller.cropImage,
-                        onRemoveGif: () => controller.gifUrl.value = null,
-                      )),
+                  Obx(() {
+                    final track = controller.music.value;
+                    if (track != null) {
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            track.artworkUrl,
+                            width: 56,
+                            height: 56,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        title: Text(track.title),
+                        subtitle: Text(track.artist),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(controller.isPlaying.value
+                                  ? Icons.pause
+                                  : Icons.play_arrow),
+                              onPressed: controller.toggleMusicPlayback,
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: controller.clearMusic,
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return PostMediaPreview(
+                      imageFiles: controller.imageFiles,
+                      gifUrl: controller.gifUrl.value,
+                      onOpenViewer: _openViewer,
+                      onRemoveImage: controller.removeImage,
+                      onCropImage: controller.cropImage,
+                      onRemoveGif: () => controller.gifUrl.value = null,
+                    );
+                  }),
                   Obx(() {
                     final disableImages = controller.gifUrl.value != null ||
-                        controller.imageFiles.length >= 4;
-                    final disableGif = controller.imageFiles.isNotEmpty;
+                        controller.imageFiles.length >= 4 ||
+                        controller.music.value != null;
+                    final disableGif = controller.imageFiles.isNotEmpty ||
+                        controller.music.value != null;
+                    final disableMusic = controller.imageFiles.isNotEmpty ||
+                        controller.gifUrl.value != null;
                     return Row(
                       children: [
                         IconButton(
@@ -204,6 +242,13 @@ class CreatePostView extends GetView<CreatePostController> {
                           icon: const Icon(Icons.gif_box_rounded),
                           onPressed: disableGif ? null : () => pickGif(context),
                           tooltip: 'addGif'.tr,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.music_note),
+                          onPressed: disableMusic
+                              ? null
+                              : () => controller.pickMusic(context: context),
+                          tooltip: 'addMusic'.tr,
                         ),
                         IconButton(
                           icon: controller.location.value == null
