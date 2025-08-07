@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,6 +16,8 @@ import 'package:hoot/models/user.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hoot/services/news_service.dart';
+import 'package:hoot/services/music_service.dart';
+import 'package:hoot/models/music_attachment.dart';
 import 'package:hoot/util/enums/feed_types.dart';
 
 class FakeAuthService extends GetxService implements AuthService {
@@ -97,6 +100,11 @@ class FakeNewsService implements BaseNewsService {
     calls.add(topic);
     return topicItems[topic] ?? [];
   }
+}
+
+class FakeMusicService implements BaseMusicService {
+  @override
+  Future<List<MusicAttachment>> searchSongs(String term) async => [];
 }
 
 void main() {
@@ -334,6 +342,103 @@ void main() {
       expect(
           posts.docs.first.data()['images'][0], 'https://example.com/img.jpg');
       expect(posts.docs.first.data()['hashes'][0], 'hash');
+    });
+
+    testWidgets('pickMusic selects track and clears other media',
+        (tester) async {
+      await tester
+          .pumpWidget(const MaterialApp(home: Scaffold(body: SizedBox())));
+      final controller = CreatePostController(
+          postService: PostService(firestore: FakeFirebaseFirestore()),
+          authService: FakeAuthService(U(
+              uid: 'u1',
+              name: 'Tester',
+              username: 'tester',
+              smallProfilePictureUrl: 'a.png',
+              feeds: [])),
+          userId: 'u1',
+          storageService: FakeStorageService(),
+          newsService: FakeNewsService(),
+          musicService: FakeMusicService());
+      final file = File('${Directory.systemTemp.path}/img.jpg')
+        ..writeAsBytesSync([0]);
+      addTearDown(() => file.deleteSync());
+      controller.imageFiles.add(file);
+      controller.gifUrl.value = 'gif';
+      final track = MusicAttachment(
+          title: 'Song', artist: 'Artist', artworkUrl: '', previewUrl: '');
+      unawaited(
+          controller.pickMusic(context: tester.element(find.byType(Scaffold))));
+      await tester.pump();
+      Navigator.of(tester.element(find.byType(Scaffold))).pop(track);
+      await tester.pump();
+      expect(controller.music.value?.title, 'Song');
+      expect(controller.imageFiles, isEmpty);
+      expect(controller.gifUrl.value, isNull);
+    });
+
+    testWidgets('cannot pick image or gif when music selected', (tester) async {
+      await tester
+          .pumpWidget(const MaterialApp(home: Scaffold(body: SizedBox())));
+      final controller = CreatePostController(
+          postService: PostService(firestore: FakeFirebaseFirestore()),
+          authService: FakeAuthService(U(
+              uid: 'u1',
+              name: 'Tester',
+              username: 'tester',
+              smallProfilePictureUrl: 'a.png',
+              feeds: [])),
+          userId: 'u1',
+          storageService: FakeStorageService(),
+          newsService: FakeNewsService(),
+          musicService: FakeMusicService());
+      controller.music.value = MusicAttachment(
+          title: 'Song', artist: 'Artist', artworkUrl: '', previewUrl: '');
+      await controller.pickImage();
+      controller.pickGif('url');
+      expect(controller.imageFiles, isEmpty);
+      expect(controller.gifUrl.value, isNull);
+    });
+
+    testWidgets('publish stores music attachment', (tester) async {
+      await tester.pumpWidget(const ToastificationWrapper(
+        child: MaterialApp(home: Scaffold(body: SizedBox())),
+      ));
+      final firestore = FakeFirebaseFirestore();
+      final postService = PostService(
+        firestore: firestore,
+      );
+      final feed = Feed(
+          id: 'f1',
+          userId: 'u1',
+          title: 't',
+          description: 'd',
+          color: Colors.blue,
+          order: 0);
+      final auth = FakeAuthService(U(
+          uid: 'u1',
+          name: 'Tester',
+          username: 'tester',
+          smallProfilePictureUrl: 'a.png',
+          feeds: [feed]));
+      final controller = CreatePostController(
+          postService: postService,
+          authService: auth,
+          userId: 'u1',
+          storageService: FakeStorageService(),
+          newsService: FakeNewsService(),
+          musicService: FakeMusicService());
+      controller.selectedFeeds.add(feed);
+      controller.music.value = MusicAttachment(
+          title: 'Song', artist: 'Artist', artworkUrl: '', previewUrl: 'p');
+      controller.textController.text = 'Hi';
+      final result = await controller.publish();
+      await tester.pump(const Duration(seconds: 4));
+      await tester.pumpAndSettle();
+      expect(result, isA<Post>());
+      final posts = await firestore.collection('posts').get();
+      expect(posts.docs.first.data()['music']['trackName'], 'Song');
+      expect(controller.music.value, isNull);
     });
 
     testWidgets('available feeds loaded on init', (tester) async {
