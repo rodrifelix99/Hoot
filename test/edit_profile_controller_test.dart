@@ -70,9 +70,6 @@ class FakeUserService implements BaseUserService {
 
   @override
   Future<bool> isUsernameAvailable(String username) async => true;
-
-  @override
-  Future<List<U>> searchUsers(String query) async => [];
 }
 
 void main() {
