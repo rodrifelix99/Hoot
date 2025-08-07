@@ -41,18 +41,12 @@ class OneSignalService extends GetxService {
     _pendingData = null;
     if (data['postId'] != null) {
       Get.toNamed(AppRoutes.post, arguments: {'id': data['postId']});
-      return;
-    }
-    if (data['action'] == 'view_feed_requests') {
+    } else if (data['action'] == 'view_feed_requests') {
       Get.toNamed(AppRoutes.feedRequests);
-      return;
-    }
-    if (data['feedId'] != null) {
+    } else if (data['feedId'] != null) {
       Get.toNamed(AppRoutes.feed,
           arguments: FeedPageArgs(feedId: data['feedId']));
-      return;
-    }
-    if (data['uid'] != null) {
+    } else if (data['uid'] != null) {
       Get.toNamed(AppRoutes.profile, arguments: ProfileArgs(uid: data['uid']));
     }
   }
