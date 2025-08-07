@@ -14,61 +14,77 @@ class DailyChallengeEditorView extends GetView<DailyChallengeEditorController> {
       appBar: AppBarComponent(
         title: 'dailyChallenge'.tr,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: controller.promptController,
-              decoration: InputDecoration(labelText: 'prompt'.tr),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: controller.hashtagController,
-              decoration: InputDecoration(labelText: 'hashtag'.tr),
-            ),
-            const SizedBox(height: 16),
-            Obx(
-              () => ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text('createAt'.tr),
-                subtitle: Text(
-                  controller.createAt.value != null
-                      ? dateFormat.format(controller.createAt.value!)
-                      : 'Select creation time',
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: controller.promptController,
+                decoration: InputDecoration(labelText: 'prompt'.tr),
+                maxLength: 280,
+                minLines: 3,
+                maxLines: 5,
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: controller.hashtagController,
+                decoration: InputDecoration(labelText: 'hashtag'.tr),
+                maxLength: 50,
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Obx(
+                    () => Expanded(
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text('createAt'.tr),
+                        subtitle: Text(
+                          controller.createAt.value != null
+                              ? dateFormat.format(controller.createAt.value!)
+                              : 'Select creation time',
+                        ),
+                        onTap: controller.pickCreateAt,
+                      ),
+                    ),
+                  ),
+                  Obx(
+                    () => Expanded(
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text('expiration'.tr),
+                        subtitle: Text(
+                          controller.expiration.value != null
+                              ? dateFormat.format(controller.expiration.value!)
+                              : 'Select expiration',
+                        ),
+                        onTap: controller.pickExpiration,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Obx(
+                () => SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed:
+                        controller.submitting.value ? null : controller.submit,
+                    child: controller.submitting.value
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text('createChallenge'.tr),
+                  ),
                 ),
-                onTap: controller.pickCreateAt,
               ),
-            ),
-            const SizedBox(height: 16),
-            Obx(
-              () => ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text('expiration'.tr),
-                subtitle: Text(
-                  controller.expiration.value != null
-                      ? dateFormat.format(controller.expiration.value!)
-                      : 'Select expiration',
-                ),
-                onTap: controller.pickExpiration,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Obx(
-              () => ElevatedButton(
-                onPressed:
-                    controller.submitting.value ? null : controller.submit,
-                child: controller.submitting.value
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Text('createChallenge'.tr),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
