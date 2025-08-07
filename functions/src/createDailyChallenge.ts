@@ -32,14 +32,15 @@ export const createDailyChallenge = onCall(async (request) => {
   const url =
     process.env.CREATE_DAILY_CHALLENGE_URL ||
     `https://${location}-${project}.cloudfunctions.net/createDailyChallengeTask`;
-
+  const taskId = createDate.getTime().toString();
   const task = {
+    name: tasksClient.taskPath(project, location, queue, taskId),
     httpRequest: {
       httpMethod: "POST" as const,
       url,
       headers: { "Content-Type": "application/json" },
       body: Buffer.from(
-        JSON.stringify({ prompt, hashtag, expiresAt })
+        JSON.stringify({ prompt, hashtag, expiresAt, taskId })
       ).toString("base64"),
     },
     scheduleTime: { seconds: Math.floor(createDate.getTime() / 1000) },
@@ -49,14 +50,24 @@ export const createDailyChallenge = onCall(async (request) => {
     parent: tasksClient.queuePath(project, location, queue),
     task,
   });
-  return { scheduled: true };
+
+  await db.collection("scheduled_daily_challenges").doc(taskId).set({
+    prompt,
+    ...(hashtag ? { hashtag } : {}),
+    createAt: createDate,
+    expiresAt: new Date(expiresAt),
+    createdAt: FieldValue.serverTimestamp(),
+  });
+
+  return { scheduled: true, taskId };
 });
 
 export const createDailyChallengeTask = onRequest(async (req, res) => {
-  const { prompt, hashtag, expiresAt } = req.body as {
+  const { prompt, hashtag, expiresAt, taskId } = req.body as {
     prompt: string;
     hashtag?: string;
     expiresAt: number | string;
+    taskId?: string;
   };
   await db.collection("daily_challenges").add({
     prompt,
@@ -64,5 +75,13 @@ export const createDailyChallengeTask = onRequest(async (req, res) => {
     expiresAt: new Date(expiresAt),
     createdAt: FieldValue.serverTimestamp(),
   });
+  if (taskId) {
+    await db.collection("scheduled_daily_challenges").doc(taskId).delete();
+  }
   res.status(200).json({ success: true });
+});
+
+export const listScheduledDailyChallenges = onCall(async () => {
+  const snapshot = await db.collection("scheduled_daily_challenges").get();
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 });
