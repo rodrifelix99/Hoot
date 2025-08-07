@@ -3,6 +3,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:hoot/services/auth_service.dart';
 
@@ -47,6 +48,33 @@ void main() {
 
     final doc = await firestore.collection('users').doc('u1').get();
     expect(doc.get('displayName'), 'John');
+  });
+
+  test('fetchUserByUsername is case-insensitive', () async {
+    final firestore = FakeFirebaseFirestore();
+    await firestore.collection('users').doc('u1').set({
+      'uid': 'u1',
+      'username': 'Alice',
+      'usernameLowercase': 'alice',
+      'createdAt': Timestamp.now(),
+    });
+    final service = AuthService(firestore: firestore);
+    final user = await service.fetchUserByUsername('ALICE');
+    expect(user, isNotNull);
+    expect(user!.username, 'Alice');
+  });
+
+  test('searchUsers matches usernames case-insensitively', () async {
+    final firestore = FakeFirebaseFirestore();
+    await firestore.collection('users').doc('u1').set({
+      'uid': 'u1',
+      'username': 'Alice',
+      'usernameLowercase': 'alice',
+    });
+    final service = AuthService(firestore: firestore);
+    final results = await service.searchUsers('AL');
+    expect(results, hasLength(1));
+    expect(results.first.username, 'Alice');
   });
 }
 
