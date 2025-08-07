@@ -141,6 +141,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
             blur: 32,
             padding: const EdgeInsets.all(12),
             frostColor: Theme.of(context).colorScheme.primaryContainer,
+            frostOpacity: 0.25,
           ),
         ],
       ),
