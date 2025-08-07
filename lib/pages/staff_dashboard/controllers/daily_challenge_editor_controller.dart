@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,7 +6,9 @@ import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/toast_service.dart';
 
 class DailyChallengeEditorController extends GetxController {
-  DailyChallengeEditorController({this.createDailyChallenge});
+  DailyChallengeEditorController(
+      {this.createDailyChallenge, FirebaseFirestore? firestore})
+      : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final Future<void> Function({
     required String prompt,
@@ -13,6 +16,7 @@ class DailyChallengeEditorController extends GetxController {
     required DateTime expiresAt,
     required DateTime createAt,
   })? createDailyChallenge;
+  final FirebaseFirestore _firestore;
 
   final TextEditingController promptController = TextEditingController();
   final TextEditingController hashtagController = TextEditingController();
@@ -21,29 +25,60 @@ class DailyChallengeEditorController extends GetxController {
   final RxBool submitting = false.obs;
 
   @override
+  void onInit() {
+    super.onInit();
+    ever<DateTime?>(createAt, (date) {
+      expiration.value = date?.add(const Duration(hours: 24));
+    });
+    _loadInitial();
+  }
+
+  Future<void> _loadInitial() async {
+    try {
+      final results = await Future.wait([
+        _firestore
+            .collection('daily_challenges')
+            .orderBy('expiresAt', descending: true)
+            .limit(1)
+            .get(),
+        _firestore
+            .collection('scheduled_daily_challenges')
+            .orderBy('expiresAt', descending: true)
+            .limit(1)
+            .get(),
+      ]);
+      DateTime? maxDate;
+      for (final query in results) {
+        if (query.docs.isEmpty) continue;
+        final doc = query.docs.first;
+        final data = doc.data();
+        final dynamic ts = data['expiresAt'];
+        DateTime dt;
+        if (ts is Timestamp) {
+          dt = ts.toDate();
+        } else if (ts is int) {
+          dt = DateTime.fromMillisecondsSinceEpoch(ts);
+        } else if (ts is DateTime) {
+          dt = ts;
+        } else {
+          continue;
+        }
+        if (maxDate == null || dt.isAfter(maxDate)) {
+          maxDate = dt;
+        }
+      }
+      createAt.value = maxDate ?? DateTime.now();
+    } catch (e, s) {
+      await ErrorService.reportError(e, stack: s);
+      createAt.value = DateTime.now();
+    }
+  }
+
+  @override
   void onClose() {
     promptController.dispose();
     hashtagController.dispose();
     super.onClose();
-  }
-
-  Future<void> pickExpiration() async {
-    final now = DateTime.now();
-    final context = Get.context!;
-    final date = await showDatePicker(
-      context: context,
-      initialDate: now,
-      firstDate: now,
-      lastDate: DateTime(now.year + 1),
-    );
-    if (date == null) return;
-    final time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(now.add(const Duration(hours: 1))),
-    );
-    if (time == null) return;
-    expiration.value =
-        DateTime(date.year, date.month, date.day, time.hour, time.minute);
   }
 
   Future<void> pickCreateAt() async {

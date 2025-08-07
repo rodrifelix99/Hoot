@@ -1,3 +1,4 @@
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,7 @@ void main() {
   testWidgets('renders creation selector and submits data', (tester) async {
     Map<String, dynamic>? received;
     final controller = DailyChallengeEditorController(
+      firestore: FakeFirebaseFirestore(),
       createDailyChallenge: (
           {required String prompt,
           required String hashtag,
@@ -41,10 +43,11 @@ void main() {
     await tester.enterText(find.byType(TextField).at(1), 'Hash');
 
     final creation = DateTime(2025, 1, 1, 12, 0);
-    final expiration = DateTime(2025, 1, 2, 12, 0);
     controller.createAt.value = creation;
-    controller.expiration.value = expiration;
     await tester.pump();
+
+    final expiration = creation.add(const Duration(hours: 24));
+    expect(controller.expiration.value, expiration);
 
     expect(find.text('Create At'), findsOneWidget);
     expect(find.text('Expiration'), findsOneWidget);
