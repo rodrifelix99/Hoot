@@ -56,6 +56,8 @@
 		<false/>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
+		<key>NSUserTrackingUsageDescription</key>
+		<string>Hoot uses your data to show you relevant content.</string>
 		<key>NSContactsUsageDescription</key>
 		<string>Access to your contacts is needed to find your friends on Hoot</string>
 		<key>NSCameraUsageDescription</key>

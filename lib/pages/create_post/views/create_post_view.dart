@@ -360,6 +360,7 @@ class CreatePostView extends GetView<CreatePostController> {
                     }
                     return const SizedBox.shrink();
                   }),
+                  const SizedBox(height: 120),
                 ],
               ),
             ),
