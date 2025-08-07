@@ -109,7 +109,7 @@ class SettingsView extends GetView<SettingsController> {
                     onTap: controller.findFriends,
                   ),*/
                   ListTile(
-                    leading: const Icon(Icons.card_giftcard),
+                    leading: const Icon(SolarIconsBold.gift),
                     title: Text('inviteFriends'.tr),
                     trailing: const Icon(SolarIconsOutline.arrowRight),
                     onTap: () => Get.toNamed(AppRoutes.inviteFriends),
