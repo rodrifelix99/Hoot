@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:hoot/pages/notifications/controllers/notifications_controller.dart';
@@ -64,6 +67,10 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     if (!permissionDenied && await oneSignal.canRequestPermission()) {
       Get.offAllNamed(AppRoutes.notificationsPermission);
       return;
+    }
+
+    if (Platform.isIOS) {
+      await AppTrackingTransparency.requestTrackingAuthorization();
     }
 
     final quickActions = Get.find<QuickActionsService>();

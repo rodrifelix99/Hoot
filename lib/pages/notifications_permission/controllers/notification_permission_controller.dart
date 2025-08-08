@@ -1,6 +1,4 @@
-import 'dart:io';
 
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:get/get.dart';
 import 'package:hoot/services/onesignal_service.dart';
 import 'package:hoot/util/routes/app_routes.dart';
@@ -13,9 +11,6 @@ class NotificationPermissionController extends GetxController {
 
   Future<void> requestPermission() async {
     final granted = await _oneSignalService.requestPermission();
-    if (Platform.isIOS) {
-      await AppTrackingTransparency.requestTrackingAuthorization();
-    }
     if (!granted) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_prefKeyNotificationPermissionDenied, true);
