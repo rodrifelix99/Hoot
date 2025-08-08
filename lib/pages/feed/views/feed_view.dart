@@ -40,12 +40,12 @@ class FeedView extends GetView<FeedController> {
             title: 'mainFeed'.tr,
             text: 'mainFeedDescription'.tr,
           ),
-          noMoreItemsIndicatorBuilder: (_) => const Padding(
-            padding: EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+          noMoreItemsIndicatorBuilder: (_) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
             child: Opacity(
               opacity: 0.75,
               child: Center(
-                child: Text('Made in Portugal 🇵🇹'),
+                child: Text('madeInPortugal'.tr),
               ),
             ),
           ),
