@@ -470,6 +470,19 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '🔥 ${user.streakCount ?? 0} Day Streak',
+                          style: Get.textTheme.bodySmall?.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
