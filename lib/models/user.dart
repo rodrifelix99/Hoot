@@ -33,6 +33,8 @@ class U {
   int? activityScore;
   int? popularityScore;
   int? challengeCount;
+  int? streakCount;
+  DateTime? lastActionAt;
   List<Feed>? feeds;
   UserRole role;
 
@@ -63,6 +65,8 @@ class U {
     this.activityScore = 0,
     this.popularityScore = 0,
     this.challengeCount = 0,
+    this.streakCount = 0,
+    this.lastActionAt,
     this.feeds,
     this.role = UserRole.user,
   });
@@ -121,6 +125,19 @@ class U {
       activityScore: json['activityScore'],
       popularityScore: json['popularityScore'],
       challengeCount: json['challengeCount'] ?? 0,
+      streakCount: json['streakCount'] ?? 0,
+      lastActionAt: json['lastActionAt'] != null
+          ? json['lastActionAt'] is Timestamp
+              ? (json['lastActionAt'] as Timestamp).toDate()
+              : json['lastActionAt'] is Map<String, dynamic> &&
+                      json['lastActionAt']['_seconds'] != null
+                  ? DateTime.fromMillisecondsSinceEpoch(
+                      json['lastActionAt']['_seconds'] * 1000)
+                  : json['lastActionAt'] is String
+                      ? DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(json['lastActionAt']))
+                      : json['lastActionAt']
+          : null,
       feeds: json['feeds'] != null
           ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x)))
           : [],
@@ -153,6 +170,8 @@ class U {
       'role': role.name,
       'verified': verified,
       'challengeCount': challengeCount,
+      'streakCount': streakCount,
+      'lastActionAt': lastActionAt,
     };
   }
 
@@ -184,6 +203,8 @@ class U {
         'activityScore': activityScore,
         'popularityScore': popularityScore,
         'challengeCount': challengeCount,
+        'streakCount': streakCount,
+        'lastActionAt': lastActionAt?.millisecondsSinceEpoch.toString(),
         'feeds': feeds?.map((e) => e.toCache()).toList(),
         'role': role.name,
       };
@@ -218,6 +239,10 @@ class U {
       activityScore: json['activityScore'],
       popularityScore: json['popularityScore'],
       challengeCount: json['challengeCount'] ?? 0,
+      streakCount: json['streakCount'] ?? 0,
+      lastActionAt: json['lastActionAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(int.parse(json['lastActionAt']))
+          : null,
       feeds: json['feeds'] != null
           ? List<Feed>.from(json['feeds'].map((x) => Feed.fromJson(x)))
           : [],
