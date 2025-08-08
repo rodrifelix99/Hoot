@@ -477,7 +477,7 @@ class _MusicSearchDelegate extends SearchDelegate<MusicAttachment?> {
         }
         final results = snapshot.data ?? [];
         if (results.isEmpty) {
-          return const Center(child: Text('No results'));
+          return Center(child: Text('noResults'.tr));
         }
         return ListView(
           children: results
