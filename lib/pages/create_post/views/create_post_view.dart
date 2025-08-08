@@ -17,6 +17,7 @@ import 'package:hoot/pages/home/controllers/home_controller.dart';
 import 'package:hoot/pages/feed/controllers/feed_controller.dart';
 import 'package:hoot/util/enums/feed_types.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:hoot/util/image_utils.dart';
 
 class CreatePostView extends GetView<CreatePostController> {
   const CreatePostView({super.key});
@@ -189,12 +190,19 @@ class CreatePostView extends GetView<CreatePostController> {
                         contentPadding: EdgeInsets.zero,
                         leading: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            track.artworkUrl,
-                            width: 56,
-                            height: 56,
-                            fit: BoxFit.cover,
-                          ),
+                          child: isBase64ImageData(track.artworkUrl)
+                              ? Image.memory(
+                                  decodeBase64Image(track.artworkUrl),
+                                  width: 56,
+                                  height: 56,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.network(
+                                  track.artworkUrl,
+                                  width: 56,
+                                  height: 56,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                         title: Text(track.title),
                         subtitle: Text(track.artist),

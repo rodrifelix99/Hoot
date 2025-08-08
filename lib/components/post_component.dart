@@ -24,6 +24,7 @@ import 'package:hoot/util/extensions/datetime_extension.dart';
 import 'package:hoot/services/haptic_service.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:hoot/util/image_utils.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
@@ -508,12 +509,19 @@ class _PostComponentState extends State<PostComponent> {
                       contentPadding: EdgeInsets.zero,
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          _post.music!.artworkUrl,
-                          width: 56,
-                          height: 56,
-                          fit: BoxFit.cover,
-                        ),
+                        child: isBase64ImageData(_post.music!.artworkUrl)
+                            ? Image.memory(
+                                decodeBase64Image(_post.music!.artworkUrl),
+                                width: 56,
+                                height: 56,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                _post.music!.artworkUrl,
+                                width: 56,
+                                height: 56,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                       title: Text(_post.music!.title),
                       subtitle: Text(_post.music!.artist),
