@@ -193,8 +193,11 @@ class CreatePostController extends GetxController {
         }
       }
     } catch (e, s) {
-      await ErrorService.reportError(e, stack: s);
-      ToastService.showError('couldNotGetLocation'.tr);
+      await ErrorService.reportError(
+        e,
+        message: 'couldNotGetLocation'.tr,
+        stack: s,
+      );
     }
   }
 
