@@ -18,6 +18,7 @@ import 'package:hoot/services/dialog_service.dart';
 import 'package:hoot/services/toast_service.dart';
 import 'package:hoot/services/report_service.dart';
 import 'package:hoot/services/challenge_service.dart';
+import 'package:hoot/services/error_service.dart';
 import 'package:hoot/util/mention_utils.dart';
 import 'package:hoot/util/extensions/datetime_extension.dart';
 import 'package:hoot/services/haptic_service.dart';
@@ -215,7 +216,7 @@ class _PostComponentState extends State<PostComponent> {
         await _postService.deletePost(_post.id);
         ToastService.showSuccess('postDeleted'.tr);
       } catch (e) {
-        ToastService.showError('somethingWentWrong'.tr);
+        ErrorService.reportError(e, message: 'somethingWentWrong'.tr);
       }
     } else if (action == 'report') {
       final reasons = await showTextInputDialog(
@@ -238,7 +239,7 @@ class _PostComponentState extends State<PostComponent> {
         await _reportService.reportPost(postId: _post.id, reason: reason);
         ToastService.showSuccess('reportSent'.tr);
       } catch (e) {
-        ToastService.showError('somethingWentWrong'.tr);
+        ErrorService.reportError(e, message: 'somethingWentWrong'.tr);
       }
     }
   }
@@ -445,7 +446,7 @@ class _PostComponentState extends State<PostComponent> {
                     const SizedBox(height: 16),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          vertical:12, horizontal: 12),
+                          vertical: 12, horizontal: 12),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Theme.of(context).colorScheme.primary,
