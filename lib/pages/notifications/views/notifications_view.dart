@@ -87,6 +87,9 @@ class NotificationsView extends GetView<NotificationsController> {
                             'feedName': feed?.title ?? '',
                           });
                           break;
+                        case 9:
+                          text = 'streakReminder'.tr;
+                          break;
                         default:
                           text = '';
                       }
