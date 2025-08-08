@@ -15,6 +15,7 @@ import 'package:hoot/util/routes/args/profile_args.dart';
 import 'package:hoot/util/routes/args/feed_page_args.dart';
 import 'package:hoot/pages/profile/controllers/profile_controller.dart';
 import 'package:hoot/services/report_service.dart';
+import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/toast_service.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:hoot/services/haptic_service.dart';
@@ -66,8 +67,8 @@ class _ProfileViewState extends State<ProfileView> {
     try {
       await service.reportUser(userId: user.uid, reason: reason);
       ToastService.showSuccess('reportSent'.tr);
-    } catch (_) {
-      ToastService.showError('somethingWentWrong'.tr);
+    } catch (e) {
+      await ErrorService.reportError(e, message: 'somethingWentWrong'.tr);
     }
   }
 
@@ -411,14 +412,16 @@ class _ProfileViewState extends State<ProfileView> {
                           Icon(
                             SolarIconsBold.mapPoint,
                             size: 16,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             user.location!,
                             style: Get.textTheme.bodySmall?.copyWith(
-                              color:
-                                  Theme.of(context).colorScheme.onSurfaceVariant,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -436,8 +439,9 @@ class _ProfileViewState extends State<ProfileView> {
                             Icon(
                               SolarIconsBold.global,
                               size: 16,
-                              color:
-                                  Theme.of(context).colorScheme.onSurfaceVariant,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -460,7 +464,8 @@ class _ProfileViewState extends State<ProfileView> {
                         Text(
                           '🌟 ${user.challengeCount ?? 0} Daily Challenges',
                           style: Get.textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
