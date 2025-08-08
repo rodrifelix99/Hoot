@@ -12,6 +12,7 @@ import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
 import 'package:hoot/pages/notifications/controllers/notifications_controller.dart';
 import 'package:hoot/services/haptic_service.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 class NotificationsView extends GetView<NotificationsController> {
   const NotificationsView({super.key});
@@ -140,7 +141,7 @@ class NotificationsView extends GetView<NotificationsController> {
                     ),
                     firstPageErrorIndicatorBuilder: (_) =>
                         NothingToShowComponent(
-                      icon: const Icon(Icons.error_outline),
+                      icon: const Icon(SolarIconsBold.dangerTriangle),
                       title: 'somethingWentWrong'.tr,
                       text: controller.state.value.error.toString(),
                     ),

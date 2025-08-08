@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hoot/services/error_service.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:hoot/models/hoot_notification.dart';
@@ -89,11 +90,13 @@ class NotificationsController extends GetxController {
       notifications.assignAll(page.notifications);
       unreadCount.value = page.notifications.where((n) => !n.read).length;
     } catch (e) {
+      await ErrorService.reportError(
+        e,
+        message: 'somethingWentWrong'.tr,
+      );
       state.value = state.value.copyWith(
         isLoading: false,
-        error: e.toString(),
       );
-      Get.snackbar('Error', 'Failed to load notifications: $e');
     } finally {
       state.value = state.value.copyWith(isLoading: false);
     }
