@@ -28,6 +28,7 @@ export const onNotificationCreated = onDocumentCreated(
       6: "New Report",
       7: "Request Accepted",
       8: "Request Rejected",
+      9: "Streak at Risk",
     };
     const title = titles[data.type as number];
     if (!title) return;
@@ -55,6 +56,7 @@ export const onNotificationCreated = onDocumentCreated(
       6: user?.username ? `${username} submitted a report` : "An anonymous user submitted a report",
       7: `${username} accepted your request to see ${feedName}`,
       8: `${username} rejected your request to see ${feedName}`,
+      9: "Hoot, like, comment or rehoot to keep your streak!",
     };
     const body =
       bodyTemplates[data.type as number] ?? "You have a new notification";
