@@ -1,6 +1,7 @@
 import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoot/services/toast_service.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,6 +56,7 @@ class AppReviewService extends GetxService {
               screenshot: feedback.screenshot,
               message: feedback.text,
             );
+            ToastService.showSuccess('feedbackSent'.tr);
           } catch (e, s) {
             await ErrorService.reportError(e, stack: s);
           }

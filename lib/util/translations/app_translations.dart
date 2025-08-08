@@ -434,6 +434,7 @@ class AppTranslations extends Translations {
           'challenge': 'Challenge',
           'searchForMusicTitle': 'Search for music',
           'searchForMusicDescription': 'Make your Hoot stand out with music',
+          'feedbackSent': 'Thank you for your feedback!',
         },
         'es': {
           'helloWorld': '¡Hola Mundo!',
@@ -874,6 +875,7 @@ class AppTranslations extends Translations {
           'challenge': 'Desafío',
           'searchForMusicTitle': 'Buscar música',
           'searchForMusicDescription': 'Haz que tu Hoot destaque con música',
+          'feedbackSent': '¡Gracias por tus comentarios!',
         },
         'pt_PT': {
           'helloWorld': 'Olá Mundo!',
@@ -1316,6 +1318,7 @@ class AppTranslations extends Translations {
           'challenge': 'Desafio',
           'searchForMusicTitle': 'Procurar música',
           'searchForMusicDescription': 'Faz com que o teu Hoot se destaque com música',
+          'feedbackSent': 'Obrigado pelo teu feedback!',
         },
         'pt_BR': {
           'helloWorld': 'Olá Mundo!',
@@ -1754,6 +1757,7 @@ class AppTranslations extends Translations {
           'challenge': 'Desafio',
           'searchForMusicTitle': 'Procurar música',
           'searchForMusicDescription': 'Faça seu Hoot se destacar com música',
+          'feedbackSent': 'Obrigado pelo seu feedback!',
         },
       };
 }

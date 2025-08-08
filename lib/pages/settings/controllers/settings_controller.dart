@@ -92,6 +92,7 @@ class SettingsController extends GetxController {
           screenshot: feedback.screenshot,
           message: feedback.text,
         );
+        ToastService.showSuccess('feedbackSent'.tr);
       } catch (e, s) {
         await ErrorService.reportError(e, stack: s);
       }

@@ -5,6 +5,9 @@ import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:hoot/services/error_service.dart';
+import 'package:hoot/services/feedback_service.dart';
+import 'package:hoot/services/toast_service.dart';
 import 'package:hoot/util/routes/app_pages.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:hoot/dependency_injector.dart';
@@ -91,7 +94,15 @@ void main() {
       final context = Get.context;
       if (context != null) {
         BetterFeedback.of(context).show((feedback) async {
-          debugPrint(feedback.text);
+          try {
+            await FeedbackService.submitFeedback(
+              screenshot: feedback.screenshot,
+              message: feedback.text,
+            );
+            ToastService.showSuccess('feedbackSent'.tr);
+          } catch (e, s) {
+            await ErrorService.reportError(e, stack: s);
+          }
         });
       }
     });

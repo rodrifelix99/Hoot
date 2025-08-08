@@ -34,8 +34,10 @@ class StaffFeedbacksView extends GetView<StaffFeedbacksController> {
             return ListTile(
               leading: fb.screenshot != null
                   ? GestureDetector(
-                      onTap: () => Get.toNamed(AppRoutes.photoViewer,
-                          arguments: fb.screenshot),
+                      onTap: () => Get.toNamed(
+                        AppRoutes.photoViewer,
+                        arguments: fb.screenshot,
+                      ),
                       child: Image.network(
                         fb.screenshot!,
                         width: 56,
