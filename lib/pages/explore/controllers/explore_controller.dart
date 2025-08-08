@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/services/error_service.dart';
 import 'package:hoot/util/enums/feed_types.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/util/constants.dart';
@@ -113,13 +114,21 @@ class ExploreController extends GetxController {
 
   /// Queries the ten users with highest popularity score.
   Future<void> loadPopularUsers() async {
-    final snapshot = await _firestore
-        .collection('users')
-        .orderBy('popularityScore', descending: true)
-        .limit(10)
-        .get();
-    popularUsers
-        .assignAll(snapshot.docs.map((d) => U.fromJson(d.data())).toList());
+    try {
+      final snapshot = await _firestore
+          .collection('users')
+          .orderBy('popularityScore', descending: true)
+          .limit(10)
+          .get();
+      popularUsers
+          .assignAll(snapshot.docs.map((d) => U.fromJson(d.data())).toList());
+    } catch (e) {
+      ErrorService.reportError(
+        e,
+        message: 'Failed to load popular users',
+      );
+      popularUsers.clear();
+    }
   }
 
   /// Queries the most popular recent posts from public feeds.

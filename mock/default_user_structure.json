@@ -32,7 +32,7 @@
     "role": "enum (user, staff)",
     "feeds": [
       {
-        "feedId": "string: unique identifier for the feed",
+        "id": "string: unique identifier for the feed",
         "userId": "string",
         "smallAvatar": "string: use the smallAvatar field from the user",
         "bigAvatar": "string: use the bigAvatar field from the user",
@@ -49,6 +49,7 @@
         "verified": "false",
         "subscriberCount": "integer",
         "order": "integer: 0, 1, 2, etc. to determine the order of feeds",
+        "createdAt": "timestamp: timezone aware",
         "subscribers": [
           {
             "userId": "string: use any userId generated but not the current userId",
@@ -57,6 +58,7 @@
         ],
         "posts": [
           {
+            "id": "string: unique identifier for the post",
             "text": "string",
             "media": "null",
             "hashes": "null",

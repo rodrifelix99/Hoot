@@ -138,7 +138,6 @@ flutter:
   assets:
     - assets/
     - assets/videos/
-    - mock/data/
     - assets/images/
     - assets/terms/
     - assets/fonts/
