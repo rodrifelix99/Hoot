@@ -1,6 +1,7 @@
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../config";
+import { updateStreak } from "../utils/updateStreak";
 
 export const onPostCreated = onDocumentCreated(
   "posts/{postId}",
@@ -73,5 +74,6 @@ export const onPostCreated = onDocumentCreated(
     }
 
     await db.collection("users").doc(userId).update(updates);
+    await updateStreak(userId);
   }
 );
