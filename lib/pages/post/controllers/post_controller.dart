@@ -1,5 +1,3 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,6 +11,7 @@ import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/services/user_service.dart';
 import 'package:hoot/services/post_service.dart';
 import 'package:hoot/services/report_service.dart';
+import 'package:hoot/services/error_service.dart';
 import 'package:hoot/services/toast_service.dart';
 
 class PostController extends GetxController {
@@ -97,16 +96,14 @@ class PostController extends GetxController {
         hasNextPage: page.hasMore,
         isLoading: false,
       );
-    } catch (e) {
+    } catch (e, s) {
       commentsState.value =
           commentsState.value.copyWith(error: e, isLoading: false);
-      if (!kDebugMode) {
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          null,
-          reason: 'Failed to load comments',
-        );
-      }
+      await ErrorService.reportError(
+        e,
+        message: 'Failed to load comments',
+        stack: s,
+      );
     }
   }
 
@@ -117,14 +114,12 @@ class PostController extends GetxController {
       if (fetched != null) {
         post.value = fetched;
       }
-    } catch (e) {
-      if (!kDebugMode) {
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          null,
-          reason: 'Failed to refresh post',
-        );
-      }
+    } catch (e, s) {
+      await ErrorService.reportError(
+        e,
+        message: 'Failed to refresh post',
+        stack: s,
+      );
     }
   }
 
@@ -187,14 +182,12 @@ class PostController extends GetxController {
       }
       post.value.comments = (post.value.comments ?? 0) + 1;
       post.refresh();
-    } catch (e) {
-      if (!kDebugMode) {
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          null,
-          reason: 'Failed to publish comment',
-        );
-      }
+    } catch (e, s) {
+      await ErrorService.reportError(
+        e,
+        message: 'Failed to publish comment',
+        stack: s,
+      );
     } finally {
       postingComment.value = false;
     }
@@ -213,8 +206,12 @@ class PostController extends GetxController {
       post.value.comments = (post.value.comments ?? 0) - 1;
       post.refresh();
       ToastService.showSuccess('commentDeleted'.tr);
-    } catch (e) {
-      ToastService.showError('somethingWentWrong'.tr);
+    } catch (e, s) {
+      await ErrorService.reportError(
+        e,
+        message: 'Failed to delete comment',
+        stack: s,
+      );
     }
   }
 
@@ -222,8 +219,12 @@ class PostController extends GetxController {
     try {
       await _reportService.reportComment(commentId: comment.id, reason: reason);
       ToastService.showSuccess('reportSent'.tr);
-    } catch (e) {
-      ToastService.showError('somethingWentWrong'.tr);
+    } catch (e, s) {
+      await ErrorService.reportError(
+        e,
+        message: 'Failed to report comment',
+        stack: s,
+      );
     }
   }
 
