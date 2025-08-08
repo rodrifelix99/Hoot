@@ -1,90 +1,92 @@
-{
-  "uid": "string: unique identifier for the user",
-  "displayName": "string",
-  "username": "string",
-  "usernameLowercase": "string",
-  "smallAvatar": "string",
-  "bigAvatar": "string",
-  "smallAvatarHash": "string",
-  "bigAvatarHash": "string",
-  "banner": "string",
-  "bannerHash": "string",
-  "music": "string",
-  "bio": "string",
-  "location": "string",
-  "website": "string",
-  "createdAt": "timezone aware timestamp",
-  "invitationCode": "string: hash created by the username and createdAt with 10 digits",
-  "invitationUses": "integer",
-  "invitationLastReset": "timestamp",
-  "invitedBy": "string",
-  "phoneNumber": "null",
-  "birthday": "timestamp (optional)",
-  "verified": "boolean",
-  "tester": "boolean",
-  "subscriptionCount": "integer",
-  "activityScore": "integer",
-  "popularityScore": "integer",
-  "challengeCount": "integer",
-  "streakCount": "integer",
-  "lastActionAt": "integer",
-  "role": "enum (user, staff)",
-  "feeds": [
-    {
-      "feedId": "string: unique identifier for the feed",
-      "userId": "string",
-      "smallAvatar": "string: use the smallAvatar field from the user",
-      "bigAvatar": "string: use the bigAvatar field from the user",
-      "smallAvatarHash": "string: use the smallAvatarHash field from the user",
-      "bigAvatarHash": "string: use the bigAvatarHash field from the user",
-      "title": "string",
-      "titleLowercase": "string",
-      "description": "string (optional)",
-      "icon": "null",
-      "color": "integer",
-      "type": "enum (general, activism, activities, adultContent, art, beauty, celebrities, comedy, design, environment, family, fitness, gaming, history, inspiration, jobs, lgbtQ, marketing, movies, music, nature, news, onlineCourses, outdoors, parenting, pets, photography, quotes, relationships, recipes, religion, school, science, selfImprovement, series, sports, technology, travel, tv, university, vegetarian, wellness, writing, yoga, business, cooking, diY, economics, education, entertainment, entrepreneurship, gardening, health, investing, journalism, kids, literature, urbanExploration, virtualReality, zoology, other)",
-      "private": "boolean",
-      "nsfw": "boolean",
-      "verified": "false",
-      "subscriberCount": "integer",
-      "order": "integer: 0, 1, 2, etc. to determine the order of feeds",
-      "subscribers": [
-        {
-          "userId": "string: use any userId generated but not the current userId",
-          "createdAt": "timestamp: timezone aware"
-        }
-      ],
-      "posts": [
-        {
-          "text": "string",
-          "media": "null",
-          "hashes": "null",
-          "feedId": "string: use the feedId from the parent",
-          "userId": "string: use the userId from the parent",
-          "challengeId": "null",
-          "url": "null",
-          "location": "string (optional)",
-          "music": "null",
-          "feed": "object: use the feed object from the parent",
-          "user": "object: use the user object from the parent",
-          "liked": "null",
-          "likes": "integer",
-          "reFeeded": "false",
-          "reFeededByMe": "false",
-          "reFeeds": "integer",
-          "reFeededFrom": "null",
-          "comments": "integer: 0",
-          "nsfw": "boolean: use feed.nsfw",
-          "createdAt": "timestamp: timezone aware",
-          "updatedAt": "timestamp: timezone aware"
-        }
-      ]
-    }
-  ],
-  "subscriptions": [
-    {
-      "feedId": "string: use any feedId generated but not the owned feeds ids",
-      "createdAt": "timestamp: timezone aware"
-    }
-  ]
-}
+[
+  {
+    "uid": "string: unique identifier for the user",
+    "displayName": "string",
+    "username": "string",
+    "usernameLowercase": "string",
+    "smallAvatar": "string",
+    "bigAvatar": "string",
+    "smallAvatarHash": "string",
+    "bigAvatarHash": "string",
+    "banner": "string",
+    "bannerHash": "string",
+    "music": "string",
+    "bio": "string",
+    "location": "string",
+    "website": "string",
+    "createdAt": "timezone aware timestamp",
+    "invitationCode": "string: hash created by the username and createdAt with 10 digits",
+    "invitationUses": "integer",
+    "invitationLastReset": "timestamp",
+    "invitedBy": "string",
+    "phoneNumber": "null",
+    "birthday": "timestamp (optional)",
+    "verified": "boolean",
+    "tester": "boolean",
+    "subscriptionCount": "integer",
+    "activityScore": "integer",
+    "popularityScore": "integer",
+    "challengeCount": "integer",
+    "streakCount": "integer",
+    "lastActionAt": "integer",
+    "role": "enum (user, staff)",
+    "feeds": [
+      {
+        "feedId": "string: unique identifier for the feed",
+        "userId": "string",
+        "smallAvatar": "string: use the smallAvatar field from the user",
+        "bigAvatar": "string: use the bigAvatar field from the user",
+        "smallAvatarHash": "string: use the smallAvatarHash field from the user",
+        "bigAvatarHash": "string: use the bigAvatarHash field from the user",
+        "title": "string",
+        "titleLowercase": "string",
+        "description": "string (optional)",
+        "icon": "null",
+        "color": "integer",
+        "type": "enum (general, activism, activities, adultContent, art, beauty, celebrities, comedy, design, environment, family, fitness, gaming, history, inspiration, jobs, lgbtQ, marketing, movies, music, nature, news, onlineCourses, outdoors, parenting, pets, photography, quotes, relationships, recipes, religion, school, science, selfImprovement, series, sports, technology, travel, tv, university, vegetarian, wellness, writing, yoga, business, cooking, diY, economics, education, entertainment, entrepreneurship, gardening, health, investing, journalism, kids, literature, urbanExploration, virtualReality, zoology, other)",
+        "private": "boolean",
+        "nsfw": "boolean",
+        "verified": "false",
+        "subscriberCount": "integer",
+        "order": "integer: 0, 1, 2, etc. to determine the order of feeds",
+        "subscribers": [
+          {
+            "userId": "string: use any userId generated but not the current userId",
+            "createdAt": "timestamp: timezone aware"
+          }
+        ],
+        "posts": [
+          {
+            "text": "string",
+            "media": "null",
+            "hashes": "null",
+            "feedId": "string: use the feedId from the parent without array fields",
+            "userId": "string: use the userId from the parent without array fields",
+            "challengeId": "null",
+            "url": "null",
+            "location": "string (optional)",
+            "music": "null",
+            "feed": "object: use the feed object from the parent without array fields",
+            "user": "object: use the user object from the parent without array fields",
+            "liked": "null",
+            "likes": "integer",
+            "reFeeded": "false",
+            "reFeededByMe": "false",
+            "reFeeds": "integer",
+            "reFeededFrom": "null",
+            "comments": "integer: 0",
+            "nsfw": "boolean: use feed.nsfw",
+            "createdAt": "timestamp: timezone aware",
+            "updatedAt": "timestamp: timezone aware"
+          }
+        ]
+      }
+    ],
+    "subscriptions": [
+      {
+        "feedId": "string: use any feedId generated but not the owned feeds ids",
+        "createdAt": "timestamp: timezone aware"
+      }
+    ]
+  }
+]
