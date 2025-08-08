@@ -51,7 +51,7 @@ class FeedRequestService {
     final userData = _authService.currentUser?.toCache() ?? {};
     final feedData = {
       'id': feedDoc.id,
-      'title': feedDoc.data()?['title'],
+      ...?feedDoc.data(),
     };
     await _firestore
         .collection('users')
@@ -79,7 +79,7 @@ class FeedRequestService {
     final userData = _authService.currentUser?.toCache() ?? {};
     final feedData = {
       'id': feedDoc.id,
-      'title': feedDoc.data()?['title'],
+      ...?feedDoc.data(),
     };
     await _firestore
         .collection('users')

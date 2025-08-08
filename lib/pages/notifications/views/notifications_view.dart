@@ -29,12 +29,15 @@ class NotificationsView extends GetView<NotificationsController> {
         return Column(
           children: [
             if (controller.requestCount.value > 0)
-              ListTile(
-                onTap: () => Get.toNamed(AppRoutes.feedRequests),
-                title: Text('subscriberRequestsCount'.trParams(
-                    {'count': controller.requestCount.value.toString()})),
-                leading: AvatarStack(users: controller.requestUsers.toList()),
-                trailing: const Icon(Icons.chevron_right),
+              SafeArea(
+                bottom: false,
+                child: ListTile(
+                  onTap: () => Get.toNamed(AppRoutes.feedRequests),
+                  title: Text('subscriberRequestsCount'.trParams(
+                      {'count': controller.requestCount.value.toString()})),
+                  leading: AvatarStack(users: controller.requestUsers.toList()),
+                  trailing: const Icon(Icons.chevron_right),
+                ),
               ),
             Expanded(
               child: RefreshIndicator(
