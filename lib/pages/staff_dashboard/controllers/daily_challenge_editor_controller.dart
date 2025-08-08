@@ -105,9 +105,7 @@ class DailyChallengeEditorController extends GetxController {
     final hashtag = hashtagController.text.trim();
     final expiresAt = expiration.value;
     final creation = createAt.value;
-    if (prompt.isEmpty ||
-        expiresAt == null ||
-        creation == null) {
+    if (prompt.isEmpty || expiresAt == null || creation == null) {
       ToastService.showError('Please fill all fields');
       return;
     }
@@ -135,8 +133,8 @@ class DailyChallengeEditorController extends GetxController {
       promptController.clear();
       hashtagController.clear();
     } catch (e, s) {
-      await ErrorService.reportError(e, stack: s);
-      ToastService.showError('somethingWentWrong'.tr);
+      await ErrorService.reportError(e,
+          message: 'somethingWentWrong'.tr, stack: s);
     } finally {
       submitting.value = false;
     }
