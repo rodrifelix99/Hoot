@@ -141,7 +141,8 @@ class NotificationsView extends GetView<NotificationsController> {
                     firstPageErrorIndicatorBuilder: (_) =>
                         NothingToShowComponent(
                       icon: const Icon(Icons.error_outline),
-                      text: 'somethingWentWrong'.tr,
+                      title: 'somethingWentWrong'.tr,
+                      text: controller.state.value.error.toString(),
                     ),
                     noItemsFoundIndicatorBuilder: (_) => NothingToShowComponent(
                       imageAsset: 'assets/images/notification.webp',

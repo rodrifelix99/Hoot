@@ -88,6 +88,12 @@ class NotificationsController extends GetxController {
       );
       notifications.assignAll(page.notifications);
       unreadCount.value = page.notifications.where((n) => !n.read).length;
+    } catch (e) {
+      state.value = state.value.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+      Get.snackbar('Error', 'Failed to load notifications: $e');
     } finally {
       state.value = state.value.copyWith(isLoading: false);
     }
