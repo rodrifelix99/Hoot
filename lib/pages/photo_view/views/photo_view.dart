@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoot/pages/photo_view/controllers/photo_view_controller.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:hoot/services/haptic_service.dart';
+import 'package:hoot/util/image_utils.dart';
 
 class PhotoZoomView extends GetView<PhotoZoomViewController> {
   const PhotoZoomView({super.key});
@@ -14,27 +13,10 @@ class PhotoZoomView extends GetView<PhotoZoomViewController> {
     if (imageUrl.startsWith('http')) {
       return NetworkImage(imageUrl);
     }
-    if (imageUrl.startsWith('data:')) {
-      final base64Data = imageUrl.split(',').last;
-      return MemoryImage(base64Decode(base64Data));
-    }
-    if (_isBase64(imageUrl)) {
-      return MemoryImage(base64Decode(imageUrl));
+    if (isBase64ImageData(imageUrl)) {
+      return MemoryImage(decodeBase64Image(imageUrl));
     }
     return AssetImage(imageUrl);
-  }
-
-  bool _isBase64(String str) {
-    final regex = RegExp(r'^[A-Za-z0-9+/]+={0,2}$');
-    if (str.length % 4 != 0 || !regex.hasMatch(str)) {
-      return false;
-    }
-    try {
-      base64Decode(str);
-      return true;
-    } catch (_) {
-      return false;
-    }
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:hoot/components/appbar_component.dart';
 import 'package:hoot/components/empty_message.dart';
 import 'package:hoot/pages/staff_feedbacks/controllers/staff_feedbacks_controller.dart';
 import 'package:hoot/util/routes/app_routes.dart';
+import 'package:hoot/util/image_utils.dart';
 
 class StaffFeedbacksView extends GetView<StaffFeedbacksController> {
   const StaffFeedbacksView({super.key});
@@ -38,12 +39,19 @@ class StaffFeedbacksView extends GetView<StaffFeedbacksController> {
                         AppRoutes.photoViewer,
                         arguments: {'imageUrl': fb.screenshot},
                       ),
-                      child: Image.network(
-                        fb.screenshot!,
-                        width: 56,
-                        height: 56,
-                        fit: BoxFit.cover,
-                      ),
+                      child: isBase64ImageData(fb.screenshot!)
+                          ? Image.memory(
+                              decodeBase64Image(fb.screenshot!),
+                              width: 56,
+                              height: 56,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.network(
+                              fb.screenshot!,
+                              width: 56,
+                              height: 56,
+                              fit: BoxFit.cover,
+                            ),
                     )
                   : null,
               title: Text(fb.message),
