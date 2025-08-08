@@ -462,7 +462,7 @@ class _ProfileViewState extends State<ProfileView> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '🌟 ${user.challengeCount ?? 0} Daily Challenges',
+                          '🌟 ${user.challengeCount ?? 0} ${'dailyChallenges'.tr}',
                           style: Get.textTheme.bodySmall?.copyWith(
                             color:
                                 Theme.of(context).colorScheme.onSurfaceVariant,
@@ -475,7 +475,7 @@ class _ProfileViewState extends State<ProfileView> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '🔥 ${user.streakCount ?? 0} Day Streak',
+                          '🔥 ${user.streakCount ?? 0} ${'dayStreak'.tr}',
                           style: Get.textTheme.bodySmall?.copyWith(
                             color:
                                 Theme.of(context).colorScheme.onSurfaceVariant,

@@ -389,6 +389,7 @@ class AppTranslations extends Translations {
           'userReFeededYourHoot': '@username reFeeded your hoot',
           'streakReminder':
               'Hoot, like, comment or rehoot to keep your streak!',
+          'dayStreak': 'Day Streak',
           'hootMightBeBuggy':
               'I wanted to let you know that I created Hoot all by myself during my summer break. It was a labor of love, and I poured my heart and soul into crafting a platform that could connect people and foster community. But, being a one-person team working within a limited timeframe, there might be a few bugs or features that don\'t quite work as intended. I appreciate your patience and understanding as I iron out these kinks and make the app better. I want to emphasize that your security and the protection of your information have been my top priorities from the get-go. I\'ve implemented strong security measures to ensure your data is safe and handled with the utmost care. While I am just one person, I\'m fully dedicated to improving Hoot. I\'m committed to updating and refining the app, making it the best it can be. Your feedback and support mean the world to me, and I\'m excited to grow Hoot into something truly exceptional in the future. Thank you for being a part of this journey, and I can\'t wait for you to see how Hoot evolves and becomes even greater over time.',
           'messageFromCreator': 'Message from the creator',
@@ -406,6 +407,7 @@ class AppTranslations extends Translations {
           'removePost': 'Remove post',
           'warnUser': 'Warn user',
           'dailyChallenge': 'Daily Challenge',
+          'dailyChallenges': 'Daily Challenges',
           'prompt': 'Prompt',
           'hashtag': 'Hashtag',
           'createAt': 'Create At',
@@ -835,6 +837,7 @@ class AppTranslations extends Translations {
           'userReFeededYourHoot': '@username rehootió tu hoot',
           'streakReminder':
               'Haz un Hoot, dale me gusta, comenta o rehootea para mantener tu racha!',
+          'dayStreak': 'Días consecutivos',
           'hootMightBeBuggy':
               'Quería informarte que creé Hoot por mi cuenta durante mis vacaciones de verano. Fue un trabajo lleno de amor, y puse todo mi corazón y alma en crear una plataforma que pudiera conectar a las personas y fomentar la comunidad. Sin embargo, al ser un equipo de una sola persona trabajando en un marco de tiempo limitado, es posible que haya algunos errores o características que no funcionen como se pretendía. Agradezco tu paciencia y comprensión mientras corrijo estos problemas y mejoro la aplicación. Quiero enfatizar que tu seguridad y la protección de tu información han sido mis principales prioridades desde el principio. He implementado fuertes medidas de seguridad para garantizar que tus datos estén seguros y se manejen con el mayor cuidado. Aunque soy solo una persona, estoy totalmente dedicado a mejorar Hoot. Me comprometo a actualizar y perfeccionar la aplicación, para que sea lo mejor posible. Tus comentarios y apoyo significan mucho para mí, y estoy emocionado de hacer que Hoot se convierta en algo verdaderamente excepcional en el futuro. Gracias por ser parte de este viaje, y no puedo esperar a que veas cómo Hoot evoluciona y se vuelve aún mejor con el tiempo.',
           'messageFromCreator': 'Mensaje del creador',
@@ -852,6 +855,7 @@ class AppTranslations extends Translations {
           'removePost': 'Eliminar publicación',
           'warnUser': 'Advertir al usuario',
           'dailyChallenge': 'Desafío diario',
+          'dailyChallenges': 'Desafíos diarios',
           'prompt': 'Consigna',
           'hashtag': 'Hashtag',
           'createAt': 'Crear en',
@@ -1282,6 +1286,7 @@ class AppTranslations extends Translations {
           'userReFeededYourHoot': '@username rehootou o teu hoot',
           'streakReminder':
               'Faz um hoot, gosta, comenta ou rehoota para manter a tua sequência!',
+          'dayStreak': 'Dias consecutivos',
           'hootMightBeBuggy':
               'Queria informar-te que criei o Hoot sozinho durante as minhas férias de verão. Foi um trabalho de amor, e dediquei-me de corpo e alma a criar uma plataforma que pudesse conectar pessoas e fomentar a comunidade. No entanto, sendo uma equipa de uma só pessoa a trabalhar num período limitado, poderão existir alguns bugs ou funcionalidades que não funcionem como planeado. Agradeço a tua paciência e compreensão enquanto resolvo estas questões e melhoro a aplicação. Quero salientar que a tua segurança e a proteção da tua informação foram sempre as minhas principais prioridades. Implementei medidas de segurança rigorosas para garantir que os teus dados estão seguros e são tratados com o máximo cuidado. Apesar de ser apenas uma pessoa, estou totalmente empenhado em melhorar o Hoot. Comprometo-me a atualizar e aperfeiçoar a aplicação, tornando-a o melhor que pode ser. As tuas opiniões e apoio significam muito para mim, e estou entusiasmado por fazer com que o Hoot se torne algo verdadeiramente excepcional no futuro. Obrigado por fazeres parte desta jornada, e mal posso esperar que vejas como o Hoot evolui e se torna ainda melhor ao longo do tempo.',
           'messageFromCreator': 'Mensagem do criador',
@@ -1299,6 +1304,7 @@ class AppTranslations extends Translations {
           'removePost': 'Remover publicação',
           'warnUser': 'Avisar utilizador',
           'dailyChallenge': 'Desafio diário',
+          'dailyChallenges': 'Desafios diários',
           'prompt': 'Enunciado',
           'hashtag': 'Hashtag',
           'createAt': 'Criar em',
@@ -1727,6 +1733,7 @@ class AppTranslations extends Translations {
           'userReFeededYourHoot': '@username rehootou seu hoot',
           'streakReminder':
               'Faça um hoot, curta, comente ou rehoote para manter sua sequência!',
+          'dayStreak': 'Dias consecutivos',
           'hootMightBeBuggy':
               'Queria te informar que criei o Hoot sozinho durante as minhas férias de verão. Foi um trabalho de amor, e dediquei-me de corpo e alma a criar uma plataforma que pudesse conectar pessoas e fomentar a comunidade. No entanto, sendo uma equipe de uma só pessoa trabalhando num período limitado, pode ser que ocorram alguns bugs ou funcionalidades que não estejam exatamente como planejado. Agradeço a sua paciência e compreensão enquanto resolvo essas questões e melhoro o aplicativo. Quero salientar que a sua segurança e a proteção das suas informações sempre foram as minhas principais prioridades. Implementei medidas de segurança rigorosas para garantir que seus dados estejam seguros e sejam tratados com o máximo cuidado. Apesar de ser apenas uma pessoa, estou totalmente dedicado a melhorar o Hoot. Comprometo-me a atualizar e aprimorar o aplicativo, tornando-o o melhor possível. Suas opiniões e apoio significam muito para mim, e estou empolgado para fazer com que o Hoot se torne algo verdadeiramente excepcional no futuro. Obrigado por fazer parte desta jornada, e mal posso esperar para que veja como o Hoot evolui e se torna ainda melhor ao longo do tempo.',
           'messageFromCreator': 'Mensagem do criador',
@@ -1744,6 +1751,7 @@ class AppTranslations extends Translations {
           'removePost': 'Remover publicação',
           'warnUser': 'Avisar usuário',
           'dailyChallenge': 'Desafio diário',
+          'dailyChallenges': 'Desafios diários',
           'prompt': 'Enunciado',
           'hashtag': 'Hashtag',
           'createAt': 'Criar em',
