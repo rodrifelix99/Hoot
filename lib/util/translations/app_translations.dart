@@ -442,6 +442,7 @@ class AppTranslations extends Translations {
           'searchForMusicTitle': 'Search for music',
           'searchForMusicDescription': 'Make your Hoot stand out with music',
           'feedbackSent': 'Thank you for your feedback!',
+          'madeInPortugal': 'Made in Portugal 🇵🇹',
         },
         'es': {
           'helloWorld': '¡Hola Mundo!',
@@ -890,6 +891,7 @@ class AppTranslations extends Translations {
           'searchForMusicTitle': 'Buscar música',
           'searchForMusicDescription': 'Haz que tu Hoot destaque con música',
           'feedbackSent': '¡Gracias por tus comentarios!',
+          'madeInPortugal': 'Hecho en Portugal 🇵🇹',
         },
         'pt_PT': {
           'helloWorld': 'Olá Mundo!',
@@ -1341,6 +1343,7 @@ class AppTranslations extends Translations {
           'searchForMusicDescription':
               'Faz com que o teu Hoot se destaque com música',
           'feedbackSent': 'Obrigado pelo teu feedback!',
+          'madeInPortugal': 'Feito em Portugal 🇵🇹',
         },
         'pt_BR': {
           'helloWorld': 'Olá Mundo!',
@@ -1787,6 +1790,7 @@ class AppTranslations extends Translations {
           'searchForMusicTitle': 'Procurar música',
           'searchForMusicDescription': 'Faça seu Hoot se destacar com música',
           'feedbackSent': 'Obrigado pelo seu feedback!',
+          'madeInPortugal': 'Feito em Portugal 🇵🇹',
         },
       };
 }
