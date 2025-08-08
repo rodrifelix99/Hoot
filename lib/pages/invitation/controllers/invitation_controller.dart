@@ -36,7 +36,8 @@ class InvitationController extends GetxController {
     try {
       final uid = _authService.currentUser?.uid;
       if (uid == null) {
-        ToastService.showError('somethingWentWrong'.tr);
+        await ErrorService.reportError('Missing UID',
+            message: 'somethingWentWrong'.tr);
         return;
       }
       final success = await _invitationService.useInvitationCode(uid, code);
