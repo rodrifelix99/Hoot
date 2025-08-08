@@ -13,3 +13,4 @@ export * from "./triggers/onReportCreated";
 export * from "./triggers/onChallengeCreated";
 export * from "./feedback";
 export * from "./createDailyChallenge";
+export * from "./scheduler/sendStreakReminder";
