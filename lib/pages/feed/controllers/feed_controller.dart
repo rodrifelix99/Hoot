@@ -1,11 +1,10 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:hoot/models/post.dart';
 import 'package:hoot/services/feed_service.dart';
+import 'package:hoot/services/error_service.dart';
 
 /// Controller responsible for fetching posts for the feed view.
 class FeedController extends GetxController {
@@ -42,13 +41,7 @@ class FeedController extends GetxController {
       );
     } catch (e) {
       state.value = state.value.copyWith(error: e, isLoading: false);
-      if (!kDebugMode) {
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          null,
-          reason: 'Failed to load feed posts',
-        );
-      }
+      ErrorService.reportError(e, message: 'Failed to load feed posts');
     }
   }
 
