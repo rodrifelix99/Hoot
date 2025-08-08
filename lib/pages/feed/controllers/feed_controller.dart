@@ -1,4 +1,5 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -41,11 +42,13 @@ class FeedController extends GetxController {
       );
     } catch (e) {
       state.value = state.value.copyWith(error: e, isLoading: false);
-      FirebaseCrashlytics.instance.recordError(
-        e,
-        null,
-        reason: 'Failed to load feed posts',
-      );
+      if (!kDebugMode) {
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          null,
+          reason: 'Failed to load feed posts',
+        );
+      }
     }
   }
 

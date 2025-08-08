@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:hoot/models/daily_challenge.dart';
 import 'package:hoot/models/post.dart';
@@ -75,11 +76,13 @@ class ChallengeFeedController extends GetxController {
       posts.value = filterPosts(fetched);
       postsLoading.value = false;
     }, onError: (e, st) {
-      FirebaseCrashlytics.instance.recordError(
-        e,
-        st,
-        reason: 'Failed to load challenge posts',
-      );
+      if (!kDebugMode) {
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          st,
+          reason: 'Failed to load challenge posts',
+        );
+      }
       postsError.value = e;
       postsLoading.value = false;
     });

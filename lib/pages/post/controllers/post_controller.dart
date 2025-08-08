@@ -1,4 +1,5 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -99,11 +100,13 @@ class PostController extends GetxController {
     } catch (e) {
       commentsState.value =
           commentsState.value.copyWith(error: e, isLoading: false);
-      FirebaseCrashlytics.instance.recordError(
-        e,
-        null,
-        reason: 'Failed to load comments',
-      );
+      if (!kDebugMode) {
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          null,
+          reason: 'Failed to load comments',
+        );
+      }
     }
   }
 
@@ -115,11 +118,13 @@ class PostController extends GetxController {
         post.value = fetched;
       }
     } catch (e) {
-      FirebaseCrashlytics.instance.recordError(
-        e,
-        null,
-        reason: 'Failed to refresh post',
-      );
+      if (!kDebugMode) {
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          null,
+          reason: 'Failed to refresh post',
+        );
+      }
     }
   }
 
@@ -183,11 +188,13 @@ class PostController extends GetxController {
       post.value.comments = (post.value.comments ?? 0) + 1;
       post.refresh();
     } catch (e) {
-      FirebaseCrashlytics.instance.recordError(
-        e,
-        null,
-        reason: 'Failed to publish comment',
-      );
+      if (!kDebugMode) {
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          null,
+          reason: 'Failed to publish comment',
+        );
+      }
     } finally {
       postingComment.value = false;
     }

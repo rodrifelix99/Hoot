@@ -1,4 +1,6 @@
 import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -37,8 +39,12 @@ void main() {
       appleProvider: AppleProvider.appAttestWithDeviceCheckFallback,
     );
     await DependencyInjector.init();
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(!kDebugMode);
+    if (!kDebugMode) {
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
+    }
 
     final languageService = Get.find<LanguageService>();
     TenorGifPicker.init(
@@ -91,6 +97,8 @@ void main() {
     });
     FlutterNativeSplash.remove();
   }, (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack);
+    if (!kDebugMode) {
+      FirebaseCrashlytics.instance.recordError(error, stack);
+    }
   });
 }
