@@ -45,6 +45,7 @@ class NotificationsView extends GetView<NotificationsController> {
                 child: PagedListView<DocumentSnapshot?, HootNotification>(
                   state: state,
                   fetchNextPage: controller.fetchNext,
+                  padding: controller.requestCount.value > 0 ? EdgeInsets.zero : null,
                   builderDelegate: PagedChildBuilderDelegate<HootNotification>(
                     itemBuilder: (context, n, index) {
                       final user = n.user;
