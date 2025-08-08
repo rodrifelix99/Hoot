@@ -36,7 +36,7 @@ class StaffFeedbacksView extends GetView<StaffFeedbacksController> {
                   ? GestureDetector(
                       onTap: () => Get.toNamed(
                         AppRoutes.photoViewer,
-                        arguments: fb.screenshot,
+                        arguments: {'imageUrl': fb.screenshot},
                       ),
                       child: Image.network(
                         fb.screenshot!,
@@ -48,8 +48,10 @@ class StaffFeedbacksView extends GetView<StaffFeedbacksController> {
                   : null,
               title: Text(fb.message),
               onTap: fb.screenshot != null
-                  ? () => Get.toNamed(AppRoutes.photoViewer,
-                      arguments: fb.screenshot)
+                  ? () => Get.toNamed(
+                        AppRoutes.photoViewer,
+                        arguments: {'imageUrl': fb.screenshot},
+                      )
                   : null,
             );
           },
