@@ -1,6 +1,7 @@
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../config";
+import { updateStreak } from "../utils/updateStreak";
 
 export const onLikeCreated = onDocumentCreated(
   "posts/{postId}/likes/{userId}",
@@ -31,5 +32,6 @@ export const onLikeCreated = onDocumentCreated(
       .collection("users")
       .doc(ownerId)
       .update({ popularityScore: FieldValue.increment(1) });
+    await updateStreak(userId);
   }
 );

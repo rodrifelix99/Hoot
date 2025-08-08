@@ -1,6 +1,7 @@
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../config";
+import { updateStreak } from "../utils/updateStreak";
 
 export const onCommentCreated = onDocumentCreated(
   "posts/{postId}/comments/{commentId}",
@@ -66,5 +67,6 @@ export const onCommentCreated = onDocumentCreated(
       .collection("users")
       .doc(userId)
       .update({ activityScore: FieldValue.increment(1) });
+    await updateStreak(userId);
   }
 );
