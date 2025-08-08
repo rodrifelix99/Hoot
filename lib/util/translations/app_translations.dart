@@ -435,6 +435,8 @@ class AppTranslations extends Translations {
           'inviteFriendsDescription':
               'Share your invite code with friends and let them join Hoot!',
           'challenge': 'Challenge',
+          'viewEntries': 'View entries',
+          'joinChallenge': 'Join challenge',
           'searchForMusicTitle': 'Search for music',
           'searchForMusicDescription': 'Make your Hoot stand out with music',
           'feedbackSent': 'Thank you for your feedback!',
@@ -879,6 +881,8 @@ class AppTranslations extends Translations {
           'inviteFriendsDescription':
               '¡Comparte tu código de invitación con amigos y deja que se unan a Hoot!',
           'challenge': 'Desafío',
+          'viewEntries': 'Ver participaciones',
+          'joinChallenge': 'Unirse al desafío',
           'searchForMusicTitle': 'Buscar música',
           'searchForMusicDescription': 'Haz que tu Hoot destaque con música',
           'feedbackSent': '¡Gracias por tus comentarios!',
@@ -1325,6 +1329,8 @@ class AppTranslations extends Translations {
           'inviteFriendsDescription':
               'Partilha o teu código de convite com amigos e deixa-os entrar no Hoot!',
           'challenge': 'Desafio',
+          'viewEntries': 'Ver participações',
+          'joinChallenge': 'Participar no desafio',
           'searchForMusicTitle': 'Procurar música',
           'searchForMusicDescription':
               'Faz com que o teu Hoot se destaque com música',
@@ -1768,6 +1774,8 @@ class AppTranslations extends Translations {
           'inviteFriendsDescription':
               'Compartilhe seu código de convite com amigos e deixe-os entrar no Hoot!',
           'challenge': 'Desafio',
+          'viewEntries': 'Ver participações',
+          'joinChallenge': 'Participar do desafio',
           'searchForMusicTitle': 'Procurar música',
           'searchForMusicDescription': 'Faça seu Hoot se destacar com música',
           'feedbackSent': 'Obrigado pelo seu feedback!',

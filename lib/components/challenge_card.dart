@@ -3,6 +3,7 @@ import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:hash_cached_image/hash_cached_image.dart';
 import 'package:hoot/models/daily_challenge.dart';
+import 'package:get/get.dart';
 
 /// Card displaying the active daily challenge.
 class ChallengeCard extends StatefulWidget {
@@ -129,7 +130,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
                           foregroundColor:
                               Theme.of(context).colorScheme.onPrimaryContainer,
                         ),
-                        child: const Text('View entries'),
+                        child: Text('viewEntries'.tr),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -144,7 +145,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
                             foregroundColor:
                                 Theme.of(context).colorScheme.primaryContainer,
                           ),
-                          child: const Text('Join Challenge'),
+                          child: Text('joinChallenge'.tr),
                         ),
                       ),
                     ],
