@@ -49,6 +49,18 @@ class AnalyticsService {
   ) async {
     _packageInfo ??= await PackageInfo.fromPlatform();
     final uid = _authService.currentUser?.uid;
+    // for every parameter convert null to empty string and all non-string and non-numeric values to their string representation
+    parameters ??= {};
+    parameters = parameters.map((key, value) {
+      if (value == null) {
+        return MapEntry(key, '');
+      } else if (value is String || value is num) {
+        return MapEntry(key, value);
+      } else {
+        return MapEntry(key, value.toString());
+      }
+    });
+
     return {
       if (uid != null) 'userId': uid,
       'timestamp': DateTime.now().toIso8601String(),
@@ -56,7 +68,7 @@ class AnalyticsService {
       'osVersion': Platform.operatingSystemVersion,
       'appVersion': _packageInfo!.version,
       'buildNumber': _packageInfo!.buildNumber,
-      ...?parameters,
+      ...parameters,
     };
   }
 }

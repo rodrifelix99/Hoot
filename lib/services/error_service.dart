@@ -15,6 +15,8 @@ class ErrorService {
         stack ?? StackTrace.current,
         reason: message,
       );
+    } else if (kDebugMode) {
+      print('ErrorService: $error');
     }
     ToastService.showError(message ?? error.toString());
   }
