@@ -28,6 +28,7 @@ import 'package:hoot/services/music_service.dart';
 import 'package:hoot/services/challenge_service.dart';
 import 'package:hoot/util/enums/feed_types.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:hoot/services/analytics_service.dart';
 
 /// Manages state for creating a new post.
 class CreatePostController extends GetxController {
@@ -40,6 +41,9 @@ class CreatePostController extends GetxController {
   final BaseChallengeService _challengeService;
   final String? challengeId;
   late final String _userId;
+  AnalyticsService? get _analytics => Get.isRegistered<AnalyticsService>()
+      ? Get.find<AnalyticsService>()
+      : null;
 
   CreatePostController({
     BasePostService? postService,
@@ -127,9 +131,17 @@ class CreatePostController extends GetxController {
       });
     }
 
-    audioPlayer.playerStateStream.listen((state) {
+    audioPlayer.playerStateStream.listen((state) async {
       if (state.processingState == ProcessingState.completed) {
         isPlaying.value = false;
+        if (_analytics != null) {
+          final track = music.value;
+          await _analytics!.logEvent('play_audio_complete', parameters: {
+            if (track != null) 'title': track.title,
+            if (track != null) 'artist': track.artist,
+            'context': 'create_post',
+          });
+        }
       }
     });
   }
@@ -271,6 +283,13 @@ class CreatePostController extends GetxController {
       await audioPlayer.setUrl(track.previewUrl);
       await audioPlayer.play();
       isPlaying.value = true;
+      if (_analytics != null) {
+        await _analytics!.logEvent('play_audio_start', parameters: {
+          'title': track.title,
+          'artist': track.artist,
+          'context': 'create_post',
+        });
+      }
     }
   }
 

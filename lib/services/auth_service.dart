@@ -124,6 +124,7 @@ class AuthService {
 
   /// Returns users whose username starts with [query].
   Future<List<U>> searchUsers(String query, {int limit = 5}) async {
+    final sw = Stopwatch()..start();
     final q = query.toLowerCase();
     final snapshot = await _firestore
         .collection('users')
@@ -131,7 +132,15 @@ class AuthService {
         .where('usernameLowercase', isLessThanOrEqualTo: '$q\uf8ff')
         .limit(limit)
         .get();
-    return snapshot.docs.map((d) => U.fromJson(d.data())).toList();
+    final users = snapshot.docs.map((d) => U.fromJson(d.data())).toList();
+    if (_analytics != null) {
+      await _analytics!.logEvent('search_users', parameters: {
+        'query': query,
+        'resultCount': users.length,
+        'responseTimeMs': sw.elapsedMilliseconds,
+      });
+    }
+    return users;
   }
 
   U? get currentUser => _currentUser.value;

@@ -25,6 +25,7 @@ import 'package:hoot/services/haptic_service.dart';
 import 'package:hoot/util/routes/args/profile_args.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:hoot/util/image_utils.dart';
+import 'package:hoot/services/analytics_service.dart';
 
 class PostComponent extends StatefulWidget {
   final Post post;
@@ -53,6 +54,7 @@ class _PostComponentState extends State<PostComponent> {
   DailyChallenge? _challenge;
   late final AudioPlayer _audioPlayer;
   bool _isPlaying = false;
+  AnalyticsService? _analytics;
 
   @override
   void initState() {
@@ -71,11 +73,22 @@ class _PostComponentState extends State<PostComponent> {
     _challengeService = Get.isRegistered<BaseChallengeService>()
         ? Get.find<BaseChallengeService>()
         : ChallengeService();
+    _analytics = Get.isRegistered<AnalyticsService>()
+        ? Get.find<AnalyticsService>()
+        : null;
     _audioPlayer = AudioPlayer();
-    _audioPlayer.playerStateStream.listen((state) {
+    _audioPlayer.playerStateStream.listen((state) async {
       if (state.processingState == ProcessingState.completed) {
         if (!mounted) return;
         setState(() => _isPlaying = false);
+        if (_analytics != null) {
+          final track = _post.music;
+          await _analytics!.logEvent('play_audio_complete', parameters: {
+            'postId': _post.id,
+            if (track != null) 'title': track.title,
+            if (track != null) 'artist': track.artist,
+          });
+        }
       }
     });
     super.initState();
@@ -186,8 +199,15 @@ class _PostComponentState extends State<PostComponent> {
       setState(() => _isPlaying = false);
     } else {
       await _audioPlayer.setUrl(track.previewUrl);
-      _audioPlayer.play();
+      await _audioPlayer.play();
       setState(() => _isPlaying = true);
+      if (_analytics != null) {
+        await _analytics!.logEvent('play_audio_start', parameters: {
+          'postId': _post.id,
+          'title': track.title,
+          'artist': track.artist,
+        });
+      }
     }
   }
 

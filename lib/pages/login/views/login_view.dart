@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hoot/util/routes/app_routes.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:video_player/video_player.dart';
+import 'package:hoot/services/analytics_service.dart';
 
 import 'package:hoot/pages/login/controllers/login_controller.dart';
 
@@ -19,23 +20,44 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final LoginController controller = Get.find();
   VideoPlayerController? _videoController;
+  AnalyticsService? _analytics;
+
+  void _onVideoEvent() {
+    final controller = _videoController;
+    if (controller != null &&
+        controller.value.position >= controller.value.duration &&
+        !controller.value.isPlaying) {
+      controller.removeListener(_onVideoEvent);
+      _analytics?.logEvent('play_video_complete', parameters: {
+        'screen': 'login',
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    _analytics = Get.isRegistered<AnalyticsService>()
+        ? Get.find<AnalyticsService>()
+        : null;
     if (widget.playBackgroundVideo) {
       _videoController =
           VideoPlayerController.asset('assets/videos/login_video.mp4')
             ..setLooping(false)
             ..initialize().then((_) {
               setState(() {});
+              _videoController?.addListener(_onVideoEvent);
               _videoController?.play();
+              _analytics?.logEvent('play_video_start', parameters: {
+                'screen': 'login',
+              });
             });
     }
   }
 
   @override
   void dispose() {
+    _videoController?.removeListener(_onVideoEvent);
     _videoController?.dispose();
     super.dispose();
   }
@@ -82,7 +104,7 @@ class _LoginViewState extends State<LoginView> {
                 children: [
                   LiquidGlass(
                     shape: LiquidRoundedRectangle(
-                        borderRadius: Radius.circular(32),
+                      borderRadius: Radius.circular(32),
                     ),
                     settings: LiquidGlassSettings(
                       blur: 32,

@@ -9,11 +9,15 @@ import 'package:hoot/services/error_service.dart';
 import 'package:hoot/util/enums/feed_types.dart';
 import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/util/constants.dart';
+import 'package:hoot/services/analytics_service.dart';
 
 /// Controller in charge of fetching data for the explore page.
 class ExploreController extends GetxController {
   final FirebaseFirestore _firestore;
   final AuthService _authService;
+  AnalyticsService? get _analytics => Get.isRegistered<AnalyticsService>()
+      ? Get.find<AnalyticsService>()
+      : null;
 
   ExploreController({FirebaseFirestore? firestore, AuthService? authService})
       : _firestore = firestore ?? FirebaseFirestore.instance,
@@ -194,6 +198,7 @@ class ExploreController extends GetxController {
 
     searching.value = true;
     try {
+      final sw = Stopwatch()..start();
       final futures = await Future.wait([
         _firestore
             .collection('users')
@@ -220,6 +225,14 @@ class ExploreController extends GetxController {
       feedSuggestions.assignAll(feedSnap.docs
           .map((d) => Feed.fromJson({'id': d.id, ...d.data()}))
           .toList());
+      if (_analytics != null) {
+        await _analytics!.logEvent('search', parameters: {
+          'query': value,
+          'userResultCount': userSuggestions.length,
+          'feedResultCount': feedSuggestions.length,
+          'responseTimeMs': sw.elapsedMilliseconds,
+        });
+      }
     } finally {
       searching.value = false;
     }
