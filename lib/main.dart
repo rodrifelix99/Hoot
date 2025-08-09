@@ -19,6 +19,7 @@ import 'package:feedback/feedback.dart';
 import 'package:hoot/theme/theme.dart';
 import 'package:hoot/util/enums/app_colors.dart';
 import 'package:hoot/util/translations/app_translations.dart';
+import 'package:hoot/util/routes/analytics_route_observer.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_tenor_gif_picker/flutter_tenor_gif_picker.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -79,6 +80,7 @@ void main() {
                 translations: AppTranslations(),
                 locale: languageService.locale.value,
                 fallbackLocale: const Locale('en', 'US'),
+                navigatorObservers: [AnalyticsRouteObserver()],
                 builder: (context, child) => GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
