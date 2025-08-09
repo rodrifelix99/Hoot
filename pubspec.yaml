@@ -38,6 +38,7 @@ dependencies:
   firebase_core: ^4.0.0
   firebase_auth: ^6.0.0
   cloud_functions: ^6.0.0
+  firebase_analytics: ^12.0.0
   firebase_crashlytics: ^5.0.0
   cloud_firestore: ^6.0.0
   card_swiper: ^3.0.1
@@ -105,6 +106,7 @@ dependencies:
 
   app_settings: ^6.1.1
   app_tracking_transparency: ^2.0.6+1
+
 
   meta: any
 dev_dependencies:
