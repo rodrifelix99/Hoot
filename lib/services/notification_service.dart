@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 import 'package:hoot/models/hoot_notification.dart';
+import 'package:hoot/services/analytics_service.dart';
 import 'package:hoot/util/constants.dart';
 
 class NotificationPage {
@@ -33,6 +35,10 @@ class NotificationService implements BaseNotificationService {
   NotificationService({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance;
 
+  AnalyticsService? get _analytics => Get.isRegistered<AnalyticsService>()
+      ? Get.find<AnalyticsService>()
+      : null;
+
   @override
   Future<NotificationPage> fetchNotifications(
     String userId, {
@@ -56,6 +62,13 @@ class NotificationService implements BaseNotificationService {
         .map((d) => HootNotification.fromJson({'id': d.id, ...d.data()}))
         .toList();
 
+    if (_analytics != null) {
+      await _analytics!.logEvent('fetch_notifications', parameters: {
+        'userId': userId,
+        'count': notifications.length,
+      });
+    }
+
     return NotificationPage(
       notifications: notifications,
       lastDoc: snapshot.docs.isNotEmpty ? snapshot.docs.last : null,
@@ -73,13 +86,19 @@ class NotificationService implements BaseNotificationService {
   }
 
   @override
-  Future<void> markAsRead(String userId, String notificationId) {
-    return _firestore
+  Future<void> markAsRead(String userId, String notificationId) async {
+    await _firestore
         .collection('users')
         .doc(userId)
         .collection('notifications')
         .doc(notificationId)
         .update({'read': true});
+    if (_analytics != null) {
+      await _analytics!.logEvent('mark_notification_read', parameters: {
+        'userId': userId,
+        'notificationId': notificationId,
+      });
+    }
   }
 
   @override
@@ -96,6 +115,12 @@ class NotificationService implements BaseNotificationService {
       batch.update(doc.reference, {'read': true});
     }
     await batch.commit();
+    if (_analytics != null) {
+      await _analytics!.logEvent('mark_all_read', parameters: {
+        'userId': userId,
+        'count': snapshot.docs.length,
+      });
+    }
   }
 
   @override
