@@ -4,6 +4,8 @@ import 'package:hoot/models/post.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/services/auth_service.dart';
+import 'package:hoot/services/analytics_service.dart';
+import 'package:get/get.dart';
 import 'package:hoot/util/constants.dart';
 
 class PostPage {
@@ -52,6 +54,9 @@ abstract class BasePostService {
 class PostService implements BasePostService {
   final FirebaseFirestore _firestore;
   final AuthService? _authService;
+  AnalyticsService? get _analytics => Get.isRegistered<AnalyticsService>()
+      ? Get.find<AnalyticsService>()
+      : null;
 
   PostService({FirebaseFirestore? firestore, AuthService? authService})
       : _firestore = firestore ?? FirebaseFirestore.instance,
@@ -72,6 +77,17 @@ class PostService implements BasePostService {
       final doc = await _firestore.collection('posts').add(data);
       id = doc.id;
     }
+    if (_analytics != null) {
+      final media = (data['images'] ?? data['gifs']) as List<dynamic>?;
+      await _analytics!.logEvent('create_post', parameters: {
+        'postId': id,
+        'feedId': data['feedId'],
+        'mediaCount': media?.length ?? 0,
+        'hasMedia': media != null && media.isNotEmpty,
+        'challengeId': challengeId,
+        'challenge': challengeId != null,
+      });
+    }
     // Mentions are now handled server-side by a Firestore trigger.
   }
 
@@ -79,24 +95,45 @@ class PostService implements BasePostService {
   Future<void> toggleLike(String postId, String userId, bool like) async {
     final postRef = _firestore.collection('posts').doc(postId);
     final likeRef = postRef.collection('likes').doc(userId);
+    var changed = false;
     await _firestore.runTransaction((txn) async {
       final likeSnap = await txn.get(likeRef);
       final currentlyLiked = likeSnap.exists;
       if (like && !currentlyLiked) {
         txn.set(likeRef, {'createdAt': FieldValue.serverTimestamp()});
         txn.update(postRef, {'likes': FieldValue.increment(1)});
+        changed = true;
       } else if (!like && currentlyLiked) {
         txn.delete(likeRef);
         txn.update(postRef, {'likes': FieldValue.increment(-1)});
+        changed = true;
       }
     });
+    if (changed && _analytics != null) {
+      final snap = await postRef.get();
+      final likeCount = snap.data()?['likes'] ?? 0;
+      await _analytics!
+          .logEvent(like ? 'like_post' : 'unlike_post', parameters: {
+        'postId': postId,
+        'userId': userId,
+        'likeCount': likeCount,
+      });
+    }
     // Like notifications are handled server-side by a Firestore trigger.
   }
 
   @override
   Future<Post?> fetchPost(String id) async {
-    final doc = await _firestore.collection('posts').doc(id).get();
+    final postRef = _firestore.collection('posts').doc(id);
+    final doc = await postRef.get();
     if (!doc.exists) return null;
+    await postRef.update({'views': FieldValue.increment(1)});
+    if (_analytics != null) {
+      await _analytics!.logEvent('view_post', parameters: {
+        'postId': id,
+        'userId': _authService?.currentUser?.uid,
+      });
+    }
     final data = {'id': doc.id, ...doc.data()!};
     if (_authService?.currentUser != null) {
       final uid = _authService!.currentUser!.uid;
@@ -212,7 +249,15 @@ class PostService implements BasePostService {
         .collection('posts')
         .doc(original.id)
         .update({'reFeeds': FieldValue.increment(1)});
-
+    if (_analytics != null) {
+      await _analytics!.logEvent('re_feed', parameters: {
+        'postId': newId,
+        'originalPostId': original.id,
+        'originalFeedId': original.feedId,
+        'targetFeedId': targetFeed.id,
+        'userId': user.uid,
+      });
+    }
     return newId;
   }
 
@@ -220,8 +265,12 @@ class PostService implements BasePostService {
   Future<void> deletePost(String id) async {
     final postRef = _firestore.collection('posts').doc(id);
     final snap = await postRef.get();
+    String? originalId;
+    String? originalFeedId;
+    final feedId = snap.data()?['feedId'];
+    final userId = snap.data()?['userId'];
     if (snap.exists && (snap.data()?['reFeeded'] == true)) {
-      final originalId = snap.data()?['reFeededFrom']?['id'];
+      originalId = snap.data()?['reFeededFrom']?['id'];
       final uid = snap.data()?['userId'];
       if (originalId != null && uid != null) {
         await _firestore
@@ -230,7 +279,19 @@ class PostService implements BasePostService {
             .collection('reFeeds')
             .doc(uid)
             .delete();
+        final origSnap =
+            await _firestore.collection('posts').doc(originalId).get();
+        originalFeedId = origSnap.data()?['feedId'];
       }
+    }
+    if (_analytics != null) {
+      await _analytics!.logEvent('delete_post', parameters: {
+        'postId': id,
+        'feedId': feedId,
+        'userId': userId,
+        if (originalId != null) 'originalPostId': originalId,
+        if (originalFeedId != null) 'originalFeedId': originalFeedId,
+      });
     }
     await postRef.delete();
   }
