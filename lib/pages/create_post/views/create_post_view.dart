@@ -67,6 +67,9 @@ class CreatePostView extends GetView<CreatePostController> {
         title: 'createPost'.tr,
       ),
       body: Obx(() {
+        if (controller.feedsLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
         int feedCount = controller.availableFeeds.length;
         if (feedCount == 0) {
           return Center(
