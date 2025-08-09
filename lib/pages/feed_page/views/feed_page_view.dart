@@ -17,36 +17,59 @@ class FeedPageView extends GetView<FeedPageController> {
 
   Widget _buildFab(BuildContext context, Feed? feed) {
     if (feed == null) return const SizedBox.shrink();
-    if (controller.isOwner) {
-      return FloatingActionButton(
-        heroTag: 'editFeedButton',
-        onPressed: () => Get.toNamed(
-          AppRoutes.editFeed,
-          arguments: feed,
-        ),
-        child: const Icon(Icons.edit),
-      );
-    }
     return Obx(() {
-      final subscribed = controller.subscribed.value;
-      final requested = controller.requested.value;
-      IconData icon;
-      if (subscribed) {
-        icon = Icons.remove;
-      } else if (requested) {
-        icon = Icons.close;
-      } else {
-        icon = Icons.add;
+      final List<Widget> buttons = [];
+      if (controller.canPost) {
+        buttons.add(FloatingActionButton(
+          heroTag: 'hootFeedButton',
+          onPressed: () => Get.toNamed(
+            AppRoutes.createPost,
+            arguments: feed,
+          ),
+          child: const Icon(Icons.edit),
+        ));
       }
-      return FloatingActionButton(
-        heroTag: 'subscribeFeedButton',
-        onPressed: () => controller.toggleSubscription(context),
-        tooltip: subscribed
-            ? 'unsubscribe'.tr
-            : requested
-                ? 'cancelRequest'.tr
-                : 'subscribe'.tr,
-        child: Icon(icon),
+      if (controller.isOwner) {
+        buttons.add(FloatingActionButton(
+          heroTag: 'editFeedButton',
+          onPressed: () => Get.toNamed(
+            AppRoutes.editFeed,
+            arguments: feed,
+          ),
+          child: const Icon(Icons.edit_attributes),
+        ));
+      } else {
+        final subscribed = controller.subscribed.value;
+        final requested = controller.requested.value;
+        IconData icon;
+        if (subscribed) {
+          icon = Icons.remove;
+        } else if (requested) {
+          icon = Icons.close;
+        } else {
+          icon = Icons.add;
+        }
+        buttons.add(FloatingActionButton(
+          heroTag: 'subscribeFeedButton',
+          onPressed: () => controller.toggleSubscription(context),
+          tooltip: subscribed
+              ? 'unsubscribe'.tr
+              : requested
+                  ? 'cancelRequest'.tr
+                  : 'subscribe'.tr,
+          child: Icon(icon),
+        ));
+      }
+      if (buttons.length == 1) return buttons.first;
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (int i = 0; i < buttons.length; i++)
+            Padding(
+              padding: EdgeInsets.only(bottom: i == 0 ? 8 : 0),
+              child: buttons[i],
+            ),
+        ],
       );
     });
   }

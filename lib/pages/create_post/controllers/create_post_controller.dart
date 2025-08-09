@@ -104,6 +104,12 @@ class CreatePostController extends GetxController {
   /// Feeds available to the user.
   final RxList<Feed> availableFeeds = <Feed>[].obs;
 
+  /// Whether feeds are currently being loaded.
+  final RxBool feedsLoading = true.obs;
+
+  /// Controller used for searching feeds in dropdown.
+  final TextEditingController feedSearchController = TextEditingController();
+
   /// Daily challenge being posted to, if any.
   final Rxn<DailyChallenge> challenge = Rxn<DailyChallenge>();
 
@@ -118,7 +124,8 @@ class CreatePostController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadFeeds();
+    final argFeed = Get.arguments as Feed?;
+    _loadFeeds(argFeed);
     if (challengeId != null) {
       _challengeService
           .getChallengeById(challengeId!)
@@ -146,9 +153,44 @@ class CreatePostController extends GetxController {
     });
   }
 
-  Future<void> _loadFeeds() async {
-    final user = await _authService.fetchUser();
-    availableFeeds.assignAll(user?.feeds ?? []);
+  Future<void> _loadFeeds(Feed? preselected) async {
+    feedsLoading.value = true;
+    try {
+      final user = await _authService.fetchUser();
+      final feeds = user?.feeds ?? [];
+      final uid = user?.uid;
+      final firestore = FirebaseFirestore.instance;
+      if (uid != null) {
+        final subsSnapshot = await firestore
+            .collection('users')
+            .doc(uid)
+            .collection('subscriptions')
+            .get();
+        for (final doc in subsSnapshot.docs) {
+          final feedDoc = await firestore.collection('feeds').doc(doc.id).get();
+          if (feedDoc.exists &&
+              (feedDoc.data()?['allowExternalHoots'] == true)) {
+            final feed = Feed.fromJson({'id': feedDoc.id, ...feedDoc.data()!});
+            if (!feeds.any((f) => f.id == feed.id)) {
+              feeds.add(feed);
+            }
+          }
+        }
+      }
+      availableFeeds.assignAll(feeds);
+      if (preselected != null) {
+        final existingIndex =
+            availableFeeds.indexWhere((f) => f.id == preselected.id);
+        if (existingIndex != -1) {
+          selectedFeeds.add(availableFeeds[existingIndex]);
+        } else {
+          availableFeeds.add(preselected);
+          selectedFeeds.add(preselected);
+        }
+      }
+    } finally {
+      feedsLoading.value = false;
+    }
   }
 
   Future<void> _loadTrendingNews({String? topic}) async {
@@ -443,6 +485,7 @@ class CreatePostController extends GetxController {
   @override
   void onClose() {
     textController.dispose();
+    feedSearchController.dispose();
     audioPlayer.dispose();
     super.onClose();
   }

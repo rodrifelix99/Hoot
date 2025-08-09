@@ -71,6 +71,9 @@ class FeedEditorView extends StatelessWidget {
               onPrivateChanged: (v) => controller.isPrivate.value = v,
               isNsfw: controller.isNsfw,
               onNsfwChanged: (v) => controller.isNsfw.value = v,
+              allowExternalHoots: controller.allowExternalHoots,
+              onAllowExternalChanged: (v) =>
+                  controller.allowExternalHoots.value = v,
             ),
             if (isEditing) ...[
               const SizedBox(height: 16),
