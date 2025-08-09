@@ -7,6 +7,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 import 'package:hoot/models/user.dart';
 import 'package:hoot/models/feed.dart';
+import 'package:hoot/services/analytics_service.dart';
 
 /// Provides authentication helpers for the application.
 class AuthService {
@@ -18,6 +19,10 @@ class AuthService {
   AuthService({FirebaseAuth? auth, FirebaseFirestore? firestore})
       : _auth = auth ?? FirebaseAuth.instance,
         _firestore = firestore ?? FirebaseFirestore.instance;
+
+  AnalyticsService? get _analytics => Get.isRegistered<AnalyticsService>()
+      ? Get.find<AnalyticsService>()
+      : null;
 
   final Rxn<U> _currentUser = Rxn<U>();
   bool _fetched = false;
@@ -149,6 +154,16 @@ class AuthService {
       'activityScore': 0,
       'popularityScore': 0,
     });
+    if (_analytics != null) {
+      await _analytics!.logEvent('sign_up', parameters: {
+        'provider': user.providerData.isNotEmpty
+            ? user.providerData.first.providerId
+            : 'unknown',
+        'userId': user.uid,
+        if (user.displayName != null) 'displayName': user.displayName,
+        if (user.email != null) 'email': user.email,
+      });
+    }
   }
 
   @visibleForTesting
@@ -157,71 +172,127 @@ class AuthService {
 
   /// Signs out the current user and clears cached data.
   Future<void> signOut() async {
+    final user = _auth.currentUser;
+    final provider = (user?.providerData.isNotEmpty ?? false)
+        ? user!.providerData.first.providerId
+        : null;
+    final uid = user?.uid;
     _currentUser.value = null;
     _fetched = false;
-    await _auth.signOut();
+    try {
+      await _auth.signOut();
+      if (_analytics != null) {
+        await _analytics!.logEvent('sign_out', parameters: {
+          if (provider != null) 'provider': provider,
+          if (uid != null) 'userId': uid,
+        });
+      }
+    } catch (e) {
+      if (_analytics != null) {
+        await _analytics!.logEvent('sign_out_error', parameters: {
+          if (provider != null) 'provider': provider,
+          if (uid != null) 'userId': uid,
+          'error': e.toString(),
+        });
+      }
+      rethrow;
+    }
   }
 
   /// Signs in the user using Google authentication.
   Future<UserCredential> signInWithGoogle() async {
-    final user = await GoogleSignIn().signIn();
-    if (user == null) {
-      throw FirebaseAuthException(
-        code: 'ABORTED',
-        message: 'Google sign in aborted',
-      );
-    }
-
-    final googleAuth = await user.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    final result = await _auth.signInWithCredential(credential);
-    if (result.additionalUserInfo?.isNewUser ?? false) {
-      final firebaseUser = result.user;
-      if (firebaseUser != null) {
-        await _createUserDocumentIfNeeded(firebaseUser);
+    const provider = 'google';
+    try {
+      final user = await GoogleSignIn().signIn();
+      if (user == null) {
+        throw FirebaseAuthException(
+          code: 'ABORTED',
+          message: 'Google sign in aborted',
+        );
       }
-    }
 
-    final displayName = result.user?.displayName;
-    if (displayName != null && displayName.isNotEmpty) {
-      this.displayName = displayName;
+      final googleAuth = await user.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      final result = await _auth.signInWithCredential(credential);
+      if (result.additionalUserInfo?.isNewUser ?? false) {
+        final firebaseUser = result.user;
+        if (firebaseUser != null) {
+          await _createUserDocumentIfNeeded(firebaseUser);
+        }
+      }
+
+      final displayName = result.user?.displayName;
+      if (displayName != null && displayName.isNotEmpty) {
+        this.displayName = displayName;
+      }
+      _fetched = false;
+      await fetchUser();
+      if (_analytics != null) {
+        await _analytics!.logEvent('sign_in', parameters: {
+          'provider': provider,
+          if (result.user != null) 'userId': result.user!.uid,
+        });
+      }
+      return result;
+    } catch (e) {
+      if (_analytics != null) {
+        await _analytics!.logEvent('sign_in_error', parameters: {
+          'provider': provider,
+          'error': e.toString(),
+        });
+      }
+      rethrow;
     }
-    _fetched = false;
-    await fetchUser();
-    return result;
   }
 
   /// Signs in the user using Apple authentication.
   Future<UserCredential> signInWithApple() async {
-    final appleIDCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
+    const provider = 'apple';
+    try {
+      final appleIDCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
 
-    final credential = OAuthProvider('apple.com').credential(
-      idToken: appleIDCredential.identityToken,
-      accessToken: appleIDCredential.authorizationCode,
-    );
-    final result = await _auth.signInWithCredential(credential);
-    if (result.additionalUserInfo?.isNewUser ?? false) {
-      final firebaseUser = result.user;
-      if (firebaseUser != null) {
-        await _createUserDocumentIfNeeded(firebaseUser);
+      final credential = OAuthProvider('apple.com').credential(
+        idToken: appleIDCredential.identityToken,
+        accessToken: appleIDCredential.authorizationCode,
+      );
+      final result = await _auth.signInWithCredential(credential);
+      if (result.additionalUserInfo?.isNewUser ?? false) {
+        final firebaseUser = result.user;
+        if (firebaseUser != null) {
+          await _createUserDocumentIfNeeded(firebaseUser);
+        }
       }
-    }
 
-    final displayName = result.user?.displayName;
-    if (displayName != null && displayName.isNotEmpty) {
-      this.displayName = displayName;
+      final displayName = result.user?.displayName;
+      if (displayName != null && displayName.isNotEmpty) {
+        this.displayName = displayName;
+      }
+      _fetched = false;
+      await fetchUser();
+      if (_analytics != null) {
+        await _analytics!.logEvent('sign_in', parameters: {
+          'provider': provider,
+          if (result.user != null) 'userId': result.user!.uid,
+        });
+      }
+      return result;
+    } catch (e) {
+      if (_analytics != null) {
+        await _analytics!.logEvent('sign_in_error', parameters: {
+          'provider': provider,
+          'error': e.toString(),
+        });
+      }
+      rethrow;
     }
-    _fetched = false;
-    await fetchUser();
-    return result;
   }
 
   /// Deletes the current user's account and Firestore data.

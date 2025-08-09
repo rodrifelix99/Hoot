@@ -26,7 +26,11 @@ class AnalyticsService {
     Map<String, Object?>? parameters,
   }) async {
     final params = await _withDefaults(parameters);
-    await _analytics.logEvent(name: name, parameters: params);
+    final filtered = <String, Object>{};
+    params.forEach((key, value) {
+      if (value != null) filtered[key] = value;
+    });
+    await _analytics.logEvent(name: name, parameters: filtered);
   }
 
   /// Logs a screen view event with [screenName] and optional [screenClass].
