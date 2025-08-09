@@ -1,13 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:hoot/models/feed.dart';
 import 'package:hoot/models/user.dart';
+import 'package:hoot/services/analytics_service.dart';
+import 'package:hoot/services/auth_service.dart';
 import 'package:hoot/util/constants.dart';
 
 class SubscriptionService {
   final FirebaseFirestore _firestore;
+  final AuthService? _authService;
 
-  SubscriptionService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  SubscriptionService({FirebaseFirestore? firestore, AuthService? authService})
+      : _firestore = firestore ?? FirebaseFirestore.instance,
+        _authService = authService;
+
+  AnalyticsService? get _analytics => Get.isRegistered<AnalyticsService>()
+      ? Get.find<AnalyticsService>()
+      : null;
 
   Future<Set<String>> fetchSubscriptions(String userId) async {
     final snapshot = await _firestore
@@ -55,7 +64,14 @@ class SubscriptionService {
       txn.update(feedRef, {'subscriberCount': FieldValue.increment(1)});
     });
     final feedDoc = await feedRef.get();
-    feedDoc.get('userId');
+    final ownerId = feedDoc.data()?['userId'];
+    if (_analytics != null) {
+      await _analytics!.logEvent('subscribe_feed', parameters: {
+        'feedId': feedId,
+        'subscriberId': userId,
+        'ownerId': ownerId,
+      });
+    }
     // Subscription notifications are handled server-side by Firestore triggers.
   }
 
@@ -77,6 +93,15 @@ class SubscriptionService {
       txn.delete(feedSubRef);
       txn.update(feedRef, {'subscriberCount': FieldValue.increment(-1)});
     });
+    final feedDoc = await feedRef.get();
+    final ownerId = feedDoc.data()?['userId'];
+    if (_analytics != null) {
+      await _analytics!.logEvent('unsubscribe_feed', parameters: {
+        'feedId': feedId,
+        'subscriberId': userId,
+        'ownerId': ownerId,
+      });
+    }
   }
 
   Future<List<U>> fetchSubscribers(String feedId) async {
@@ -122,6 +147,14 @@ class SubscriptionService {
       txn.delete(feedSubRef);
       txn.update(feedRef, {'subscriberCount': FieldValue.increment(-1)});
     });
+    if (_analytics != null) {
+      final actingUserId = _authService?.currentUser?.uid;
+      await _analytics!.logEvent('remove_subscriber', parameters: {
+        'feedId': feedId,
+        'actingUserId': actingUserId,
+        'targetUserId': userId,
+      });
+    }
   }
 
   Future<void> banSubscriber(String feedId, String userId) async {
@@ -132,5 +165,13 @@ class SubscriptionService {
         .collection('banned')
         .doc(userId)
         .set({'createdAt': FieldValue.serverTimestamp()});
+    if (_analytics != null) {
+      final actingUserId = _authService?.currentUser?.uid;
+      await _analytics!.logEvent('ban_subscriber', parameters: {
+        'feedId': feedId,
+        'actingUserId': actingUserId,
+        'targetUserId': userId,
+      });
+    }
   }
 }
