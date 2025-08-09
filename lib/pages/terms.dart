@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hoot/components/appbar_component.dart';
+import 'package:hoot/services/analytics_service.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class TermsOfService extends StatefulWidget {
@@ -14,10 +16,11 @@ class _TermsOfServiceState extends State<TermsOfService> {
 
   @override
   void initState() {
+    super.initState();
+    Get.find<AnalyticsService>().logScreenView('terms_of_service');
     _controller = WebViewController();
     _controller.loadFlutterAsset('assets/terms/terms.html');
     _controller.platform.enableZoom(true);
-    super.initState();
   }
 
   @override
