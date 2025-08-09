@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:hoot/models/comment.dart';
+import 'package:hoot/services/analytics_service.dart';
 import 'package:hoot/util/constants.dart';
 
 class CommentPage {
@@ -31,6 +33,10 @@ class CommentService implements BaseCommentService {
   CommentService({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance;
 
+  AnalyticsService? get _analytics => Get.isRegistered<AnalyticsService>()
+      ? Get.find<AnalyticsService>()
+      : null;
+
   @override
   Future<CommentPage> fetchComments(
     String postId, {
@@ -50,9 +56,24 @@ class CommentService implements BaseCommentService {
 
     final snapshot = await query.get();
 
+    if (snapshot.docs.isNotEmpty) {
+      final batch = _firestore.batch();
+      for (final d in snapshot.docs) {
+        batch.update(d.reference, {'views': FieldValue.increment(1)});
+      }
+      await batch.commit();
+    }
+
     final comments = snapshot.docs
         .map((d) => Comment.fromJson({'id': d.id, ...d.data()}))
         .toList();
+
+    if (_analytics != null) {
+      await _analytics!.logEvent('fetch_comments', parameters: {
+        'postId': postId,
+        'count': comments.length,
+      });
+    }
 
     return CommentPage(
       comments: comments,
@@ -75,11 +96,20 @@ class CommentService implements BaseCommentService {
     final postRef = _firestore.collection('posts').doc(postId);
     final commentsRef = postRef.collection('comments');
 
+    final doc = id != null ? commentsRef.doc(id) : commentsRef.doc();
+    final commentId = doc.id;
     await _firestore.runTransaction((txn) async {
-      final doc = id != null ? commentsRef.doc(id) : commentsRef.doc();
       txn.set(doc, data);
       txn.update(postRef, {'comments': FieldValue.increment(1)});
     });
+    if (_analytics != null) {
+      await _analytics!.logEvent('create_comment', parameters: {
+        'postId': postId,
+        'commentId': commentId,
+        'authorId': data['userId'],
+        'textLength': (data['text'] as String?)?.length ?? 0,
+      });
+    }
     // Notification creation is handled server-side by Firestore triggers.
   }
 
@@ -91,5 +121,11 @@ class CommentService implements BaseCommentService {
       txn.delete(commentRef);
       txn.update(postRef, {'comments': FieldValue.increment(-1)});
     });
+    if (_analytics != null) {
+      await _analytics!.logEvent('delete_comment', parameters: {
+        'postId': postId,
+        'commentId': commentId,
+      });
+    }
   }
 }
