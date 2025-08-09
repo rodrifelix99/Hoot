@@ -49,7 +49,6 @@ class AnalyticsService {
   ) async {
     _packageInfo ??= await PackageInfo.fromPlatform();
     final uid = _authService.currentUser?.uid;
-    // for every parameter convert null to empty string and all non-string and non-numeric values to their string representation
     parameters ??= {};
     parameters = parameters.map((key, value) {
       if (value == null) {
