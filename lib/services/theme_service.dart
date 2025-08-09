@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hoot/services/analytics_service.dart';
 import 'package:hoot/util/enums/app_colors.dart';
 
 /// Service that manages theme mode and persists the user's preference.
 class ThemeService extends GetxService {
   static const _prefKeyMode = 'themeMode';
   static const _prefKeyColor = 'appColor';
+
+  AnalyticsService? get _analytics => Get.isRegistered<AnalyticsService>()
+      ? Get.find<AnalyticsService>()
+      : null;
 
   /// Current theme mode. Defaults to [ThemeMode.system].
   final themeMode = ThemeMode.system.obs;
@@ -31,6 +36,11 @@ class ThemeService extends GetxService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_prefKeyMode, mode.index);
     themeMode.value = mode;
+    if (_analytics != null) {
+      await _analytics!.logEvent('theme_mode_update', parameters: {
+        'mode': mode.name,
+      });
+    }
   }
 
   /// Persists and applies the selected [color].
@@ -38,6 +48,11 @@ class ThemeService extends GetxService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_prefKeyColor, color.index);
     appColor.value = color;
+    if (_analytics != null) {
+      await _analytics!.logEvent('app_color_update', parameters: {
+        'color': color.name,
+      });
+    }
   }
 
   /// Resets the app color to default.
@@ -45,5 +60,10 @@ class ThemeService extends GetxService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_prefKeyColor);
     appColor.value = AppColor.blue;
+    if (_analytics != null) {
+      await _analytics!.logEvent('app_color_reset', parameters: {
+        'color': AppColor.blue.name,
+      });
+    }
   }
 }

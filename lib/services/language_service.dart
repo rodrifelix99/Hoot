@@ -1,13 +1,21 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hoot/services/analytics_service.dart';
 
 /// Service responsible for managing and persisting the app's locale.
 class LanguageService extends GetxService {
   static const _prefKeyLocale = 'locale';
 
+  AnalyticsService? get _analytics => Get.isRegistered<AnalyticsService>()
+      ? Get.find<AnalyticsService>()
+      : null;
+
   /// Currently selected locale.
-  final Rx<Locale> locale = Get.deviceLocale?.obs ?? Rx<Locale>(const Locale('en', 'US'));
+  final Rx<Locale> locale =
+      Get.deviceLocale?.obs ?? Rx<Locale>(const Locale('en', 'US'));
 
   /// Loads the saved locale or defaults to [Get.deviceLocale].
   Future<void> loadLocale() async {
@@ -39,5 +47,17 @@ class LanguageService extends GetxService {
     await prefs.setString(_prefKeyLocale, newLocale.toLanguageTag());
     locale.value = newLocale;
     Get.updateLocale(newLocale);
+    final newCode = newLocale.toLanguageTag();
+    final deviceCode = Get.deviceLocale?.toLanguageTag();
+    final differs = newCode != deviceCode;
+    developer.log(
+      'LanguageService.updateLocale: $newCode (differs from device default: $differs)',
+    );
+    if (_analytics != null) {
+      await _analytics!.logEvent('update_locale', parameters: {
+        'locale': newCode,
+        'differsDeviceDefault': differs,
+      });
+    }
   }
 }
