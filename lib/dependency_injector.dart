@@ -14,6 +14,7 @@ import 'package:hoot/services/news_service.dart';
 import 'package:hoot/services/challenge_service.dart';
 import 'package:hoot/services/app_review_service.dart';
 import 'package:hoot/services/music_service.dart';
+import 'package:hoot/services/analytics_service.dart';
 
 /// Registers global dependencies for the application.
 class DependencyInjector {
@@ -23,6 +24,7 @@ class DependencyInjector {
   static Future<void> init() async {
     final auth = Get.put(AuthService(), permanent: true);
     await auth.fetchUser();
+    Get.put(AnalyticsService(authService: auth), permanent: true);
     Get.put<BaseFeedService>(FeedService(), permanent: true);
     Get.put<BasePostService>(PostService(authService: auth), permanent: true);
     Get.put(SubscriptionService(), permanent: true);
