@@ -104,6 +104,9 @@ class CreatePostController extends GetxController {
   /// Feeds available to the user.
   final RxList<Feed> availableFeeds = <Feed>[].obs;
 
+  /// Controller used for searching feeds in dropdown.
+  final TextEditingController feedSearchController = TextEditingController();
+
   /// Daily challenge being posted to, if any.
   final Rxn<DailyChallenge> challenge = Rxn<DailyChallenge>();
 
@@ -119,6 +122,13 @@ class CreatePostController extends GetxController {
   void onInit() {
     super.onInit();
     _loadFeeds();
+    final argFeed = Get.arguments as Feed?;
+    if (argFeed != null) {
+      selectedFeeds.add(argFeed);
+      if (!availableFeeds.any((f) => f.id == argFeed.id)) {
+        availableFeeds.add(argFeed);
+      }
+    }
     if (challengeId != null) {
       _challengeService
           .getChallengeById(challengeId!)
@@ -148,7 +158,23 @@ class CreatePostController extends GetxController {
 
   Future<void> _loadFeeds() async {
     final user = await _authService.fetchUser();
-    availableFeeds.assignAll(user?.feeds ?? []);
+    final feeds = user?.feeds ?? [];
+    final uid = user?.uid;
+    final firestore = FirebaseFirestore.instance;
+    if (uid != null) {
+      final subsSnapshot = await firestore
+          .collection('users')
+          .doc(uid)
+          .collection('subscriptions')
+          .get();
+      for (final doc in subsSnapshot.docs) {
+        final feedDoc = await firestore.collection('feeds').doc(doc.id).get();
+        if (feedDoc.exists && (feedDoc.data()?['allowExternalHoots'] == true)) {
+          feeds.add(Feed.fromJson({'id': feedDoc.id, ...feedDoc.data()!}));
+        }
+      }
+    }
+    availableFeeds.assignAll(feeds);
   }
 
   Future<void> _loadTrendingNews({String? topic}) async {
@@ -443,6 +469,7 @@ class CreatePostController extends GetxController {
   @override
   void onClose() {
     textController.dispose();
+    feedSearchController.dispose();
     audioPlayer.dispose();
     super.onClose();
   }

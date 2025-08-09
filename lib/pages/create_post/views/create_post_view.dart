@@ -135,6 +135,30 @@ class CreatePostView extends GetView<CreatePostController> {
                             .toList(),
                         value: selected.isEmpty ? null : selected.last,
                         onChanged: (_) {},
+                        dropdownSearchData: DropdownSearchData(
+                          searchController: controller.feedSearchController,
+                          searchInnerWidgetHeight: 50,
+                          searchInnerWidget: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: controller.feedSearchController,
+                              decoration: InputDecoration(
+                                isDense: true,
+                                hintText: 'searchEllipsis'.tr,
+                                border: const OutlineInputBorder(),
+                              ),
+                              textCapitalization: TextCapitalization.sentences,
+                            ),
+                          ),
+                          searchMatchFn: (item, searchValue) {
+                            return item.value!.title
+                                .toLowerCase()
+                                .contains(searchValue.toLowerCase());
+                          },
+                        ),
+                        onMenuStateChange: (isOpen) {
+                          if (!isOpen) controller.feedSearchController.clear();
+                        },
                         selectedItemBuilder: (context) {
                           return controller.availableFeeds.map((feed) {
                             return Container(

@@ -57,6 +57,7 @@ class FeedEditorController extends GetxController {
   /// Privacy/NSFW flags.
   final RxBool isPrivate = false.obs;
   final RxBool isNsfw = false.obs;
+  final RxBool allowExternalHoots = false.obs;
 
   /// Avatar file chosen by user.
   final Rx<File?> avatarFile = Rx<File?>(null);
@@ -90,6 +91,7 @@ class FeedEditorController extends GetxController {
       selectedType.value = feed!.type;
       isPrivate.value = feed!.private ?? false;
       isNsfw.value = feed!.nsfw ?? false;
+      allowExternalHoots.value = feed!.allowExternalHoots ?? false;
     }
   }
 
@@ -173,6 +175,7 @@ class FeedEditorController extends GetxController {
       'type': type.toString().split('.').last,
       'private': isPrivate.value,
       'nsfw': isNsfw.value,
+      'allowExternalHoots': allowExternalHoots.value,
       'userId': _userId,
       'order': order,
       if (smallAvatarUrl != null) 'smallAvatar': smallAvatarUrl,
@@ -203,6 +206,7 @@ class FeedEditorController extends GetxController {
       type: type,
       private: isPrivate.value,
       nsfw: isNsfw.value,
+      allowExternalHoots: allowExternalHoots.value,
       order: order,
       subscriberCount: 0,
     );
@@ -258,6 +262,7 @@ class FeedEditorController extends GetxController {
       'type': type.toString().split('.').last,
       'private': isPrivate.value,
       'nsfw': isNsfw.value,
+      'allowExternalHoots': allowExternalHoots.value,
       if (smallAvatarUrl != null) 'smallAvatar': smallAvatarUrl,
       if (bigAvatarUrl != null) 'bigAvatar': bigAvatarUrl,
       if (smallAvatarHash != null) 'smallAvatarHash': smallAvatarHash,
@@ -271,6 +276,7 @@ class FeedEditorController extends GetxController {
       ..type = type
       ..private = isPrivate.value
       ..nsfw = isNsfw.value
+      ..allowExternalHoots = allowExternalHoots.value
       ..smallAvatar = smallAvatarUrl ?? feed!.smallAvatar
       ..bigAvatar = bigAvatarUrl ?? feed!.bigAvatar
       ..smallAvatarHash = smallAvatarHash ?? feed!.smallAvatarHash

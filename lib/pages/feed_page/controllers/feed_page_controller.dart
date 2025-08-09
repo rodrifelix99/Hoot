@@ -48,6 +48,13 @@ class FeedPageController extends GetxController {
   final RxBool showNsfwWarning = false.obs;
 
   bool get isOwner => feed.value?.userId == _authService.currentUser?.uid;
+  bool get canPost {
+    final f = feed.value;
+    final userId = _authService.currentUser?.uid;
+    if (f == null || userId == null) return false;
+    if (f.userId == userId) return true;
+    return f.allowExternalHoots == true && subscribed.value;
+  }
 
   @override
   void onInit() {
