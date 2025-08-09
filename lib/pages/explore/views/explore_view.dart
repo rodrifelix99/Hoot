@@ -167,13 +167,12 @@ class ExploreView extends GetView<ExploreController> {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
-                const SizedBox(height: 16),
                 SizedBox(
-                  height: 80,
+                  height: 120,
                   child: Obx(
                     () => ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                       itemCount: controller.popularUsers.length,
                       itemBuilder: (context, index) {
                         final u = controller.popularUsers[index];
@@ -204,7 +203,7 @@ class ExploreView extends GetView<ExploreController> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 42),
+                const SizedBox(height: 24),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
