@@ -17,6 +17,7 @@ class Feed {
   bool? private;
   bool? nsfw;
   bool? verified;
+  bool? allowExternalHoots;
   FeedType? type;
   int order;
   final int? subscriberCount;
@@ -36,6 +37,7 @@ class Feed {
       this.private,
       this.nsfw,
       this.verified,
+      this.allowExternalHoots,
       this.type,
       this.order = 0,
       this.subscriberCount,
@@ -60,6 +62,7 @@ class Feed {
       private: json['private'],
       nsfw: json['nsfw'],
       verified: json['verified'],
+      allowExternalHoots: json['allowExternalHoots'],
       order: json['order'] ?? 0,
       subscriberCount: json['subscriberCount'],
       posts: json['posts'] != null
@@ -81,6 +84,7 @@ class Feed {
         'type': type.toString().split('.').last,
         'private': private,
         'nsfw': nsfw,
+        'allowExternalHoots': allowExternalHoots,
         'order': order,
       };
 
@@ -100,6 +104,7 @@ class Feed {
         'private': private,
         'nsfw': nsfw,
         'verified': verified,
+        'allowExternalHoots': allowExternalHoots,
         'subscriberCount': subscriberCount,
         'order': order
       };

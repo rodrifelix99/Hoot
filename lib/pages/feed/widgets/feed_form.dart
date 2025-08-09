@@ -21,6 +21,8 @@ class FeedForm extends StatelessWidget {
     required this.onPrivateChanged,
     required this.isNsfw,
     required this.onNsfwChanged,
+    required this.allowExternalHoots,
+    required this.onAllowExternalChanged,
   });
 
   /// Controller for the feed title field.
@@ -55,6 +57,12 @@ class FeedForm extends StatelessWidget {
 
   /// Callback when the NSFW flag changes.
   final ValueChanged<bool> onNsfwChanged;
+
+  /// Whether others can post to the feed.
+  final RxBool allowExternalHoots;
+
+  /// Callback when the external posting flag changes.
+  final ValueChanged<bool> onAllowExternalChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -153,6 +161,13 @@ class FeedForm extends StatelessWidget {
             value: isPrivate.value,
             onChanged: onPrivateChanged,
             title: Text('privateFeed'.tr),
+          ),
+        ),
+        Obx(
+          () => SwitchListTile(
+            value: allowExternalHoots.value,
+            onChanged: onAllowExternalChanged,
+            title: Text('allowOthersToPost'.tr),
           ),
         ),
         Obx(
