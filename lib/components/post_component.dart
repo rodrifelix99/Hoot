@@ -456,7 +456,7 @@ class _PostComponentState extends State<PostComponent> {
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(
                             SolarIconsBold.medalRibbonStar,
